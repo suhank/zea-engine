@@ -63,7 +63,8 @@
         EulerAngles,
         Color,
         Sphere,
-        Material,
+        SimpleSurfaceMaterial,
+        FlatSurfaceMaterial,
         TreeItem,
         GeomItem,
         ObjAsset,
@@ -93,8 +94,8 @@
         const pointerOverColor = new Color(0, 1, 1)
         const pointerDownColor = new Color(1, 0, 0)
 
-        const material = new Material('surfaces', 'StandardSurfaceShader')
-        material.getParameter('BaseColor').value = new Color(0.75, 0.75, 0.75)
+        const material = new StandardSurfaceMaterial('surfaces')
+        material.baseColorParam.value = new Color(0.75, 0.75, 0.75)
 
         const cylinder = new Cylinder(1.5, 2.0, 6)
         const geomItem1 = new GeomItem('Cylinder', cylinder, material, new Xfo(new Vec3(-2.2, 2, 1)))
@@ -133,13 +134,13 @@
         const sphere = new Sphere(0.5, 12, 24)
 
         // scene.getRoot().addChild(geomItem)
-        const simpleMaterial = new Material('mat', 'SimpleSurfaceShader')
-        const flatMaterial = new Material('mat', 'FlatSurfaceShader')
+        const simpleMaterial = new SimpleSurfaceMaterial('mat')
+        const flatMaterial = new FlatSurfaceMaterial('mat')
 
         const addLayers = (layerId, treeItem) => {
           for (let j = 0; j < dim; j += 1) {
-            // const material = new Material('mat', 'SimpleSurfaceShader')
-            // material.getParameter('BaseColor').value = new Color(layerId / dim, j / dim, 1)
+            // const material = new SimpleSurfaceMaterial('mat')
+            // material.baseColorParam.value = new Color(layerId / dim, j / dim, 1)
             const material = simpleMaterial //layerId > dim / 2 ? simpleMaterial : flatMaterial
             const treeItemJ = new TreeItem('TreeItem' + j)
             treeItem.addChild(treeItemJ)

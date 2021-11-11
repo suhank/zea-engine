@@ -40,26 +40,21 @@
         gap: 1em;
       }
     </style>
+    <script src="https://websocket-staging.zea.live/socket.io/socket.io.js"></script>
+    <script src="https://www.gstatic.com/draco/v1/decoders/draco_decoder_gltf.js"></script>
     <script type="module">
       import '../dist/index.umd.js'
       import '../node_modules/@zeainc/zea-cad/dist/index.umd.js'
       import '../node_modules/@zeainc/zea-ux/dist/index.umd.js'
       import '../node_modules/@zeainc/zea-potree/dist/index.umd.js'
 
-      import "https://websocket-staging.zea.live/socket.io/socket.io.js"
+      // import 'https://websocket-staging.zea.live/socket.io/socket.io.js'
       import '../node_modules/@zeainc/zea-collab/dist/index.umd.js'
 
-      import 'https://www.gstatic.com/draco/v1/decoders/draco_decoder_gltf.js'
+      // import 'https://www.gstatic.com/draco/v1/decoders/draco_decoder_gltf.js'
       import '../node_modules/@zeainc/gltf-loader/dist/index.umd.js'
 
       const urlParams = new URLSearchParams(window.location.search)
-
-      import '../dist/index.umd.js'
-      import 'https://cdn.jsdelivr.net/npm/@zeainc/zea-cad@3.3.0/dist/index.umd.js'
-      import 'https://cdn.jsdelivr.net/npm/@zeainc/zea-ux/dist/index.umd.js'
-      import 'https://cdn.jsdelivr.net/npm/@zeainc/zea-collab/dist/index.umd.js'
-      import 'https://www.gstatic.com/draco/v1/decoders/draco_decoder_gltf.js'
-      import 'https://cdn.jsdelivr.net/npm/@zeainc/gltf-loader/dist/index.umd.js'
 
       const {
         Color,
@@ -168,14 +163,14 @@
       selectionTool.rectItem
         .materialParam
         .getValue()
-        .getParameter('BaseColor')
+        .baseColorParam
         .value = selectionRectColor
 
       /** SELECTION END * /
 
       /** FREEHAND LINES TOOL START * /
       const freeHandLineTool = new CreateFreehandLineTool(appData)
-      freeHandLineTool.getParameter('LineThickness').value = 0.01
+      freeHandLineTool.lineThicknessParam.value = 0.01
 
       /** FREEHAND LINES TOOL END * /
 

@@ -28,7 +28,7 @@
         Torus,
         GeomItem,
         TreeItem,
-        Material,
+        SimpleSurfaceMaterial,
         MaterialGroup,
       } = zeaEngine
 
@@ -44,19 +44,19 @@
       // scene.getRoot().addChild(tree1)
 
       const materialGroup1 = new MaterialGroup('materialGroup1')
-      const material1 = new Material('surfaces', 'SimpleSurfaceShader')
-      material1.getParameter('BaseColor').value = new Color('lemonchiffon')
+      const material1 = new SimpleSurfaceMaterial('surfaces')
+      material1.baseColorParam.value = new Color('lemonchiffon')
       materialGroup1.materialParam.value = material1
       scene.getRoot().addChild(materialGroup1)
 
       const materialGroup2 = new MaterialGroup('materialGroup2')
-      const material2 = new Material('surfaces', 'SimpleSurfaceShader')
-      material2.getParameter('BaseColor').value = new Color('mediumblue')
+      const material2 = new SimpleSurfaceMaterial('surfaces')
+      material2.baseColorParam.value = new Color('mediumblue')
       materialGroup2.materialParam.value = material2
       scene.getRoot().addChild(materialGroup2)
 
-      const standardMaterial = new Material('surfaces', 'SimpleSurfaceShader')
-      standardMaterial.getParameter('BaseColor').value = new Color(89 / 255, 182 / 255, 92 / 255)
+      const standardMaterial = new SimpleSurfaceMaterial('surfaces')
+      standardMaterial.baseColorParam.value = new Color(89 / 255, 182 / 255, 92 / 255)
 
       const addGeomItem = (shape, row, count, i) => {
         const geomItem = new GeomItem('Item' + row + '-' + i, shape, standardMaterial)

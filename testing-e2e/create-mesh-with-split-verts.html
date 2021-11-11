@@ -13,7 +13,8 @@
     <script src="../dist/index.umd.js"></script>
 
     <script type="module">
-      const { GLRenderer, Scene, Vec3, Mesh, Color, Material, GeomItem, Lines, Vec3Attribute } = window.zeaEngine
+      const { GLRenderer, Scene, Vec3, Mesh, Color, SimpleSurfaceMaterial, GeomItem, Lines, Vec3Attribute } =
+        window.zeaEngine
 
       const canvas = document.querySelector('#renderer')
 
@@ -25,7 +26,7 @@
 
       const mesh = new Mesh()
 
-      const geomItem = new GeomItem('geom', mesh, new Material('mat', 'StandardSurfaceShader'))
+      const geomItem = new GeomItem('geom', mesh, new SimpleSurfaceMaterial('mat'))
       scene.getRoot().addChild(geomItem)
       mesh.setFaceCounts([2])
       mesh.setFaceVertexIndices(0, [0, 2, 1])

@@ -31,8 +31,19 @@
       }
     </style>
     <script type="module">
-      const { GLRenderer, Scene, Vec3, Xfo, Color, ObjAsset, Sphere, Material, GeomItem, TreeItem, BaseTool } =
-        window.zeaEngine
+      const {
+        GLRenderer,
+        Scene,
+        Vec3,
+        Xfo,
+        Color,
+        ObjAsset,
+        Sphere,
+        SimpleSurfaceMaterial,
+        GeomItem,
+        TreeItem,
+        BaseTool,
+      } = window.zeaEngine
 
       const canvas = document.getElementById('viewport')
 
@@ -61,8 +72,8 @@
       }
 
       const sphere = new Sphere(0.1)
-      const material = new Material('foo', 'SimpleSurfaceShader')
-      material.getParameter('BaseColor').value = new Color(1, 0, 0)
+      const material = new SimpleSurfaceMaterial('foo')
+      material.baseColorParam.value = new Color(1, 0, 0)
 
       class MovePointTool extends BaseTool {
         constructor(viewport) {

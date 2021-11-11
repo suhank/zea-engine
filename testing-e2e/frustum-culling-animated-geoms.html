@@ -13,7 +13,18 @@
     <script src="../dist/index.umd.js"></script>
 
     <script type="module">
-      const { GLRenderer, Scene, Vec3, Xfo, Color, Sphere, Material, TreeItem, GeomItem, GLBoundingBoxPass } = zeaEngine
+      const {
+        GLRenderer,
+        Scene,
+        Vec3,
+        Xfo,
+        Color,
+        Sphere,
+        SimpleSurfaceMaterial,
+        TreeItem,
+        GeomItem,
+        GLBoundingBoxPass,
+      } = zeaEngine
 
       const canvas = document.getElementById('viewport')
 
@@ -23,7 +34,7 @@
 
       scene.setupGrid(10.0, 10)
 
-      const standardMaterial = new Material('surfaces', 'SimpleSurfaceShader')
+      const standardMaterial = new SimpleSurfaceMaterial('surfaces')
       const sphere = new Sphere(0.4, 20, 10)
 
       const buildSubTree = (xfo) => {

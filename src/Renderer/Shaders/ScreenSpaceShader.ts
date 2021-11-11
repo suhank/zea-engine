@@ -2,6 +2,7 @@
 import { Color } from '../../Math/Color'
 import { Registry } from '../../Registry'
 import { Material } from '../../SceneTree/Material'
+import { ScreenSpaceMaterial } from '../../SceneTree/Materials/ScreenSpaceMaterial'
 import { MaterialColorParam } from '../../SceneTree/Parameters/MaterialColorParam'
 import { GLShader } from '../GLShader'
 import { shaderLibrary } from '../ShaderLibrary'
@@ -54,9 +55,7 @@ class ScreenSpaceShader extends GLShader {
   }
 }
 
-const material = new Material('ScreenSpaceShader_template')
-material.addParameter(new MaterialColorParam('BaseColor', new Color(1.0, 1, 0.5)))
-
+const material = new ScreenSpaceMaterial('ScreenSpaceShader_template')
 Registry.register('ScreenSpaceShader', ScreenSpaceShader)
 
 export { ScreenSpaceShader }

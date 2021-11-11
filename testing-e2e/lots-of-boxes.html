@@ -65,7 +65,7 @@
 
     <script src="../dist/index.umd.js"></script>
     <script type="module">
-      const { Vec3, Xfo, Color, Cuboid, Material, GeomItem, Scene, GLRenderer, TreeItem } = window.zeaEngine
+      const { Vec3, Xfo, Color, Cuboid, FlatSurfaceMaterial, GeomItem, Scene, GLRenderer, TreeItem } = window.zeaEngine
 
       const domElement = document.getElementById('viewport')
 
@@ -80,8 +80,8 @@
       renderer.solidAngleLimit = 0.0
       renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(70, 70, 30), new Vec3(30, 30, 0.2))
 
-      // const material = new Material('surfaces', 'SimpleSurfaceShader');
-      // material.getParameter('BaseColor').value = new Color(89 / 255, 182 / 255, 92 / 255);
+      // const material = new SimpleSurfaceMaterial('surfaces');
+      // material.baseColorParam.value = new Color(89 / 255, 182 / 255, 92 / 255);
 
       const urlParams = new URLSearchParams(window.location.search)
 
@@ -94,13 +94,13 @@
       // geomItem.globalXfoParam.value = new Xfo(new Vec3(0, 0, 1)))
 
       // scene.getRoot().addChild(geomItem)
-      const simpleMaterial = new Material('mat', 'SimpleSurfaceShader')
-      const flatMaterial = new Material('mat', 'FlatSurfaceShader')
+      const simpleMaterial = new SimpleSurfaceMaterial('mat')
+      const flatMaterial = new FlatSurfaceMaterial('mat')
 
       const addLayers = (layerId, treeItem) => {
         for (let j = 0; j < dim; j += 1) {
-          // const material = new Material('mat', 'SimpleSurfaceShader')
-          // material.getParameter('BaseColor').value = new Color(layerId / dim, j / dim, 1)
+          // const material = new SimpleSurfaceMaterial('mat')
+          // material.baseColorParam.value = new Color(layerId / dim, j / dim, 1)
           const material = simpleMaterial //layerId > dim / 2 ? simpleMaterial : flatMaterial
           const treeItemJ = new TreeItem('TreeItem' + j)
           treeItem.addChild(treeItemJ)

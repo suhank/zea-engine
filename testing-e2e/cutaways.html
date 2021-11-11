@@ -28,7 +28,7 @@
         Torus,
         GeomItem,
         TreeItem,
-        Material,
+        SimpleSurfaceMaterial,
         CuttingPlane,
       } = zeaEngine
 
@@ -48,8 +48,8 @@
       cuttingPlane.localXfoParam.value = cuttingPlaneXfo
       scene.getRoot().addChild(cuttingPlane)
 
-      const standardMaterial = new Material('surfaces', 'SimpleSurfaceShader')
-      standardMaterial.getParameter('BaseColor').value = new Color(89 / 255, 182 / 255, 92 / 255)
+      const standardMaterial = new SimpleSurfaceMaterial('surfaces')
+      standardMaterial.baseColorParam.value = new Color(89 / 255, 182 / 255, 92 / 255)
 
       let i = 0
 

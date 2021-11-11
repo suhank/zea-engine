@@ -61,7 +61,7 @@
         MathFunctions,
         Cuboid,
         GeomItem,
-        Material,
+        SimpleSurfaceMaterial,
       } = window.zeaEngine
 
       const sceneScale = 1.0
@@ -72,7 +72,7 @@
       renderer.setScene(scene)
 
       const treeItem = new TreeItem('TreeItem')
-      const material = new Material('mat', 'SimpleSurfaceShader')
+      const material = new SimpleSurfaceMaterial('mat')
       treeItem.addChild(new GeomItem('Geom', new Cuboid(10.0, 0.1, 10), material, new Xfo(new Vec3(0, -1.0, 5.0))))
       treeItem.addChild(new GeomItem('Geom', new Cuboid(4.5, 2, 0.1), material, new Xfo(new Vec3(2.75, 0.0, 10.0))))
       treeItem.addChild(new GeomItem('Geom', new Cuboid(4.5, 2, 0.1), material, new Xfo(new Vec3(-2.75, 0.0, 10.0))))

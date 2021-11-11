@@ -12,15 +12,15 @@
     <script src="../dist/index.umd.js"></script>
 
     <script type="module">
-      const { GLRenderer, Scene, Vec3, Color, Circle, Sphere, Material, GeomItem, GLBoundingBoxPass } = zeaEngine
+      const { GLRenderer, Scene, Vec3, Color, Circle, Sphere, LinesMaterial, GeomItem, GLBoundingBoxPass } = zeaEngine
 
       const scene = new Scene()
       const domElement = document.getElementById('viewport')
       const renderer = new GLRenderer(domElement, { antialias: true })
       renderer.setScene(scene)
 
-      const material = new Material('surfaces', 'LinesShader')
-      material.getParameter('BaseColor').value = new Color(89 / 255, 182 / 255, 92 / 255)
+      const material = new LinesMaterial('lines')
+      material.baseColorParam.value = new Color(89 / 255, 182 / 255, 92 / 255)
 
       scene.setupGrid(10, 10)
 
