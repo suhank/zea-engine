@@ -44,11 +44,19 @@ class FatLinesShader extends GLShader {
   static supportsInstancing() {
     return false
   }
+
+  /**
+   * Each shader provides a template material that each material instance is
+   * based on. The shader specifies the parameters needed by the shader, and
+   * the material provides values to the shader during rendering.
+   * @return - The template material value.
+   */
+  static getMaterialTemplate(): Material {
+    return material
+  }
 }
 
-
 const material = new FatLinesMaterial('FatLinesShader_template')
-shaderLibrary.registerMaterialTemplate('FatLinesShader', material)
 Registry.register('FatLinesShader', FatLinesShader)
 
 export { FatLinesShader }

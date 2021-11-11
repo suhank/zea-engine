@@ -48,8 +48,7 @@ class LatLongEnvProjectionShader extends EnvProjectionShader {
   }
 }
 
-// Registry.register('LatLongEnvProjectionShader', LatLongEnvProjectionShader)
-export { EnvProjectionShader, OctahedralEnvProjectionShader, LatLongEnvProjectionShader }
 const material = new Material('EnvProjectionShader_template')
 material.addParameter(new Vec3Parameter('projectionCenter', new Vec3(0.0, 0.0, 1.7)))
-shaderLibrary.registerMaterialTemplate('EnvProjectionShader', material)
+
+export { EnvProjectionShader, OctahedralEnvProjectionShader, LatLongEnvProjectionShader }

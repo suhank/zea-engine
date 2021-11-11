@@ -60,7 +60,8 @@ class Material extends BaseItem {
     if (this.__shaderName == shaderName) return
     this.__shaderName = shaderName
 
-    const materialTemplate = shaderLibrary.getMaterialTemplate(shaderName)
+    const shaderClass = <typeof GLShader>Registry.getClassDefinition(shaderName)
+    const materialTemplate = shaderClass.getMaterialTemplate()
     if (!materialTemplate) throw new Error('Error setting Shader. Material template not registered found:' + shaderName)
 
     const paramMap: { [key: string]: boolean } = {}

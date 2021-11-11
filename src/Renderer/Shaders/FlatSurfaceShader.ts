@@ -67,10 +67,19 @@ class FlatSurfaceShader extends GLShader {
     matData[3] = baseColor.a
     return matData
   }
+
+  /**
+   * Each shader provides a template material that each material instance is
+   * based on. The shader specifies the parameters needed by the shader, and
+   * the material provides values to the shader during rendering.
+   * @return - The template material value.
+   */
+  static getMaterialTemplate(): Material {
+    return material
+  }
 }
 
 const material = new FlatSurfaceMaterial('FlatSurfaceShader_template')
-shaderLibrary.registerMaterialTemplate('FlatSurfaceShader', material)
 Registry.register('FlatSurfaceShader', FlatSurfaceShader)
 
 export { FlatSurfaceShader }

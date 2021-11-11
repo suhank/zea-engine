@@ -44,10 +44,19 @@ class LinesShader extends GLShader {
     matData[8] = material.getParameter('OccludedStippleValue')!.value
     return matData
   }
+
+  /**
+   * Each shader provides a template material that each material instance is
+   * based on. The shader specifies the parameters needed by the shader, and
+   * the material provides values to the shader during rendering.
+   * @return - The template material value.
+   */
+  static getMaterialTemplate(): Material {
+    return material
+  }
 }
 
 const material = new LinesMaterial('LinesShader_template')
-shaderLibrary.registerMaterialTemplate('LinesShader', material)
 Registry.register('LinesShader', LinesShader)
 
 export { LinesShader }
