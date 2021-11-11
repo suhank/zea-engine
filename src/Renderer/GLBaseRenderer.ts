@@ -573,7 +573,7 @@ class GLBaseRenderer extends ParameterOwner {
     // closer than 100ms appart.
     const throttledResize = throttle((entries) => {
       for (const entry of entries) {
-        if (!entry.contentRect) {
+        if (!Array.isArray(entries) || !entries.length || !entry.contentRect) {
           return
         }
 
