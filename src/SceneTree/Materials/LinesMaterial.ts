@@ -1,3 +1,4 @@
+import { Registry } from '../../Registry'
 import { MaterialColorParam } from '../Parameters/MaterialColorParam'
 import { MaterialFloatParam } from '../Parameters/MaterialFloatParam'
 import { NumberParameter } from '../Parameters/NumberParameter'
@@ -25,3 +26,5 @@ export class LinesMaterial extends Material {
     this.addParameter(this.occludedStippleValueParam)
   }
 }
+
+Registry.register('LinesMaterial', LinesMaterial)

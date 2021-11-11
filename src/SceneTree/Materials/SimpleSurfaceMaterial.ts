@@ -1,3 +1,4 @@
+import { Registry } from '../../Registry'
 import { MaterialColorParam } from '../Parameters/MaterialColorParam'
 import { MaterialFloatParam } from '../Parameters/MaterialFloatParam'
 import { Color } from '../../Math/Color'
@@ -15,3 +16,5 @@ export class SimpleSurfaceMaterial extends Material {
     this.addParameter(this.emissiveStrengthParam)
   }
 }
+
+Registry.register('SimpleSurfaceMaterial', SimpleSurfaceMaterial)

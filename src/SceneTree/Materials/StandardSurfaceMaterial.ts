@@ -1,6 +1,6 @@
+import { Registry } from '../../Registry'
 import { MaterialColorParam } from '../Parameters/MaterialColorParam'
 import { MaterialFloatParam } from '../Parameters/MaterialFloatParam'
-import { NumberParameter } from '../Parameters/NumberParameter'
 import { Color } from '../../Math/Color'
 import { Material } from '../Material'
 
@@ -28,3 +28,5 @@ export class StandardSurfaceMaterial extends Material {
     this.addParameter(this.opacityParam)
   }
 }
+
+Registry.register('StandardSurfaceMaterial', StandardSurfaceMaterial)

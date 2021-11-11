@@ -1,3 +1,4 @@
+import { Registry } from '../../Registry'
 import { MaterialColorParam } from '../Parameters/MaterialColorParam'
 import { NumberParameter } from '../Parameters/NumberParameter'
 import { Color } from '../../Math/Color'
@@ -20,3 +21,5 @@ export class FatPointsMaterial extends Material {
     this.addParameter(this.overlayParam)
   }
 }
+
+Registry.register('FatPointsMaterial', FatPointsMaterial)

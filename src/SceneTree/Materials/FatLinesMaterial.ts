@@ -1,3 +1,4 @@
+import { Registry } from '../../Registry'
 import { MaterialColorParam } from '../Parameters/MaterialColorParam'
 import { NumberParameter } from '../Parameters/NumberParameter'
 import { Color } from '../../Math/Color'
@@ -17,3 +18,5 @@ export class FatLinesMaterial extends Material {
     this.addParameter(this.lineThicknessParam)
   }
 }
+
+Registry.register('FatLinesMaterial', FatLinesMaterial)
