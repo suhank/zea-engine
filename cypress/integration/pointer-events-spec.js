@@ -118,8 +118,6 @@ describe('pointer-events-debugGeomShader', () => {
         cy.spy(win, 'postMessage').as('postMessage')
       },
     })
-
-    cy.get('@postMessage').its('lastCall.args.0').should('equal', 'done-loading')
     cy.get('canvas').percySnapshot('pointer-events')
   })
 })
