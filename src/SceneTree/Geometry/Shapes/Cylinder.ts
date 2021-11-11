@@ -93,8 +93,8 @@ class Cylinder extends ProceduralMesh {
    * @private
    */
   rebuild(): void {
-    const nbSides = this.sidesParam.value || 32
-    const nbLoops = this.loopsParam.value || 2
+    const nbSides = this.sidesParam.value
+    const nbLoops = this.loopsParam.value
     const caps = this.capsParam.value
 
     let numVertices = nbSides * nbLoops
@@ -213,10 +213,10 @@ class Cylinder extends ProceduralMesh {
    * @private
    */
   resize(): void {
-    const nbSides = this.sidesParam.value || 32
-    const nbLoops = this.loopsParam.value || 2
-    const radius = this.radiusParam.value || 0.5
-    const height = this.heightParam.value || 1.0
+    const nbSides = this.sidesParam.value
+    const nbLoops = this.loopsParam.value
+    const radius = this.radiusParam.value
+    const height = this.heightParam.value
     const caps = this.capsParam.value
     const baseZAtZero = this.baseZAtZeroParam.value
 

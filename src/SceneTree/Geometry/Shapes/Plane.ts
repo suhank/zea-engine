@@ -71,8 +71,8 @@ class Plane extends ProceduralMesh {
    * @private
    */
   rebuild(): void {
-    const detailX = this.detailXParam.value || 1
-    const detailY = this.detailYParam.value || 1
+    const detailX = this.detailXParam.value
+    const detailY = this.detailYParam.value
     this.setNumVertices((detailX + 1) * (detailY + 1))
     this.setFaceCounts([0, detailX * detailY])
 
@@ -121,10 +121,10 @@ class Plane extends ProceduralMesh {
    * @private
    */
   resize(): void {
-    const sizeX = this.sizeXParam.value || 1.0
-    const sizeY = this.sizeYParam.value || 1.0
-    const detailX = this.detailXParam.value || 1
-    const detailY = this.detailYParam.value || 1
+    const sizeX = this.sizeXParam.value
+    const sizeY = this.sizeYParam.value
+    const detailX = this.detailXParam.value
+    const detailY = this.detailYParam.value
     const positions = <Vec3Attribute>this.getVertexAttribute('positions')
     if (!positions) return
 

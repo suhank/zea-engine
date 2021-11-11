@@ -53,7 +53,7 @@ class Cross extends ProceduralLines {
    * @private
    */
   resize(): void {
-    const size = this.sizeParam.value || 1.0
+    const size = this.sizeParam.value
     const positions = <Vec3Attribute>this.getVertexAttribute('positions')
     if (!positions) return
     positions.getValueRef(0).set(-0.5 * size, 0, 0)

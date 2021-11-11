@@ -76,9 +76,9 @@ class Cone extends ProceduralMesh {
    * @private
    */
   rebuild(): void {
-    const nbSides = this.detailParam.value || 32
-    const radius = this.radiusParam.value || 0.5
-    const height = this.heightParam.value || 1.0
+    const nbSides = this.detailParam.value
+    const radius = this.radiusParam.value
+    const height = this.heightParam.value
     const cap = this.capParam.value
     let numVertices = nbSides + 1
     if (cap) {
@@ -148,9 +148,9 @@ class Cone extends ProceduralMesh {
    * @private
    */
   resize(): void {
-    const nbSides = this.detailParam.value || 32
-    const radius = this.radiusParam.value || 0.5
-    const height = this.heightParam.value || 1.0
+    const nbSides = this.detailParam.value
+    const radius = this.radiusParam.value
+    const height = this.heightParam.value
 
     const tipPoint = nbSides
     const basePoint = nbSides + 1

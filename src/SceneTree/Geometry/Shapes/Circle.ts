@@ -59,9 +59,9 @@ class Circle extends ProceduralLines {
    * @private
    */
   rebuild(): void {
-    const segs = this.sidesParam.value || 32
+    const segs = this.sidesParam.value
     this.setNumVertices(segs)
-    const angle = this.angleParam.value || Math.PI * 2
+    const angle = this.angleParam.value
     const arc = angle < Math.PI * 2
     if (arc) this.setNumSegments(segs - 1)
     else this.setNumSegments(segs)
@@ -74,9 +74,9 @@ class Circle extends ProceduralLines {
    * @private
    */
   resize(): void {
-    const radius = this.radiusParam.value || 1.0
-    const segs = this.sidesParam.value || 32
-    const angle = this.angleParam.value || Math.PI * 2
+    const radius = this.radiusParam.value
+    const segs = this.sidesParam.value
+    const angle = this.angleParam.value
     const step = angle / segs
     const positions = <Vec3Attribute>this.getVertexAttribute('positions')
     if (positions) {
