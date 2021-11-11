@@ -10,8 +10,8 @@ export class StandardSurfaceMaterial extends Material {
   ambientOcclusion: MaterialFloatParam = new MaterialFloatParam('AmbientOcclusion', 1, [0, 1])
   metallicParam: MaterialFloatParam = new MaterialFloatParam('Metallic', 0.05, [0, 1])
 
-  roughnessParam: NumberParameter = new NumberParameter('Roughness', 0.5, [0, 1])
-  reflectanceParam: NumberParameter = new NumberParameter('Reflectance', 0.5, [0, 1])
+  roughnessParam: MaterialFloatParam = new MaterialFloatParam('Roughness', 0.5, [0, 1])
+  reflectanceParam: MaterialFloatParam = new MaterialFloatParam('Reflectance', 0.5, [0, 1])
   emissiveStrengthParam: MaterialFloatParam = new MaterialFloatParam('EmissiveStrength', 0, [0, 1])
   opacityParam: MaterialFloatParam = new MaterialFloatParam('Opacity', 1, [0, 1])
 

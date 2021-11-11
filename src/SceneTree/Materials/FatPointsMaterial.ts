@@ -1,5 +1,4 @@
 import { MaterialColorParam } from '../Parameters/MaterialColorParam'
-import { MaterialFloatParam } from '../Parameters/MaterialFloatParam'
 import { NumberParameter } from '../Parameters/NumberParameter'
 import { Color } from '../../Math/Color'
 import { Material } from '../Material'
@@ -9,7 +8,7 @@ export class FatPointsMaterial extends Material {
   pointSizeParam: NumberParameter = new NumberParameter('PointSize', 1)
   roundedParam: NumberParameter = new NumberParameter('Rounded', 1)
   borderWidthParam: NumberParameter = new NumberParameter('BorderWidth', 0.2)
-  overlayParam: MaterialFloatParam = new MaterialFloatParam('Overlay', 0.0)
+  overlayParam: NumberParameter = new NumberParameter('Overlay', 0.0)
 
   constructor(name?: string) {
     super(name)
