@@ -34,6 +34,20 @@ const attr = new Vec3Attribute()
 points.addVertexAttribute('foo', attr)
 ```
 
+* VertexAttributes.length was removed and replaced with getCount
+
+Old code
+```javascript
+const attr = geom.addVertexAttribute('foo', Vec3)
+attr.length
+```
+
+New code
+```javascript
+const attr = new Vec3Attribute()
+attr.getCount()
+```
+
 * Assets are now loaded using the 'load' method instead of using the 'FilePath' parameters.
 
 Old code
@@ -90,6 +104,20 @@ const image = new FileImage('albedo')
 image.load('data/steelplate1-unity/steelplate1_albedo.webp').then(() => {
   ...
 })
+```
+
+* getSelectable was renamed to isSelectable 
+
+Old code
+```javascript
+const geomItem = new GeomItem('foo')
+geomItem.getSelectable()
+```
+
+New code
+```javascript
+const geomItem = new GeomItem('foo')
+geomItem.isSelectable()
 ```
 
 ### Features
