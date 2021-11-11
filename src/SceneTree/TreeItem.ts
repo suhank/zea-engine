@@ -634,7 +634,6 @@ class TreeItem extends BaseItem {
    * @param childItem - The child TreeItem to remove.
    */
   removeChildByHandle(childItem: TreeItem): void {
-    console.warn('Deprecated. Use #removeChild')
     const index = this.__childItems.indexOf(childItem)
     if (index == -1) throw new Error('Error in removeChildByHandle. Child not found:' + childItem.getName())
     this.removeChild(index)
