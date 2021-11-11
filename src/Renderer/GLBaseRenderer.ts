@@ -564,6 +564,8 @@ class GLBaseRenderer extends ParameterOwner {
     }
 
     this.__glcanvas.style['touch-action'] = 'none'
+    this.__glcanvas.parentElement.style.position = 'relative'
+    this.__glcanvas.style.position = 'absolute'
 
     // Rapid resizing of the canvas would cause issues with WebGL.
     // FrameBuffer objects would end up all black. So here we throttle
