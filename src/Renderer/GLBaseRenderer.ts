@@ -511,16 +511,15 @@ class GLBaseRenderer extends ParameterOwner {
     const width = Math.max(4, newWidth)
     const height = Math.max(4, newHeight)
 
-    if ((width != this.__glcanvas.width && width) || height != this.__glcanvas.height) {
-      this.__glcanvas.width = width
-      this.__glcanvas.height = height
+    this.__glcanvas.width = width
+    this.__glcanvas.height = height
 
-      for (const vp of this.__viewports) {
-        vp.resize(width, height)
-      }
-      const event = new ResizedEvent(width, height)
-      this.emit('resized', event)
-    }
+    this.__viewports.forEach((viewport) => {
+      viewport.resize(width, height)
+    })
+
+    const event = new ResizedEvent(width, height)
+    this.emit('resized', event)
     this.requestRedraw()
   }
 
@@ -563,8 +562,10 @@ class GLBaseRenderer extends ParameterOwner {
     } else {
       this.__glcanvas = $canvas
     }
+
     this.__glcanvas.style['touch-action'] = 'none'
-    this.__glcanvas.style.margin = '0px'
+    this.__glcanvas.parentElement.style.position = 'relative'
+    this.__glcanvas.style.position = 'absolute'
 
     // Rapid resizing of the canvas would cause issues with WebGL.
     // FrameBuffer objects would end up all black. So here we throttle
@@ -572,14 +573,16 @@ class GLBaseRenderer extends ParameterOwner {
     // closer than 100ms appart.
     const throttledResize = throttle((entries) => {
       for (const entry of entries) {
-        if (!entry.contentRect) {
+        if (!Array.isArray(entries) || !entries.length || !entry.contentRect) {
           return
         }
+
         const displayWidth = Math.round(entry.contentRect.width)
         const displayHeight = Math.round(entry.contentRect.height)
         this.handleResize(displayWidth, displayHeight)
       }
-    }, 100)
+    }, 500)
+
     const resizeObserver = new ResizeObserver(throttledResize)
 
     this.handleResize(this.__glcanvas.parentElement.clientWidth, this.__glcanvas.parentElement.clientHeight)
