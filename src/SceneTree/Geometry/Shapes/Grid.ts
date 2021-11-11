@@ -77,8 +77,8 @@ class Grid extends ProceduralLines {
    * @private
    */
   rebuild(): void {
-    const xDivisions = this.xDivisionsParam.value || 10
-    const yDivisions = this.yDivisionsParam.value || 10
+    const xDivisions = this.xDivisionsParam.value
+    const yDivisions = this.yDivisionsParam.value
 
     const skipCenterLines = this.skipCenterLinesParam.value && xDivisions % 2 == 0 && yDivisions % 2 == 0
     this.setNumVertices((xDivisions + yDivisions + 2 - (skipCenterLines ? 1 : 0)) * 2)
@@ -107,10 +107,10 @@ class Grid extends ProceduralLines {
    */
   resize(): void {
     const positions = <Vec3Attribute>this.getVertexAttribute('positions')
-    const xDivisions = this.xDivisionsParam.value || 10
-    const yDivisions = this.yDivisionsParam.value || 10
-    const xSize = this.xParam.value || 1.0
-    const ySize = this.yParam.value || 1.0
+    const xDivisions = this.xDivisionsParam.value
+    const yDivisions = this.yDivisionsParam.value
+    const xSize = this.xParam.value
+    const ySize = this.yParam.value
 
     const skipCenterLines = this.skipCenterLinesParam.value && xDivisions % 2 == 0 && yDivisions % 2 == 0
     let idx = 0

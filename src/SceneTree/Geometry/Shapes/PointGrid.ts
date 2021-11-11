@@ -69,8 +69,8 @@ class PointGrid extends ProceduralPoints {
    * @private
    */
   rebuild(): void {
-    const xDivisions = this.divisionsXParam.value || 1
-    const yDivisions = this.divisionsYParam.value || 1
+    const xDivisions = this.divisionsXParam.value
+    const yDivisions = this.divisionsYParam.value
     this.setNumVertices(xDivisions * yDivisions)
 
     const texCoords = <Vec2Attribute>this.getVertexAttribute('texCoords')
@@ -91,10 +91,10 @@ class PointGrid extends ProceduralPoints {
    * @private
    */
   resize(): void {
-    const xDivisions = this.divisionsXParam.value || 1
-    const yDivisions = this.divisionsYParam.value || 1
-    const x = this.sizeXParam.value || 1.0
-    const y = this.sizeYParam.value || 1.0
+    const xDivisions = this.divisionsXParam.value
+    const yDivisions = this.divisionsYParam.value
+    const x = this.sizeXParam.value
+    const y = this.sizeYParam.value
 
     const positions = <Vec3Attribute>this.getVertexAttribute('positions')
     if (!positions) return

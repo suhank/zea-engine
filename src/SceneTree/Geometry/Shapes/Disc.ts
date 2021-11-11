@@ -57,7 +57,7 @@ class Disc extends ProceduralMesh {
    * @private
    */
   rebuild(): void {
-    const nbSides = this.sidesParam.value || 32
+    const nbSides = this.sidesParam.value
 
     this.setNumVertices(nbSides + 1)
     this.setFaceCounts([nbSides])
@@ -106,8 +106,8 @@ class Disc extends ProceduralMesh {
    * @private
    */
   resize(): void {
-    const nbSides = this.sidesParam.value || 32
-    const radius = this.radiusParam.value || 0.5
+    const nbSides = this.sidesParam.value
+    const radius = this.radiusParam.value
     const positions = <Vec3Attribute>this.getVertexAttribute('positions')
     if (positions) {
       for (let i = 0; i < nbSides; i++) {

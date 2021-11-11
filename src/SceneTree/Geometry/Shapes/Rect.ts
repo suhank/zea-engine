@@ -66,8 +66,8 @@ class Rect extends ProceduralLines {
    * @private
    */
   resize(): void {
-    const x = this.sizeXParam.value || 1.0
-    const y = this.sizeYParam.value || 1.0
+    const x = this.sizeXParam.value
+    const y = this.sizeYParam.value
 
     const positions = <Vec3Attribute>this.getVertexAttribute('positions')
     if (!positions) return

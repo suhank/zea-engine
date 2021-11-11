@@ -67,9 +67,9 @@ class Torus extends ProceduralMesh {
    * @private
    */
   rebuild(): void {
-    const arcAngle = this.arcAngleParam.value || Math.PI * 2.0
+    const arcAngle = this.arcAngleParam.value
     const open = arcAngle < 2.0 * Math.PI
-    const detail = this.detailParam.value || 32
+    const detail = this.detailParam.value
     const nbSlices = detail
     const nbLoops = detail * 2 + (open ? 1 : 0)
     const numVertices = nbSlices * nbLoops
@@ -109,10 +109,10 @@ class Torus extends ProceduralMesh {
    * @private
    */
   resize(): void {
-    const innerRadius = this.innerRadiusParam.value || 0.5
-    const outerRadius = this.outerRadiusParam.value || 3
-    const arcAngle = this.arcAngleParam.value || Math.PI * 2
-    const detail = this.detailParam.value || 32
+    const innerRadius = this.innerRadiusParam.value
+    const outerRadius = this.outerRadiusParam.value
+    const arcAngle = this.arcAngleParam.value
+    const detail = this.detailParam.value
     const open = arcAngle < 2.0 * Math.PI
     const nbSlices = detail
     const nbLoops = detail * 2 + (open ? 1 : 0)
