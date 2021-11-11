@@ -74,6 +74,16 @@ class StandardSurfaceShader extends GLShader {
 
     return matData
   }
+
+  /**
+   * Each shader provides a template material that each material instance is
+   * based on. The shader specifies the parameters needed by the shader, and
+   * the material provides values to the shader during rendering.
+   * @return - The template material value.
+   */
+  static getMaterialTemplate(): Material {
+    return material
+  }
 }
 
 const material = new Material('StandardSurfaceShader_template')
@@ -85,9 +95,6 @@ material.addParameter(new MaterialFloatParam('Roughness', 0.5, [0, 1])) // added
 material.addParameter(new MaterialFloatParam('Reflectance', 0.5, [0, 1]))
 material.addParameter(new MaterialFloatParam('EmissiveStrength', 0, [0, 1]))
 material.addParameter(new MaterialFloatParam('Opacity', 1, [0, 1]))
-
-shaderLibrary.registerMaterialTemplate('StandardSurfaceShader', material)
-shaderLibrary.registerMaterialTemplate('TransparentSurfaceShader', material)
 
 Registry.register('StandardSurfaceShader', StandardSurfaceShader)
 Registry.register('TransparentSurfaceShader', StandardSurfaceShader)
