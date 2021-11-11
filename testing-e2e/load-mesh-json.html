@@ -13,7 +13,8 @@
     <script src="../dist/index.umd.js"></script>
 
     <script type="module">
-      const { GLRenderer, Scene, Vec3, Mesh, Color, Material, GeomItem, Lines } = window.zeaEngine
+      const { GLRenderer, Scene, Vec3, Mesh, Color, StandardSurfaceMaterial, LinesMaterial, GeomItem, Lines } =
+        window.zeaEngine
 
       const canvas = document.getElementById('viewport')
 
@@ -25,7 +26,7 @@
 
       const mesh = new Mesh()
 
-      const geomItem = new GeomItem('geom', mesh, new Material('mat', 'StandardSurfaceShader'))
+      const geomItem = new GeomItem('geom', mesh, new StandardSurfaceMaterial('mat'))
       scene.getRoot().addChild(geomItem)
       mesh.fromJSON({
         faceCounts: [2],
@@ -46,10 +47,10 @@
       edges.__vertexAttributes.set('positions', mesh.getVertexAttribute('positions'))
       edges.setNumVertices(mesh.getNumVertices())
       edges.__indices = new Uint32Array(mesh.edgeVerts)
-      const edgesMaterial = new Material('edgesMaterial', 'LinesShader')
-      edgesMaterial.getParameter('BaseColor').value = new Color(0.2, 0.2, 0.2)
-      edgesMaterial.getParameter('Opacity').value = 0.3
-      edgesMaterial.getParameter('Overlay').value = 0.000001
+      const edgesMaterial = new LinesMaterial('edgesMaterial')
+      edgesMaterial.baseColorParam.value = new Color(0.2, 0.2, 0.2)
+      edgesMaterial.opacityParam.value = 0.3
+      edgesMaterial.overlayParam.value = 0.000001
       const edgesItem = new GeomItem('edges', edges, edgesMaterial)
       geomItem.addChild(edgesItem)
 
@@ -58,10 +59,10 @@
       hardEdges.__vertexAttributes.set('positions', mesh.getVertexAttribute('positions'))
       hardEdges.setNumVertices(mesh.getNumVertices())
       hardEdges.__indices = mesh.computeHardEdgesIndices()
-      const hardEdgesMaterial = new Material('hardEdgesMaterial', 'LinesShader')
-      hardEdgesMaterial.getParameter('BaseColor').value = new Color(0.1, 0.1, 0.1)
-      hardEdgesMaterial.getParameter('Opacity').value = 1
-      hardEdgesMaterial.getParameter('Overlay').value = 0.00001
+      const hardEdgesMaterial = new LinesMaterial('hardEdgesMaterial')
+      hardEdgesMaterial.baseColorParam.value = new Color(0.1, 0.1, 0.1)
+      hardEdgesMaterial.opacityParam.value = 1
+      hardEdgesMaterial.overlayParam.value = 0.00001
       const hardEdgesItem = new GeomItem('hardEdges', hardEdges, hardEdgesMaterial)
       geomItem.addChild(hardEdgesItem)
 

@@ -1,55 +1,32 @@
-import { MaterialColorParam, MaterialFloatParam, NumberParameter } from '..'
+import { Registry } from '../../Registry'
+import { MaterialColorParam } from '../Parameters/MaterialColorParam'
+import { MaterialFloatParam } from '../Parameters/MaterialFloatParam'
 import { Color } from '../../Math/Color'
 import { Material } from '../Material'
 
 export class StandardSurfaceMaterial extends Material {
-  constructor() {
-    super('StandardSurfaceMaterial')
+  baseColorParam: MaterialColorParam = new MaterialColorParam('BaseColor', new Color(1.0, 1, 0.5))
+  normalParam: MaterialColorParam = new MaterialColorParam('Normal', new Color(1.0, 1, 0.5))
+  ambientOcclusion: MaterialFloatParam = new MaterialFloatParam('AmbientOcclusion', 1, [0, 1])
+  metallicParam: MaterialFloatParam = new MaterialFloatParam('Metallic', 0.05, [0, 1])
+
+  roughnessParam: MaterialFloatParam = new MaterialFloatParam('Roughness', 0.5, [0, 1])
+  reflectanceParam: MaterialFloatParam = new MaterialFloatParam('Reflectance', 0.5, [0, 1])
+  emissiveStrengthParam: MaterialFloatParam = new MaterialFloatParam('EmissiveStrength', 0, [0, 1])
+  opacityParam: MaterialFloatParam = new MaterialFloatParam('Opacity', 1, [0, 1])
+
+  constructor(name?: string) {
+    super(name)
     this.__shaderName = 'StandardSurfaceShader'
-    this.addParameter(new MaterialColorParam('BaseColor', new Color(1.0, 1, 0.5)))
-    this.addParameter(new MaterialColorParam('Normal', new Color(1.0, 1, 0.5)))
-
-    this.addParameter(new MaterialFloatParam('Opacity', 0.5, [0, 1]))
-    this.addParameter(new MaterialFloatParam('AmbientOcclusion', 1, [0, 1]))
-    this.addParameter(new MaterialFloatParam('Metallic', 0.5, [0, 1]))
-
-    this.addParameter(new NumberParameter('Roughness', 0.5, [0, 1])) // added
-    this.addParameter(new NumberParameter('Reflectance', 0.5, [0, 1]))
-    this.addParameter(new NumberParameter('EmissiveStrength', 0.5, [0, 1]))
-
-    this.__checkTransparency({})
-  }
-
-  // NOTE: check if an object has a particular getter: Object.getPrototypeOf(classInstance).hasOwnProperty('BaseColor');
-
-  get BaseColor(): MaterialColorParam {
-    return <MaterialColorParam>this.getParameter('BaseColor')
-  }
-  get Normal(): MaterialColorParam {
-    return <MaterialColorParam>this.getParameter('Normal')
-  }
-
-  get Opacity(): MaterialFloatParam {
-    return <MaterialFloatParam>this.getParameter('Opacity')
-  }
-  get AmbientOcclusion(): MaterialFloatParam {
-    return <MaterialFloatParam>this.getParameter('AmbientOcclusion')
-  }
-  get Metallic(): MaterialFloatParam {
-    return <MaterialFloatParam>this.getParameter('Metallic')
-  }
-
-  get Roughness(): NumberParameter {
-    return <NumberParameter>this.getParameter('Roughness')
-  }
-  get Reflectance(): NumberParameter {
-    return <NumberParameter>this.getParameter('Reflectance')
-  }
-  get EmissiveStrength(): NumberParameter {
-    return <NumberParameter>this.getParameter('EmissiveStrength')
-  }
-
-  setShaderName(shaderName: string) {
-    throw ' Cannot change shader name'
+    this.addParameter(this.baseColorParam)
+    this.addParameter(this.normalParam)
+    this.addParameter(this.ambientOcclusion)
+    this.addParameter(this.metallicParam)
+    this.addParameter(this.roughnessParam)
+    this.addParameter(this.reflectanceParam)
+    this.addParameter(this.emissiveStrengthParam)
+    this.addParameter(this.opacityParam)
   }
 }
+
+Registry.register('StandardSurfaceMaterial', StandardSurfaceMaterial)

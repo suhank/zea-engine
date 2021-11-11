@@ -60,7 +60,7 @@
         Xfo,
         Sphere,
         GeomItem,
-        Material,
+        StandardSurfaceMaterial,
         EnvMap,
         Label,
         BillboardItem,
@@ -96,14 +96,14 @@
       const addRow = (name, baseColor, metallic, reflectance, lerpOpacity = false) => {
         for (let i = 0; i < 10; i++) {
           for (let j = 0; j < 10; j++) {
-            const material = new Material('surfaces', 'StandardSurfaceShader')
-            material.getParameter('BaseColor').value = baseColor
-            material.getParameter('Metallic').value = metallic
-            material.getParameter('Reflectance').value = reflectance
+          const material = new StandardSurfaceMaterial('surfaces')
+            material.baseColorParam.value = baseColor
+            material.metallicParam.value = metallic
+            material.reflectanceParam.value = reflectance
 
-            material.getParameter('Roughness').value = 0.2
-            material.getParameter('Opacity').value = i / 10
-            material.getParameter('EmissiveStrength').value = j / 9
+            material.roughnessParam.value = 0.2
+            material.opacityParam.value = i / 10
+            material.emissiveStrengthParam.value = j / 9
 
             addMeshShape(name + i, sphere, new Vec3((i / 9 - 0.5) * 30, (j / 9 - 0.5) * 30, 1.4 + zoffset), material)
           }

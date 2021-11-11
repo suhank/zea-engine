@@ -270,14 +270,6 @@ class ShaderLibrary {
     // console.log(result.glsl)
     return result
   }
-
-  registerMaterialTemplate(shaderName: string, materialTemplate: any) {
-    this.materialTemplates[shaderName] = materialTemplate
-  }
-
-  getMaterialTemplate(shaderName: string) {
-    return this.materialTemplates[shaderName]
-  }
 }
 
 const shaderLibrary = new ShaderLibrary()

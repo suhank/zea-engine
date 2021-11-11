@@ -1,8 +1,8 @@
 /* eslint-disable require-jsdoc */
-import { Color } from '../../Math/Color'
 import { Registry } from '../../Registry'
 import { GLShader } from '../GLShader'
 import { Material } from '../../SceneTree/Material'
+import { LinesMaterial } from '../../SceneTree/Materials/LinesMaterial'
 import { shaderLibrary } from '../ShaderLibrary'
 
 import './GLSL/index'
@@ -10,9 +10,6 @@ import './GLSL/index'
 import vert from './Lines.vert'
 // @ts-ignore
 import frag from './Lines.frag'
-import { MaterialColorParam } from '../../SceneTree/Parameters/MaterialColorParam'
-import { MaterialFloatParam } from '../../SceneTree/Parameters/MaterialFloatParam'
-import { NumberParameter } from '../../SceneTree/Parameters/NumberParameter'
 
 class LinesShader extends GLShader {
   /**
@@ -47,20 +44,19 @@ class LinesShader extends GLShader {
     matData[8] = material.getParameter('OccludedStippleValue')!.value
     return matData
   }
+
+  /**
+   * Each shader provides a template material that each material instance is
+   * based on. The shader specifies the parameters needed by the shader, and
+   * the material provides values to the shader during rendering.
+   * @return - The template material value.
+   */
+  static getMaterialTemplate(): Material {
+    return material
+  }
 }
 
-const material = new Material('LinesShader_template')
-material.addParameter(new MaterialColorParam('BaseColor', new Color(1.0, 1, 0.5)))
-
-material.addParameter(new MaterialFloatParam('Opacity', 0.7, [0, 1]))
-material.addParameter(new MaterialFloatParam('Overlay', 0.000001)) // Provide a slight overlay so lines draw over meshes.
-
-material.addParameter(new NumberParameter('StippleScale', 0.01))
-material.addParameter(new NumberParameter('StippleValue', 0, [0, 1]))
-
-material.addParameter(new NumberParameter('OccludedStippleValue', 1.0, [0, 1]))
-shaderLibrary.registerMaterialTemplate('LinesShader', material)
-
+const material = new LinesMaterial('LinesShader_template')
 Registry.register('LinesShader', LinesShader)
 
 export { LinesShader }

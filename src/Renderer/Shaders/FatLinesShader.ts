@@ -12,6 +12,7 @@ import { shaderLibrary } from '../ShaderLibrary'
 import { Material } from '../../SceneTree/Material'
 import { MaterialColorParam } from '../../SceneTree/Parameters/MaterialColorParam'
 import { NumberParameter } from '../../SceneTree/Parameters/NumberParameter'
+import { FatLinesMaterial } from '../../SceneTree/Materials/FatLinesMaterial'
 
 /** Shader for drawing Fat lines
  * @extends GLShader
@@ -43,15 +44,19 @@ class FatLinesShader extends GLShader {
   static supportsInstancing() {
     return false
   }
+
+  /**
+   * Each shader provides a template material that each material instance is
+   * based on. The shader specifies the parameters needed by the shader, and
+   * the material provides values to the shader during rendering.
+   * @return - The template material value.
+   */
+  static getMaterialTemplate(): Material {
+    return material
+  }
 }
 
+const material = new FatLinesMaterial('FatLinesShader_template')
 Registry.register('FatLinesShader', FatLinesShader)
-
-const material = new Material('FatLinesShader_template')
-material.addParameter(new MaterialColorParam('BaseColor', new Color(1.0, 1, 0.5)))
-material.addParameter(new NumberParameter('Opacity', 1.0))
-material.addParameter(new NumberParameter('LineThickness', 0.01))
-material.addParameter(new NumberParameter('Overlay', 0.0))
-shaderLibrary.registerMaterialTemplate('FatLinesShader', material)
 
 export { FatLinesShader }

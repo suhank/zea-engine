@@ -110,3 +110,14 @@ describe('pointer-events', () => {
       .percySnapshot(`TouchZoomOutCameraManipulator`)
   })
 })
+
+describe('pointer-events-debugGeomShader', () => {
+  it('Capture snapshots', () => {
+    cy.visit('testing-e2e/pointer-events.html?debugGeomShader', {
+      onBeforeLoad(win) {
+        cy.spy(win, 'postMessage').as('postMessage')
+      },
+    })
+    cy.get('canvas').percySnapshot('pointer-events')
+  })
+})

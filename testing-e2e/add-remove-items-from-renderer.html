@@ -13,7 +13,19 @@
     <script src="../dist/index.umd.js"></script>
 
     <script type="module">
-      const { GLRenderer, Scene, Vec3, Color, Xfo, Sphere, Material, GeomItem, FileImage, TreeItem } = zeaEngine
+      const {
+        GLRenderer,
+        Scene,
+        Vec3,
+        Color,
+        Xfo,
+        Sphere,
+        FlatSurfaceMaterial,
+        SimpleSurfaceMaterial,
+        GeomItem,
+        FileImage,
+        TreeItem,
+      } = zeaEngine
 
       const canvas = document.getElementById('viewport')
 
@@ -25,20 +37,20 @@
 
       const promises = []
 
-      const texturedMaterial0 = new Material('Material', 'FlatSurfaceShader')
-      texturedMaterial0.getParameter('BaseColor').value = new Color(0.6, 0, 1)
+      const texturedMaterial0 = new FlatSurfaceMaterial('Material')
+      texturedMaterial0.baseColorParam.value = new Color(0.6, 0, 1)
       const image0 = new FileImage('logo')
       promises.push(image0.load('data/zea-logo.png', 'RGBA'))
-      texturedMaterial0.getParameter('BaseColor').setImage(image0)
+      texturedMaterial0.baseColorParam.setImage(image0)
 
-      const texturedMaterial1 = new Material('Material', 'FlatSurfaceShader')
-      texturedMaterial1.getParameter('BaseColor').value = new Color(0.6, 0, 1)
+      const texturedMaterial1 = new FlatSurfaceMaterial('Material')
+      texturedMaterial1.baseColorParam.value = new Color(0.6, 0, 1)
       const image1 = new FileImage('avatar1')
       promises.push(image1.load('data/avatar1.jpg'))
-      texturedMaterial1.getParameter('BaseColor').setImage(image1)
+      texturedMaterial1.baseColorParam.setImage(image1)
 
-      const material = new Material('surfaces', 'SimpleSurfaceShader')
-      material.getParameter('BaseColor').value = new Color(1, 0, 1, 1)
+      const material = new SimpleSurfaceMaterial('surfaces')
+      material.baseColorParam.value = new Color(1, 0, 1, 1)
 
       const sphere0 = new Sphere(1, 46)
       const sphere1 = new Sphere(1, 46)
@@ -101,12 +113,12 @@
           treeItem.addChild(geomItem2)
           treeItem.addChild(geomItem3)
 
-          const material = new Material('surfaces', 'SimpleSurfaceShader')
-          material.getParameter('BaseColor').value = new Color(1, 1, 0, 0.2)
+          const material = new SimpleSurfaceMaterial('surfaces')
+          material.baseColorParam.value = new Color(1, 1, 0, 0.2)
           geomItem2.materialParam.value = material
 
-          const material2 = new Material('surfaces', 'SimpleSurfaceShader')
-          material2.getParameter('BaseColor').value = new Color(1, 1, 0, 1)
+          const material2 = new SimpleSurfaceMaterial('surfaces')
+          material2.baseColorParam.value = new Color(1, 1, 0, 1)
           geomItem3.materialParam.value = material2
 
           window.postMessage(`done-${data}`)

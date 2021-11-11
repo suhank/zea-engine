@@ -12,6 +12,7 @@ import { Material } from '../../SceneTree/Material'
 import { shaderLibrary } from '../ShaderLibrary'
 import { MaterialColorParam } from '../../SceneTree/Parameters/MaterialColorParam'
 import { MaterialFloatParam } from '../../SceneTree/Parameters/MaterialFloatParam'
+import { StandardSurfaceMaterial } from '../../SceneTree/Materials/StandardSurfaceMaterial'
 
 /** A standard shader handling Opaque and transparent items and PBR rendering.
  * @extends GLShader
@@ -74,20 +75,19 @@ class StandardSurfaceShader extends GLShader {
 
     return matData
   }
+
+  /**
+   * Each shader provides a template material that each material instance is
+   * based on. The shader specifies the parameters needed by the shader, and
+   * the material provides values to the shader during rendering.
+   * @return - The template material value.
+   */
+  static getMaterialTemplate(): Material {
+    return material
+  }
 }
 
-const material = new Material('StandardSurfaceShader_template')
-material.addParameter(new MaterialColorParam('BaseColor', new Color(1.0, 1, 0.5)))
-material.addParameter(new MaterialColorParam('Normal', new Color(1.0, 1, 0.5)))
-material.addParameter(new MaterialFloatParam('AmbientOcclusion', 1, [0, 1]))
-material.addParameter(new MaterialFloatParam('Metallic', 0.05, [0, 1]))
-material.addParameter(new MaterialFloatParam('Roughness', 0.5, [0, 1])) // added
-material.addParameter(new MaterialFloatParam('Reflectance', 0.5, [0, 1]))
-material.addParameter(new MaterialFloatParam('EmissiveStrength', 0, [0, 1]))
-material.addParameter(new MaterialFloatParam('Opacity', 1, [0, 1]))
-
-shaderLibrary.registerMaterialTemplate('StandardSurfaceShader', material)
-shaderLibrary.registerMaterialTemplate('TransparentSurfaceShader', material)
+const material = new StandardSurfaceMaterial('StandardSurfaceShader_template')
 
 Registry.register('StandardSurfaceShader', StandardSurfaceShader)
 Registry.register('TransparentSurfaceShader', StandardSurfaceShader)

@@ -2,7 +2,7 @@
 import { Color } from '../../Math/Color'
 import { Registry } from '../../Registry'
 import { GLShader } from '../GLShader'
-import { Material, MaterialColorParam } from '../../SceneTree'
+import { FlatSurfaceMaterial, Material, MaterialColorParam } from '../../SceneTree'
 import { shaderLibrary } from '../ShaderLibrary'
 
 import './GLSL/index'
@@ -67,12 +67,19 @@ class FlatSurfaceShader extends GLShader {
     matData[3] = baseColor.a
     return matData
   }
+
+  /**
+   * Each shader provides a template material that each material instance is
+   * based on. The shader specifies the parameters needed by the shader, and
+   * the material provides values to the shader during rendering.
+   * @return - The template material value.
+   */
+  static getMaterialTemplate(): Material {
+    return material
+  }
 }
 
-export { FlatSurfaceShader }
-
-const material = new Material('StandardSurfaceShader_template')
-material.addParameter(new MaterialColorParam('BaseColor', new Color(1.0, 1, 0.5)))
-shaderLibrary.registerMaterialTemplate('FlatSurfaceShader', material)
-
+const material = new FlatSurfaceMaterial('FlatSurfaceShader_template')
 Registry.register('FlatSurfaceShader', FlatSurfaceShader)
+
+export { FlatSurfaceShader }

@@ -25,7 +25,9 @@
         Cone,
         Circle,
         PointGrid,
-        Material,
+        SimpleSurfaceMaterial,
+        StandardSurfaceMaterial,
+        PointsMaterial,
         GeomItem,
         CameraManipulator,
       } = zeaEngine
@@ -38,18 +40,18 @@
 
       scene.setupGrid(10.0, 10)
 
-      const material1 = new Material('surfaces', 'StandardSurfaceShader')
-      material1.getParameter('BaseColor').value = new Color(1, 1, 0)
+      const material1 = new StandardSurfaceMaterial('surfaces')
+      material1.baseColorParam.value = new Color(1, 1, 0)
 
-      const material2 = new Material('surfaces', 'StandardSurfaceShader')
-      material2.getParameter('BaseColor').value = new Color(0, 1, 0)
+      const material2 = new StandardSurfaceMaterial('surfaces')
+      material2.baseColorParam.value = new Color(0, 1, 0)
 
-      const material3 = new Material('surfaces', 'SimpleSurfaceShader')
-      material3.getParameter('BaseColor').value = new Color(1, 0, 1)
+      const material3 = new SimpleSurfaceMaterial('surfaces')
+      material3.baseColorParam.value = new Color(1, 0, 1)
 
-      const material4 = new Material('surfaces', 'PointsShader')
-      material4.getParameter('BaseColor').value = new Color(1, 0, 1)
-      material4.getParameter('PointSize').value = 2
+      const material4 = new PointsMaterial('surfaces')
+      material4.baseColorParam.value = new Color(1, 0, 1)
+      material4.pointSizeParam.value = 2
 
       const addShape = (name, shape, pos, material) => {
         const geomItem = new GeomItem(name + 'Item', shape, material)

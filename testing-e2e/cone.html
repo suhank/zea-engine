@@ -14,7 +14,7 @@
     <script src="../dist/index.umd.js"></script>
 
     <script type="module">
-      const { GLRenderer, Scene, Vec3, Color, Cone, Material, GeomItem } = zeaEngine
+      const { GLRenderer, Scene, Vec3, Color, Cone, SimpleSurfaceMaterial, GeomItem } = zeaEngine
 
       const domElement = document.getElementById('viewport')
 
@@ -24,8 +24,8 @@
       const renderer = new GLRenderer(domElement, { antialias: false })
       renderer.setScene(scene)
 
-      const standardMaterial = new Material('surfaces', 'SimpleSurfaceShader')
-      standardMaterial.getParameter('BaseColor').value = new Color(89 / 255, 182 / 255, 92 / 255)
+      const standardMaterial = new SimpleSurfaceMaterial('surfaces')
+      standardMaterial.baseColorParam.value = new Color(89 / 255, 182 / 255, 92 / 255)
 
       const cone = new Cone(1.5, 2.0, 6)
       const geomItem = new GeomItem('Cone', cone, standardMaterial)

@@ -31,11 +31,14 @@
         Xfo,
         Vec3,
         Color,
-        Material,
+        OverlayMaterial,
         BillboardItem,
         Label,
         SelectionSet,
+        StandardSurfaceMaterial,
         SimpleSurfaceShader,
+        Material,
+        SimpleSurfaceMaterial,
         Registry,
         shaderLibrary,
       } = window.zeaEngine
@@ -51,18 +54,19 @@
         }
       }
       Registry.register('OverlayShader', OverlayShader)
-      shaderLibrary.registerMaterialTemplate('OverlayShader', shaderLibrary.getMaterialTemplate('SimpleSurfaceShader'))
 
       const scene = new Scene()
       const renderer = new GLRenderer(document.getElementById('viewport'), {
         floatGeomBuffer: urlParams.has('webgl') ? false : true,
         antialias: false,
       })
+      renderer.getViewport().debugGeomShader = urlParams.has('debugGeomShader')
       renderer.setScene(scene)
+      scene.setupGrid()
 
       // {{{ Self Events.
-      const material1 = new Material('material1', 'SimpleSurfaceShader')
-      material1.getParameter('BaseColor').value = new Color('#94C47D')
+      const material1 = new SimpleSurfaceMaterial('material1')
+      material1.baseColorParam.value = new Color('#94C47D')
 
       const selfEventItem = new GeomItem('CuboidGeometryItem', new Cuboid(0.7, 0.7, 0.7), material1)
 
@@ -110,8 +114,8 @@
 
       // {{{ Group Events.
       {
-        const material2 = new Material('material2', 'SimpleSurfaceShader')
-        material2.getParameter('BaseColor').value = new Color('#F6B26B')
+        const material2 = new SimpleSurfaceMaterial('material2')
+        material2.baseColorParam.value = new Color('#F6B26B')
 
         const groupItem1 = new GeomItem('CylinderGeometryItem', new Cylinder(0.3, 0.4), material2)
 
@@ -129,11 +133,23 @@
         const groupItem2Xfo = new Xfo()
         groupItem2Xfo.tr = new Vec3(-0.45, 0, 0.5)
         groupItem2.globalXfoParam.value = groupItem2Xfo
+        // ----------------------------------------------------------------------------------------
+
+        const material4 = new SimpleSurfaceMaterial('material4')
+        material4.baseColorParam.value = new Color('#aaaaaa')
+
+        const groupItem4 = new GeomItem('CylinderGeometryItem', new Torus(0.1, 0.3), material4)
+        groupItem4.setSelectable(false)
+
+        const groupItem4Xfo = new Xfo()
+        groupItem4Xfo.tr = new Vec3(1.1, 0, 0.5)
+        groupItem4.globalXfoParam.value = groupItem4Xfo
 
         // ----------------------------------------------------------------------------------------
 
         scene.getRoot().addChild(groupItem1)
         scene.getRoot().addChild(groupItem2)
+        scene.getRoot().addChild(groupItem4)
 
         const group = new SelectionSet('MyGroup')
         group.addItem(groupItem1)

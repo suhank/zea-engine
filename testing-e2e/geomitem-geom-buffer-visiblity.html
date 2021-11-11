@@ -27,7 +27,7 @@
         Torus,
         GeomItem,
         TreeItem,
-        Material,
+        StandardSurfaceMaterial,
         SelectionSet,
         EnvMap,
       } = zeaEngine
@@ -53,7 +53,7 @@
       }
 
       const sphere = new Sphere(1.4, 80)
-      const material = new Material('surfaces', 'StandardSurfaceShader')
+      const material = new StandardSurfaceMaterial('surfaces')
 
       for (let i = 0; i < 3; i++) {
         const geomItem = addMeshShape('Sphere' + i, sphere, new Vec3((i / 9) * 20, 0, 1.4), material)

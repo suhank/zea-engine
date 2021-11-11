@@ -28,13 +28,17 @@
         Torus,
         GeomItem,
         TreeItem,
-        Material,
+        StandardSurfaceMaterial,
+        SimpleSurfaceMaterial,
+        FlatSurfaceMaterial,
         CuttingPlane,
       } = zeaEngine
+      const urlParams = new URLSearchParams(window.location.search)
 
       const scene = new Scene()
       const domElement = document.getElementById('viewport')
       const renderer = new GLRenderer(domElement, { antialias: false })
+      renderer.getViewport().debugGeomShader = urlParams.has('debugGeomShader')
       renderer.setScene(scene)
 
       scene.setupGrid(40.0, 10)
@@ -48,26 +52,36 @@
       cuttingPlane.localXfoParam.value = cuttingPlaneXfo
       scene.getRoot().addChild(cuttingPlane)
 
-      const standardMaterial = new Material('surfaces', 'SimpleSurfaceShader')
-      standardMaterial.getParameter('BaseColor').value = new Color(89 / 255, 182 / 255, 92 / 255)
+      const standardMaterial = new StandardSurfaceMaterial('surfaces')
+      standardMaterial.baseColorParam.value = new Color(89 / 255, 182 / 255, 92 / 255)
+
+      const flatSurfaceMaterial = new FlatSurfaceMaterial('Material')
+      flatSurfaceMaterial.baseColorParam.value = new Color(0.6, 0, 1)
+
+      const simpleSurfaceMaterial = new SimpleSurfaceMaterial('Material')
+      simpleSurfaceMaterial.baseColorParam.value = new Color(0, 0.6, 1)
 
       let i = 0
 
-      const addMeshShape = (shape) => {
-        const geomItem = new GeomItem(`item-${i}`, shape, standardMaterial)
+      const addMeshShape = (shape, material) => {
+        const geomItem = new GeomItem(`item-${i}`, shape, material)
         geomItem.localXfoParam.value = new Xfo(new Vec3(i * 3, 0, 0))
         tree1.addChild(geomItem)
 
         cuttingPlane.addItem(geomItem)
 
+        if (i % 2 == 0) {
+          geomItem.addHighlight('highlight', new Color(1, 0, 0, 0.01))
+        }
+
         i += 1
       }
 
-      addMeshShape(new Sphere(1, 20))
-      addMeshShape(new Torus(0.5, 1))
-      addMeshShape(new Cuboid(1, 1, 1))
-      addMeshShape(new Cone(1, 2), 4)
-      addMeshShape(new Cylinder(1, 2, 20, 2, true))
+      addMeshShape(new Sphere(1, 20), standardMaterial)
+      addMeshShape(new Torus(0.5, 1), standardMaterial)
+      addMeshShape(new Cuboid(1, 1, 1), simpleSurfaceMaterial)
+      addMeshShape(new Cone(1, 2), flatSurfaceMaterial)
+      addMeshShape(new Cylinder(1, 2, 20, 2, true), flatSurfaceMaterial)
 
       cuttingPlane.cutAwayEnabledParam.value = true
 

@@ -32,7 +32,7 @@
     <script src="../dist/index.umd.js"></script>
 
     <script type="module">
-      const { GLRenderer, Scene, Vec3, Color, Material, Sphere, GeomItem } = window.zeaEngine
+      const { GLRenderer, Scene, Vec3, Color, SimpleSurfaceMaterial, Sphere, GeomItem } = window.zeaEngine
 
       const scene = new Scene()
       const canvasEl = document.getElementById('viewport')
@@ -49,8 +49,8 @@
         event.leftGeometry.removeHighlight('pointerOverGeom', true)
       })
 
-      const standardMaterial = new Material('surfaces', 'SimpleSurfaceShader')
-      standardMaterial.getParameter('BaseColor').value = new Color(89 / 255, 182 / 255, 92 / 255)
+      const standardMaterial = new SimpleSurfaceMaterial('surfaces')
+      standardMaterial.baseColorParam.value = new Color(89 / 255, 182 / 255, 92 / 255)
       const sphere = new Sphere(0.5, 20, 10)
       const geomItem = new GeomItem('Sphere', sphere, standardMaterial)
       scene.getRoot().addChild(geomItem)

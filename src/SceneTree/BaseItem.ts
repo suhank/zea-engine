@@ -180,7 +180,7 @@ class BaseItem extends ParameterOwner implements Owner {
    *
    * @return - Returns a boolean indicating if the item is selectable.
    */
-  getSelectable(): boolean {
+  isSelectable(): boolean {
     return this.__selectable
   }
 

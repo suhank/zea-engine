@@ -28,9 +28,8 @@ import { ColorParameter, NumberParameter } from '..'
  */
 // TODO: make abstract after subclasses checked
 class Material extends BaseItem {
-  protected __isTransparent: boolean
-  protected __isTextured: boolean
-
+  protected __isTransparent: boolean = false
+  protected __isTextured: boolean = false
   protected __shaderName: string = ''
   /**
    * Create a material
@@ -39,9 +38,6 @@ class Material extends BaseItem {
    */
   constructor(name?: string, shaderName?: string) {
     super(name)
-    this.__isTransparent = false
-    this.__isTextured = false
-
     if (shaderName) this.setShaderName(shaderName)
   }
 
@@ -64,7 +60,8 @@ class Material extends BaseItem {
     if (this.__shaderName == shaderName) return
     this.__shaderName = shaderName
 
-    const materialTemplate = shaderLibrary.getMaterialTemplate(shaderName)
+    const shaderClass = <typeof GLShader>Registry.getClassDefinition(shaderName)
+    const materialTemplate = shaderClass.getMaterialTemplate()
     if (!materialTemplate) throw new Error('Error setting Shader. Material template not registered found:' + shaderName)
 
     const paramMap: { [key: string]: boolean } = {}

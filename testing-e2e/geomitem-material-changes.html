@@ -13,7 +13,8 @@
     <script src="../dist/index.umd.js"></script>
 
     <script type="module">
-      const { GLRenderer, Scene, Vec3, Xfo, Color, Sphere, Cross, Material, GeomItem } = zeaEngine
+      const { GLRenderer, Scene, Vec3, Xfo, Color, Sphere, Cross, SimpleSurfaceMaterial,StandardSurfaceMaterial, LinesMaterial, GeomItem } =
+        zeaEngine
 
       const canvas = document.getElementById('viewport')
 
@@ -23,14 +24,14 @@
 
       scene.setupGrid(10.0, 10)
 
-      const material = new Material('surfaces', 'SimpleSurfaceShader')
-      material.getParameter('BaseColor').value = new Color(1, 0, 1)
+      const material = new SimpleSurfaceMaterial('surfaces')
+      material.baseColorParam.value = new Color(1, 0, 1)
 
       const geomItem = new GeomItem('Sphere', new Sphere(1.5, 46), material, new Xfo(new Vec3(-2, 0, 1)))
       scene.getRoot().addChild(geomItem)
 
-      const linesMaterial = new Material('linesMaterial', 'LinesShader')
-      linesMaterial.getParameter('BaseColor').value = new Color(0.2, 0.2, 0)
+      const linesMaterial = new LinesMaterial('linesMaterial')
+      linesMaterial.baseColorParam.value = new Color(0.2, 0.2, 0)
       const crossItem = new GeomItem('Cross', new Cross(1.18), linesMaterial, new Xfo(new Vec3(2, 0, 0.5)))
       scene.getRoot().addChild(crossItem)
 
@@ -46,42 +47,42 @@
         const { data } = event
 
         if (data === 'variant-01') {
-          const material = new Material('surfaces', 'SimpleSurfaceShader')
-          material.getParameter('BaseColor').value = new Color(0, 0, 1)
+          const material = new SimpleSurfaceMaterial('surfaces')
+          material.baseColorParam.value = new Color(0, 0, 1)
           geomItem.materialParam.value = material
 
-          const linesMaterial = new Material('linesMaterial2', 'LinesShader')
-          linesMaterial.getParameter('BaseColor').value = new Color(0, 1, 1)
+          const linesMaterial = new LinesMaterial('linesMaterial2')
+          linesMaterial.baseColorParam.value = new Color(0, 1, 1)
           crossItem.materialParam.value = linesMaterial
 
           window.postMessage(`done-${data}`)
         } else if (data === 'variant-02') {
-          const material = new Material('surfaces', 'StandardSurfaceShader')
-          material.getParameter('BaseColor').value = new Color(1, 1, 0)
+          const material = new StandardSurfaceMaterial('surfaces')
+          material.baseColorParam.value = new Color(1, 1, 0)
           geomItem.materialParam.value = material
 
-          const linesMaterial = new Material('linesMaterial3', 'LinesShader')
-          linesMaterial.getParameter('BaseColor').value = new Color(0, 1, 1, 0.2)
+          const linesMaterial = new LinesMaterial('linesMaterial3')
+          linesMaterial.baseColorParam.value = new Color(0, 1, 1, 0.2)
           crossItem.materialParam.value = linesMaterial
 
           window.postMessage(`done-${data}`)
         } else if (data === 'variant-03') {
-          const material = new Material('surfaces', 'SimpleSurfaceShader')
-          material.getParameter('BaseColor').value = new Color(0, 0, 1)
+          const material = new SimpleSurfaceMaterial('surfaces')
+          material.baseColorParam.value = new Color(0, 0, 1)
           geomItem.materialParam.value = material
 
-          const linesMaterial = new Material('linesMaterial2', 'LinesShader')
-          linesMaterial.getParameter('BaseColor').value = new Color(0, 1, 1)
+          const linesMaterial = new LinesMaterial('linesMaterial2')
+          linesMaterial.baseColorParam.value = new Color(0, 1, 1)
           crossItem.materialParam.value = linesMaterial
 
           window.postMessage(`done-${data}`)
         } else if (data === 'variant-04') {
-          const material = new Material('surfaces', 'StandardSurfaceShader')
-          material.getParameter('BaseColor').value = new Color(1, 1, 0)
+          const material = new StandardSurfaceMaterial('surfaces')
+          material.baseColorParam.value = new Color(1, 1, 0)
           geomItem.materialParam.value = material
 
-          const linesMaterial = new Material('linesMaterial3', 'LinesShader')
-          linesMaterial.getParameter('BaseColor').value = new Color(0, 1, 1, 0.2)
+          const linesMaterial = new LinesMaterial('linesMaterial3')
+          linesMaterial.baseColorParam.value = new Color(0, 1, 1, 0.2)
           crossItem.materialParam.value = linesMaterial
 
           window.postMessage(`done-${data}`)

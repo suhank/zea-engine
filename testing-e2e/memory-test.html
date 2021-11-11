@@ -36,7 +36,7 @@
             Intel UHD Graphics 630 1536 MB
       */
 
-      const { Vec3, EulerAngles, Xfo, Color, Cuboid, Material, GeomItem, TreeItem, Scene, GLRenderer } =
+      const { Vec3, EulerAngles, Xfo, Color, Cuboid, SimpleSurfaceMaterial, GeomItem, TreeItem, Scene, GLRenderer } =
         window.zeaEngine
 
       const canvas = document.getElementById('viewport')
@@ -64,13 +64,13 @@
       const TIME_LIMIT = 45_000
 
       document.querySelector('#memoryLimit').textContent = MEMORY_LIMIT
-      // const material = new Material('mat', 'SimpleSurfaceShader')
-      // material.getParameter('BaseColor').value = new Color(1, 1, 0)
+      // const material = new SimpleSurfaceMaterial('mat')
+      // material.baseColorParam.value = new Color(1, 1, 0)
 
       const addColumns = (row, treeItem) => {
         for (let j = 0; j < dim; j += 1) {
-          const material = new Material('mat', 'SimpleSurfaceShader')
-          material.getParameter('BaseColor').value = new Color(row / dim, j / dim, 1)
+          const material = new SimpleSurfaceMaterial('mat')
+          material.baseColorParam.value = new Color(row / dim, j / dim, 1)
 
           const treeItemJ = new TreeItem('TreeItem' + j)
           treeItem.addChild(treeItemJ)

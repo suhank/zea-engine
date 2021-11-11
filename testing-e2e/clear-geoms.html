@@ -13,7 +13,7 @@
     <script src="../dist/index.umd.js"></script>
 
     <script type="module">
-      const { GLRenderer, Scene, Vec3, Color, Material, GeomItem, Lines } = zeaEngine
+      const { GLRenderer, Scene, Vec3, Color, SimpleSurfaceMaterial, GeomItem, Lines } = zeaEngine
 
       const domElement = document.getElementById('webglcanvas')
 
@@ -23,8 +23,8 @@
       const renderer = new GLRenderer(domElement, { antialias: false })
       renderer.setScene(scene)
 
-      const standardMaterial = new Material('surfaces', 'SimpleSurfaceShader')
-      standardMaterial.getParameter('BaseColor').value = new Color(89 / 255, 182 / 255, 92 / 255)
+      const standardMaterial = new SimpleSurfaceMaterial('surfaces')
+      standardMaterial.baseColorParam.value = new Color(89 / 255, 182 / 255, 92 / 255)
 
       const lines = new Lines()
       const geomItem = new GeomItem('Lines', lines, standardMaterial)

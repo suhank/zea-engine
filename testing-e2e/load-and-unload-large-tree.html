@@ -10,10 +10,6 @@
 
     <link rel="stylesheet" href="styles/tailwind.min.css" />
 
-    <script src="../dist/index.umd.js"></script>
-    <script defer crossorigin src="https://cdn.jsdelivr.net/npm/@zeainc/zea-cad@3.3.0/dist/index.umd.js"></script>
-    <script defer crossorigin src="https://cdn.jsdelivr.net/npm/@zeainc/zea-ux/dist/index.umd.js"></script>
-
     <style>
       body {
         height: 100vh;
@@ -45,6 +41,9 @@
       }
     </style>
     <script type="module">
+      import '../dist/index.umd.js'
+      import '../node_modules/@zeainc/zea-cad/dist/index.umd.js'
+      import '../node_modules/@zeainc/zea-ux/dist/index.umd.js'
       const urlParams = new URLSearchParams(window.location.search)
 
       const {

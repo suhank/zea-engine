@@ -26,7 +26,7 @@
         Torus,
         GeomItem,
         TreeItem,
-        Material,
+        SimpleSurfaceMaterial,
         SelectionSet,
       } = zeaEngine
 
@@ -48,8 +48,8 @@
       selectionSet2.highlightColorParam.value = new Color('mediumblue')
       scene.getRoot().addChild(selectionSet2)
 
-      const standardMaterial = new Material('surfaces', 'SimpleSurfaceShader')
-      standardMaterial.getParameter('BaseColor').value = new Color(89 / 255, 182 / 255, 92 / 255)
+      const standardMaterial = new SimpleSurfaceMaterial('surfaces')
+      standardMaterial.baseColorParam.value = new Color(89 / 255, 182 / 255, 92 / 255)
 
       const addGeomItem = (shape, row, count, i) => {
         const geomItem = new GeomItem('Item' + row + '-' + i, shape, standardMaterial)

@@ -13,7 +13,8 @@
     <script src="../dist/index.umd.js"></script>
 
     <script type="module">
-      const { GLRenderer, Scene, Vec3, Color, Xfo, Disc, Plane, Material, GeomItem, Label, LDRImage } = window.zeaEngine
+      const { GLRenderer, Scene, Vec3, Color, Xfo, Disc, Plane, FlatSurfaceMaterial, GeomItem, Label, LDRImage } =
+        window.zeaEngine
 
       const canvas = document.getElementById('viewport')
 
@@ -54,30 +55,30 @@
       const promises = []
 
       {
-        const material = new Material('Material', 'FlatSurfaceShader')
+        const material = new FlatSurfaceMaterial('Material')
 
-        material.getParameter('BaseColor').value = new Color(0.6, 0, 1)
+        material.baseColorParam.value = new Color(0.6, 0, 1)
         const image = new LDRImage('LDRImage')
         image.setImageURL('data/avatar1.jpg')
         promises.push(new Promise((resolve) => image.on('loaded', resolve)))
-        material.getParameter('BaseColor').setImage(image)
+        material.baseColorParam.setImage(image)
         const geomItem = new GeomItem('geomItem1', disc, material, new Xfo(new Vec3(-1, 0, 0.1)))
         scene.getRoot().addChild(geomItem)
       }
       {
-        const material = new Material('Material', 'FlatSurfaceShader')
+        const material = new FlatSurfaceMaterial('Material')
 
-        material.getParameter('BaseColor').value = new Color(0.6, 0, 1)
+        material.baseColorParam.value = new Color(0.6, 0, 1)
         const image = new LDRImage('LDRImage')
         image.setImageURL('data/zea-logo.png', 'RGBA')
         promises.push(new Promise((resolve) => image.on('loaded', resolve)))
-        material.getParameter('BaseColor').setImage(image)
+        material.baseColorParam.setImage(image)
         const geomItem = new GeomItem('geomItem2', plane, material, new Xfo(new Vec3(0, 0, 0.1)))
         scene.getRoot().addChild(geomItem)
       }
 
       {
-        const material = new Material('Material', 'FlatSurfaceShader')
+        const material = new FlatSurfaceMaterial('Material')
         const label = new Label('Name')
         label.fontColorParam.value = new Color(0.6, 0, 0)
         label.backgroundColorParam.value = new Color(1, 1, 1)
@@ -89,7 +90,7 @@
         label.textParam.value = `Hello World`
         promises.push(new Promise((resolve) => label.on('labelRendered', resolve)))
 
-        material.getParameter('BaseColor').setImage(label)
+        material.baseColorParam.setImage(label)
         const geomItem = new GeomItem('geomItem3', plane, material, new Xfo(new Vec3(1, 0, 0.1)))
 
         scene.getRoot().addChild(geomItem)

@@ -67,7 +67,8 @@
     </style>
 
     <script type="module">
-      const { GLRenderer, Scene, Vec3, Color, Xfo, Sphere, GeomItem, Material, EnvMap } = window.zeaEngine
+      const { GLRenderer, Scene, Vec3, Color, Xfo, Sphere, GeomItem, StandardSurfaceMaterial, EnvMap } =
+        window.zeaEngine
 
       const canvas = document.getElementById('viewport')
 
@@ -96,24 +97,24 @@
       renderer.getViewport().getCamera().setLensFocalLength('20mm')
       renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 0, 0), new Vec3(0, 0, 0))
 
-      const material = new Material('surfaces', 'StandardSurfaceShader')
-      material.getParameter('BaseColor').value = new Color(0.6, 0.0, 0.0)
-      material.getParameter('Roughness').value = 0.5
-      material.getParameter('Metallic').value = 0.05
-      material.getParameter('Reflectance').value = 0.01
+      const material = new StandardSurfaceMaterial('surfaces')
+      material.baseColorParam.value = new Color(0.6, 0.0, 0.0)
+      material.roughnessParam.value = 0.5
+      material.metallicParam.value = 0.05
+      material.reflectanceParam.value = 0.01
       scene.getRoot().addChild(new GeomItem('sphere', new Sphere(0.4, 40), material))
 
       document.getElementById('colorControl').addEventListener('input', (event) => {
-        material.getParameter('BaseColor').value = new Color(event.target.value)
+        material.baseColorParam.value = new Color(event.target.value)
       })
       document.getElementById('roughnessControl').addEventListener('input', (event) => {
-        material.getParameter('Roughness').value = event.target.value / 100
+        material.roughnessParam.value = event.target.value / 100
       })
       document.getElementById('metallicControl').addEventListener('input', (event) => {
-        material.getParameter('Metallic').value = event.target.value / 100
+        material.metallicParam.value = event.target.value / 100
       })
       document.getElementById('glossinessControl').addEventListener('input', (event) => {
-        material.getParameter('Reflectance').value = event.target.value / 100
+        material.reflectanceParam.value = event.target.value / 100
       })
 
       Promise.all([new Promise((resolve) => envMap.once('loaded', resolve))]).then(() => {
