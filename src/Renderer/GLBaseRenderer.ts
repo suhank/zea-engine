@@ -514,9 +514,9 @@ class GLBaseRenderer extends ParameterOwner {
     this.__glcanvas.width = width
     this.__glcanvas.height = height
 
-    for (const vp of this.__viewports) {
-      vp.resize(width, height)
-    }
+    this.__viewports.forEach((viewport) => {
+      viewport.resize(width, height)
+    })
 
     const event = new ResizedEvent(width, height)
     this.emit('resized', event)
