@@ -250,7 +250,35 @@ class MaterialLibrary extends EventEmitter implements Owner {
     if (numMaterials > 0) {
       const toc = reader.loadUInt32Array(numMaterials)
       for (let i = 0; i < numMaterials; i++) {
-        const material = new Material('')
+        const shaderName = reader.loadStr()
+        let material
+        switch (shaderName) {
+          case 'StandardMaterial':
+          case 'TransparentMaterial':
+          case 'StandardSurfaceShader':
+            material = <Material>Registry.constructClass('StandardSurfaceMaterial')
+            break
+
+          case 'SimpleSurfaceShader':
+          case 'SimpleSurfaceMaterial':
+            material = <Material>Registry.constructClass('SimpleSurfaceMaterial')
+            break
+          case 'PointsShader':
+          case 'PointsMaterial':
+            material = <Material>Registry.constructClass('PointsMaterial')
+            break
+          case 'FatPointsShader':
+          case 'FatPointsMaterial':
+            material = <Material>Registry.constructClass('FatPointsMaterial')
+            break
+          case 'LinesShader':
+          case 'LinesMaterial':
+            material = <Material>Registry.constructClass('LinesMaterial')
+            break
+          default:
+            material = new Material('')
+            break
+        }
         reader.seek(toc[i]) // Reset the pointer to the start of the item data.
         material.readBinary(reader, context) // (reader, context, this.__images)
         this.addMaterial(material)
