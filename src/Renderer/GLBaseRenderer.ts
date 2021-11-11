@@ -574,11 +574,13 @@ class GLBaseRenderer extends ParameterOwner {
         if (!entry.contentRect) {
           return
         }
+
         const displayWidth = Math.round(entry.contentRect.width)
         const displayHeight = Math.round(entry.contentRect.height)
         this.handleResize(displayWidth, displayHeight)
       }
-    }, 100)
+    }, 500)
+
     const resizeObserver = new ResizeObserver(throttledResize)
 
     this.handleResize(this.__glcanvas.parentElement.clientWidth, this.__glcanvas.parentElement.clientHeight)
