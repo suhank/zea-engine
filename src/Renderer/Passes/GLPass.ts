@@ -104,16 +104,12 @@ abstract class GLPass extends ParameterOwner {
   /**
    * The startPresenting method.
    */
-  startPresenting(): any {
-    throw Error('startPresenting not implemented on GLPass')
-  }
+  startPresenting(): void {}
 
   /**
    * The stopPresenting method.
    */
-  stopPresenting(): any {
-    throw Error('stopPresenting not implemented on GLPass')
-  }
+  stopPresenting(): void {}
 
   // ///////////////////////////////////
   // Rendering

@@ -162,6 +162,9 @@ class VRViewManipulator extends BaseTool {
       const grabDir = p1.subtract(p0)
       grabDir.y = 0.0
       const grabDist = grabDir.length()
+
+      // Sometimes we would get NaN values in the stage Xfo
+      if (grabDist < 0.0001) return
       grabDir.scaleInPlace(1 / grabDist)
 
       const deltaXfo = new Xfo()

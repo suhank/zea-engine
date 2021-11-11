@@ -486,7 +486,7 @@ class VRViewport extends GLBaseViewport {
   drawXRFrame(xrFrame: any) {
     const session = xrFrame.session
 
-    const layer = session.renderstate.baseLayer
+    const layer = session.renderState.baseLayer
 
     const pose = xrFrame.getViewerPose(this.__refSpace)
     if (!pose) {
@@ -521,7 +521,7 @@ class VRViewport extends GLBaseViewport {
     gl.clearColor(col[0], col[1], col[2], col[3])
     gl.colorMask(true, true, true, true)
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
-    this.depthRange = [session.renderstate.depthNear, session.renderstate.depthFar] // TODO: check if this changes during session
+    this.depthRange = [session.renderState.depthNear, session.renderState.depthFar] // TODO: check if this changes during session
 
     const renderstate: ColorRenderState = <ColorRenderState>{}
 

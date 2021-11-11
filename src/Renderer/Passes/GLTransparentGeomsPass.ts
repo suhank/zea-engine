@@ -473,7 +473,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
       currentGLGeom: null,
     }
     for (const transparentItem of this.visibleItems) {
-      if (!transparentItem.glGeomItem.geomItem.getSelectable()) continue
+      if (!transparentItem.glGeomItem.geomItem.isSelectable()) continue
 
       const shaders = transparentItem.shaders
       if (!shaders.glgeomdatashader) {

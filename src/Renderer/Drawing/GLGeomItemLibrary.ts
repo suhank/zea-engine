@@ -428,7 +428,7 @@ class GLGeomItemLibrary extends EventEmitter {
     if (geomItem.isCutawayEnabled()) {
       flags |= GLGeomItemFlags.GEOMITEM_FLAG_CUTAWAY
     }
-    if (geomItem.getSelectable() == false) {
+    if (geomItem.isSelectable() == false) {
       flags |= GLGeomItemFlags.GEOMITEM_INVISIBLE_IN_GEOMDATA
     }
 
