@@ -332,14 +332,17 @@ class GLRenderer extends GLBaseRenderer {
     }
 
     const region = [0, 0, 3, 3]
-    const renderstate = <GeomDataRenderState>{}
-    renderstate.cameraMatrix = xfo.toMat4()
-    renderstate.viewports.push({
-      region,
-      viewMatrix: xfo.inverse().toMat4(),
-      projectionMatrix: this.__rayCastRenderTargetProjMatrix,
-      isOrthographic: true,
-    })
+    const renderstate = <GeomDataRenderState>{
+      cameraMatrix: xfo.toMat4(),
+      viewports: [
+        {
+          region,
+          viewMatrix: xfo.inverse().toMat4(),
+          projectionMatrix: this.__rayCastRenderTargetProjMatrix,
+          isOrthographic: true,
+        },
+      ],
+    }
 
     this.__rayCastRenderTarget.bindForWriting(renderstate, true)
     gl.enable(gl.CULL_FACE)
