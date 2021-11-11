@@ -177,7 +177,7 @@ class Sphere extends ProceduralMesh {
     const radius = this.radiusParam.value
     const nbSides = this.sidesParam.value
     const nbLoops = this.loopsParam.value
-    if (!radius || !nbSides || !nbLoops) {
+    if (!nbSides || !nbLoops) {
       console.warn('resize() failed')
       return
     }
