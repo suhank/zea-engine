@@ -280,7 +280,7 @@ class ParameterOwner extends EventEmitter {
         const propName = reader.loadStr()
         let param = this.getParameter(propName)
         if (!param) {
-          param = Registry.constructClass(propType) as Parameter<any> // TODO: is proptype correct to use here over propName?
+          param = Registry.constructClass(propType) as Parameter<any>
           if (!param) {
             console.error('Unable to construct prop:' + propName + ' of type:' + propType)
             continue
