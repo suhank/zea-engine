@@ -120,8 +120,34 @@ const geomItem = new GeomItem('foo')
 geomItem.isSelectable()
 ```
 
+* GLShader.getParamDeclarations was replaced with getMaterialTemplate 
+getParamDeclarations would return an array of parameter descriptors, but now we return an instance of a Material from getMaterialTemplate instead.
+
+Old code
+```javascript
+  static getParamDeclarations() {
+    const paramDescs = super.getParamDeclarations()
+    paramDescs.push({
+      name: 'BaseColor',
+      defaultValue: new Color(1.0, 1.0, 0.5),
+    })
+    return paramDescs
+  }
+```
+
+New code
+```javascript
+  static getMaterialTemplate(): Material {
+    const material = new Material()
+    return material
+  }
+```
+
+* The deprecated Group class was removed from the build. You must now use one of the specialized classes based on BaseGroup. e.g. SelectionSet, or KinematicGroup.
+
 ### Features
 
+* auto-position the canvas and its parent ([18b8a90](https://github.com/ZeaInc/zea-engine/commit/18b8a90d4b9da50e232dccc5d10cb1f8e773d5db))
 * The engine now provides various statically defined Materials. This simplifies the process of assigning materials to Geometries, as the parameters are exposed as public properties. ([ae92d20](https://github.com/ZeaInc/zea-engine/commit/ae92d20fae158c4f4fbb746227bc4ce8f04ef494))
 * zcad files when loading now construct statically defined materials when possible. ([4acad4e](https://github.com/ZeaInc/zea-engine/commit/4acad4e7aafd938aab58fa310a4e45be166f2cbd))
 
@@ -140,6 +166,11 @@ geomItem.localXfoParam.value = xfo
 
 ### Bug Fixes
 
+* Cutaways are now applied to GeomData and Highlight rendering so surfaces that are both highlighted and cutaway, the highlight is also cutaway.
+* The GEOMITEM_INVISIBLE_IN_GEOMDATA is now being honored in the SimpleSurfaceShader and FlatSurfaceShader.
+* A bug in our resize throttling caused incorrect canvas size. ([8d23702](https://github.com/ZeaInc/zea-engine/commit/8d23702b8b3834a0af81ef1fb4b070242dec062e))
+* black flickering when resizing ([10005fa](https://github.com/ZeaInc/zea-engine/commit/10005fa0b36561821925606ef21e848a2297c6bb))
+* FlatSurfaceShader now supports cutaways ([9a46e49](https://github.com/ZeaInc/zea-engine/commit/9a46e497b0172a3db63fb293432e3f5dbc016531))
 * A bug in our resize throttling caused incorrect canvas size. ([8d23702](https://github.com/ZeaInc/zea-engine/commit/8d23702b8b3834a0af81ef1fb4b070242dec062e))
 * Cleaned up silly bug in renderer. Geometries were continuously being uploaded to the GPU. ([c131a96](https://github.com/ZeaInc/zea-engine/commit/c131a96e9db624dfac2dc9ca8f066bbf202eae07))
 * Fixed loading Obj files that contain a reference to a mtl file. Fixed parsing mtl files. ([b0ec4fe](https://github.com/ZeaInc/zea-engine/commit/b0ec4fe953989fa193bddaa2a043b9012c0b14d9))
