@@ -94,6 +94,9 @@ image.load('data/steelplate1-unity/steelplate1_albedo.webp').then(() => {
 
 ### Features
 
+* The engine now provides various statically defined Materials. This simplifies the process of assigning materials to Geometries, as the parameters are exposed as public properties. ([ae92d20](https://github.com/ZeaInc/zea-engine/commit/ae92d20fae158c4f4fbb746227bc4ce8f04ef494))
+* zcad files when loading now construct statically defined materials when possible. ([4acad4e](https://github.com/ZeaInc/zea-engine/commit/4acad4e7aafd938aab58fa310a4e45be166f2cbd))
+
 * Vec2, Vec3, Vec4, Quat, Color, Xfo, Mat3 and Mat4 parameters can now be encoded in zcad files. ([1b17f76](https://github.com/ZeaInc/zea-engine/commit/1b17f76c9cf390433d84232cbaaa1dc4c7235729))
 * Parameters are now accessible directly on the class as public members.
 * Parameter values are now accessible as a property via getter and setter.
