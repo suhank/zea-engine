@@ -31,7 +31,7 @@ Create a Frustum
 
 #### Defined in
 
-[Math/Frustum.ts:25](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/Frustum.ts#L25)
+[Math/Frustum.ts:25](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Frustum.ts#L25)
 
 ## Properties
 
@@ -41,7 +41,7 @@ Create a Frustum
 
 #### Defined in
 
-[Math/Frustum.ts:15](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/Frustum.ts#L15)
+[Math/Frustum.ts:15](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Frustum.ts#L15)
 
 ## Methods
 
@@ -63,7 +63,7 @@ The fromJSON method decodes a json object for this type.
 
 #### Defined in
 
-[Math/Frustum.ts:101](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/Frustum.ts#L101)
+[Math/Frustum.ts:101](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Frustum.ts#L101)
 
 ___
 
@@ -87,7 +87,7 @@ Tests a box to see if it is entirely within the frustum.
 
 #### Defined in
 
-[Math/Frustum.ts:59](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/Frustum.ts#L59)
+[Math/Frustum.ts:59](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Frustum.ts#L59)
 
 ___
 
@@ -110,7 +110,7 @@ Typically the matrix is a model view projection matrix.
 
 #### Defined in
 
-[Math/Frustum.ts:41](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/Frustum.ts#L41)
+[Math/Frustum.ts:41](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Frustum.ts#L41)
 
 ___
 
@@ -128,7 +128,7 @@ The toJSON method encodes this type as a json object for persistence.
 
 #### Defined in
 
-[Math/Frustum.ts:85](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/Frustum.ts#L85)
+[Math/Frustum.ts:85](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Frustum.ts#L85)
 
 ___
 
@@ -146,5 +146,5 @@ Calls `toJSON` method and stringifies it.
 
 #### Defined in
 
-[Math/Frustum.ts:115](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/Frustum.ts#L115)
+[Math/Frustum.ts:115](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Frustum.ts#L115)
 

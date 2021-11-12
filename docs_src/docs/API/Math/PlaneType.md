@@ -26,7 +26,7 @@ Create a plane.
 
 #### Defined in
 
-[Math/PlaneType.ts:18](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/PlaneType.ts#L18)
+[Math/PlaneType.ts:18](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/PlaneType.ts#L18)
 
 ## Properties
 
@@ -36,7 +36,7 @@ Create a plane.
 
 #### Defined in
 
-[Math/PlaneType.ts:9](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/PlaneType.ts#L9)
+[Math/PlaneType.ts:9](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/PlaneType.ts#L9)
 
 ___
 
@@ -46,7 +46,7 @@ ___
 
 #### Defined in
 
-[Math/PlaneType.ts:10](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/PlaneType.ts#L10)
+[Math/PlaneType.ts:10](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/PlaneType.ts#L10)
 
 ## Methods
 
@@ -64,7 +64,7 @@ Clones this plane and returns a new plane.
 
 #### Defined in
 
-[Math/PlaneType.ts:74](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/PlaneType.ts#L74)
+[Math/PlaneType.ts:74](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/PlaneType.ts#L74)
 
 ___
 
@@ -88,7 +88,7 @@ Calculates the distance from a point to this plane.
 
 #### Defined in
 
-[Math/PlaneType.ts:56](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/PlaneType.ts#L56)
+[Math/PlaneType.ts:56](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/PlaneType.ts#L56)
 
 ___
 
@@ -110,7 +110,7 @@ The divideScalar method
 
 #### Defined in
 
-[Math/PlaneType.ts:45](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/PlaneType.ts#L45)
+[Math/PlaneType.ts:45](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/PlaneType.ts#L45)
 
 ___
 
@@ -130,7 +130,7 @@ ___
 
 #### Defined in
 
-[Math/PlaneType.ts:93](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/PlaneType.ts#L93)
+[Math/PlaneType.ts:93](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/PlaneType.ts#L93)
 
 ___
 
@@ -146,7 +146,7 @@ Normalize this plane in place modifying its values.
 
 #### Defined in
 
-[Math/PlaneType.ts:63](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/PlaneType.ts#L63)
+[Math/PlaneType.ts:63](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/PlaneType.ts#L63)
 
 ___
 
@@ -171,7 +171,7 @@ Setter from scalar components.
 
 #### Defined in
 
-[Math/PlaneType.ts:35](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/PlaneType.ts#L35)
+[Math/PlaneType.ts:35](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/PlaneType.ts#L35)
 
 ___
 
@@ -189,7 +189,7 @@ The toJSON method encodes this type as a json object for persistence.
 
 #### Defined in
 
-[Math/PlaneType.ts:86](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/PlaneType.ts#L86)
+[Math/PlaneType.ts:86](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/PlaneType.ts#L86)
 
 ___
 
@@ -207,5 +207,5 @@ Calls `toJSON` method and stringifies it.
 
 #### Defined in
 
-[Math/PlaneType.ts:103](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/PlaneType.ts#L103)
+[Math/PlaneType.ts:103](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/PlaneType.ts#L103)
 

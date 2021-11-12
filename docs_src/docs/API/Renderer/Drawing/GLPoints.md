@@ -36,7 +36,7 @@ Create a GL point.
 
 #### Defined in
 
-[Renderer/Drawing/GLPoints.ts:16](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Drawing/GLPoints.ts#L16)
+[Renderer/Drawing/GLPoints.ts:16](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Renderer/Drawing/GLPoints.ts#L16)
 
 ## Properties
 
@@ -50,7 +50,7 @@ Create a GL point.
 
 #### Defined in
 
-[SceneTree/RefCounted.ts:15](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/RefCounted.ts#L15)
+[SceneTree/RefCounted.ts:15](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/SceneTree/RefCounted.ts#L15)
 
 ___
 
@@ -64,7 +64,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLGeom.ts:9](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Drawing/GLGeom.ts#L9)
+[Renderer/Drawing/GLGeom.ts:9](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Renderer/Drawing/GLGeom.ts#L9)
 
 ___
 
@@ -78,7 +78,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLGeom.ts:8](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Drawing/GLGeom.ts#L8)
+[Renderer/Drawing/GLGeom.ts:8](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Renderer/Drawing/GLGeom.ts#L8)
 
 ___
 
@@ -92,7 +92,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLGeom.ts:10](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Drawing/GLGeom.ts#L10)
+[Renderer/Drawing/GLGeom.ts:10](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Renderer/Drawing/GLGeom.ts#L10)
 
 ___
 
@@ -106,7 +106,7 @@ ___
 
 #### Defined in
 
-[Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/BaseClass.ts#L11)
+[Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Utilities/BaseClass.ts#L11)
 
 ___
 
@@ -120,7 +120,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLGeom.ts:14](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Drawing/GLGeom.ts#L14)
+[Renderer/Drawing/GLGeom.ts:14](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Renderer/Drawing/GLGeom.ts#L14)
 
 ___
 
@@ -130,7 +130,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLPoints.ts:9](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Drawing/GLPoints.ts#L9)
+[Renderer/Drawing/GLPoints.ts:9](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Renderer/Drawing/GLPoints.ts#L9)
 
 ___
 
@@ -144,7 +144,7 @@ ___
 
 #### Defined in
 
-[SceneTree/RefCounted.ts:14](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/RefCounted.ts#L14)
+[SceneTree/RefCounted.ts:14](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/SceneTree/RefCounted.ts#L14)
 
 ___
 
@@ -158,7 +158,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLGeom.ts:11](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Drawing/GLGeom.ts#L11)
+[Renderer/Drawing/GLGeom.ts:11](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Renderer/Drawing/GLGeom.ts#L11)
 
 ___
 
@@ -168,7 +168,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLPoints.ts:10](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Drawing/GLPoints.ts#L10)
+[Renderer/Drawing/GLPoints.ts:10](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Renderer/Drawing/GLPoints.ts#L10)
 
 ___
 
@@ -182,7 +182,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLGeom.ts:12](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Drawing/GLGeom.ts#L12)
+[Renderer/Drawing/GLGeom.ts:12](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Renderer/Drawing/GLGeom.ts#L12)
 
 ___
 
@@ -196,7 +196,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLGeom.ts:13](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Drawing/GLGeom.ts#L13)
+[Renderer/Drawing/GLGeom.ts:13](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Renderer/Drawing/GLGeom.ts#L13)
 
 ___
 
@@ -210,7 +210,7 @@ ___
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/EventEmitter.ts#L26)
+[Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Utilities/EventEmitter.ts#L26)
 
 ## Methods
 
@@ -238,7 +238,7 @@ The addRef method.
 
 #### Defined in
 
-[SceneTree/RefCounted.ts:51](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/RefCounted.ts#L51)
+[SceneTree/RefCounted.ts:51](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/SceneTree/RefCounted.ts#L51)
 
 ___
 
@@ -266,7 +266,7 @@ The bind method.
 
 #### Defined in
 
-[Renderer/Drawing/GLPoints.ts:82](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Drawing/GLPoints.ts#L82)
+[Renderer/Drawing/GLPoints.ts:82](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Renderer/Drawing/GLPoints.ts#L82)
 
 ___
 
@@ -292,7 +292,7 @@ The bindAndDraw method.
 
 #### Defined in
 
-[Renderer/Drawing/GLGeom.ts:138](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Drawing/GLGeom.ts#L138)
+[Renderer/Drawing/GLGeom.ts:138](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Renderer/Drawing/GLGeom.ts#L138)
 
 ___
 
@@ -312,7 +312,7 @@ The clearBuffers method.
 
 #### Defined in
 
-[Renderer/Drawing/GLGeom.ts:146](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Drawing/GLGeom.ts#L146)
+[Renderer/Drawing/GLGeom.ts:146](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Renderer/Drawing/GLGeom.ts#L146)
 
 ___
 
@@ -333,7 +333,7 @@ Users should never need to call this method directly.
 
 #### Defined in
 
-[Renderer/Drawing/GLGeom.ts:168](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Drawing/GLGeom.ts#L168)
+[Renderer/Drawing/GLGeom.ts:168](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Renderer/Drawing/GLGeom.ts#L168)
 
 ___
 
@@ -359,7 +359,7 @@ The dirtyBuffers method.
 
 #### Defined in
 
-[Renderer/Drawing/GLGeom.ts:56](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Drawing/GLGeom.ts#L56)
+[Renderer/Drawing/GLGeom.ts:56](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Renderer/Drawing/GLGeom.ts#L56)
 
 ___
 
@@ -385,7 +385,7 @@ The draw method.
 
 #### Defined in
 
-[Renderer/Drawing/GLPoints.ts:106](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Drawing/GLPoints.ts#L106)
+[Renderer/Drawing/GLPoints.ts:106](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Renderer/Drawing/GLPoints.ts#L106)
 
 ___
 
@@ -412,7 +412,7 @@ The drawInstanced method.
 
 #### Defined in
 
-[Renderer/Drawing/GLPoints.ts:120](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Drawing/GLPoints.ts#L120)
+[Renderer/Drawing/GLPoints.ts:120](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Renderer/Drawing/GLPoints.ts#L120)
 
 ___
 
@@ -439,7 +439,7 @@ Triggers all listener functions in an event.
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/EventEmitter.ts#L154)
+[Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Utilities/EventEmitter.ts#L154)
 
 ___
 
@@ -465,7 +465,7 @@ The genBuffers method.
 
 #### Defined in
 
-[Renderer/Drawing/GLPoints.ts:25](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Drawing/GLPoints.ts#L25)
+[Renderer/Drawing/GLPoints.ts:25](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Renderer/Drawing/GLPoints.ts#L25)
 
 ___
 
@@ -487,7 +487,7 @@ Returns the unmangled name of the class.
 
 #### Defined in
 
-[Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/BaseClass.ts#L33)
+[Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Utilities/BaseClass.ts#L33)
 
 ___
 
@@ -509,7 +509,7 @@ Returns the owned Geometry object
 
 #### Defined in
 
-[Renderer/Drawing/GLGeom.ts:45](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Drawing/GLGeom.ts#L45)
+[Renderer/Drawing/GLGeom.ts:45](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Renderer/Drawing/GLGeom.ts#L45)
 
 ___
 
@@ -532,7 +532,7 @@ identifier which is based on a counter that is incremented.
 
 #### Defined in
 
-[SceneTree/RefCounted.ts:34](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/RefCounted.ts#L34)
+[SceneTree/RefCounted.ts:34](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/SceneTree/RefCounted.ts#L34)
 
 ___
 
@@ -560,7 +560,7 @@ The getRefIndex method.
 
 #### Defined in
 
-[SceneTree/RefCounted.ts:89](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/RefCounted.ts#L89)
+[SceneTree/RefCounted.ts:89](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/SceneTree/RefCounted.ts#L89)
 
 ___
 
@@ -588,7 +588,7 @@ The getRefer method.
 
 #### Defined in
 
-[SceneTree/RefCounted.ts:80](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/RefCounted.ts#L80)
+[SceneTree/RefCounted.ts:80](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/SceneTree/RefCounted.ts#L80)
 
 ___
 
@@ -610,7 +610,7 @@ Returns true if this object has already been destroyed.
 
 #### Defined in
 
-[SceneTree/RefCounted.ts:97](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/RefCounted.ts#L97)
+[SceneTree/RefCounted.ts:97](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/SceneTree/RefCounted.ts#L97)
 
 ___
 
@@ -632,7 +632,7 @@ The numRefs method.
 
 #### Defined in
 
-[SceneTree/RefCounted.ts:42](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/RefCounted.ts#L42)
+[SceneTree/RefCounted.ts:42](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/SceneTree/RefCounted.ts#L42)
 
 ___
 
@@ -659,7 +659,7 @@ Removes a listener function from the specified event, using either the function 
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/EventEmitter.ts#L97)
+[Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Utilities/EventEmitter.ts#L97)
 
 ___
 
@@ -688,7 +688,7 @@ Adds a listener function for a given event name.
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/EventEmitter.ts#L44)
+[Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Utilities/EventEmitter.ts#L44)
 
 ___
 
@@ -726,7 +726,7 @@ asset.once('loaded', () => {
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/EventEmitter.ts#L82)
+[Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Utilities/EventEmitter.ts#L82)
 
 ___
 
@@ -753,7 +753,7 @@ remove listener by ID returned from #on
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/EventEmitter.ts#L134)
+[Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Utilities/EventEmitter.ts#L134)
 
 ___
 
@@ -779,7 +779,7 @@ The removeRef method.
 
 #### Defined in
 
-[SceneTree/RefCounted.ts:64](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/RefCounted.ts#L64)
+[SceneTree/RefCounted.ts:64](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/SceneTree/RefCounted.ts#L64)
 
 ___
 
@@ -805,7 +805,7 @@ The unbind method.
 
 #### Defined in
 
-[Renderer/Drawing/GLGeom.ts:104](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Drawing/GLGeom.ts#L104)
+[Renderer/Drawing/GLGeom.ts:104](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Renderer/Drawing/GLGeom.ts#L104)
 
 ___
 
@@ -831,5 +831,5 @@ The updateBuffers method.
 
 #### Defined in
 
-[Renderer/Drawing/GLPoints.ts:55](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Drawing/GLPoints.ts#L55)
+[Renderer/Drawing/GLPoints.ts:55](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Renderer/Drawing/GLPoints.ts#L55)
 

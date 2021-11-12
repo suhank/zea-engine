@@ -39,7 +39,7 @@ Create a GL base viewport.
 
 #### Defined in
 
-[Renderer/GLBaseViewport.ts:63](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/GLBaseViewport.ts#L63)
+[Renderer/GLBaseViewport.ts:63](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Renderer/GLBaseViewport.ts#L63)
 
 ## Properties
 
@@ -49,7 +49,7 @@ Create a GL base viewport.
 
 #### Defined in
 
-[Renderer/GLBaseViewport.ts:45](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/GLBaseViewport.ts#L45)
+[Renderer/GLBaseViewport.ts:45](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Renderer/GLBaseViewport.ts#L45)
 
 ___
 
@@ -59,7 +59,7 @@ ___
 
 #### Defined in
 
-[Renderer/GLBaseViewport.ts:36](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/GLBaseViewport.ts#L36)
+[Renderer/GLBaseViewport.ts:36](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Renderer/GLBaseViewport.ts#L36)
 
 ___
 
@@ -69,7 +69,7 @@ ___
 
 #### Defined in
 
-[Renderer/GLBaseViewport.ts:35](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/GLBaseViewport.ts#L35)
+[Renderer/GLBaseViewport.ts:35](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Renderer/GLBaseViewport.ts#L35)
 
 ___
 
@@ -79,7 +79,7 @@ ___
 
 #### Defined in
 
-[Renderer/GLBaseViewport.ts:41](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/GLBaseViewport.ts#L41)
+[Renderer/GLBaseViewport.ts:41](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Renderer/GLBaseViewport.ts#L41)
 
 ___
 
@@ -89,7 +89,7 @@ ___
 
 #### Defined in
 
-[Renderer/GLBaseViewport.ts:40](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/GLBaseViewport.ts#L40)
+[Renderer/GLBaseViewport.ts:40](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Renderer/GLBaseViewport.ts#L40)
 
 ___
 
@@ -99,7 +99,7 @@ ___
 
 #### Defined in
 
-[Renderer/GLBaseViewport.ts:29](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/GLBaseViewport.ts#L29)
+[Renderer/GLBaseViewport.ts:29](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Renderer/GLBaseViewport.ts#L29)
 
 ___
 
@@ -109,7 +109,7 @@ ___
 
 #### Defined in
 
-[Renderer/GLBaseViewport.ts:26](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/GLBaseViewport.ts#L26)
+[Renderer/GLBaseViewport.ts:26](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Renderer/GLBaseViewport.ts#L26)
 
 ___
 
@@ -119,7 +119,7 @@ ___
 
 #### Defined in
 
-[Renderer/GLBaseViewport.ts:39](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/GLBaseViewport.ts#L39)
+[Renderer/GLBaseViewport.ts:39](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Renderer/GLBaseViewport.ts#L39)
 
 ___
 
@@ -133,7 +133,7 @@ ___
 
 #### Defined in
 
-[Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/BaseClass.ts#L11)
+[Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Utilities/BaseClass.ts#L11)
 
 ___
 
@@ -143,7 +143,7 @@ ___
 
 #### Defined in
 
-[Renderer/GLBaseViewport.ts:28](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/GLBaseViewport.ts#L28)
+[Renderer/GLBaseViewport.ts:28](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Renderer/GLBaseViewport.ts#L28)
 
 ___
 
@@ -153,7 +153,7 @@ ___
 
 #### Defined in
 
-[Renderer/GLBaseViewport.ts:38](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/GLBaseViewport.ts#L38)
+[Renderer/GLBaseViewport.ts:38](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Renderer/GLBaseViewport.ts#L38)
 
 ___
 
@@ -165,7 +165,7 @@ ___
 
 #### Defined in
 
-[Renderer/GLBaseViewport.ts:52](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/GLBaseViewport.ts#L52)
+[Renderer/GLBaseViewport.ts:52](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Renderer/GLBaseViewport.ts#L52)
 
 ___
 
@@ -175,7 +175,7 @@ ___
 
 #### Defined in
 
-[Renderer/GLBaseViewport.ts:43](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/GLBaseViewport.ts#L43)
+[Renderer/GLBaseViewport.ts:43](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Renderer/GLBaseViewport.ts#L43)
 
 ___
 
@@ -189,7 +189,7 @@ ___
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:23](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L23)
+[SceneTree/ParameterOwner.ts:23](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/SceneTree/ParameterOwner.ts#L23)
 
 ___
 
@@ -199,7 +199,7 @@ ___
 
 #### Defined in
 
-[Renderer/GLBaseViewport.ts:44](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/GLBaseViewport.ts#L44)
+[Renderer/GLBaseViewport.ts:44](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Renderer/GLBaseViewport.ts#L44)
 
 ___
 
@@ -209,7 +209,7 @@ ___
 
 #### Defined in
 
-[Renderer/GLBaseViewport.ts:47](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/GLBaseViewport.ts#L47)
+[Renderer/GLBaseViewport.ts:47](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Renderer/GLBaseViewport.ts#L47)
 
 ___
 
@@ -219,7 +219,7 @@ ___
 
 #### Defined in
 
-[Renderer/GLBaseViewport.ts:32](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/GLBaseViewport.ts#L32)
+[Renderer/GLBaseViewport.ts:32](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Renderer/GLBaseViewport.ts#L32)
 
 ___
 
@@ -231,7 +231,7 @@ ___
 
 #### Defined in
 
-[Renderer/GLBaseViewport.ts:57](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/GLBaseViewport.ts#L57)
+[Renderer/GLBaseViewport.ts:57](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Renderer/GLBaseViewport.ts#L57)
 
 ___
 
@@ -241,7 +241,7 @@ ___
 
 #### Defined in
 
-[Renderer/GLBaseViewport.ts:42](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/GLBaseViewport.ts#L42)
+[Renderer/GLBaseViewport.ts:42](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Renderer/GLBaseViewport.ts#L42)
 
 ___
 
@@ -251,7 +251,7 @@ ___
 
 #### Defined in
 
-[Renderer/GLBaseViewport.ts:33](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/GLBaseViewport.ts#L33)
+[Renderer/GLBaseViewport.ts:33](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Renderer/GLBaseViewport.ts#L33)
 
 ___
 
@@ -261,7 +261,7 @@ ___
 
 #### Defined in
 
-[Renderer/GLBaseViewport.ts:34](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/GLBaseViewport.ts#L34)
+[Renderer/GLBaseViewport.ts:34](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Renderer/GLBaseViewport.ts#L34)
 
 ___
 
@@ -275,7 +275,7 @@ ___
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/EventEmitter.ts#L26)
+[Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Utilities/EventEmitter.ts#L26)
 
 ___
 
@@ -285,7 +285,7 @@ ___
 
 #### Defined in
 
-[Renderer/GLBaseViewport.ts:46](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/GLBaseViewport.ts#L46)
+[Renderer/GLBaseViewport.ts:46](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Renderer/GLBaseViewport.ts#L46)
 
 ___
 
@@ -295,7 +295,7 @@ ___
 
 #### Defined in
 
-[Renderer/GLBaseViewport.ts:31](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/GLBaseViewport.ts#L31)
+[Renderer/GLBaseViewport.ts:31](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Renderer/GLBaseViewport.ts#L31)
 
 ___
 
@@ -305,7 +305,7 @@ ___
 
 #### Defined in
 
-[Renderer/GLBaseViewport.ts:37](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/GLBaseViewport.ts#L37)
+[Renderer/GLBaseViewport.ts:37](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Renderer/GLBaseViewport.ts#L37)
 
 ___
 
@@ -319,7 +319,7 @@ ___
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:20](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L20)
+[SceneTree/ParameterOwner.ts:20](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/SceneTree/ParameterOwner.ts#L20)
 
 ___
 
@@ -333,7 +333,7 @@ ___
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:21](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L21)
+[SceneTree/ParameterOwner.ts:21](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/SceneTree/ParameterOwner.ts#L21)
 
 ___
 
@@ -347,7 +347,7 @@ ___
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:22](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L22)
+[SceneTree/ParameterOwner.ts:22](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/SceneTree/ParameterOwner.ts#L22)
 
 ___
 
@@ -357,7 +357,7 @@ ___
 
 #### Defined in
 
-[Renderer/GLBaseViewport.ts:30](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/GLBaseViewport.ts#L30)
+[Renderer/GLBaseViewport.ts:30](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Renderer/GLBaseViewport.ts#L30)
 
 ___
 
@@ -367,7 +367,7 @@ ___
 
 #### Defined in
 
-[Renderer/GLBaseViewport.ts:27](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/GLBaseViewport.ts#L27)
+[Renderer/GLBaseViewport.ts:27](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Renderer/GLBaseViewport.ts#L27)
 
 ## Methods
 
@@ -397,7 +397,7 @@ Adds `Parameter` object to the owner's parameter list.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:133](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L133)
+[SceneTree/ParameterOwner.ts:133](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/SceneTree/ParameterOwner.ts#L133)
 
 ___
 
@@ -427,7 +427,7 @@ This is used to handle migrating parameters to new names.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:90](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L90)
+[SceneTree/ParameterOwner.ts:90](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/SceneTree/ParameterOwner.ts#L90)
 
 ___
 
@@ -454,7 +454,7 @@ Copies Parameters from another `ParameterOwner` to current object.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:314](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L314)
+[SceneTree/ParameterOwner.ts:314](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/SceneTree/ParameterOwner.ts#L314)
 
 ___
 
@@ -476,7 +476,7 @@ The draw method.
 
 #### Defined in
 
-[Renderer/GLBaseViewport.ts:257](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/GLBaseViewport.ts#L257)
+[Renderer/GLBaseViewport.ts:257](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Renderer/GLBaseViewport.ts#L257)
 
 ___
 
@@ -498,7 +498,7 @@ Draws the highlights around geometries.
 
 #### Defined in
 
-[Renderer/GLBaseViewport.ts:401](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/GLBaseViewport.ts#L401)
+[Renderer/GLBaseViewport.ts:401](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Renderer/GLBaseViewport.ts#L401)
 
 ___
 
@@ -520,7 +520,7 @@ Draws the Silhouettes around geometries.
 
 #### Defined in
 
-[Renderer/GLBaseViewport.ts:334](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/GLBaseViewport.ts#L334)
+[Renderer/GLBaseViewport.ts:334](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Renderer/GLBaseViewport.ts#L334)
 
 ___
 
@@ -547,7 +547,7 @@ Triggers all listener functions in an event.
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/EventEmitter.ts#L154)
+[Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Utilities/EventEmitter.ts#L154)
 
 ___
 
@@ -574,7 +574,7 @@ The fromJSON method decodes a json object for this type.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:239](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L239)
+[SceneTree/ParameterOwner.ts:239](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/SceneTree/ParameterOwner.ts#L239)
 
 ___
 
@@ -596,7 +596,7 @@ Returns the unmangled name of the class.
 
 #### Defined in
 
-[Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/BaseClass.ts#L33)
+[Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Utilities/BaseClass.ts#L33)
 
 ___
 
@@ -614,7 +614,7 @@ The getHeight method.
 
 #### Defined in
 
-[Renderer/GLBaseViewport.ts:152](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/GLBaseViewport.ts#L152)
+[Renderer/GLBaseViewport.ts:152](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Renderer/GLBaseViewport.ts#L152)
 
 ___
 
@@ -638,7 +638,7 @@ Returns the unique id of the object.
 
 #### Defined in
 
-[Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/BaseClass.ts#L25)
+[Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Utilities/BaseClass.ts#L25)
 
 ___
 
@@ -656,7 +656,7 @@ The getManipulator method.
 
 #### Defined in
 
-[Renderer/GLBaseViewport.ts:452](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/GLBaseViewport.ts#L452)
+[Renderer/GLBaseViewport.ts:452](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Renderer/GLBaseViewport.ts#L452)
 
 ___
 
@@ -678,7 +678,7 @@ Returns the number of parameters current object has.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:39](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L39)
+[SceneTree/ParameterOwner.ts:39](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/SceneTree/ParameterOwner.ts#L39)
 
 ___
 
@@ -706,7 +706,7 @@ Returns `Parameter` object using the given name
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:100](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L100)
+[SceneTree/ParameterOwner.ts:100](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/SceneTree/ParameterOwner.ts#L100)
 
 ___
 
@@ -734,7 +734,7 @@ Returns `Parameter` object in a given index
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:68](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L68)
+[SceneTree/ParameterOwner.ts:68](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/SceneTree/ParameterOwner.ts#L68)
 
 ___
 
@@ -762,7 +762,7 @@ Returns the index of a parameter in parameter list.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:58](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L58)
+[SceneTree/ParameterOwner.ts:58](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/SceneTree/ParameterOwner.ts#L58)
 
 ___
 
@@ -784,7 +784,7 @@ Returns all the parameters of the object.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:48](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L48)
+[SceneTree/ParameterOwner.ts:48](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/SceneTree/ParameterOwner.ts#L48)
 
 ___
 
@@ -802,7 +802,7 @@ The getWidth method.
 
 #### Defined in
 
-[Renderer/GLBaseViewport.ts:144](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/GLBaseViewport.ts#L144)
+[Renderer/GLBaseViewport.ts:144](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Renderer/GLBaseViewport.ts#L144)
 
 ___
 
@@ -830,7 +830,7 @@ Validates if the specified parameter exists in the object.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:78](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L78)
+[SceneTree/ParameterOwner.ts:78](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/SceneTree/ParameterOwner.ts#L78)
 
 ___
 
@@ -862,7 +862,7 @@ It replaces the event in the specified index.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:147](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L147)
+[SceneTree/ParameterOwner.ts:147](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/SceneTree/ParameterOwner.ts#L147)
 
 ___
 
@@ -889,7 +889,7 @@ Removes a listener function from the specified event, using either the function 
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/EventEmitter.ts#L97)
+[Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Utilities/EventEmitter.ts#L97)
 
 ___
 
@@ -918,7 +918,7 @@ Adds a listener function for a given event name.
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/EventEmitter.ts#L44)
+[Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Utilities/EventEmitter.ts#L44)
 
 ___
 
@@ -940,7 +940,7 @@ Invoked when the user is pressing a key on the keyboard.
 
 #### Defined in
 
-[Renderer/GLBaseViewport.ts:529](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/GLBaseViewport.ts#L529)
+[Renderer/GLBaseViewport.ts:529](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Renderer/GLBaseViewport.ts#L529)
 
 ___
 
@@ -962,7 +962,7 @@ Causes an event to occur  when the user releases a key on the keyboard.
 
 #### Defined in
 
-[Renderer/GLBaseViewport.ts:535](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/GLBaseViewport.ts#L535)
+[Renderer/GLBaseViewport.ts:535](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Renderer/GLBaseViewport.ts#L535)
 
 ___
 
@@ -984,7 +984,7 @@ Invoked when the mouse pointer is moved out of an element.
 
 #### Defined in
 
-[Renderer/GLBaseViewport.ts:523](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/GLBaseViewport.ts#L523)
+[Renderer/GLBaseViewport.ts:523](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Renderer/GLBaseViewport.ts#L523)
 
 ___
 
@@ -1006,7 +1006,7 @@ Handler of the `pointerdown` event fired when the pointer device is initially pr
 
 #### Defined in
 
-[Renderer/GLBaseViewport.ts:479](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/GLBaseViewport.ts#L479)
+[Renderer/GLBaseViewport.ts:479](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Renderer/GLBaseViewport.ts#L479)
 
 ___
 
@@ -1028,7 +1028,7 @@ Invoked when the mouse pointer is moved into this viewport.
 
 #### Defined in
 
-[Renderer/GLBaseViewport.ts:506](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/GLBaseViewport.ts#L506)
+[Renderer/GLBaseViewport.ts:506](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Renderer/GLBaseViewport.ts#L506)
 
 ___
 
@@ -1050,7 +1050,7 @@ Invoked when the mouse pointer is moved out of this viewport.
 
 #### Defined in
 
-[Renderer/GLBaseViewport.ts:515](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/GLBaseViewport.ts#L515)
+[Renderer/GLBaseViewport.ts:515](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Renderer/GLBaseViewport.ts#L515)
 
 ___
 
@@ -1072,7 +1072,7 @@ Handler of the `pointermove` event fired when the pointer device changes coordin
 
 #### Defined in
 
-[Renderer/GLBaseViewport.ts:497](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/GLBaseViewport.ts#L497)
+[Renderer/GLBaseViewport.ts:497](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Renderer/GLBaseViewport.ts#L497)
 
 ___
 
@@ -1094,7 +1094,7 @@ Handler of the `pointerup` event fired when the pointer device is finally releas
 
 #### Defined in
 
-[Renderer/GLBaseViewport.ts:488](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/GLBaseViewport.ts#L488)
+[Renderer/GLBaseViewport.ts:488](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Renderer/GLBaseViewport.ts#L488)
 
 ___
 
@@ -1132,7 +1132,7 @@ asset.once('loaded', () => {
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/EventEmitter.ts#L82)
+[Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Utilities/EventEmitter.ts#L82)
 
 ___
 
@@ -1159,7 +1159,7 @@ to perform general updates (see GLPass or BaseItem).
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:122](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L122)
+[SceneTree/ParameterOwner.ts:122](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/SceneTree/ParameterOwner.ts#L122)
 
 ___
 
@@ -1191,7 +1191,7 @@ used to build the right `Parameter` class. Then all of them are added to the obj
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:274](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L274)
+[SceneTree/ParameterOwner.ts:274](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/SceneTree/ParameterOwner.ts#L274)
 
 ___
 
@@ -1218,7 +1218,7 @@ remove listener by ID returned from #on
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/EventEmitter.ts#L134)
+[Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Utilities/EventEmitter.ts#L134)
 
 ___
 
@@ -1246,7 +1246,7 @@ Removes `Parameter` from owner, by using parameter's name.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:174](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L174)
+[SceneTree/ParameterOwner.ts:174](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/SceneTree/ParameterOwner.ts#L174)
 
 ___
 
@@ -1274,7 +1274,7 @@ Replaces old `Parameter` by passing a new one with the same name.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:196](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L196)
+[SceneTree/ParameterOwner.ts:196](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/SceneTree/ParameterOwner.ts#L196)
 
 ___
 
@@ -1297,7 +1297,7 @@ The resize method.
 
 #### Defined in
 
-[Renderer/GLBaseViewport.ts:161](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/GLBaseViewport.ts#L161)
+[Renderer/GLBaseViewport.ts:161](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Renderer/GLBaseViewport.ts#L161)
 
 ___
 
@@ -1321,7 +1321,7 @@ Resize any offscreen render targets.
 
 #### Defined in
 
-[Renderer/GLBaseViewport.ts:178](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/GLBaseViewport.ts#L178)
+[Renderer/GLBaseViewport.ts:178](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Renderer/GLBaseViewport.ts#L178)
 
 ___
 
@@ -1343,7 +1343,7 @@ Sets the tool that will receive mouse, touch and keyboard events from the viewpo
 
 #### Defined in
 
-[Renderer/GLBaseViewport.ts:460](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/GLBaseViewport.ts#L460)
+[Renderer/GLBaseViewport.ts:460](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Renderer/GLBaseViewport.ts#L460)
 
 ___
 
@@ -1371,7 +1371,7 @@ The toJSON method encodes this type as a json object for persistence.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:216](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L216)
+[SceneTree/ParameterOwner.ts:216](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/SceneTree/ParameterOwner.ts#L216)
 
 ___
 
@@ -1399,5 +1399,5 @@ Converts object's JSON value and converts it to a string.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:301](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L301)
+[SceneTree/ParameterOwner.ts:301](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/SceneTree/ParameterOwner.ts#L301)
 

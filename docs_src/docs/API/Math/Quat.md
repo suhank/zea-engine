@@ -33,7 +33,7 @@ Creates a quaternion.
 
 #### Defined in
 
-[Math/Quat.ts:29](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/Quat.ts#L29)
+[Math/Quat.ts:29](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Quat.ts#L29)
 
 ## Properties
 
@@ -43,7 +43,7 @@ Creates a quaternion.
 
 #### Defined in
 
-[Math/Quat.ts:20](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/Quat.ts#L20)
+[Math/Quat.ts:20](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Quat.ts#L20)
 
 ## Accessors
 
@@ -61,7 +61,7 @@ Getter for `w` value.
 
 #### Defined in
 
-[Math/Quat.ts:117](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/Quat.ts#L117)
+[Math/Quat.ts:117](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Quat.ts#L117)
 
 • `set` **w**(`val`): `void`
 
@@ -81,7 +81,7 @@ Setter for `w`.
 
 #### Defined in
 
-[Math/Quat.ts:125](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/Quat.ts#L125)
+[Math/Quat.ts:125](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Quat.ts#L125)
 
 ___
 
@@ -99,7 +99,7 @@ Getter for `x` axis rotation.
 
 #### Defined in
 
-[Math/Quat.ts:63](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/Quat.ts#L63)
+[Math/Quat.ts:63](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Quat.ts#L63)
 
 • `set` **x**(`val`): `void`
 
@@ -119,7 +119,7 @@ Setter for `x` axis rotation.
 
 #### Defined in
 
-[Math/Quat.ts:72](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/Quat.ts#L72)
+[Math/Quat.ts:72](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Quat.ts#L72)
 
 ___
 
@@ -137,7 +137,7 @@ Getter for `y` axis rotation.
 
 #### Defined in
 
-[Math/Quat.ts:81](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/Quat.ts#L81)
+[Math/Quat.ts:81](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Quat.ts#L81)
 
 • `set` **y**(`val`): `void`
 
@@ -157,7 +157,7 @@ Setter for `y` axis rotation.
 
 #### Defined in
 
-[Math/Quat.ts:90](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/Quat.ts#L90)
+[Math/Quat.ts:90](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Quat.ts#L90)
 
 ___
 
@@ -175,7 +175,7 @@ Getter for `z` axis rotation.
 
 #### Defined in
 
-[Math/Quat.ts:99](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/Quat.ts#L99)
+[Math/Quat.ts:99](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Quat.ts#L99)
 
 • `set` **z**(`val`): `void`
 
@@ -195,7 +195,7 @@ Setter for `z` axis rotation.
 
 #### Defined in
 
-[Math/Quat.ts:108](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/Quat.ts#L108)
+[Math/Quat.ts:108](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Quat.ts#L108)
 
 ## Methods
 
@@ -219,7 +219,7 @@ Adds other to this Quat and return the result as a new Quat.
 
 #### Defined in
 
-[Math/Quat.ts:520](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/Quat.ts#L520)
+[Math/Quat.ts:520](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Quat.ts#L520)
 
 ___
 
@@ -241,7 +241,7 @@ Adds other to this Quat.
 
 #### Defined in
 
-[Math/Quat.ts:529](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/Quat.ts#L529)
+[Math/Quat.ts:529](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Quat.ts#L529)
 
 ___
 
@@ -264,7 +264,7 @@ the Quat values is the shortest path over the hyper-sphere.
 
 #### Defined in
 
-[Math/Quat.ts:685](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/Quat.ts#L685)
+[Math/Quat.ts:685](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Quat.ts#L685)
 
 ___
 
@@ -289,7 +289,7 @@ Returns true if this Quat is approximately the same as other
 
 #### Defined in
 
-[Math/Quat.ts:505](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/Quat.ts#L505)
+[Math/Quat.ts:505](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Quat.ts#L505)
 
 ___
 
@@ -307,7 +307,7 @@ Returns the type as an array. Often used to pass types to the GPU.
 
 #### Defined in
 
-[Math/Quat.ts:1030](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/Quat.ts#L1030)
+[Math/Quat.ts:1030](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Quat.ts#L1030)
 
 ___
 
@@ -325,7 +325,7 @@ Clones this Quat and returns a new Quat.
 
 #### Defined in
 
-[Math/Quat.ts:1021](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/Quat.ts#L1021)
+[Math/Quat.ts:1021](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Quat.ts#L1021)
 
 ___
 
@@ -345,7 +345,7 @@ in the opposite direction around the rotational axis.
 
 #### Defined in
 
-[Math/Quat.ts:666](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/Quat.ts#L666)
+[Math/Quat.ts:666](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Quat.ts#L666)
 
 ___
 
@@ -369,7 +369,7 @@ Calculates the cross product of two Quats and returns the result as a new Quat.
 
 #### Defined in
 
-[Math/Quat.ts:646](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/Quat.ts#L646)
+[Math/Quat.ts:646](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Quat.ts#L646)
 
 ___
 
@@ -393,7 +393,7 @@ Calculates the dot product of this quat against another.
 
 #### Defined in
 
-[Math/Quat.ts:636](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/Quat.ts#L636)
+[Math/Quat.ts:636](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Quat.ts#L636)
 
 ___
 
@@ -415,7 +415,7 @@ The fromJSON method decodes a json object for this type.
 
 #### Defined in
 
-[Math/Quat.ts:1066](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/Quat.ts#L1066)
+[Math/Quat.ts:1066](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Quat.ts#L1066)
 
 ___
 
@@ -433,7 +433,7 @@ Return the angle of the Quat.
 
 #### Defined in
 
-[Math/Quat.ts:474](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/Quat.ts#L474)
+[Math/Quat.ts:474](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Quat.ts#L474)
 
 ___
 
@@ -451,7 +451,7 @@ Calculates a Vec3 value aligned with the X axis of this quaternion.
 
 #### Defined in
 
-[Math/Quat.ts:859](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/Quat.ts#L859)
+[Math/Quat.ts:859](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Quat.ts#L859)
 
 ___
 
@@ -469,7 +469,7 @@ Calculates a Vec3 value aligned with the Y axis of this quaternion.
 
 #### Defined in
 
-[Math/Quat.ts:875](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/Quat.ts#L875)
+[Math/Quat.ts:875](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Quat.ts#L875)
 
 ___
 
@@ -487,7 +487,7 @@ Calculates a Vec3 value aligned with the Z axis of this quaternion.
 
 #### Defined in
 
-[Math/Quat.ts:891](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/Quat.ts#L891)
+[Math/Quat.ts:891](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Quat.ts#L891)
 
 ___
 
@@ -505,7 +505,7 @@ Return the inverse of the `Quat`
 
 #### Defined in
 
-[Math/Quat.ts:675](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/Quat.ts#L675)
+[Math/Quat.ts:675](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Quat.ts#L675)
 
 ___
 
@@ -529,7 +529,7 @@ Checks if this Quat contains the same values as the other Quat.
 
 #### Defined in
 
-[Math/Quat.ts:484](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/Quat.ts#L484)
+[Math/Quat.ts:484](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Quat.ts#L484)
 
 ___
 
@@ -547,7 +547,7 @@ Checks if the angle of the Quat is less that ` Number.EPSILON`
 
 #### Defined in
 
-[Math/Quat.ts:465](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/Quat.ts#L465)
+[Math/Quat.ts:465](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Quat.ts#L465)
 
 ___
 
@@ -565,7 +565,7 @@ Calculates the length of this Quat.
 
 #### Defined in
 
-[Math/Quat.ts:573](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/Quat.ts#L573)
+[Math/Quat.ts:573](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Quat.ts#L573)
 
 ___
 
@@ -583,7 +583,7 @@ Calculates the squared length of this Quat.
 
 #### Defined in
 
-[Math/Quat.ts:586](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/Quat.ts#L586)
+[Math/Quat.ts:586](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Quat.ts#L586)
 
 ___
 
@@ -608,7 +608,7 @@ Performs a linear interpolation of this Quat towards another Quat, returning the
 
 #### Defined in
 
-[Math/Quat.ts:971](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/Quat.ts#L971)
+[Math/Quat.ts:971](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Quat.ts#L971)
 
 ___
 
@@ -632,7 +632,7 @@ Reflects this quaternion according to the axis provided.
 
 #### Defined in
 
-[Math/Quat.ts:910](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/Quat.ts#L910)
+[Math/Quat.ts:910](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Quat.ts#L910)
 
 ___
 
@@ -656,7 +656,7 @@ Multiplies two this quat by another returning the result as a new Quat.
 
 #### Defined in
 
-[Math/Quat.ts:697](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/Quat.ts#L697)
+[Math/Quat.ts:697](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Quat.ts#L697)
 
 ___
 
@@ -678,7 +678,7 @@ Multiplies this quat by another, modifying its values in place.
 
 #### Defined in
 
-[Math/Quat.ts:720](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/Quat.ts#L720)
+[Math/Quat.ts:720](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Quat.ts#L720)
 
 ___
 
@@ -696,7 +696,7 @@ Normalizes the Quat and returns it as a new Quat.
 
 #### Defined in
 
-[Math/Quat.ts:599](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/Quat.ts#L599)
+[Math/Quat.ts:599](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Quat.ts#L599)
 
 ___
 
@@ -712,7 +712,7 @@ Normalizes the Quat, modifying its values in place.
 
 #### Defined in
 
-[Math/Quat.ts:617](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/Quat.ts#L617)
+[Math/Quat.ts:617](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Quat.ts#L617)
 
 ___
 
@@ -736,7 +736,7 @@ Returns true if this Quat is NOT exactly the same other.
 
 #### Defined in
 
-[Math/Quat.ts:494](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/Quat.ts#L494)
+[Math/Quat.ts:494](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Quat.ts#L494)
 
 ___
 
@@ -758,7 +758,7 @@ Loads the state of the value from a binary reader.
 
 #### Defined in
 
-[Math/Quat.ts:1079](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/Quat.ts#L1079)
+[Math/Quat.ts:1079](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Quat.ts#L1079)
 
 ___
 
@@ -784,7 +784,7 @@ you want axial translation as well as rotation.
 
 #### Defined in
 
-[Math/Quat.ts:746](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/Quat.ts#L746)
+[Math/Quat.ts:746](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Quat.ts#L746)
 
 ___
 
@@ -806,7 +806,7 @@ Sets this quaternion to a rotation by the given angle about the X axis.
 
 #### Defined in
 
-[Math/Quat.ts:757](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/Quat.ts#L757)
+[Math/Quat.ts:757](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Quat.ts#L757)
 
 ___
 
@@ -828,7 +828,7 @@ Sets this quaternion to a rotation by the given angle about the Y axis.
 
 #### Defined in
 
-[Math/Quat.ts:778](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/Quat.ts#L778)
+[Math/Quat.ts:778](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Quat.ts#L778)
 
 ___
 
@@ -850,7 +850,7 @@ Sets this quaternion to a rotation by the given angle about the Z axis.
 
 #### Defined in
 
-[Math/Quat.ts:799](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/Quat.ts#L799)
+[Math/Quat.ts:799](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Quat.ts#L799)
 
 ___
 
@@ -874,7 +874,7 @@ Scales this Quat by scalar and returns the result as a new Quat.
 
 #### Defined in
 
-[Math/Quat.ts:552](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/Quat.ts#L552)
+[Math/Quat.ts:552](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Quat.ts#L552)
 
 ___
 
@@ -896,7 +896,7 @@ Scales this Quat by scalar.
 
 #### Defined in
 
-[Math/Quat.ts:561](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/Quat.ts#L561)
+[Math/Quat.ts:561](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Quat.ts#L561)
 
 ___
 
@@ -921,7 +921,7 @@ Setter from scalar components.
 
 #### Defined in
 
-[Math/Quat.ts:137](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/Quat.ts#L137)
+[Math/Quat.ts:137](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Quat.ts#L137)
 
 ___
 
@@ -943,7 +943,7 @@ Sets the state of the Quat class using a Float32Array.
 
 #### Defined in
 
-[Math/Quat.ts:149](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/Quat.ts#L149)
+[Math/Quat.ts:149](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Quat.ts#L149)
 
 ___
 
@@ -966,7 +966,7 @@ Sets the state of the `Quat` from two `Vec3`. The quaternion would then represen
 
 #### Defined in
 
-[Math/Quat.ts:375](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/Quat.ts#L375)
+[Math/Quat.ts:375](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Quat.ts#L375)
 
 ___
 
@@ -989,7 +989,7 @@ Set this Quat to a rotation defined by an axis and an angle (in radians).
 
 #### Defined in
 
-[Math/Quat.ts:349](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/Quat.ts#L349)
+[Math/Quat.ts:349](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Quat.ts#L349)
 
 ___
 
@@ -1014,7 +1014,7 @@ Sets the state of the Quat to look in a particular direction along the z axis.
 
 #### Defined in
 
-[Math/Quat.ts:363](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/Quat.ts#L363)
+[Math/Quat.ts:363](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Quat.ts#L363)
 
 ___
 
@@ -1036,7 +1036,7 @@ Set this Quat from a euler rotation.
 
 #### Defined in
 
-[Math/Quat.ts:170](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/Quat.ts#L170)
+[Math/Quat.ts:170](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Quat.ts#L170)
 
 ___
 
@@ -1058,7 +1058,7 @@ Set the Quat from a Mat3.
 
 #### Defined in
 
-[Math/Quat.ts:389](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/Quat.ts#L389)
+[Math/Quat.ts:389](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Quat.ts#L389)
 
 ___
 
@@ -1080,7 +1080,7 @@ Set the Quat from a Mat4.
 
 #### Defined in
 
-[Math/Quat.ts:427](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/Quat.ts#L427)
+[Math/Quat.ts:427](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Quat.ts#L427)
 
 ___
 
@@ -1102,7 +1102,7 @@ Setter from another vector.
 
 #### Defined in
 
-[Math/Quat.ts:158](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/Quat.ts#L158)
+[Math/Quat.ts:158](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Quat.ts#L158)
 
 ___
 
@@ -1127,7 +1127,7 @@ Performs a spherical linear interpolation of this Quat towards another Quat, ret
 
 #### Defined in
 
-[Math/Quat.ts:989](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/Quat.ts#L989)
+[Math/Quat.ts:989](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Quat.ts#L989)
 
 ___
 
@@ -1151,7 +1151,7 @@ Subtracts other from this Quat and returns the result as a new Quat.
 
 #### Defined in
 
-[Math/Quat.ts:542](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/Quat.ts#L542)
+[Math/Quat.ts:542](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Quat.ts#L542)
 
 ___
 
@@ -1175,7 +1175,7 @@ Converts Quat to an EulerAngles
 
 #### Defined in
 
-[Math/Quat.ts:269](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/Quat.ts#L269)
+[Math/Quat.ts:269](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Quat.ts#L269)
 
 ___
 
@@ -1193,7 +1193,7 @@ The toJSON method encodes this type as a json object for persistence.
 
 #### Defined in
 
-[Math/Quat.ts:1052](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/Quat.ts#L1052)
+[Math/Quat.ts:1052](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Quat.ts#L1052)
 
 ___
 
@@ -1211,7 +1211,7 @@ Converts this Quat to a Mat3 (a 3x3 matrix).
 
 #### Defined in
 
-[Math/Quat.ts:820](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/Quat.ts#L820)
+[Math/Quat.ts:820](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Quat.ts#L820)
 
 ___
 
@@ -1229,7 +1229,7 @@ Converts this Quat to a Mat4 (a 4x4 matrix).
 
 #### Defined in
 
-[Math/Quat.ts:929](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/Quat.ts#L929)
+[Math/Quat.ts:929](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Quat.ts#L929)
 
 ___
 
@@ -1247,5 +1247,5 @@ Converts this Vec3 to a string in JSON format.
 
 #### Defined in
 
-[Math/Quat.ts:1042](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/Quat.ts#L1042)
+[Math/Quat.ts:1042](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Quat.ts#L1042)
 
