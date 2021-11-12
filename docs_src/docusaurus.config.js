@@ -29,6 +29,7 @@ module.exports = {
   favicon: 'img/favicon.ico',
   organizationName: 'Zea Inc.', // Usually your GitHub org/user name.
   projectName: 'Zea Engine Docs', // Usually your repo name.
+  trailingSlash: false,
 
   plugins: [
     [
@@ -42,7 +43,12 @@ module.exports = {
         },
         entryPoints: ['../src/'],
         entryPointStrategy: 'expand',
-        exclude: ['**/*+(**Impl|**PostCommand|**WsCommand|**index).ts', '**/decoders/*', '**/*+(**Utils).ts', '**/*.test.ts'],
+        exclude: [
+          '**/*+(**Impl|**PostCommand|**WsCommand|**index).ts',
+          '**/decoders/*',
+          '**/*+(**Utils).ts',
+          '**/*.test.ts',
+        ],
         // excludePrivate: true,
       },
     ],
