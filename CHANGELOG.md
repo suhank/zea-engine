@@ -7,7 +7,29 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### ⚠ BREAKING CHANGES
 
+* Canvas must now be nested under a another DOM element that it is resized to fit 100%
+This addresses a circular relationship where the canvas width and height must be calculated
+based on its parent, not on itself.
+
+```css
+#rendererHolder {
+  width: 500;
+  height: 300;
+}
+#renderer {
+  width: 100%;
+  height: 100%;
+}
+```
+
+```html
+<div id="canvasHolder">
+  <canvas id="canvas"></canvas>
+</div>
+```
+
 * Scene Settings has been removed, and its values migrated to either the Scene or the Viewport.
+
 
 Old code
 ```javascript
@@ -33,6 +55,20 @@ New code
 const attr = new Vec3Attribute()
 points.addVertexAttribute('foo', attr)
 ```
+
+* VertexAttribute values are no longer initialized to zero and must be explicitly initialized.
+
+New code
+```javascript
+const line = new Lines()
+line.setNumVertices(2)
+line.setNumSegments(1)
+line.setSegmentVertexIndices(0, 0, 1)
+line.getVertexAttribute('positions').setValue(0, new Vec3(0, 0, 0))
+line.getVertexAttribute('positions').setValue(1, new Vec3(0, 0, 1))
+```
+
+
 
 * VertexAttributes.length was removed and replaced with getCount
 
