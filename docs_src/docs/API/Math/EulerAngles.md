@@ -33,7 +33,7 @@ It could be either the `string` or the `number` value.
 
 #### Defined in
 
-[Math/EulerAngles.ts:23](https://github.com/ZeaInc/zea-engine/blob/a43ac923/src/Math/EulerAngles.ts#L23)
+[Math/EulerAngles.ts:23](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/EulerAngles.ts#L23)
 
 ## Properties
 
@@ -43,7 +43,7 @@ It could be either the `string` or the `number` value.
 
 #### Defined in
 
-[Math/EulerAngles.ts:10](https://github.com/ZeaInc/zea-engine/blob/a43ac923/src/Math/EulerAngles.ts#L10)
+[Math/EulerAngles.ts:10](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/EulerAngles.ts#L10)
 
 ___
 
@@ -53,7 +53,7 @@ ___
 
 #### Defined in
 
-[Math/EulerAngles.ts:9](https://github.com/ZeaInc/zea-engine/blob/a43ac923/src/Math/EulerAngles.ts#L9)
+[Math/EulerAngles.ts:9](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/EulerAngles.ts#L9)
 
 ## Accessors
 
@@ -71,7 +71,7 @@ Getter for x axis rotation.
 
 #### Defined in
 
-[Math/EulerAngles.ts:66](https://github.com/ZeaInc/zea-engine/blob/a43ac923/src/Math/EulerAngles.ts#L66)
+[Math/EulerAngles.ts:66](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/EulerAngles.ts#L66)
 
 • `set` **x**(`val`): `void`
 
@@ -91,7 +91,7 @@ Setter for x axis rotation.
 
 #### Defined in
 
-[Math/EulerAngles.ts:75](https://github.com/ZeaInc/zea-engine/blob/a43ac923/src/Math/EulerAngles.ts#L75)
+[Math/EulerAngles.ts:75](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/EulerAngles.ts#L75)
 
 ___
 
@@ -109,7 +109,7 @@ Getter for y axis rotation.
 
 #### Defined in
 
-[Math/EulerAngles.ts:84](https://github.com/ZeaInc/zea-engine/blob/a43ac923/src/Math/EulerAngles.ts#L84)
+[Math/EulerAngles.ts:84](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/EulerAngles.ts#L84)
 
 • `set` **y**(`val`): `void`
 
@@ -129,7 +129,7 @@ Setter for y axis rotation.
 
 #### Defined in
 
-[Math/EulerAngles.ts:93](https://github.com/ZeaInc/zea-engine/blob/a43ac923/src/Math/EulerAngles.ts#L93)
+[Math/EulerAngles.ts:93](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/EulerAngles.ts#L93)
 
 ___
 
@@ -147,7 +147,7 @@ Getter for z axis rotation.
 
 #### Defined in
 
-[Math/EulerAngles.ts:102](https://github.com/ZeaInc/zea-engine/blob/a43ac923/src/Math/EulerAngles.ts#L102)
+[Math/EulerAngles.ts:102](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/EulerAngles.ts#L102)
 
 • `set` **z**(`val`): `void`
 
@@ -167,7 +167,7 @@ Setter for z axis rotation.
 
 #### Defined in
 
-[Math/EulerAngles.ts:111](https://github.com/ZeaInc/zea-engine/blob/a43ac923/src/Math/EulerAngles.ts#L111)
+[Math/EulerAngles.ts:111](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/EulerAngles.ts#L111)
 
 ## Methods
 
@@ -187,7 +187,7 @@ Setter for z axis rotation.
 
 #### Defined in
 
-[Math/EulerAngles.ts:150](https://github.com/ZeaInc/zea-engine/blob/a43ac923/src/Math/EulerAngles.ts#L150)
+[Math/EulerAngles.ts:150](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/EulerAngles.ts#L150)
 
 ___
 
@@ -211,7 +211,7 @@ Sets the EulerAngles
 
 #### Defined in
 
-[Math/EulerAngles.ts:122](https://github.com/ZeaInc/zea-engine/blob/a43ac923/src/Math/EulerAngles.ts#L122)
+[Math/EulerAngles.ts:122](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/EulerAngles.ts#L122)
 
 ___
 
@@ -225,7 +225,7 @@ ___
 
 #### Defined in
 
-[Math/EulerAngles.ts:141](https://github.com/ZeaInc/zea-engine/blob/a43ac923/src/Math/EulerAngles.ts#L141)
+[Math/EulerAngles.ts:141](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/EulerAngles.ts#L141)
 
 ___
 
@@ -243,5 +243,5 @@ Converts this Vec3 to a string in JSON format.
 
 #### Defined in
 
-[Math/EulerAngles.ts:136](https://github.com/ZeaInc/zea-engine/blob/a43ac923/src/Math/EulerAngles.ts#L136)
+[Math/EulerAngles.ts:136](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Math/EulerAngles.ts#L136)
 

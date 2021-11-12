@@ -23,7 +23,7 @@ JSON loader plugin.
 
 #### Defined in
 
-[SceneTree/ResourceLoader/JsonLoaderPlugin.ts:13](https://github.com/ZeaInc/zea-engine/blob/a43ac923/src/SceneTree/ResourceLoader/JsonLoaderPlugin.ts#L13)
+[SceneTree/ResourceLoader/JsonLoaderPlugin.ts:13](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ResourceLoader/JsonLoaderPlugin.ts#L13)
 
 ## Methods
 
@@ -41,7 +41,7 @@ The type of file.
 
 #### Defined in
 
-[SceneTree/ResourceLoader/JsonLoaderPlugin.ts:22](https://github.com/ZeaInc/zea-engine/blob/a43ac923/src/SceneTree/ResourceLoader/JsonLoaderPlugin.ts#L22)
+[SceneTree/ResourceLoader/JsonLoaderPlugin.ts:22](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ResourceLoader/JsonLoaderPlugin.ts#L22)
 
 ___
 
@@ -61,7 +61,7 @@ ___
 
 #### Defined in
 
-[SceneTree/ResourceLoader/JsonLoaderPlugin.ts:14](https://github.com/ZeaInc/zea-engine/blob/a43ac923/src/SceneTree/ResourceLoader/JsonLoaderPlugin.ts#L14)
+[SceneTree/ResourceLoader/JsonLoaderPlugin.ts:14](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ResourceLoader/JsonLoaderPlugin.ts#L14)
 
 ___
 
@@ -81,5 +81,5 @@ ___
 
 #### Defined in
 
-[SceneTree/ResourceLoader/JsonLoaderPlugin.ts:26](https://github.com/ZeaInc/zea-engine/blob/a43ac923/src/SceneTree/ResourceLoader/JsonLoaderPlugin.ts#L26)
+[SceneTree/ResourceLoader/JsonLoaderPlugin.ts:26](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ResourceLoader/JsonLoaderPlugin.ts#L26)
 
