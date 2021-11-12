@@ -28,6 +28,8 @@ based on its parent, not on itself.
 </div>
 ```
 
+* The Scene Tree now contains only TreeItems. This means items such as Kinematic Solvers can no longer be added as children in the tree.
+
 * Scene Settings has been removed, and its values migrated to either the Scene or the Viewport.
 
 
