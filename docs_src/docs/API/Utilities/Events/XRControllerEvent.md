@@ -34,7 +34,7 @@ Create an BaseEvent.
 
 #### Defined in
 
-[Utilities/Events/XRControllerEvent.ts:8](https://github.com/ZeaInc/zea-engine/blob/9a102c0d/src/Utilities/Events/XRControllerEvent.ts#L8)
+[Utilities/Events/XRControllerEvent.ts:8](https://github.com/ZeaInc/zea-engine/blob/a43ac923/src/Utilities/Events/XRControllerEvent.ts#L8)
 
 ## Properties
 
@@ -44,7 +44,7 @@ Create an BaseEvent.
 
 #### Defined in
 
-[Utilities/Events/XRControllerEvent.ts:6](https://github.com/ZeaInc/zea-engine/blob/9a102c0d/src/Utilities/Events/XRControllerEvent.ts#L6)
+[Utilities/Events/XRControllerEvent.ts:6](https://github.com/ZeaInc/zea-engine/blob/a43ac923/src/Utilities/Events/XRControllerEvent.ts#L6)
 
 ___
 
@@ -54,7 +54,7 @@ ___
 
 #### Defined in
 
-[Utilities/Events/XRControllerEvent.ts:7](https://github.com/ZeaInc/zea-engine/blob/9a102c0d/src/Utilities/Events/XRControllerEvent.ts#L7)
+[Utilities/Events/XRControllerEvent.ts:7](https://github.com/ZeaInc/zea-engine/blob/a43ac923/src/Utilities/Events/XRControllerEvent.ts#L7)
 
 ___
 
@@ -64,7 +64,7 @@ ___
 
 #### Defined in
 
-[Utilities/Events/XRControllerEvent.ts:5](https://github.com/ZeaInc/zea-engine/blob/9a102c0d/src/Utilities/Events/XRControllerEvent.ts#L5)
+[Utilities/Events/XRControllerEvent.ts:5](https://github.com/ZeaInc/zea-engine/blob/a43ac923/src/Utilities/Events/XRControllerEvent.ts#L5)
 
 ___
 
@@ -78,7 +78,7 @@ ___
 
 #### Defined in
 
-[Utilities/Events/ZeaPointerEvent.ts:18](https://github.com/ZeaInc/zea-engine/blob/9a102c0d/src/Utilities/Events/ZeaPointerEvent.ts#L18)
+[Utilities/Events/ZeaPointerEvent.ts:18](https://github.com/ZeaInc/zea-engine/blob/a43ac923/src/Utilities/Events/ZeaPointerEvent.ts#L18)
 
 ___
 
@@ -92,7 +92,7 @@ ___
 
 #### Defined in
 
-[Utilities/Events/ZeaPointerEvent.ts:19](https://github.com/ZeaInc/zea-engine/blob/9a102c0d/src/Utilities/Events/ZeaPointerEvent.ts#L19)
+[Utilities/Events/ZeaPointerEvent.ts:19](https://github.com/ZeaInc/zea-engine/blob/a43ac923/src/Utilities/Events/ZeaPointerEvent.ts#L19)
 
 ___
 
@@ -106,7 +106,7 @@ ___
 
 #### Defined in
 
-[Utilities/Events/ZeaPointerEvent.ts:14](https://github.com/ZeaInc/zea-engine/blob/9a102c0d/src/Utilities/Events/ZeaPointerEvent.ts#L14)
+[Utilities/Events/ZeaPointerEvent.ts:14](https://github.com/ZeaInc/zea-engine/blob/a43ac923/src/Utilities/Events/ZeaPointerEvent.ts#L14)
 
 ___
 
@@ -120,7 +120,7 @@ ___
 
 #### Defined in
 
-[Utilities/Events/ZeaPointerEvent.ts:16](https://github.com/ZeaInc/zea-engine/blob/9a102c0d/src/Utilities/Events/ZeaPointerEvent.ts#L16)
+[Utilities/Events/ZeaPointerEvent.ts:16](https://github.com/ZeaInc/zea-engine/blob/a43ac923/src/Utilities/Events/ZeaPointerEvent.ts#L16)
 
 ___
 
@@ -134,7 +134,7 @@ ___
 
 #### Defined in
 
-[Utilities/Events/ZeaPointerEvent.ts:15](https://github.com/ZeaInc/zea-engine/blob/9a102c0d/src/Utilities/Events/ZeaPointerEvent.ts#L15)
+[Utilities/Events/ZeaPointerEvent.ts:15](https://github.com/ZeaInc/zea-engine/blob/a43ac923/src/Utilities/Events/ZeaPointerEvent.ts#L15)
 
 ## Methods
 
@@ -152,7 +152,7 @@ ___
 
 #### Defined in
 
-[Utilities/Events/ZeaPointerEvent.ts:34](https://github.com/ZeaInc/zea-engine/blob/9a102c0d/src/Utilities/Events/ZeaPointerEvent.ts#L34)
+[Utilities/Events/ZeaPointerEvent.ts:34](https://github.com/ZeaInc/zea-engine/blob/a43ac923/src/Utilities/Events/ZeaPointerEvent.ts#L34)
 
 ___
 
@@ -170,7 +170,7 @@ ___
 
 #### Defined in
 
-[Utilities/Events/ZeaPointerEvent.ts:38](https://github.com/ZeaInc/zea-engine/blob/9a102c0d/src/Utilities/Events/ZeaPointerEvent.ts#L38)
+[Utilities/Events/ZeaPointerEvent.ts:38](https://github.com/ZeaInc/zea-engine/blob/a43ac923/src/Utilities/Events/ZeaPointerEvent.ts#L38)
 
 ___
 
@@ -194,7 +194,7 @@ ___
 
 #### Defined in
 
-[Utilities/Events/ZeaPointerEvent.ts:30](https://github.com/ZeaInc/zea-engine/blob/9a102c0d/src/Utilities/Events/ZeaPointerEvent.ts#L30)
+[Utilities/Events/ZeaPointerEvent.ts:30](https://github.com/ZeaInc/zea-engine/blob/a43ac923/src/Utilities/Events/ZeaPointerEvent.ts#L30)
 
 ___
 
@@ -212,5 +212,5 @@ ___
 
 #### Defined in
 
-[Utilities/Events/ZeaPointerEvent.ts:26](https://github.com/ZeaInc/zea-engine/blob/9a102c0d/src/Utilities/Events/ZeaPointerEvent.ts#L26)
+[Utilities/Events/ZeaPointerEvent.ts:26](https://github.com/ZeaInc/zea-engine/blob/a43ac923/src/Utilities/Events/ZeaPointerEvent.ts#L26)
 

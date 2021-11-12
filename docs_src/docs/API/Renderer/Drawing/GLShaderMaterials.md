@@ -37,7 +37,7 @@ Create a GL shader material.
 
 #### Defined in
 
-[Renderer/Drawing/GLShaderMaterials.ts:25](https://github.com/ZeaInc/zea-engine/blob/9a102c0d/src/Renderer/Drawing/GLShaderMaterials.ts#L25)
+[Renderer/Drawing/GLShaderMaterials.ts:25](https://github.com/ZeaInc/zea-engine/blob/a43ac923/src/Renderer/Drawing/GLShaderMaterials.ts#L25)
 
 ## Properties
 
@@ -51,7 +51,7 @@ Create a GL shader material.
 
 #### Defined in
 
-[Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/9a102c0d/src/Utilities/BaseClass.ts#L11)
+[Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/a43ac923/src/Utilities/BaseClass.ts#L11)
 
 ___
 
@@ -61,7 +61,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLShaderMaterials.ts:13](https://github.com/ZeaInc/zea-engine/blob/9a102c0d/src/Renderer/Drawing/GLShaderMaterials.ts#L13)
+[Renderer/Drawing/GLShaderMaterials.ts:13](https://github.com/ZeaInc/zea-engine/blob/a43ac923/src/Renderer/Drawing/GLShaderMaterials.ts#L13)
 
 ___
 
@@ -71,7 +71,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLShaderMaterials.ts:18](https://github.com/ZeaInc/zea-engine/blob/9a102c0d/src/Renderer/Drawing/GLShaderMaterials.ts#L18)
+[Renderer/Drawing/GLShaderMaterials.ts:18](https://github.com/ZeaInc/zea-engine/blob/a43ac923/src/Renderer/Drawing/GLShaderMaterials.ts#L18)
 
 ___
 
@@ -81,7 +81,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLShaderMaterials.ts:15](https://github.com/ZeaInc/zea-engine/blob/9a102c0d/src/Renderer/Drawing/GLShaderMaterials.ts#L15)
+[Renderer/Drawing/GLShaderMaterials.ts:15](https://github.com/ZeaInc/zea-engine/blob/a43ac923/src/Renderer/Drawing/GLShaderMaterials.ts#L15)
 
 ___
 
@@ -91,7 +91,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLShaderMaterials.ts:16](https://github.com/ZeaInc/zea-engine/blob/9a102c0d/src/Renderer/Drawing/GLShaderMaterials.ts#L16)
+[Renderer/Drawing/GLShaderMaterials.ts:16](https://github.com/ZeaInc/zea-engine/blob/a43ac923/src/Renderer/Drawing/GLShaderMaterials.ts#L16)
 
 ___
 
@@ -101,7 +101,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLShaderMaterials.ts:17](https://github.com/ZeaInc/zea-engine/blob/9a102c0d/src/Renderer/Drawing/GLShaderMaterials.ts#L17)
+[Renderer/Drawing/GLShaderMaterials.ts:17](https://github.com/ZeaInc/zea-engine/blob/a43ac923/src/Renderer/Drawing/GLShaderMaterials.ts#L17)
 
 ___
 
@@ -115,7 +115,7 @@ ___
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/9a102c0d/src/Utilities/EventEmitter.ts#L26)
+[Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/a43ac923/src/Utilities/EventEmitter.ts#L26)
 
 ___
 
@@ -125,7 +125,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLShaderMaterials.ts:14](https://github.com/ZeaInc/zea-engine/blob/9a102c0d/src/Renderer/Drawing/GLShaderMaterials.ts#L14)
+[Renderer/Drawing/GLShaderMaterials.ts:14](https://github.com/ZeaInc/zea-engine/blob/a43ac923/src/Renderer/Drawing/GLShaderMaterials.ts#L14)
 
 ## Methods
 
@@ -149,7 +149,7 @@ The addGLGeomItem method.
 
 #### Defined in
 
-[Renderer/Drawing/GLShaderMaterials.ts:52](https://github.com/ZeaInc/zea-engine/blob/9a102c0d/src/Renderer/Drawing/GLShaderMaterials.ts#L52)
+[Renderer/Drawing/GLShaderMaterials.ts:52](https://github.com/ZeaInc/zea-engine/blob/a43ac923/src/Renderer/Drawing/GLShaderMaterials.ts#L52)
 
 ___
 
@@ -171,7 +171,7 @@ The addMaterialGeomItemSets method.
 
 #### Defined in
 
-[Renderer/Drawing/GLShaderMaterials.ts:66](https://github.com/ZeaInc/zea-engine/blob/9a102c0d/src/Renderer/Drawing/GLShaderMaterials.ts#L66)
+[Renderer/Drawing/GLShaderMaterials.ts:66](https://github.com/ZeaInc/zea-engine/blob/a43ac923/src/Renderer/Drawing/GLShaderMaterials.ts#L66)
 
 ___
 
@@ -193,7 +193,7 @@ Draws all elements, binding the shader and continuing into the GLMaterialGeomIte
 
 #### Defined in
 
-[Renderer/Drawing/GLShaderMaterials.ts:106](https://github.com/ZeaInc/zea-engine/blob/9a102c0d/src/Renderer/Drawing/GLShaderMaterials.ts#L106)
+[Renderer/Drawing/GLShaderMaterials.ts:106](https://github.com/ZeaInc/zea-engine/blob/a43ac923/src/Renderer/Drawing/GLShaderMaterials.ts#L106)
 
 ___
 
@@ -215,7 +215,7 @@ The drawGeomData method.
 
 #### Defined in
 
-[Renderer/Drawing/GLShaderMaterials.ts:136](https://github.com/ZeaInc/zea-engine/blob/9a102c0d/src/Renderer/Drawing/GLShaderMaterials.ts#L136)
+[Renderer/Drawing/GLShaderMaterials.ts:136](https://github.com/ZeaInc/zea-engine/blob/a43ac923/src/Renderer/Drawing/GLShaderMaterials.ts#L136)
 
 ___
 
@@ -237,7 +237,7 @@ The drawHighlightedGeoms method.
 
 #### Defined in
 
-[Renderer/Drawing/GLShaderMaterials.ts:122](https://github.com/ZeaInc/zea-engine/blob/9a102c0d/src/Renderer/Drawing/GLShaderMaterials.ts#L122)
+[Renderer/Drawing/GLShaderMaterials.ts:122](https://github.com/ZeaInc/zea-engine/blob/a43ac923/src/Renderer/Drawing/GLShaderMaterials.ts#L122)
 
 ___
 
@@ -264,7 +264,7 @@ Triggers all listener functions in an event.
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/9a102c0d/src/Utilities/EventEmitter.ts#L154)
+[Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/a43ac923/src/Utilities/EventEmitter.ts#L154)
 
 ___
 
@@ -288,7 +288,7 @@ The findMaterialGeomItemSets method.
 
 #### Defined in
 
-[Renderer/Drawing/GLShaderMaterials.ts:40](https://github.com/ZeaInc/zea-engine/blob/9a102c0d/src/Renderer/Drawing/GLShaderMaterials.ts#L40)
+[Renderer/Drawing/GLShaderMaterials.ts:40](https://github.com/ZeaInc/zea-engine/blob/a43ac923/src/Renderer/Drawing/GLShaderMaterials.ts#L40)
 
 ___
 
@@ -310,7 +310,7 @@ Returns the unmangled name of the class.
 
 #### Defined in
 
-[Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/9a102c0d/src/Utilities/BaseClass.ts#L33)
+[Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/a43ac923/src/Utilities/BaseClass.ts#L33)
 
 ___
 
@@ -334,7 +334,7 @@ Returns the unique id of the object.
 
 #### Defined in
 
-[Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/9a102c0d/src/Utilities/BaseClass.ts#L25)
+[Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/a43ac923/src/Utilities/BaseClass.ts#L25)
 
 ___
 
@@ -352,7 +352,7 @@ The getMaterialGeomItemSets method.
 
 #### Defined in
 
-[Renderer/Drawing/GLShaderMaterials.ts:98](https://github.com/ZeaInc/zea-engine/blob/9a102c0d/src/Renderer/Drawing/GLShaderMaterials.ts#L98)
+[Renderer/Drawing/GLShaderMaterials.ts:98](https://github.com/ZeaInc/zea-engine/blob/a43ac923/src/Renderer/Drawing/GLShaderMaterials.ts#L98)
 
 ___
 
@@ -379,7 +379,7 @@ Removes a listener function from the specified event, using either the function 
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/9a102c0d/src/Utilities/EventEmitter.ts#L97)
+[Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/a43ac923/src/Utilities/EventEmitter.ts#L97)
 
 ___
 
@@ -408,7 +408,7 @@ Adds a listener function for a given event name.
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/9a102c0d/src/Utilities/EventEmitter.ts#L44)
+[Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/a43ac923/src/Utilities/EventEmitter.ts#L44)
 
 ___
 
@@ -446,7 +446,7 @@ asset.once('loaded', () => {
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/9a102c0d/src/Utilities/EventEmitter.ts#L82)
+[Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/a43ac923/src/Utilities/EventEmitter.ts#L82)
 
 ___
 
@@ -473,7 +473,7 @@ remove listener by ID returned from #on
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/9a102c0d/src/Utilities/EventEmitter.ts#L134)
+[Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/a43ac923/src/Utilities/EventEmitter.ts#L134)
 
 ___
 
@@ -495,5 +495,5 @@ The removeMaterialGeomItemSets method.
 
 #### Defined in
 
-[Renderer/Drawing/GLShaderMaterials.ts:89](https://github.com/ZeaInc/zea-engine/blob/9a102c0d/src/Renderer/Drawing/GLShaderMaterials.ts#L89)
+[Renderer/Drawing/GLShaderMaterials.ts:89](https://github.com/ZeaInc/zea-engine/blob/a43ac923/src/Renderer/Drawing/GLShaderMaterials.ts#L89)
 

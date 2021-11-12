@@ -23,7 +23,7 @@ Binary loader plugin.
 
 #### Defined in
 
-[SceneTree/ResourceLoader/BinaryLoaderPlugin.ts:13](https://github.com/ZeaInc/zea-engine/blob/9a102c0d/src/SceneTree/ResourceLoader/BinaryLoaderPlugin.ts#L13)
+[SceneTree/ResourceLoader/BinaryLoaderPlugin.ts:13](https://github.com/ZeaInc/zea-engine/blob/a43ac923/src/SceneTree/ResourceLoader/BinaryLoaderPlugin.ts#L13)
 
 ## Methods
 
@@ -41,7 +41,7 @@ The type of file.
 
 #### Defined in
 
-[SceneTree/ResourceLoader/BinaryLoaderPlugin.ts:22](https://github.com/ZeaInc/zea-engine/blob/9a102c0d/src/SceneTree/ResourceLoader/BinaryLoaderPlugin.ts#L22)
+[SceneTree/ResourceLoader/BinaryLoaderPlugin.ts:22](https://github.com/ZeaInc/zea-engine/blob/a43ac923/src/SceneTree/ResourceLoader/BinaryLoaderPlugin.ts#L22)
 
 ___
 
@@ -61,7 +61,7 @@ ___
 
 #### Defined in
 
-[SceneTree/ResourceLoader/BinaryLoaderPlugin.ts:14](https://github.com/ZeaInc/zea-engine/blob/9a102c0d/src/SceneTree/ResourceLoader/BinaryLoaderPlugin.ts#L14)
+[SceneTree/ResourceLoader/BinaryLoaderPlugin.ts:14](https://github.com/ZeaInc/zea-engine/blob/a43ac923/src/SceneTree/ResourceLoader/BinaryLoaderPlugin.ts#L14)
 
 ___
 
@@ -81,5 +81,5 @@ ___
 
 #### Defined in
 
-[SceneTree/ResourceLoader/BinaryLoaderPlugin.ts:26](https://github.com/ZeaInc/zea-engine/blob/9a102c0d/src/SceneTree/ResourceLoader/BinaryLoaderPlugin.ts#L26)
+[SceneTree/ResourceLoader/BinaryLoaderPlugin.ts:26](https://github.com/ZeaInc/zea-engine/blob/a43ac923/src/SceneTree/ResourceLoader/BinaryLoaderPlugin.ts#L26)
 
