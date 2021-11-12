@@ -3,14 +3,13 @@ sidebar_position: 4
 title: Resources
 ---
 
-
 <!-- <p>Use these resources to help get you on your way</p> -->
 
 ## Official Zea Resources
 
 <div class="card" markdown="1">
 
-[![Zea Community](../../static/img/zea-images/zea-community.png ':class=cardImg')](https://community.zea.live/)
+[![Zea Community](/img/zea-images/zea-community.png ':class=cardImg')](https://community.zea.live/)
 [Zea Community](https://community.zea.live/ ':class=cardTitle')
 
   <p class="cardText"> Zea Community is a dedicated support forum for Zea users. Here you can ask questions to our team and find answers to previously asked questions. </p>

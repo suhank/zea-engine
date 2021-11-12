@@ -7,7 +7,7 @@ The Zea Engine comes with definitions for standard geometry types, such as Point
 
 ### Geometry types
 
-![geometry-primitives](../../../static/img/misc/geometry-primitives.svg)
+![geometry-primitives](/img/misc/geometry-primitives.svg)
 
 The fundamental geometry types can be described as Points, Lines, and Triangles. Each geometry type is defined by a set of vertices, and in the case of Lines and Triangles a topology that connects these vertices together for primitives like lines and triangles.
 Vertices

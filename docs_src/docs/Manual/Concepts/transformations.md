@@ -5,7 +5,7 @@ title: Transformations
 
 In this document we will cover how transformations are computed and how they are used to control the position, orientation and scale of objects in the 3d scene.
 
-![transformations-robot-hierarchy](../../../static/img/misc/transformations-robot-hierarchy.svg)
+![transformations-robot-hierarchy](/img/misc/transformations-robot-hierarchy.svg)
 
 ### Coordinate System
 
@@ -47,7 +47,7 @@ xfo2.fromMat4(mat)
 
 ## “Local Xfo” vs “Global Xfo”
 
-![transformations-local-global](../../../static/img/misc/transformations-local-global.svg)
+![transformations-local-global](/img/misc/transformations-local-global.svg)
 
 Each tree item in the Scene Tree specifies the offset from its parent using the Local Xfo Parameter. This Xfo Parameters value provides the translation, rotation and scaling offset that the tree item should have relative to the transformation of its parent.
 

@@ -143,7 +143,7 @@ es-dev-server started on http://localhost:8000
 
 📷 Loading the given URL in your browser should generate the following result:
 
-![getting-started-grid](../../../static/img/misc/getting-started-grid.png ':class=screenshot')
+![getting-started-grid](/img/misc/getting-started-grid.png ':class=screenshot')
 
 > Alternatively, if you are using [Visual Studio Code](https://code.visualstudio.com/), it's recommended you download the extension [Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer). Live Server makes it easy to launch a local development server that reloads automatically as changes are made to your source code.
 

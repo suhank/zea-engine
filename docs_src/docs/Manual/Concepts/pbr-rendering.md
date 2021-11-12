@@ -3,7 +3,7 @@ sidebar_position: 5
 title: PBR (Physically Based Rendering)
 ---
 
-![pbr-materials](../../../static/img/misc/pbr-materials.jpg)
+![pbr-materials](/img/misc/pbr-materials.jpg)
 
 PBR is an advancement in lighting algorithms that provides a very realistic response to lighting that mimics the real responses of materials. Zea Engine comes with a Physically Based Rendering pipeline based on the GGX BRDF.
 
@@ -27,8 +27,8 @@ _We will make this tool available through our marketplace as soon as it is up an
 
 ## Materials Parameters
 
-![pbr-material-library1](../../../static/img/misc/pbr-material-library1.jpg)
-![pbr-material-library2](../../../static/img/misc/pbr-material-library2.jpg)
+![pbr-material-library1](/img/misc/pbr-material-library1.jpg)
+![pbr-material-library2](/img/misc/pbr-material-library2.jpg)
 
 The Material parameters provided by Zea Engine are a subset of those found in Unity and line up with the material parameters provided by Filament. You can use the Filament material guide to help you understand the material parameters in Zea Engine.
 

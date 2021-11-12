@@ -17,7 +17,7 @@ The WebGL renderer is bound to a canvas element that lives in the DOM of a runni
 
 ## Hit Testing Events
 
-![events-hit-testing](../../../static/img/misc/events-hit-testing.svg)
+![events-hit-testing](/img/misc/events-hit-testing.svg)
 
 One of the services provided by the Viewport class, is translating 2d screen coordinates into 3d hits on geometries. For any coordinate on the 2d region of the viewport, a ray can be computed. The intersection of any geometries hit by that ray in the scene can be retrieved.
 Mouse or touch interactions on the viewport are transformed into rays and resulting hit information is included in the events that are then propagated throughout the scene tree.
@@ -26,7 +26,7 @@ The goal of this design is to emulate the event system we find in the browser, w
 
 ## Event Propagation
 
-![events-propagation](../../../static/img/misc/events-propagation.svg)
+![events-propagation](/img/misc/events-propagation.svg)
 
 There isn't automatic bubbling process in the zea engine tree to automatically propagate events up the tree. However, the scene tree does propagate a few events automatically up the tree.
 
@@ -44,7 +44,7 @@ Groups receive events from their members, and propagate them. So a user can dete
 
 Example:
 
-![events-propagation-groups](../../../static/img/misc/events-propagation-groups.svg)
+![events-propagation-groups](/img/misc/events-propagation-groups.svg)
 _The geom that was clicked on by the mouse emits the ‘pointerDown’ event, which is propagated by its parent. The Group receives the event from the parent, and propagates it. A ‘pointerDown’ listener registered on the group will then receive the event._
 
 Groups enable events to be aggregate from all members and propagated to any registered listeners.

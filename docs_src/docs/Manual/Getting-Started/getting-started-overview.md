@@ -11,7 +11,7 @@ This section covers how to build and run your first app to get you started with 
 
 <div class="card" markdown="1">
 
-[![Setting up your workspace](../../../static/img/card-icons/wrench.png ':class=cardImg')](development-setup.md)
+[![Setting up your workspace](/img/card-icons/wrench.png ':class=cardImg')](development-setup.md)
 [Setting up your workspace](development-setup.md ':class=cardTitle')
 
 <p class="cardText"> Learn how to get your workspace setup.</p>
@@ -19,7 +19,7 @@ This section covers how to build and run your first app to get you started with 
 
 <div class="card" markdown="1">
 
-[![Build your first project](../../../static/img/misc/getting-started-working-grid.png ':class=cardImg')](build-first-project.md)
+[![Build your first project](/img/misc/getting-started-working-grid.png ':class=cardImg')](build-first-project.md)
 [Build your first project](build-first-project.md ':class=cardTitle')
 
 <p class="cardText"> After your environment is setup, build your first app with the Zea Engine! </p>
@@ -27,7 +27,7 @@ This section covers how to build and run your first app to get you started with 
 
 <div class="card" markdown="1">
 
-[![Debugging](../../../static/img/misc/getting-started-breakpoint-end.png ':class=cardImg')](debugging.md)
+[![Debugging](/img/misc/getting-started-breakpoint-end.png ':class=cardImg')](debugging.md)
 [Debugging](debugging.md ':class=cardTitle')
 
   <p class="cardText"> Learn how to use Chrome's DevTools with Zea Engine.   </p>
