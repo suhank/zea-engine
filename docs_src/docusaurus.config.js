@@ -23,7 +23,7 @@ module.exports = {
   title: 'Zea Engine Docs',
   tagline: 'Fast, Easy, Open',
   url: 'https://www.zea.live/',
-  baseUrl: '/docs/',
+  baseUrl: '/zea-engine/',
   onBrokenLinks: 'warn',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
