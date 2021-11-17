@@ -38,7 +38,7 @@ Create a AssetLoadContext
 
 #### Defined in
 
-[SceneTree/AssetLoadContext.ts:34](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/AssetLoadContext.ts#L34)
+[SceneTree/AssetLoadContext.ts:34](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/AssetLoadContext.ts#L34)
 
 ## Properties
 
@@ -52,7 +52,7 @@ Create a AssetLoadContext
 
 #### Defined in
 
-[Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Utilities/BaseClass.ts#L11)
+[Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Utilities/BaseClass.ts#L11)
 
 ___
 
@@ -77,7 +77,7 @@ ___
 
 #### Defined in
 
-[SceneTree/AssetLoadContext.ts:28](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/AssetLoadContext.ts#L28)
+[SceneTree/AssetLoadContext.ts:28](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/AssetLoadContext.ts#L28)
 
 ___
 
@@ -87,7 +87,7 @@ ___
 
 #### Defined in
 
-[SceneTree/AssetLoadContext.ts:22](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/AssetLoadContext.ts#L22)
+[SceneTree/AssetLoadContext.ts:22](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/AssetLoadContext.ts#L22)
 
 ___
 
@@ -97,7 +97,7 @@ ___
 
 #### Defined in
 
-[SceneTree/AssetLoadContext.ts:16](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/AssetLoadContext.ts#L16)
+[SceneTree/AssetLoadContext.ts:16](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/AssetLoadContext.ts#L16)
 
 ___
 
@@ -107,7 +107,7 @@ ___
 
 #### Defined in
 
-[SceneTree/AssetLoadContext.ts:26](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/AssetLoadContext.ts#L26)
+[SceneTree/AssetLoadContext.ts:26](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/AssetLoadContext.ts#L26)
 
 ___
 
@@ -117,7 +117,7 @@ ___
 
 #### Defined in
 
-[SceneTree/AssetLoadContext.ts:20](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/AssetLoadContext.ts#L20)
+[SceneTree/AssetLoadContext.ts:20](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/AssetLoadContext.ts#L20)
 
 ___
 
@@ -131,7 +131,7 @@ ___
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Utilities/EventEmitter.ts#L26)
+[Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Utilities/EventEmitter.ts#L26)
 
 ___
 
@@ -141,7 +141,7 @@ ___
 
 #### Defined in
 
-[SceneTree/AssetLoadContext.ts:24](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/AssetLoadContext.ts#L24)
+[SceneTree/AssetLoadContext.ts:24](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/AssetLoadContext.ts#L24)
 
 ___
 
@@ -151,7 +151,7 @@ ___
 
 #### Defined in
 
-[SceneTree/AssetLoadContext.ts:23](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/AssetLoadContext.ts#L23)
+[SceneTree/AssetLoadContext.ts:23](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/AssetLoadContext.ts#L23)
 
 ___
 
@@ -161,7 +161,7 @@ ___
 
 #### Defined in
 
-[SceneTree/AssetLoadContext.ts:25](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/AssetLoadContext.ts#L25)
+[SceneTree/AssetLoadContext.ts:25](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/AssetLoadContext.ts#L25)
 
 ___
 
@@ -171,7 +171,7 @@ ___
 
 #### Defined in
 
-[SceneTree/AssetLoadContext.ts:17](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/AssetLoadContext.ts#L17)
+[SceneTree/AssetLoadContext.ts:17](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/AssetLoadContext.ts#L17)
 
 ___
 
@@ -181,7 +181,7 @@ ___
 
 #### Defined in
 
-[SceneTree/AssetLoadContext.ts:21](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/AssetLoadContext.ts#L21)
+[SceneTree/AssetLoadContext.ts:21](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/AssetLoadContext.ts#L21)
 
 ___
 
@@ -191,7 +191,7 @@ ___
 
 #### Defined in
 
-[SceneTree/AssetLoadContext.ts:15](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/AssetLoadContext.ts#L15)
+[SceneTree/AssetLoadContext.ts:15](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/AssetLoadContext.ts#L15)
 
 ___
 
@@ -201,7 +201,7 @@ ___
 
 #### Defined in
 
-[SceneTree/AssetLoadContext.ts:19](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/AssetLoadContext.ts#L19)
+[SceneTree/AssetLoadContext.ts:19](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/AssetLoadContext.ts#L19)
 
 ___
 
@@ -211,7 +211,7 @@ ___
 
 #### Defined in
 
-[SceneTree/AssetLoadContext.ts:18](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/AssetLoadContext.ts#L18)
+[SceneTree/AssetLoadContext.ts:18](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/AssetLoadContext.ts#L18)
 
 ## Methods
 
@@ -235,7 +235,7 @@ e.g. an instance will
 
 #### Defined in
 
-[SceneTree/AssetLoadContext.ts:115](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/AssetLoadContext.ts#L115)
+[SceneTree/AssetLoadContext.ts:115](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/AssetLoadContext.ts#L115)
 
 ___
 
@@ -252,7 +252,7 @@ asset to know that the subtrees are loaded.
 
 #### Defined in
 
-[SceneTree/AssetLoadContext.ts:65](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/AssetLoadContext.ts#L65)
+[SceneTree/AssetLoadContext.ts:65](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/AssetLoadContext.ts#L65)
 
 ___
 
@@ -279,7 +279,7 @@ Triggers all listener functions in an event.
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Utilities/EventEmitter.ts#L154)
+[Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Utilities/EventEmitter.ts#L154)
 
 ___
 
@@ -301,7 +301,7 @@ Returns the unmangled name of the class.
 
 #### Defined in
 
-[Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Utilities/BaseClass.ts#L33)
+[Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Utilities/BaseClass.ts#L33)
 
 ___
 
@@ -325,7 +325,7 @@ Returns the unique id of the object.
 
 #### Defined in
 
-[Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Utilities/BaseClass.ts#L25)
+[Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Utilities/BaseClass.ts#L25)
 
 ___
 
@@ -345,7 +345,7 @@ Asset know to wait till the children are loaded before emitting its own 'loaded'
 
 #### Defined in
 
-[SceneTree/AssetLoadContext.ts:57](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/AssetLoadContext.ts#L57)
+[SceneTree/AssetLoadContext.ts:57](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/AssetLoadContext.ts#L57)
 
 ___
 
@@ -372,7 +372,7 @@ Removes a listener function from the specified event, using either the function 
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Utilities/EventEmitter.ts#L97)
+[Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Utilities/EventEmitter.ts#L97)
 
 ___
 
@@ -401,7 +401,7 @@ Adds a listener function for a given event name.
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Utilities/EventEmitter.ts#L44)
+[Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Utilities/EventEmitter.ts#L44)
 
 ___
 
@@ -439,7 +439,7 @@ asset.once('loaded', () => {
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Utilities/EventEmitter.ts#L82)
+[Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Utilities/EventEmitter.ts#L82)
 
 ___
 
@@ -466,7 +466,7 @@ remove listener by ID returned from #on
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Utilities/EventEmitter.ts#L134)
+[Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Utilities/EventEmitter.ts#L134)
 
 ___
 
@@ -492,5 +492,5 @@ or an instance can find its source tree.
 
 #### Defined in
 
-[SceneTree/AssetLoadContext.ts:81](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/AssetLoadContext.ts#L81)
+[SceneTree/AssetLoadContext.ts:81](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/AssetLoadContext.ts#L81)
 

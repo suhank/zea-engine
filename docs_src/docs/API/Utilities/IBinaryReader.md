@@ -45,5 +45,5 @@ The readBinary method.
 
 #### Defined in
 
-[Utilities/IBinaryReader.ts:10](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Utilities/IBinaryReader.ts#L10)
+[Utilities/IBinaryReader.ts:10](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Utilities/IBinaryReader.ts#L10)
 

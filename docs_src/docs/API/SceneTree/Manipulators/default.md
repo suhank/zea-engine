@@ -54,7 +54,7 @@ Creates an instance of BaseTool.
 
 #### Defined in
 
-[SceneTree/Manipulators/BaseTool.ts:37](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/Manipulators/BaseTool.ts#L37)
+[SceneTree/Manipulators/BaseTool.ts:37](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/Manipulators/BaseTool.ts#L37)
 
 ## Properties
 
@@ -64,7 +64,7 @@ Creates an instance of BaseTool.
 
 #### Defined in
 
-[SceneTree/Manipulators/BaseTool.ts:33](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/Manipulators/BaseTool.ts#L33)
+[SceneTree/Manipulators/BaseTool.ts:33](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/Manipulators/BaseTool.ts#L33)
 
 ___
 
@@ -78,7 +78,7 @@ ___
 
 #### Defined in
 
-[Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Utilities/BaseClass.ts#L11)
+[Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Utilities/BaseClass.ts#L11)
 
 ___
 
@@ -92,7 +92,7 @@ ___
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:23](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/ParameterOwner.ts#L23)
+[SceneTree/ParameterOwner.ts:23](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/ParameterOwner.ts#L23)
 
 ___
 
@@ -106,7 +106,7 @@ ___
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Utilities/EventEmitter.ts#L26)
+[Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Utilities/EventEmitter.ts#L26)
 
 ___
 
@@ -120,7 +120,7 @@ ___
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:20](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/ParameterOwner.ts#L20)
+[SceneTree/ParameterOwner.ts:20](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/ParameterOwner.ts#L20)
 
 ___
 
@@ -134,7 +134,7 @@ ___
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:21](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/ParameterOwner.ts#L21)
+[SceneTree/ParameterOwner.ts:21](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/ParameterOwner.ts#L21)
 
 ___
 
@@ -148,7 +148,7 @@ ___
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:22](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/ParameterOwner.ts#L22)
+[SceneTree/ParameterOwner.ts:22](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/ParameterOwner.ts#L22)
 
 ## Methods
 
@@ -164,7 +164,7 @@ Enables tools usage. This method is called by either the Viewport when a tool is
 
 #### Defined in
 
-[SceneTree/Manipulators/BaseTool.ts:44](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/Manipulators/BaseTool.ts#L44)
+[SceneTree/Manipulators/BaseTool.ts:44](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/Manipulators/BaseTool.ts#L44)
 
 ___
 
@@ -194,7 +194,7 @@ Adds `Parameter` object to the owner's parameter list.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:133](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/ParameterOwner.ts#L133)
+[SceneTree/ParameterOwner.ts:133](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/ParameterOwner.ts#L133)
 
 ___
 
@@ -224,7 +224,7 @@ This is used to handle migrating parameters to new names.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:90](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/ParameterOwner.ts#L90)
+[SceneTree/ParameterOwner.ts:90](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/ParameterOwner.ts#L90)
 
 ___
 
@@ -251,7 +251,7 @@ Copies Parameters from another `ParameterOwner` to current object.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:314](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/ParameterOwner.ts#L314)
+[SceneTree/ParameterOwner.ts:314](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/ParameterOwner.ts#L314)
 
 ___
 
@@ -267,7 +267,7 @@ Disables tool usage. This method is called by either the Viewport when a tool is
 
 #### Defined in
 
-[SceneTree/Manipulators/BaseTool.ts:53](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/Manipulators/BaseTool.ts#L53)
+[SceneTree/Manipulators/BaseTool.ts:53](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/Manipulators/BaseTool.ts#L53)
 
 ___
 
@@ -294,7 +294,7 @@ Triggers all listener functions in an event.
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Utilities/EventEmitter.ts#L154)
+[Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Utilities/EventEmitter.ts#L154)
 
 ___
 
@@ -321,7 +321,7 @@ The fromJSON method decodes a json object for this type.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:239](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/ParameterOwner.ts#L239)
+[SceneTree/ParameterOwner.ts:239](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/ParameterOwner.ts#L239)
 
 ___
 
@@ -343,7 +343,7 @@ Returns the unmangled name of the class.
 
 #### Defined in
 
-[Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Utilities/BaseClass.ts#L33)
+[Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Utilities/BaseClass.ts#L33)
 
 ___
 
@@ -367,7 +367,7 @@ Returns the unique id of the object.
 
 #### Defined in
 
-[Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Utilities/BaseClass.ts#L25)
+[Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Utilities/BaseClass.ts#L25)
 
 ___
 
@@ -389,7 +389,7 @@ Returns the number of parameters current object has.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:39](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/ParameterOwner.ts#L39)
+[SceneTree/ParameterOwner.ts:39](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/ParameterOwner.ts#L39)
 
 ___
 
@@ -417,7 +417,7 @@ Returns `Parameter` object using the given name
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:100](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/ParameterOwner.ts#L100)
+[SceneTree/ParameterOwner.ts:100](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/ParameterOwner.ts#L100)
 
 ___
 
@@ -445,7 +445,7 @@ Returns `Parameter` object in a given index
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:68](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/ParameterOwner.ts#L68)
+[SceneTree/ParameterOwner.ts:68](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/ParameterOwner.ts#L68)
 
 ___
 
@@ -473,7 +473,7 @@ Returns the index of a parameter in parameter list.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:58](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/ParameterOwner.ts#L58)
+[SceneTree/ParameterOwner.ts:58](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/ParameterOwner.ts#L58)
 
 ___
 
@@ -495,7 +495,7 @@ Returns all the parameters of the object.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:48](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/ParameterOwner.ts#L48)
+[SceneTree/ParameterOwner.ts:48](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/ParameterOwner.ts#L48)
 
 ___
 
@@ -523,7 +523,7 @@ Validates if the specified parameter exists in the object.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:78](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/ParameterOwner.ts#L78)
+[SceneTree/ParameterOwner.ts:78](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/ParameterOwner.ts#L78)
 
 ___
 
@@ -555,7 +555,7 @@ It replaces the event in the specified index.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:147](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/ParameterOwner.ts#L147)
+[SceneTree/ParameterOwner.ts:147](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/ParameterOwner.ts#L147)
 
 ___
 
@@ -582,7 +582,7 @@ Removes a listener function from the specified event, using either the function 
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Utilities/EventEmitter.ts#L97)
+[Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Utilities/EventEmitter.ts#L97)
 
 ___
 
@@ -611,7 +611,7 @@ Adds a listener function for a given event name.
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Utilities/EventEmitter.ts#L44)
+[Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Utilities/EventEmitter.ts#L44)
 
 ___
 
@@ -633,7 +633,7 @@ Event fired when the user presses down a key on the keyboard.
 
 #### Defined in
 
-[SceneTree/Manipulators/BaseTool.ts:132](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/Manipulators/BaseTool.ts#L132)
+[SceneTree/Manipulators/BaseTool.ts:132](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/Manipulators/BaseTool.ts#L132)
 
 ___
 
@@ -655,7 +655,7 @@ Event fired when the user releases a key on the keyboard.
 
 #### Defined in
 
-[SceneTree/Manipulators/BaseTool.ts:141](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/Manipulators/BaseTool.ts#L141)
+[SceneTree/Manipulators/BaseTool.ts:141](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/Manipulators/BaseTool.ts#L141)
 
 ___
 
@@ -677,7 +677,7 @@ Event fired when a pointing device button is double clicked.
 
 #### Defined in
 
-[SceneTree/Manipulators/BaseTool.ts:93](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/Manipulators/BaseTool.ts#L93)
+[SceneTree/Manipulators/BaseTool.ts:93](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/Manipulators/BaseTool.ts#L93)
 
 ___
 
@@ -699,7 +699,7 @@ Event fired when either the mouse button is pressed, or a touch start event occu
 
 #### Defined in
 
-[SceneTree/Manipulators/BaseTool.ts:66](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/Manipulators/BaseTool.ts#L66)
+[SceneTree/Manipulators/BaseTool.ts:66](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/Manipulators/BaseTool.ts#L66)
 
 ___
 
@@ -721,7 +721,7 @@ Event fired when a mouse pointer enters the viewport
 
 #### Defined in
 
-[SceneTree/Manipulators/BaseTool.ts:102](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/Manipulators/BaseTool.ts#L102)
+[SceneTree/Manipulators/BaseTool.ts:102](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/Manipulators/BaseTool.ts#L102)
 
 ___
 
@@ -743,7 +743,7 @@ Event fired when a mouse pointer leaves the viewport
 
 #### Defined in
 
-[SceneTree/Manipulators/BaseTool.ts:111](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/Manipulators/BaseTool.ts#L111)
+[SceneTree/Manipulators/BaseTool.ts:111](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/Manipulators/BaseTool.ts#L111)
 
 ___
 
@@ -765,7 +765,7 @@ Event fired when either the mouse cursor is moved, or a touch point moves.
 
 #### Defined in
 
-[SceneTree/Manipulators/BaseTool.ts:75](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/Manipulators/BaseTool.ts#L75)
+[SceneTree/Manipulators/BaseTool.ts:75](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/Manipulators/BaseTool.ts#L75)
 
 ___
 
@@ -787,7 +787,7 @@ Event fired when either the mouse button is released, or a touch end event occur
 
 #### Defined in
 
-[SceneTree/Manipulators/BaseTool.ts:84](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/Manipulators/BaseTool.ts#L84)
+[SceneTree/Manipulators/BaseTool.ts:84](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/Manipulators/BaseTool.ts#L84)
 
 ___
 
@@ -809,7 +809,7 @@ Event fired when one or more touch points have been disrupted in an implementati
 
 #### Defined in
 
-[SceneTree/Manipulators/BaseTool.ts:153](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/Manipulators/BaseTool.ts#L153)
+[SceneTree/Manipulators/BaseTool.ts:153](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/Manipulators/BaseTool.ts#L153)
 
 ___
 
@@ -831,7 +831,7 @@ Event fired when the user rotates the pointing device wheel.
 
 #### Defined in
 
-[SceneTree/Manipulators/BaseTool.ts:120](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/Manipulators/BaseTool.ts#L120)
+[SceneTree/Manipulators/BaseTool.ts:120](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/Manipulators/BaseTool.ts#L120)
 
 ___
 
@@ -869,7 +869,7 @@ asset.once('loaded', () => {
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Utilities/EventEmitter.ts#L82)
+[Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Utilities/EventEmitter.ts#L82)
 
 ___
 
@@ -896,7 +896,7 @@ to perform general updates (see GLPass or BaseItem).
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:122](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/ParameterOwner.ts#L122)
+[SceneTree/ParameterOwner.ts:122](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/ParameterOwner.ts#L122)
 
 ___
 
@@ -928,7 +928,7 @@ used to build the right `Parameter` class. Then all of them are added to the obj
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:274](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/ParameterOwner.ts#L274)
+[SceneTree/ParameterOwner.ts:274](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/ParameterOwner.ts#L274)
 
 ___
 
@@ -955,7 +955,7 @@ remove listener by ID returned from #on
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Utilities/EventEmitter.ts#L134)
+[Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Utilities/EventEmitter.ts#L134)
 
 ___
 
@@ -983,7 +983,7 @@ Removes `Parameter` from owner, by using parameter's name.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:174](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/ParameterOwner.ts#L174)
+[SceneTree/ParameterOwner.ts:174](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/ParameterOwner.ts#L174)
 
 ___
 
@@ -1011,7 +1011,7 @@ Replaces old `Parameter` by passing a new one with the same name.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:196](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/ParameterOwner.ts#L196)
+[SceneTree/ParameterOwner.ts:196](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/ParameterOwner.ts#L196)
 
 ___
 
@@ -1039,7 +1039,7 @@ The toJSON method encodes this type as a json object for persistence.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:216](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/ParameterOwner.ts#L216)
+[SceneTree/ParameterOwner.ts:216](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/ParameterOwner.ts#L216)
 
 ___
 
@@ -1067,5 +1067,5 @@ Converts object's JSON value and converts it to a string.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:301](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/ParameterOwner.ts#L301)
+[SceneTree/ParameterOwner.ts:301](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/ParameterOwner.ts#L301)
 

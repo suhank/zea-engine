@@ -28,7 +28,7 @@ Creates a `Color` object with an RGBA structure.
 
 #### Defined in
 
-[Math/Color.ts:16](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Color.ts#L16)
+[Math/Color.ts:16](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Math/Color.ts#L16)
 
 ## Properties
 
@@ -38,7 +38,7 @@ Creates a `Color` object with an RGBA structure.
 
 #### Defined in
 
-[Math/Color.ts:7](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Color.ts#L7)
+[Math/Color.ts:7](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Math/Color.ts#L7)
 
 ## Accessors
 
@@ -56,7 +56,7 @@ Getter for alpha channel.
 
 #### Defined in
 
-[Math/Color.ts:99](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Color.ts#L99)
+[Math/Color.ts:99](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Math/Color.ts#L99)
 
 • `set` **a**(`val`): `void`
 
@@ -76,7 +76,7 @@ Setter for alpha value.
 
 #### Defined in
 
-[Math/Color.ts:107](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Color.ts#L107)
+[Math/Color.ts:107](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Math/Color.ts#L107)
 
 ___
 
@@ -94,7 +94,7 @@ Getter for blue channel.
 
 #### Defined in
 
-[Math/Color.ts:81](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Color.ts#L81)
+[Math/Color.ts:81](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Math/Color.ts#L81)
 
 • `set` **b**(`val`): `void`
 
@@ -114,7 +114,7 @@ Setter for blue channel.
 
 #### Defined in
 
-[Math/Color.ts:90](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Color.ts#L90)
+[Math/Color.ts:90](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Math/Color.ts#L90)
 
 ___
 
@@ -132,7 +132,7 @@ Getter for green channel.
 
 #### Defined in
 
-[Math/Color.ts:64](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Color.ts#L64)
+[Math/Color.ts:64](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Math/Color.ts#L64)
 
 • `set` **g**(`val`): `void`
 
@@ -152,7 +152,7 @@ Setter for green channel.
 
 #### Defined in
 
-[Math/Color.ts:72](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Color.ts#L72)
+[Math/Color.ts:72](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Math/Color.ts#L72)
 
 ___
 
@@ -170,7 +170,7 @@ Getter for red channel.
 
 #### Defined in
 
-[Math/Color.ts:46](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Color.ts#L46)
+[Math/Color.ts:46](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Math/Color.ts#L46)
 
 • `set` **r**(`val`): `void`
 
@@ -190,7 +190,7 @@ Setter for red channel.
 
 #### Defined in
 
-[Math/Color.ts:55](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Color.ts#L55)
+[Math/Color.ts:55](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Math/Color.ts#L55)
 
 ## Methods
 
@@ -214,7 +214,7 @@ Returns a new Color which is this Color added to other.
 
 #### Defined in
 
-[Math/Color.ts:455](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Color.ts#L455)
+[Math/Color.ts:455](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Math/Color.ts#L455)
 
 ___
 
@@ -236,7 +236,7 @@ Updates this Color by adding the values from the other color.
 
 #### Defined in
 
-[Math/Color.ts:464](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Color.ts#L464)
+[Math/Color.ts:464](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Math/Color.ts#L464)
 
 ___
 
@@ -258,7 +258,7 @@ Apply gamma correction to this color
 
 #### Defined in
 
-[Math/Color.ts:508](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Color.ts#L508)
+[Math/Color.ts:508](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Math/Color.ts#L508)
 
 ___
 
@@ -283,7 +283,7 @@ Returns true if this color is approximately the same as other.
 
 #### Defined in
 
-[Math/Color.ts:440](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Color.ts#L440)
+[Math/Color.ts:440](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Math/Color.ts#L440)
 
 ___
 
@@ -301,7 +301,7 @@ Returns the type as a 3 component array. Often used to pass types to the GPU.
 
 #### Defined in
 
-[Math/Color.ts:614](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Color.ts#L614)
+[Math/Color.ts:614](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Math/Color.ts#L614)
 
 ___
 
@@ -319,7 +319,7 @@ Returns the type as an array. Often used to pass types to the GPU.
 
 #### Defined in
 
-[Math/Color.ts:604](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Color.ts#L604)
+[Math/Color.ts:604](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Math/Color.ts#L604)
 
 ___
 
@@ -337,7 +337,7 @@ Clones this color and returns a new color.
 
 #### Defined in
 
-[Math/Color.ts:595](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Color.ts#L595)
+[Math/Color.ts:595](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Math/Color.ts#L595)
 
 ___
 
@@ -359,7 +359,7 @@ The fromJSON method decodes a json object for this type.
 
 #### Defined in
 
-[Math/Color.ts:640](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Color.ts#L640)
+[Math/Color.ts:640](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Math/Color.ts#L640)
 
 ___
 
@@ -377,7 +377,7 @@ Getter from an RGB array.
 
 #### Defined in
 
-[Math/Color.ts:155](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Color.ts#L155)
+[Math/Color.ts:155](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Math/Color.ts#L155)
 
 ___
 
@@ -395,7 +395,7 @@ Getter from an RGB dict.
 
 #### Defined in
 
-[Math/Color.ts:164](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Color.ts#L164)
+[Math/Color.ts:164](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Math/Color.ts#L164)
 
 ___
 
@@ -419,7 +419,7 @@ Checks if this Color  contains the same values as the other.
 
 #### Defined in
 
-[Math/Color.ts:419](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Color.ts#L419)
+[Math/Color.ts:419](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Math/Color.ts#L419)
 
 ___
 
@@ -444,7 +444,7 @@ Performs a linear interpolation between this color and other.
 
 #### Defined in
 
-[Math/Color.ts:553](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Color.ts#L553)
+[Math/Color.ts:553](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Math/Color.ts#L553)
 
 ___
 
@@ -462,7 +462,7 @@ Calculates and returns the luminance of the linear RGB components.
 
 #### Defined in
 
-[Math/Color.ts:542](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Color.ts#L542)
+[Math/Color.ts:542](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Math/Color.ts#L542)
 
 ___
 
@@ -486,7 +486,7 @@ Returns true if this color is NOT exactly the same as other.
 
 #### Defined in
 
-[Math/Color.ts:429](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Color.ts#L429)
+[Math/Color.ts:429](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Math/Color.ts#L429)
 
 ___
 
@@ -508,7 +508,7 @@ Loads the state of the value from a binary reader.
 
 #### Defined in
 
-[Math/Color.ts:652](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Color.ts#L652)
+[Math/Color.ts:652](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Math/Color.ts#L652)
 
 ___
 
@@ -532,7 +532,7 @@ Scales this color by scalar and return the result as a new Vec4.
 
 #### Defined in
 
-[Math/Color.ts:487](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Color.ts#L487)
+[Math/Color.ts:487](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Math/Color.ts#L487)
 
 ___
 
@@ -554,7 +554,7 @@ Scales this color by scalar.
 
 #### Defined in
 
-[Math/Color.ts:496](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Color.ts#L496)
+[Math/Color.ts:496](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Math/Color.ts#L496)
 
 ___
 
@@ -579,7 +579,7 @@ Setter from scalar components.
 
 #### Defined in
 
-[Math/Color.ts:119](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Color.ts#L119)
+[Math/Color.ts:119](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Math/Color.ts#L119)
 
 ___
 
@@ -602,7 +602,7 @@ E.g. "red"
 
 #### Defined in
 
-[Math/Color.ts:241](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Color.ts#L241)
+[Math/Color.ts:241](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Math/Color.ts#L241)
 
 ___
 
@@ -625,7 +625,7 @@ E.g. #ff0000
 
 #### Defined in
 
-[Math/Color.ts:216](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Color.ts#L216)
+[Math/Color.ts:216](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Math/Color.ts#L216)
 
 ___
 
@@ -647,7 +647,7 @@ Sets current color state with another `Color` object.
 
 #### Defined in
 
-[Math/Color.ts:131](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Color.ts#L131)
+[Math/Color.ts:131](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Math/Color.ts#L131)
 
 ___
 
@@ -672,7 +672,7 @@ Setter from a RGB value.
 
 #### Defined in
 
-[Math/Color.ts:180](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Color.ts#L180)
+[Math/Color.ts:180](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Math/Color.ts#L180)
 
 ___
 
@@ -694,7 +694,7 @@ Setter from an RGB array.
 
 #### Defined in
 
-[Math/Color.ts:192](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Color.ts#L192)
+[Math/Color.ts:192](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Math/Color.ts#L192)
 
 ___
 
@@ -716,7 +716,7 @@ Setter from an RGB dict.
 
 #### Defined in
 
-[Math/Color.ts:204](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Color.ts#L204)
+[Math/Color.ts:204](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Math/Color.ts#L204)
 
 ___
 
@@ -738,7 +738,7 @@ Setter from a scalar array.
 
 #### Defined in
 
-[Math/Color.ts:143](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Color.ts#L143)
+[Math/Color.ts:143](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Math/Color.ts#L143)
 
 ___
 
@@ -762,7 +762,7 @@ Returns a new color which is this color subtracted from other.
 
 #### Defined in
 
-[Math/Color.ts:477](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Color.ts#L477)
+[Math/Color.ts:477](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Math/Color.ts#L477)
 
 ___
 
@@ -780,7 +780,7 @@ Returns the CSS rgba string.
 
 #### Defined in
 
-[Math/Color.ts:664](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Color.ts#L664)
+[Math/Color.ts:664](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Math/Color.ts#L664)
 
 ___
 
@@ -804,7 +804,7 @@ returns a new color value value is mapped into a gamma curve
 
 #### Defined in
 
-[Math/Color.ts:528](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Color.ts#L528)
+[Math/Color.ts:528](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Math/Color.ts#L528)
 
 ___
 
@@ -822,7 +822,7 @@ Returns the hexadecimal value of this color, including the leading "#" character
 
 #### Defined in
 
-[Math/Color.ts:404](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Color.ts#L404)
+[Math/Color.ts:404](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Math/Color.ts#L404)
 
 ___
 
@@ -840,7 +840,7 @@ The toJSON method encodes this type as a json object for persistence.
 
 #### Defined in
 
-[Math/Color.ts:626](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Color.ts#L626)
+[Math/Color.ts:626](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Math/Color.ts#L626)
 
 ___
 
@@ -864,7 +864,7 @@ Converts to linear color space and returns a new color
 
 #### Defined in
 
-[Math/Color.ts:518](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Color.ts#L518)
+[Math/Color.ts:518](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Math/Color.ts#L518)
 
 ___
 
@@ -889,5 +889,5 @@ Creates a random color.
 
 #### Defined in
 
-[Math/Color.ts:568](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Color.ts#L568)
+[Math/Color.ts:568](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Math/Color.ts#L568)
 

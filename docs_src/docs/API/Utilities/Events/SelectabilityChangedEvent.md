@@ -33,7 +33,7 @@ Create an BaseEvent.
 
 #### Defined in
 
-[Utilities/Events/SelectabilityChangedEvent.ts:5](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Utilities/Events/SelectabilityChangedEvent.ts#L5)
+[Utilities/Events/SelectabilityChangedEvent.ts:5](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Utilities/Events/SelectabilityChangedEvent.ts#L5)
 
 ## Properties
 
@@ -43,5 +43,5 @@ Create an BaseEvent.
 
 #### Defined in
 
-[Utilities/Events/SelectabilityChangedEvent.ts:4](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Utilities/Events/SelectabilityChangedEvent.ts#L4)
+[Utilities/Events/SelectabilityChangedEvent.ts:4](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Utilities/Events/SelectabilityChangedEvent.ts#L4)
 
