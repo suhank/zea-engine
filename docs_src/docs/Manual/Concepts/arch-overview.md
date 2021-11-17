@@ -69,7 +69,7 @@ The Engine provides a similar registry that plugin developers can register custo
 
 ## Scene Tree
 
-![scene-tree](../../../static/img/misc/scene-tree.svg)
+![scene-tree](/img/misc/scene-tree.svg)
 _A simple scene tree containing a tree item, one geom Item, and an Asset containing a couple of Geom Items._
 
 The Scene tree structures the data that is rendered by the renderer. The Scene tree provides a hierarchy of nodes, each containing data in the form of Parameters, and potentially custom JavaScript objects.
@@ -78,13 +78,13 @@ The Scene tree structures the data that is rendered by the renderer. The Scene t
 
 **Why a Tree and not a Graph**
 
-![tree-vs-dag](../../../static/img/misc/tree-vs-dag.svg)
+![tree-vs-dag](/img/misc/tree-vs-dag.svg)
 
 Many scene descriptions and described as a Scene Graph, or even a Direct Acyclic Graph(DAG). A Graph is more flexible in that any item can have 1 or more parents. A Graph provides an elegant definition of instancing because it implies that any item in the Graph can have 1 or more transformations in the 3d scene. A scene tree, in contrast, implies that any tree item can have one and only one transformation in the 3d scene. While this constraint creates some limitations on how data can be organized, it simplifies many aspects of how a developer interacts with and understands the scene they are building.
 
 ### Parameters
 
-![parameter-owner-params](../../../static/img/misc/parameter-owner-params.svg)
+![parameter-owner-params](/img/misc/parameter-owner-params.svg)
 
 Within the Scene Tree, each item in the tree contains a collection of parameters. Each parameter has a name and a value. Parameters can be added and removed from Tree items and provide a standard interface to access data stored within the tree.
 
@@ -98,7 +98,7 @@ Parameters can also be displayed using ParameterWidgets, which are user interfac
 
 Any item in the tree, or parameter can be reached by traversing the tree and accessing parameters. Each Tree item and Parameter can also return its path within the tree.
 
-![scene-tree-paths](../../../static/img/misc/scene-tree-paths.svg)
+![scene-tree-paths](/img/misc/scene-tree-paths.svg)
 
 In the following scene, a cylinder geometry is attached to a GeomItem which is nested under TreeItem1. The path for the Radius parameter is the following:
 
@@ -110,7 +110,7 @@ In the following scene, a cylinder geometry is attached to a GeomItem which is n
 
 Operators are used to compute new values for Parameters within the scene tree. Operators make the scene tree dynamic and able to maintain relationships between parameters, update based on changes, and drive animation.
 
-![operators-ABC](../../../static/img/misc/operators-ABC.svg)
+![operators-ABC](/img/misc/operators-ABC.svg)
 _In this diagram above, the value of Parameter C is calculated by Operator A using the values of Parameter A and Parameter B as inputs._
 
 ### Lazy Evaluation
@@ -121,7 +121,7 @@ However, the operator does not immediately start this calculation. Instead it wa
 These messages propagate throughout the tree until they reach an observer that is connected to a parameter and requests its updated value.
 On request, the operator requests the operators to finally calculate the updated value. Each operator asks it inputs for their values, which causes them to ask any input parameters for their values. This propagates back up the scene tree until it reaches the original operator whose value was modified.
 
-![operators-lazy-evaluation](../../../static/img/misc/operators-lazy-evaluation.svg)
+![operators-lazy-evaluation](/img/misc/operators-lazy-evaluation.svg)
 
 > Parameter 1 is changed by some mechanism. Maybe a timer changes its value periodically or a user edits it using a user interface component.If Parameter 1 is changed, then Parameters 2 and 3 become ‘dirty’ and this propagates to 4, 5 & 6. An Observer, potentially the renderer, or another user interface component, is watching Parameters 4 & 5. It receives an event indicating that they have become dirty, so it retrieves their values. This causes Op 1 and then Op 2 to evaluate producing the new updated values for Parameters 4 & 5. No Observer is watching Param 6, so Op 3 is not evaluated and so Param 6 value is never calculated. Param 6 remains dirty until its value is needed.
 
@@ -132,13 +132,13 @@ It can also be helpful if items are hidden from view, at which point, the render
 
 #### Scene Tree Class Hierarchy
 
-![scene-class-hierarchy](../../../static/img/misc/scene-class-hierarchy.svg)
+![scene-class-hierarchy](/img/misc/scene-class-hierarchy.svg)
 
 ### Renderer
 
 While the Scene tree provides a structure useful in organizing according to hierarchies useful for our understanding of the environment being displayed, the Renderer, through the system of passes, enables the organization of data around the requirements of efficient rendering on the GPU. Each Pass in the Renderer takes responsibility for rendering parts of the scene tree. The builtin passes generally handle the standard geometries that are provided in the scene tree, and custom passes can be registered to handle custom geometries that could be added to the scene tree.
 
-![scene-tree-renderer](../../../static/img/misc/scene-tree-renderer.svg)
+![scene-tree-renderer](/img/misc/scene-tree-renderer.svg)
 _A simple scene tree containing a tree item, one geom Item, and an Asset containing a couple of Geom Items. The Renderer contains a collection of passes that are observing the various parts of the scene tree._
 
 ### Renderer as an observer of the Scene Tree
@@ -184,7 +184,7 @@ Overlay passes are rendered after all Opaque and Transparent passes, and are use
 
 The Renderer uses a system of adapters to manage the relationship between the Objects and data stored in the Scene Tree and the memory on the GPU. For each type of Scene Tree item that is used in rendering, there is an adapter provided that manages the GPU resources for that object.
 
-![renderer-adaptors](../../../static/img/misc/renderer-adaptors.svg)
+![renderer-adaptors](/img/misc/renderer-adaptors.svg)
 
 > The role of the adaptor is to observe the data object, listen to changes, and update the GPU memory whenever necessary as the scene changes. If the data object is removed from the scene tree, the adaptor should clean up any GPU resources allocated for that object.
 
@@ -249,7 +249,7 @@ The latest Microsoft surface hardware runs a full version of Windows 10 and so p
 
 ## Class Hierarchy
 
-![renderer-class-hierarchy](../../../static/img/misc/renderer-class-hierarchy.svg)
+![renderer-class-hierarchy](/img/misc/renderer-class-hierarchy.svg)
 
 ## Summary
 

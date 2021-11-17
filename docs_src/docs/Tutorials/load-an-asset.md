@@ -72,7 +72,7 @@ The ObjAsset can only load text based .obj files, which is primarliy used in tes
 
 > OBJ files quickly grow into large unwieldy files as the number of points and triangles in the file increases. To load larger files, there are other formats that provide more efficient storage for large meshes. Read about the alternatives in the [Zea CAD Docs](https://docs.zea.live/zea-cad/#/getting-started/get-started-with-zea-cad)
 
-![load-asset0](../../static/img/misc/load-asset0.png)
+![load-asset0](/img/misc/load-asset0.png)
 
 ### Positioning and Rotating the Asset
 
@@ -91,7 +91,7 @@ xfo.ori.setFromEulerAngles(new EulerAngles(90 * (Math.PI / 180), 0, 0))
 objAsset.getParameter('GlobalXfo').setValue(xfo)
 ```
 
-![load-asset1](../../static/img/misc/load-asset1.png)
+![load-asset1](/img/misc/load-asset1.png)
 
 ## Conclusion
 

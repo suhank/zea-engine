@@ -58,7 +58,7 @@ scene.getRoot().addChild(geomItem)
 
 You should now have a sphere positioned at the center of the grid.
 
-![sphere](../../static/img/misc/sphere-drag-step2.png ':class = screenshot')
+![sphere](/img/misc/sphere-drag-step2.png ':class = screenshot')
 
 ## 3) Adding Listeners
 

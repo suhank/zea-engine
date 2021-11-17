@@ -11,25 +11,25 @@ Now, let's debug a hypothetical situation. For some reason, your grid is not ren
 
 📷 A strange looking white plane, Aka, the 🐞:
 
-![getting-started-strange-plane](../../../static/img/misc/getting-started-strange-plane.png ':class=screenshot')
+![getting-started-strange-plane](/img/misc/getting-started-strange-plane.png ':class=screenshot')
 
 ### Step 1
 
 Open the DevTools Sources panel and locate the index.js file:
 
-![getting-started-sources-panel](../../../static/img/misc/getting-started-sources-panel.png ':class=screenshot')
+![getting-started-sources-panel](/img/misc/getting-started-sources-panel.png ':class=screenshot')
 
 ### Step 2
 
 Pause the code with a breakpoint:
 
-![getting-started-breakpoint-start](../../../static/img/misc/getting-started-breakpoint-start.png ':class=screenshot')
+![getting-started-breakpoint-start](/img/misc/getting-started-breakpoint-start.png ':class=screenshot')
 
 ### Step 3
 
 Step through the code until the end of the file:
 
-![getting-started-breakpoint-end](../../../static/img/misc/getting-started-breakpoint-end.png ':class=screenshot')
+![getting-started-breakpoint-end](/img/misc/getting-started-breakpoint-end.png ':class=screenshot')
 
 Aha! Looks like we're so thrilled about learning the Zea Engine ways, that we accidentally left an extra line at the end. It turns out the strange looking white plane is actually a very crammed grid, with 10000 subdivisions in each direction.
 
@@ -37,9 +37,9 @@ Aha! Looks like we're so thrilled about learning the Zea Engine ways, that we ac
 
 Remove or comment the problematic line. Your grid should render again:
 
-![getting-started-commented-line](../../../static/img/misc/getting-started-commented-line.png ':class=screenshot')
+![getting-started-commented-line](/img/misc/getting-started-commented-line.png ':class=screenshot')
 
-![getting-started-working-grid](../../../static/img/misc/getting-started-working-grid.png ':class=screenshot')
+![getting-started-working-grid](/img/misc/getting-started-working-grid.png ':class=screenshot')
 
 ## Next steps
 
