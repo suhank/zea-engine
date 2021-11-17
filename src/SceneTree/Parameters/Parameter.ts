@@ -167,7 +167,7 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
     }
     // If we weren't already dirty, make sure to emit a 'valueChanged' anyway.
     this.__findFirstOP_WRITE()
-    if (!this.setDirty(index)) this.emit('valueChanged', { mode: 0 })
+    this.setDirty(index)
     return index
   }
 
@@ -213,7 +213,8 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
    */
   setDirty(index: number): boolean {
     // Determine the first operator in the stack that must evaluate to clean the parameter.
-    if (index < this.dirtyOpIndex) {
+    // Note: if a READ_WRITE op is becoming dirty, then we dirty back up to that op.
+    if (index < this.dirtyOpIndex || index > this.firstOP_WRITE) {
       // If we must dirty all operators in the stack from the last OP_WRITE to the end.
       // Note: If a setDirty call comes from an op that precedes an OP_WRITE operator, we
       // can safely discard it, as its output will have no effect on the value of this parameter.
@@ -230,7 +231,7 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
         for (let i = 0; i < this.boundInputs.length; i++) {
           this.boundInputs[i].setDirty()
         }
-        this.emit('valueChanged', { mode: 0 })
+        this.emit('valueChanged')
         return true
       }
     }
