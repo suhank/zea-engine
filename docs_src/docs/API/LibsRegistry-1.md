@@ -25,7 +25,7 @@ Construct a new libraries registry for the specific version.
 
 #### Defined in
 
-[LibsRegistry.ts:12](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/LibsRegistry.ts#L12)
+[LibsRegistry.ts:12](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/LibsRegistry.ts#L12)
 
 ## Properties
 
@@ -35,7 +35,7 @@ Construct a new libraries registry for the specific version.
 
 #### Defined in
 
-[LibsRegistry.ts:5](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/LibsRegistry.ts#L5)
+[LibsRegistry.ts:5](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/LibsRegistry.ts#L5)
 
 ___
 
@@ -45,7 +45,7 @@ ___
 
 #### Defined in
 
-[LibsRegistry.ts:6](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/LibsRegistry.ts#L6)
+[LibsRegistry.ts:6](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/LibsRegistry.ts#L6)
 
 ## Methods
 
@@ -63,7 +63,7 @@ Libraries list.
 
 #### Defined in
 
-[LibsRegistry.ts:37](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/LibsRegistry.ts#L37)
+[LibsRegistry.ts:37](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/LibsRegistry.ts#L37)
 
 ___
 
@@ -85,5 +85,5 @@ Validate and register a library.
 
 #### Defined in
 
-[LibsRegistry.ts:21](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/LibsRegistry.ts#L21)
+[LibsRegistry.ts:21](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/LibsRegistry.ts#L21)
 

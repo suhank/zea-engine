@@ -33,7 +33,7 @@ Create an BaseEvent.
 
 #### Defined in
 
-[Utilities/Events/TransparencyChangedEvent.ts:5](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Utilities/Events/TransparencyChangedEvent.ts#L5)
+[Utilities/Events/TransparencyChangedEvent.ts:5](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Utilities/Events/TransparencyChangedEvent.ts#L5)
 
 ## Properties
 
@@ -43,5 +43,5 @@ Create an BaseEvent.
 
 #### Defined in
 
-[Utilities/Events/TransparencyChangedEvent.ts:4](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Utilities/Events/TransparencyChangedEvent.ts#L4)
+[Utilities/Events/TransparencyChangedEvent.ts:4](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Utilities/Events/TransparencyChangedEvent.ts#L4)
 

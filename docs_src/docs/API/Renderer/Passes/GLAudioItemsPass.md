@@ -29,7 +29,7 @@ Create a GL audio items pass.
 
 #### Defined in
 
-[Renderer/Passes/GLAudioItemsPass.ts:35](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Renderer/Passes/GLAudioItemsPass.ts#L35)
+[Renderer/Passes/GLAudioItemsPass.ts:35](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Renderer/Passes/GLAudioItemsPass.ts#L35)
 
 ## Properties
 
@@ -39,7 +39,7 @@ Create a GL audio items pass.
 
 #### Defined in
 
-[Renderer/Passes/GLAudioItemsPass.ts:31](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Renderer/Passes/GLAudioItemsPass.ts#L31)
+[Renderer/Passes/GLAudioItemsPass.ts:31](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Renderer/Passes/GLAudioItemsPass.ts#L31)
 
 ___
 
@@ -53,7 +53,7 @@ ___
 
 #### Defined in
 
-[Renderer/Passes/GLPass.ts:20](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Renderer/Passes/GLPass.ts#L20)
+[Renderer/Passes/GLPass.ts:20](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Renderer/Passes/GLPass.ts#L20)
 
 ___
 
@@ -67,7 +67,7 @@ ___
 
 #### Defined in
 
-[Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Utilities/BaseClass.ts#L11)
+[Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Utilities/BaseClass.ts#L11)
 
 ___
 
@@ -81,7 +81,7 @@ ___
 
 #### Defined in
 
-[Renderer/Passes/GLPass.ts:22](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Renderer/Passes/GLPass.ts#L22)
+[Renderer/Passes/GLPass.ts:22](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Renderer/Passes/GLPass.ts#L22)
 
 ___
 
@@ -95,7 +95,7 @@ ___
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:23](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/ParameterOwner.ts#L23)
+[SceneTree/ParameterOwner.ts:23](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/SceneTree/ParameterOwner.ts#L23)
 
 ___
 
@@ -109,7 +109,7 @@ ___
 
 #### Defined in
 
-[Renderer/Passes/GLPass.ts:17](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Renderer/Passes/GLPass.ts#L17)
+[Renderer/Passes/GLPass.ts:17](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Renderer/Passes/GLPass.ts#L17)
 
 ___
 
@@ -123,7 +123,7 @@ ___
 
 #### Defined in
 
-[Renderer/Passes/GLPass.ts:24](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Renderer/Passes/GLPass.ts#L24)
+[Renderer/Passes/GLPass.ts:24](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Renderer/Passes/GLPass.ts#L24)
 
 ___
 
@@ -137,7 +137,7 @@ ___
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Utilities/EventEmitter.ts#L26)
+[Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Utilities/EventEmitter.ts#L26)
 
 ___
 
@@ -151,7 +151,7 @@ ___
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:20](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/ParameterOwner.ts#L20)
+[SceneTree/ParameterOwner.ts:20](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/SceneTree/ParameterOwner.ts#L20)
 
 ___
 
@@ -165,7 +165,7 @@ ___
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:21](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/ParameterOwner.ts#L21)
+[SceneTree/ParameterOwner.ts:21](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/SceneTree/ParameterOwner.ts#L21)
 
 ___
 
@@ -179,7 +179,7 @@ ___
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:22](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/ParameterOwner.ts#L22)
+[SceneTree/ParameterOwner.ts:22](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/SceneTree/ParameterOwner.ts#L22)
 
 ___
 
@@ -193,7 +193,7 @@ ___
 
 #### Defined in
 
-[Renderer/Passes/GLPass.ts:18](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Renderer/Passes/GLPass.ts#L18)
+[Renderer/Passes/GLPass.ts:18](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Renderer/Passes/GLPass.ts#L18)
 
 ___
 
@@ -207,7 +207,7 @@ ___
 
 #### Defined in
 
-[Renderer/Passes/GLPass.ts:21](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Renderer/Passes/GLPass.ts#L21)
+[Renderer/Passes/GLPass.ts:21](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Renderer/Passes/GLPass.ts#L21)
 
 ## Methods
 
@@ -229,7 +229,7 @@ The __updateListenerPosition method.
 
 #### Defined in
 
-[Renderer/Passes/GLAudioItemsPass.ts:226](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Renderer/Passes/GLAudioItemsPass.ts#L226)
+[Renderer/Passes/GLAudioItemsPass.ts:226](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Renderer/Passes/GLAudioItemsPass.ts#L226)
 
 ___
 
@@ -253,7 +253,7 @@ The addAudioSource method.
 
 #### Defined in
 
-[Renderer/Passes/GLAudioItemsPass.ts:113](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Renderer/Passes/GLAudioItemsPass.ts#L113)
+[Renderer/Passes/GLAudioItemsPass.ts:113](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Renderer/Passes/GLAudioItemsPass.ts#L113)
 
 ___
 
@@ -283,7 +283,7 @@ Adds `Parameter` object to the owner's parameter list.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:133](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/ParameterOwner.ts#L133)
+[SceneTree/ParameterOwner.ts:133](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/SceneTree/ParameterOwner.ts#L133)
 
 ___
 
@@ -313,7 +313,7 @@ This is used to handle migrating parameters to new names.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:90](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/ParameterOwner.ts#L90)
+[SceneTree/ParameterOwner.ts:90](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/SceneTree/ParameterOwner.ts#L90)
 
 ___
 
@@ -340,7 +340,7 @@ Copies Parameters from another `ParameterOwner` to current object.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:314](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/ParameterOwner.ts#L314)
+[SceneTree/ParameterOwner.ts:314](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/SceneTree/ParameterOwner.ts#L314)
 
 ___
 
@@ -366,7 +366,7 @@ The draw method.
 
 #### Defined in
 
-[Renderer/Passes/GLAudioItemsPass.ts:272](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Renderer/Passes/GLAudioItemsPass.ts#L272)
+[Renderer/Passes/GLAudioItemsPass.ts:272](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Renderer/Passes/GLAudioItemsPass.ts#L272)
 
 ___
 
@@ -392,7 +392,7 @@ The drawGeomData method.
 
 #### Defined in
 
-[Renderer/Passes/GLPass.ts:135](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Renderer/Passes/GLPass.ts#L135)
+[Renderer/Passes/GLPass.ts:135](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Renderer/Passes/GLPass.ts#L135)
 
 ___
 
@@ -418,7 +418,7 @@ The drawHighlightedGeoms method.
 
 #### Defined in
 
-[Renderer/Passes/GLPass.ts:129](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Renderer/Passes/GLPass.ts#L129)
+[Renderer/Passes/GLPass.ts:129](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Renderer/Passes/GLPass.ts#L129)
 
 ___
 
@@ -445,7 +445,7 @@ Triggers all listener functions in an event.
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Utilities/EventEmitter.ts#L154)
+[Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Utilities/EventEmitter.ts#L154)
 
 ___
 
@@ -472,7 +472,7 @@ The fromJSON method decodes a json object for this type.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:239](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/ParameterOwner.ts#L239)
+[SceneTree/ParameterOwner.ts:239](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/SceneTree/ParameterOwner.ts#L239)
 
 ___
 
@@ -494,7 +494,7 @@ Returns the unmangled name of the class.
 
 #### Defined in
 
-[Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Utilities/BaseClass.ts#L33)
+[Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Utilities/BaseClass.ts#L33)
 
 ___
 
@@ -520,7 +520,7 @@ The getGeomItemAndDist method.
 
 #### Defined in
 
-[Renderer/Passes/GLPass.ts:141](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Renderer/Passes/GLPass.ts#L141)
+[Renderer/Passes/GLPass.ts:141](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Renderer/Passes/GLPass.ts#L141)
 
 ___
 
@@ -544,7 +544,7 @@ Returns the unique id of the object.
 
 #### Defined in
 
-[Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Utilities/BaseClass.ts#L25)
+[Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Utilities/BaseClass.ts#L25)
 
 ___
 
@@ -566,7 +566,7 @@ Returns the number of parameters current object has.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:39](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/ParameterOwner.ts#L39)
+[SceneTree/ParameterOwner.ts:39](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/SceneTree/ParameterOwner.ts#L39)
 
 ___
 
@@ -594,7 +594,7 @@ Returns `Parameter` object using the given name
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:100](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/ParameterOwner.ts#L100)
+[SceneTree/ParameterOwner.ts:100](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/SceneTree/ParameterOwner.ts#L100)
 
 ___
 
@@ -622,7 +622,7 @@ Returns `Parameter` object in a given index
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:68](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/ParameterOwner.ts#L68)
+[SceneTree/ParameterOwner.ts:68](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/SceneTree/ParameterOwner.ts#L68)
 
 ___
 
@@ -650,7 +650,7 @@ Returns the index of a parameter in parameter list.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:58](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/ParameterOwner.ts#L58)
+[SceneTree/ParameterOwner.ts:58](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/SceneTree/ParameterOwner.ts#L58)
 
 ___
 
@@ -672,7 +672,7 @@ Returns all the parameters of the object.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:48](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/ParameterOwner.ts#L48)
+[SceneTree/ParameterOwner.ts:48](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/SceneTree/ParameterOwner.ts#L48)
 
 ___
 
@@ -694,7 +694,7 @@ Returns the pass type. OPAQUE passes are always rendered first, followed by TRAN
 
 #### Defined in
 
-[Renderer/Passes/GLAudioItemsPass.ts:55](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Renderer/Passes/GLAudioItemsPass.ts#L55)
+[Renderer/Passes/GLAudioItemsPass.ts:55](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Renderer/Passes/GLAudioItemsPass.ts#L55)
 
 ___
 
@@ -722,7 +722,7 @@ Validates if the specified parameter exists in the object.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:78](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/ParameterOwner.ts#L78)
+[SceneTree/ParameterOwner.ts:78](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/SceneTree/ParameterOwner.ts#L78)
 
 ___
 
@@ -749,7 +749,7 @@ The init method.
 
 #### Defined in
 
-[Renderer/Passes/GLAudioItemsPass.ts:45](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Renderer/Passes/GLAudioItemsPass.ts#L45)
+[Renderer/Passes/GLAudioItemsPass.ts:45](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Renderer/Passes/GLAudioItemsPass.ts#L45)
 
 ___
 
@@ -781,7 +781,7 @@ It replaces the event in the specified index.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:147](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/ParameterOwner.ts#L147)
+[SceneTree/ParameterOwner.ts:147](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/SceneTree/ParameterOwner.ts#L147)
 
 ___
 
@@ -812,7 +812,7 @@ It allows Passes to select geometries to handle the drawing of.
 
 #### Defined in
 
-[Renderer/Passes/GLAudioItemsPass.ts:69](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Renderer/Passes/GLAudioItemsPass.ts#L69)
+[Renderer/Passes/GLAudioItemsPass.ts:69](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Renderer/Passes/GLAudioItemsPass.ts#L69)
 
 ___
 
@@ -842,7 +842,7 @@ is removed to the scene, and the pass must handle cleaning up any resources.
 
 #### Defined in
 
-[Renderer/Passes/GLAudioItemsPass.ts:102](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Renderer/Passes/GLAudioItemsPass.ts#L102)
+[Renderer/Passes/GLAudioItemsPass.ts:102](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Renderer/Passes/GLAudioItemsPass.ts#L102)
 
 ___
 
@@ -869,7 +869,7 @@ Removes a listener function from the specified event, using either the function 
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Utilities/EventEmitter.ts#L97)
+[Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Utilities/EventEmitter.ts#L97)
 
 ___
 
@@ -898,7 +898,7 @@ Adds a listener function for a given event name.
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Utilities/EventEmitter.ts#L44)
+[Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Utilities/EventEmitter.ts#L44)
 
 ___
 
@@ -936,7 +936,7 @@ asset.once('loaded', () => {
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Utilities/EventEmitter.ts#L82)
+[Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Utilities/EventEmitter.ts#L82)
 
 ___
 
@@ -962,7 +962,7 @@ The __parameterValueChanged method.
 
 #### Defined in
 
-[Renderer/Passes/GLPass.ts:42](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Renderer/Passes/GLPass.ts#L42)
+[Renderer/Passes/GLPass.ts:42](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Renderer/Passes/GLPass.ts#L42)
 
 ___
 
@@ -994,7 +994,7 @@ used to build the right `Parameter` class. Then all of them are added to the obj
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:274](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/ParameterOwner.ts#L274)
+[SceneTree/ParameterOwner.ts:274](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/SceneTree/ParameterOwner.ts#L274)
 
 ___
 
@@ -1021,7 +1021,7 @@ remove listener by ID returned from #on
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Utilities/EventEmitter.ts#L134)
+[Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Utilities/EventEmitter.ts#L134)
 
 ___
 
@@ -1049,7 +1049,7 @@ Removes `Parameter` from owner, by using parameter's name.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:174](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/ParameterOwner.ts#L174)
+[SceneTree/ParameterOwner.ts:174](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/SceneTree/ParameterOwner.ts#L174)
 
 ___
 
@@ -1077,7 +1077,7 @@ Replaces old `Parameter` by passing a new one with the same name.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:196](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/ParameterOwner.ts#L196)
+[SceneTree/ParameterOwner.ts:196](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/SceneTree/ParameterOwner.ts#L196)
 
 ___
 
@@ -1103,7 +1103,7 @@ The setPassIndex method.
 
 #### Defined in
 
-[Renderer/Passes/GLPass.ts:65](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Renderer/Passes/GLPass.ts#L65)
+[Renderer/Passes/GLPass.ts:65](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Renderer/Passes/GLPass.ts#L65)
 
 ___
 
@@ -1123,7 +1123,7 @@ The startPresenting method.
 
 #### Defined in
 
-[Renderer/Passes/GLPass.ts:107](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Renderer/Passes/GLPass.ts#L107)
+[Renderer/Passes/GLPass.ts:107](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Renderer/Passes/GLPass.ts#L107)
 
 ___
 
@@ -1143,7 +1143,7 @@ The stopPresenting method.
 
 #### Defined in
 
-[Renderer/Passes/GLPass.ts:112](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/Renderer/Passes/GLPass.ts#L112)
+[Renderer/Passes/GLPass.ts:112](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Renderer/Passes/GLPass.ts#L112)
 
 ___
 
@@ -1171,7 +1171,7 @@ The toJSON method encodes this type as a json object for persistence.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:216](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/ParameterOwner.ts#L216)
+[SceneTree/ParameterOwner.ts:216](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/SceneTree/ParameterOwner.ts#L216)
 
 ___
 
@@ -1199,5 +1199,5 @@ Converts object's JSON value and converts it to a string.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:301](https://github.com/ZeaInc/zea-engine/blob/cafd1585c/src/SceneTree/ParameterOwner.ts#L301)
+[SceneTree/ParameterOwner.ts:301](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/SceneTree/ParameterOwner.ts#L301)
 
