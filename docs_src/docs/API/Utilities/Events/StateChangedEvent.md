@@ -33,7 +33,7 @@ Create an BaseEvent.
 
 #### Defined in
 
-[Utilities/Events/StateChangedEvent.ts:5](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Utilities/Events/StateChangedEvent.ts#L5)
+[Utilities/Events/StateChangedEvent.ts:5](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Utilities/Events/StateChangedEvent.ts#L5)
 
 ## Properties
 
@@ -43,5 +43,5 @@ Create an BaseEvent.
 
 #### Defined in
 
-[Utilities/Events/StateChangedEvent.ts:4](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Utilities/Events/StateChangedEvent.ts#L4)
+[Utilities/Events/StateChangedEvent.ts:4](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Utilities/Events/StateChangedEvent.ts#L4)
 

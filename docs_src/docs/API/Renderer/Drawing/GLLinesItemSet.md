@@ -35,7 +35,7 @@ Create a GL geom item set.
 
 #### Defined in
 
-[Renderer/Drawing/GLGeomItemSetMultiDraw.ts:38](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Renderer/Drawing/GLGeomItemSetMultiDraw.ts#L38)
+[Renderer/Drawing/GLGeomItemSetMultiDraw.ts:38](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Renderer/Drawing/GLGeomItemSetMultiDraw.ts#L38)
 
 ## Properties
 
@@ -49,7 +49,7 @@ Create a GL geom item set.
 
 #### Defined in
 
-[Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Utilities/BaseClass.ts#L11)
+[Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Utilities/BaseClass.ts#L11)
 
 ___
 
@@ -63,7 +63,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLGeomItemSetMultiDraw.ts:20](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Renderer/Drawing/GLGeomItemSetMultiDraw.ts#L20)
+[Renderer/Drawing/GLGeomItemSetMultiDraw.ts:20](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Renderer/Drawing/GLGeomItemSetMultiDraw.ts#L20)
 
 ___
 
@@ -77,7 +77,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLGeomItemSetMultiDraw.ts:21](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Renderer/Drawing/GLGeomItemSetMultiDraw.ts#L21)
+[Renderer/Drawing/GLGeomItemSetMultiDraw.ts:21](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Renderer/Drawing/GLGeomItemSetMultiDraw.ts#L21)
 
 ___
 
@@ -91,7 +91,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLGeomItemSetMultiDraw.ts:26](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Renderer/Drawing/GLGeomItemSetMultiDraw.ts#L26)
+[Renderer/Drawing/GLGeomItemSetMultiDraw.ts:26](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Renderer/Drawing/GLGeomItemSetMultiDraw.ts#L26)
 
 ___
 
@@ -105,7 +105,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLGeomItemSetMultiDraw.ts:27](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Renderer/Drawing/GLGeomItemSetMultiDraw.ts#L27)
+[Renderer/Drawing/GLGeomItemSetMultiDraw.ts:27](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Renderer/Drawing/GLGeomItemSetMultiDraw.ts#L27)
 
 ___
 
@@ -119,7 +119,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLGeomItemSetMultiDraw.ts:28](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Renderer/Drawing/GLGeomItemSetMultiDraw.ts#L28)
+[Renderer/Drawing/GLGeomItemSetMultiDraw.ts:28](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Renderer/Drawing/GLGeomItemSetMultiDraw.ts#L28)
 
 ___
 
@@ -133,7 +133,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLGeomItemSetMultiDraw.ts:19](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Renderer/Drawing/GLGeomItemSetMultiDraw.ts#L19)
+[Renderer/Drawing/GLGeomItemSetMultiDraw.ts:19](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Renderer/Drawing/GLGeomItemSetMultiDraw.ts#L19)
 
 ___
 
@@ -147,7 +147,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLGeomItemSetMultiDraw.ts:15](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Renderer/Drawing/GLGeomItemSetMultiDraw.ts#L15)
+[Renderer/Drawing/GLGeomItemSetMultiDraw.ts:15](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Renderer/Drawing/GLGeomItemSetMultiDraw.ts#L15)
 
 ___
 
@@ -161,7 +161,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLGeomItemSetMultiDraw.ts:17](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Renderer/Drawing/GLGeomItemSetMultiDraw.ts#L17)
+[Renderer/Drawing/GLGeomItemSetMultiDraw.ts:17](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Renderer/Drawing/GLGeomItemSetMultiDraw.ts#L17)
 
 ___
 
@@ -175,7 +175,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLGeomItemSetMultiDraw.ts:16](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Renderer/Drawing/GLGeomItemSetMultiDraw.ts#L16)
+[Renderer/Drawing/GLGeomItemSetMultiDraw.ts:16](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Renderer/Drawing/GLGeomItemSetMultiDraw.ts#L16)
 
 ___
 
@@ -189,7 +189,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLGeomItemSetMultiDraw.ts:18](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Renderer/Drawing/GLGeomItemSetMultiDraw.ts#L18)
+[Renderer/Drawing/GLGeomItemSetMultiDraw.ts:18](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Renderer/Drawing/GLGeomItemSetMultiDraw.ts#L18)
 
 ___
 
@@ -203,7 +203,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLGeomItemSetMultiDraw.ts:22](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Renderer/Drawing/GLGeomItemSetMultiDraw.ts#L22)
+[Renderer/Drawing/GLGeomItemSetMultiDraw.ts:22](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Renderer/Drawing/GLGeomItemSetMultiDraw.ts#L22)
 
 ___
 
@@ -217,7 +217,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLGeomItemSetMultiDraw.ts:23](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Renderer/Drawing/GLGeomItemSetMultiDraw.ts#L23)
+[Renderer/Drawing/GLGeomItemSetMultiDraw.ts:23](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Renderer/Drawing/GLGeomItemSetMultiDraw.ts#L23)
 
 ___
 
@@ -231,7 +231,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLGeomItemSetMultiDraw.ts:30](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Renderer/Drawing/GLGeomItemSetMultiDraw.ts#L30)
+[Renderer/Drawing/GLGeomItemSetMultiDraw.ts:30](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Renderer/Drawing/GLGeomItemSetMultiDraw.ts#L30)
 
 ___
 
@@ -245,7 +245,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLGeomItemSetMultiDraw.ts:32](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Renderer/Drawing/GLGeomItemSetMultiDraw.ts#L32)
+[Renderer/Drawing/GLGeomItemSetMultiDraw.ts:32](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Renderer/Drawing/GLGeomItemSetMultiDraw.ts#L32)
 
 ___
 
@@ -259,7 +259,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLGeomItemSetMultiDraw.ts:31](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Renderer/Drawing/GLGeomItemSetMultiDraw.ts#L31)
+[Renderer/Drawing/GLGeomItemSetMultiDraw.ts:31](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Renderer/Drawing/GLGeomItemSetMultiDraw.ts#L31)
 
 ___
 
@@ -273,7 +273,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLGeomItemSetMultiDraw.ts:29](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Renderer/Drawing/GLGeomItemSetMultiDraw.ts#L29)
+[Renderer/Drawing/GLGeomItemSetMultiDraw.ts:29](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Renderer/Drawing/GLGeomItemSetMultiDraw.ts#L29)
 
 ___
 
@@ -287,7 +287,7 @@ ___
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Utilities/EventEmitter.ts#L26)
+[Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Utilities/EventEmitter.ts#L26)
 
 ___
 
@@ -301,7 +301,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLGeomItemSetMultiDraw.ts:14](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Renderer/Drawing/GLGeomItemSetMultiDraw.ts#L14)
+[Renderer/Drawing/GLGeomItemSetMultiDraw.ts:14](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Renderer/Drawing/GLGeomItemSetMultiDraw.ts#L14)
 
 ___
 
@@ -315,7 +315,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLGeomItemSetMultiDraw.ts:24](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Renderer/Drawing/GLGeomItemSetMultiDraw.ts#L24)
+[Renderer/Drawing/GLGeomItemSetMultiDraw.ts:24](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Renderer/Drawing/GLGeomItemSetMultiDraw.ts#L24)
 
 ___
 
@@ -329,7 +329,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLGeomItemSetMultiDraw.ts:25](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Renderer/Drawing/GLGeomItemSetMultiDraw.ts#L25)
+[Renderer/Drawing/GLGeomItemSetMultiDraw.ts:25](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Renderer/Drawing/GLGeomItemSetMultiDraw.ts#L25)
 
 ## Methods
 
@@ -355,7 +355,7 @@ The addGLGeomItem method.
 
 #### Defined in
 
-[Renderer/Drawing/GLGeomItemSetMultiDraw.ts:89](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Renderer/Drawing/GLGeomItemSetMultiDraw.ts#L89)
+[Renderer/Drawing/GLGeomItemSetMultiDraw.ts:89](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Renderer/Drawing/GLGeomItemSetMultiDraw.ts#L89)
 
 ___
 
@@ -385,7 +385,7 @@ The bindAndRender method.
 
 #### Defined in
 
-[Renderer/Drawing/GLGeomItemSetMultiDraw.ts:426](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Renderer/Drawing/GLGeomItemSetMultiDraw.ts#L426)
+[Renderer/Drawing/GLGeomItemSetMultiDraw.ts:426](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Renderer/Drawing/GLGeomItemSetMultiDraw.ts#L426)
 
 ___
 
@@ -406,7 +406,7 @@ Users should never need to call this method directly.
 
 #### Defined in
 
-[Renderer/Drawing/GLGeomItemSetMultiDraw.ts:499](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Renderer/Drawing/GLGeomItemSetMultiDraw.ts#L499)
+[Renderer/Drawing/GLGeomItemSetMultiDraw.ts:499](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Renderer/Drawing/GLGeomItemSetMultiDraw.ts#L499)
 
 ___
 
@@ -432,7 +432,7 @@ The draw method.
 
 #### Defined in
 
-[Renderer/Drawing/GLGeomItemSetMultiDraw.ts:371](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Renderer/Drawing/GLGeomItemSetMultiDraw.ts#L371)
+[Renderer/Drawing/GLGeomItemSetMultiDraw.ts:371](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Renderer/Drawing/GLGeomItemSetMultiDraw.ts#L371)
 
 ___
 
@@ -458,7 +458,7 @@ The drawHighlighted method.
 
 #### Defined in
 
-[Renderer/Drawing/GLGeomItemSetMultiDraw.ts:398](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Renderer/Drawing/GLGeomItemSetMultiDraw.ts#L398)
+[Renderer/Drawing/GLGeomItemSetMultiDraw.ts:398](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Renderer/Drawing/GLGeomItemSetMultiDraw.ts#L398)
 
 ___
 
@@ -485,7 +485,7 @@ Triggers all listener functions in an event.
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Utilities/EventEmitter.ts#L154)
+[Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Utilities/EventEmitter.ts#L154)
 
 ___
 
@@ -507,7 +507,7 @@ Returns the unmangled name of the class.
 
 #### Defined in
 
-[Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Utilities/BaseClass.ts#L33)
+[Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Utilities/BaseClass.ts#L33)
 
 ___
 
@@ -531,7 +531,7 @@ Returns the unique id of the object.
 
 #### Defined in
 
-[Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Utilities/BaseClass.ts#L25)
+[Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Utilities/BaseClass.ts#L25)
 
 ___
 
@@ -561,7 +561,7 @@ Draw an item to screen.
 
 #### Defined in
 
-[Renderer/Drawing/GLLinesItemSet.ts:17](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Renderer/Drawing/GLLinesItemSet.ts#L17)
+[Renderer/Drawing/GLLinesItemSet.ts:17](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Renderer/Drawing/GLLinesItemSet.ts#L17)
 
 ___
 
@@ -588,7 +588,7 @@ Removes a listener function from the specified event, using either the function 
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Utilities/EventEmitter.ts#L97)
+[Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Utilities/EventEmitter.ts#L97)
 
 ___
 
@@ -617,7 +617,7 @@ Adds a listener function for a given event name.
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Utilities/EventEmitter.ts#L44)
+[Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Utilities/EventEmitter.ts#L44)
 
 ___
 
@@ -655,7 +655,7 @@ asset.once('loaded', () => {
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Utilities/EventEmitter.ts#L82)
+[Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Utilities/EventEmitter.ts#L82)
 
 ___
 
@@ -681,7 +681,7 @@ The removeGLGeomItem method.
 
 #### Defined in
 
-[Renderer/Drawing/GLGeomItemSetMultiDraw.ts:155](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Renderer/Drawing/GLGeomItemSetMultiDraw.ts#L155)
+[Renderer/Drawing/GLGeomItemSetMultiDraw.ts:155](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Renderer/Drawing/GLGeomItemSetMultiDraw.ts#L155)
 
 ___
 
@@ -708,7 +708,7 @@ remove listener by ID returned from #on
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Utilities/EventEmitter.ts#L134)
+[Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Utilities/EventEmitter.ts#L134)
 
 ___
 
@@ -734,7 +734,7 @@ Sorts the drawn items in order furthest to nearest when rendering transparent ob
 
 #### Defined in
 
-[Renderer/Drawing/GLGeomItemSetMultiDraw.ts:467](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Renderer/Drawing/GLGeomItemSetMultiDraw.ts#L467)
+[Renderer/Drawing/GLGeomItemSetMultiDraw.ts:467](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Renderer/Drawing/GLGeomItemSetMultiDraw.ts#L467)
 
 ___
 
@@ -760,7 +760,7 @@ The updateDrawIDsBuffer method.
 
 #### Defined in
 
-[Renderer/Drawing/GLGeomItemSetMultiDraw.ts:197](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Renderer/Drawing/GLGeomItemSetMultiDraw.ts#L197)
+[Renderer/Drawing/GLGeomItemSetMultiDraw.ts:197](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Renderer/Drawing/GLGeomItemSetMultiDraw.ts#L197)
 
 ___
 
@@ -786,5 +786,5 @@ The updateHighlightedIDsBuffer method.
 
 #### Defined in
 
-[Renderer/Drawing/GLGeomItemSetMultiDraw.ts:279](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Renderer/Drawing/GLGeomItemSetMultiDraw.ts#L279)
+[Renderer/Drawing/GLGeomItemSetMultiDraw.ts:279](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Renderer/Drawing/GLGeomItemSetMultiDraw.ts#L279)
 

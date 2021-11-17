@@ -41,7 +41,7 @@ Initializes the Mat3 class with given data.
 
 #### Defined in
 
-[Math/Mat4.ts:34](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L34)
+[Math/Mat4.ts:34](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L34)
 
 ## Properties
 
@@ -51,7 +51,7 @@ Initializes the Mat3 class with given data.
 
 #### Defined in
 
-[Math/Mat4.ts:13](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L13)
+[Math/Mat4.ts:13](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L13)
 
 ## Accessors
 
@@ -69,7 +69,7 @@ Getter for row 0, column 0.
 
 #### Defined in
 
-[Math/Mat4.ts:72](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L72)
+[Math/Mat4.ts:72](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L72)
 
 • `set` **m00**(`val`): `void`
 
@@ -89,7 +89,7 @@ Setter for row 0, column 0.
 
 #### Defined in
 
-[Math/Mat4.ts:81](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L81)
+[Math/Mat4.ts:81](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L81)
 
 ___
 
@@ -107,7 +107,7 @@ Getter for row 0, column 1.
 
 #### Defined in
 
-[Math/Mat4.ts:90](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L90)
+[Math/Mat4.ts:90](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L90)
 
 • `set` **m01**(`val`): `void`
 
@@ -127,7 +127,7 @@ Setter for row 0, column 1.
 
 #### Defined in
 
-[Math/Mat4.ts:99](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L99)
+[Math/Mat4.ts:99](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L99)
 
 ___
 
@@ -145,7 +145,7 @@ Getter for row 0, column 2.
 
 #### Defined in
 
-[Math/Mat4.ts:108](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L108)
+[Math/Mat4.ts:108](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L108)
 
 • `set` **m02**(`val`): `void`
 
@@ -165,7 +165,7 @@ Setter for row 0, column 2.
 
 #### Defined in
 
-[Math/Mat4.ts:117](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L117)
+[Math/Mat4.ts:117](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L117)
 
 ___
 
@@ -183,7 +183,7 @@ Getter for row 0, column 3.
 
 #### Defined in
 
-[Math/Mat4.ts:126](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L126)
+[Math/Mat4.ts:126](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L126)
 
 • `set` **m03**(`val`): `void`
 
@@ -203,7 +203,7 @@ Setter for row 0, column 3.
 
 #### Defined in
 
-[Math/Mat4.ts:135](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L135)
+[Math/Mat4.ts:135](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L135)
 
 ___
 
@@ -221,7 +221,7 @@ Getter for row 1, column 0.
 
 #### Defined in
 
-[Math/Mat4.ts:144](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L144)
+[Math/Mat4.ts:144](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L144)
 
 • `set` **m10**(`val`): `void`
 
@@ -241,7 +241,7 @@ Setter for row 1, column 0.
 
 #### Defined in
 
-[Math/Mat4.ts:153](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L153)
+[Math/Mat4.ts:153](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L153)
 
 ___
 
@@ -259,7 +259,7 @@ Getter for row 1, column 1.
 
 #### Defined in
 
-[Math/Mat4.ts:162](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L162)
+[Math/Mat4.ts:162](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L162)
 
 • `set` **m11**(`val`): `void`
 
@@ -279,7 +279,7 @@ Setter for row 1, column 1.
 
 #### Defined in
 
-[Math/Mat4.ts:171](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L171)
+[Math/Mat4.ts:171](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L171)
 
 ___
 
@@ -297,7 +297,7 @@ Getter for row 1, column 2.
 
 #### Defined in
 
-[Math/Mat4.ts:180](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L180)
+[Math/Mat4.ts:180](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L180)
 
 • `set` **m12**(`val`): `void`
 
@@ -317,7 +317,7 @@ Setter for row 1, column 2.
 
 #### Defined in
 
-[Math/Mat4.ts:189](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L189)
+[Math/Mat4.ts:189](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L189)
 
 ___
 
@@ -335,7 +335,7 @@ Getter for row 1, column 3.
 
 #### Defined in
 
-[Math/Mat4.ts:198](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L198)
+[Math/Mat4.ts:198](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L198)
 
 • `set` **m13**(`val`): `void`
 
@@ -355,7 +355,7 @@ Setter for row 1, column 3.
 
 #### Defined in
 
-[Math/Mat4.ts:207](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L207)
+[Math/Mat4.ts:207](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L207)
 
 ___
 
@@ -373,7 +373,7 @@ Getter for row 2, column 0.
 
 #### Defined in
 
-[Math/Mat4.ts:216](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L216)
+[Math/Mat4.ts:216](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L216)
 
 • `set` **m20**(`val`): `void`
 
@@ -393,7 +393,7 @@ Setter for row 2, column 0.
 
 #### Defined in
 
-[Math/Mat4.ts:225](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L225)
+[Math/Mat4.ts:225](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L225)
 
 ___
 
@@ -411,7 +411,7 @@ Getter for row 2, column 1.
 
 #### Defined in
 
-[Math/Mat4.ts:234](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L234)
+[Math/Mat4.ts:234](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L234)
 
 • `set` **m21**(`val`): `void`
 
@@ -431,7 +431,7 @@ Setter for row 2, column 1
 
 #### Defined in
 
-[Math/Mat4.ts:243](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L243)
+[Math/Mat4.ts:243](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L243)
 
 ___
 
@@ -449,7 +449,7 @@ Getter for row 2, column 2.
 
 #### Defined in
 
-[Math/Mat4.ts:252](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L252)
+[Math/Mat4.ts:252](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L252)
 
 • `set` **m22**(`val`): `void`
 
@@ -469,7 +469,7 @@ Setter for row 2, column 2.
 
 #### Defined in
 
-[Math/Mat4.ts:261](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L261)
+[Math/Mat4.ts:261](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L261)
 
 ___
 
@@ -487,7 +487,7 @@ Getter for row 2, column 3.
 
 #### Defined in
 
-[Math/Mat4.ts:270](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L270)
+[Math/Mat4.ts:270](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L270)
 
 • `set` **m23**(`val`): `void`
 
@@ -507,7 +507,7 @@ Setter for row 2, column 3.
 
 #### Defined in
 
-[Math/Mat4.ts:279](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L279)
+[Math/Mat4.ts:279](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L279)
 
 ___
 
@@ -525,7 +525,7 @@ Getter for row 3, column 0
 
 #### Defined in
 
-[Math/Mat4.ts:288](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L288)
+[Math/Mat4.ts:288](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L288)
 
 • `set` **m30**(`val`): `void`
 
@@ -545,7 +545,7 @@ Setter for row 3, column 0.
 
 #### Defined in
 
-[Math/Mat4.ts:297](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L297)
+[Math/Mat4.ts:297](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L297)
 
 ___
 
@@ -563,7 +563,7 @@ Getter for row 3, column 1.
 
 #### Defined in
 
-[Math/Mat4.ts:306](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L306)
+[Math/Mat4.ts:306](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L306)
 
 • `set` **m31**(`val`): `void`
 
@@ -583,7 +583,7 @@ Setter for row 3, column 1.
 
 #### Defined in
 
-[Math/Mat4.ts:315](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L315)
+[Math/Mat4.ts:315](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L315)
 
 ___
 
@@ -601,7 +601,7 @@ Getter for row 3, column 2.
 
 #### Defined in
 
-[Math/Mat4.ts:324](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L324)
+[Math/Mat4.ts:324](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L324)
 
 • `set` **m32**(`val`): `void`
 
@@ -621,7 +621,7 @@ Setter for row 3, column 2.
 
 #### Defined in
 
-[Math/Mat4.ts:333](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L333)
+[Math/Mat4.ts:333](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L333)
 
 ___
 
@@ -639,7 +639,7 @@ Getter for row 3, column 3.
 
 #### Defined in
 
-[Math/Mat4.ts:342](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L342)
+[Math/Mat4.ts:342](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L342)
 
 • `set` **m33**(`val`): `void`
 
@@ -659,7 +659,7 @@ Setter for row 3, column 3.
 
 #### Defined in
 
-[Math/Mat4.ts:351](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L351)
+[Math/Mat4.ts:351](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L351)
 
 ___
 
@@ -677,7 +677,7 @@ Getter for the translation of the matrix. Assumes the translation values are 12,
 
 #### Defined in
 
-[Math/Mat4.ts:414](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L414)
+[Math/Mat4.ts:414](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L414)
 
 • `set` **translation**(`vec3`): `void`
 
@@ -697,7 +697,7 @@ Setter for the translation of the matrix. Assumes the translation values are 12,
 
 #### Defined in
 
-[Math/Mat4.ts:423](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L423)
+[Math/Mat4.ts:423](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L423)
 
 ___
 
@@ -715,7 +715,7 @@ Getter for the `x` axis.
 
 #### Defined in
 
-[Math/Mat4.ts:360](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L360)
+[Math/Mat4.ts:360](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L360)
 
 • `set` **xAxis**(`vec3`): `void`
 
@@ -735,7 +735,7 @@ Setter for the `x` axis.
 
 #### Defined in
 
-[Math/Mat4.ts:369](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L369)
+[Math/Mat4.ts:369](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L369)
 
 ___
 
@@ -753,7 +753,7 @@ Getter for the `y` axis.
 
 #### Defined in
 
-[Math/Mat4.ts:378](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L378)
+[Math/Mat4.ts:378](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L378)
 
 • `set` **yAxis**(`vec3`): `void`
 
@@ -773,7 +773,7 @@ Setter for the `y` axis.
 
 #### Defined in
 
-[Math/Mat4.ts:387](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L387)
+[Math/Mat4.ts:387](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L387)
 
 ___
 
@@ -791,7 +791,7 @@ Getter for the `z` axis.
 
 #### Defined in
 
-[Math/Mat4.ts:396](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L396)
+[Math/Mat4.ts:396](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L396)
 
 • `set` **zAxis**(`vec3`): `void`
 
@@ -811,7 +811,7 @@ Setter for the `z` axis.
 
 #### Defined in
 
-[Math/Mat4.ts:405](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L405)
+[Math/Mat4.ts:405](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L405)
 
 ## Methods
 
@@ -829,7 +829,7 @@ Returns current Math type data as array. Often used to pass types to the GPU.
 
 #### Defined in
 
-[Math/Mat4.ts:1430](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L1430)
+[Math/Mat4.ts:1430](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L1430)
 
 ___
 
@@ -847,7 +847,7 @@ Clones this Mat4 returning a new instance.
 
 #### Defined in
 
-[Math/Mat4.ts:1364](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L1364)
+[Math/Mat4.ts:1364](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L1364)
 
 ___
 
@@ -869,7 +869,7 @@ The fromJSON method decodes a json object for this type.
 
 #### Defined in
 
-[Math/Mat4.ts:1412](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L1412)
+[Math/Mat4.ts:1412](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L1412)
 
 ___
 
@@ -887,7 +887,7 @@ Inverts a Mat4 and returns the result as a new instance.
 
 #### Defined in
 
-[Math/Mat4.ts:605](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L605)
+[Math/Mat4.ts:605](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L605)
 
 ___
 
@@ -905,7 +905,7 @@ Inverts a Mat4.
 
 #### Defined in
 
-[Math/Mat4.ts:670](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L670)
+[Math/Mat4.ts:670](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L670)
 
 ___
 
@@ -929,7 +929,7 @@ Multiplies two Mat4s and returns the result as a new instance.
 
 #### Defined in
 
-[Math/Mat4.ts:800](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L800)
+[Math/Mat4.ts:800](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L800)
 
 ___
 
@@ -953,7 +953,7 @@ Multiplies two Mat4s in place explicitly not using SIMD.
 
 #### Defined in
 
-[Math/Mat4.ts:865](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L865)
+[Math/Mat4.ts:865](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L865)
 
 ___
 
@@ -977,7 +977,7 @@ Post multiplies two Mat4s in place explicitly not using SIMD.
 
 #### Defined in
 
-[Math/Mat4.ts:930](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L930)
+[Math/Mat4.ts:930](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L930)
 
 ___
 
@@ -999,7 +999,7 @@ Loads the state of the value from a binary reader.
 
 #### Defined in
 
-[Math/Mat4.ts:1421](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L1421)
+[Math/Mat4.ts:1421](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L1421)
 
 ___
 
@@ -1023,7 +1023,7 @@ Rotates a given `Vec3` and the result is returned as a new `Vec3`, applying only
 
 #### Defined in
 
-[Math/Mat4.ts:1254](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L1254)
+[Math/Mat4.ts:1254](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L1254)
 
 ___
 
@@ -1060,7 +1060,7 @@ Sets the state of the Mat4 class
 
 #### Defined in
 
-[Math/Mat4.ts:450](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L450)
+[Math/Mat4.ts:450](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L450)
 
 ___
 
@@ -1082,7 +1082,7 @@ Sets the state of the Mat4 Object.
 
 #### Defined in
 
-[Math/Mat4.ts:498](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L498)
+[Math/Mat4.ts:498](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L498)
 
 ___
 
@@ -1104,7 +1104,7 @@ Transforms a 3x4 matrix into a 4x4 matrix and set the result to the Math4 state.
 
 #### Defined in
 
-[Math/Mat4.ts:1336](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L1336)
+[Math/Mat4.ts:1336](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L1336)
 
 ___
 
@@ -1128,7 +1128,7 @@ Note: works with either Mat3 or Mat4.
 
 #### Defined in
 
-[Math/Mat4.ts:509](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L509)
+[Math/Mat4.ts:509](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L509)
 
 ___
 
@@ -1144,7 +1144,7 @@ Sets state of the Mat4 with the identity  Matrix
 
 #### Defined in
 
-[Math/Mat4.ts:489](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L489)
+[Math/Mat4.ts:489](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L489)
 
 ___
 
@@ -1168,7 +1168,7 @@ Sets this matrix as the inverse of the given Mat4.
 
 #### Defined in
 
-[Math/Mat4.ts:736](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L736)
+[Math/Mat4.ts:736](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L736)
 
 ___
 
@@ -1192,7 +1192,7 @@ Generates a look-at matrix with the given position, focal point, and up axis.
 
 #### Defined in
 
-[Math/Mat4.ts:1014](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L1014)
+[Math/Mat4.ts:1014](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L1014)
 
 ___
 
@@ -1219,7 +1219,7 @@ Calculates the orthographic matrix and sets the state of the Mat4 class
 
 #### Defined in
 
-[Math/Mat4.ts:1288](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L1288)
+[Math/Mat4.ts:1288](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L1288)
 
 ___
 
@@ -1244,7 +1244,7 @@ Set the perspective from a Mat4.
 
 #### Defined in
 
-[Math/Mat4.ts:1270](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L1270)
+[Math/Mat4.ts:1270](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L1270)
 
 ___
 
@@ -1273,7 +1273,7 @@ This is equivalent to (but much faster than):
 
 #### Defined in
 
-[Math/Mat4.ts:1064](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L1064)
+[Math/Mat4.ts:1064](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L1064)
 
 ___
 
@@ -1297,7 +1297,7 @@ Set the Matrix to be a scale matrix.
 
 #### Defined in
 
-[Math/Mat4.ts:1321](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L1321)
+[Math/Mat4.ts:1321](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L1321)
 
 ___
 
@@ -1325,7 +1325,7 @@ This is equivalent to (but much faster than):
 
 #### Defined in
 
-[Math/Mat4.ts:1110](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L1110)
+[Math/Mat4.ts:1110](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L1110)
 
 ___
 
@@ -1353,7 +1353,7 @@ This is equivalent to (but much faster than):
 
 #### Defined in
 
-[Math/Mat4.ts:1147](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L1147)
+[Math/Mat4.ts:1147](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L1147)
 
 ___
 
@@ -1381,7 +1381,7 @@ This is equivalent to (but much faster than):
 
 #### Defined in
 
-[Math/Mat4.ts:1184](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L1184)
+[Math/Mat4.ts:1184](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L1184)
 
 ___
 
@@ -1399,7 +1399,7 @@ The toJSON method encodes this type as a json object for persistence.
 
 #### Defined in
 
-[Math/Mat4.ts:1403](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L1403)
+[Math/Mat4.ts:1403](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L1403)
 
 ___
 
@@ -1417,7 +1417,7 @@ Converts a Mat4 to a Mat3.
 
 #### Defined in
 
-[Math/Mat4.ts:533](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L533)
+[Math/Mat4.ts:533](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L533)
 
 ___
 
@@ -1435,7 +1435,7 @@ Converts this Vec3 to a string in JSON format.
 
 #### Defined in
 
-[Math/Mat4.ts:1393](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L1393)
+[Math/Mat4.ts:1393](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L1393)
 
 ___
 
@@ -1459,7 +1459,7 @@ Transforms the Vec3 with a Mat4.
 
 #### Defined in
 
-[Math/Mat4.ts:1237](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L1237)
+[Math/Mat4.ts:1237](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L1237)
 
 ___
 
@@ -1483,7 +1483,7 @@ Transforms the Vec4 with a Mat4.
 
 #### Defined in
 
-[Math/Mat4.ts:1217](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L1217)
+[Math/Mat4.ts:1217](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L1217)
 
 ___
 
@@ -1507,7 +1507,7 @@ Translate a Mat4 by the given vector not using SIMD.
 
 #### Defined in
 
-[Math/Mat4.ts:995](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L995)
+[Math/Mat4.ts:995](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L995)
 
 ___
 
@@ -1526,7 +1526,7 @@ and returns the result as a new instance.
 
 #### Defined in
 
-[Math/Mat4.ts:579](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L579)
+[Math/Mat4.ts:579](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L579)
 
 ___
 
@@ -1542,5 +1542,5 @@ Transposes (exchanges columns with rows) this matrix.
 
 #### Defined in
 
-[Math/Mat4.ts:550](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Math/Mat4.ts#L550)
+[Math/Mat4.ts:550](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Math/Mat4.ts#L550)
 

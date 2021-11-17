@@ -39,7 +39,7 @@ Restricts the specified value between two numbers
 
 #### Defined in
 
-[Utilities/MathFunctions.ts:84](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Utilities/MathFunctions.ts#L84)
+[Utilities/MathFunctions.ts:84](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Utilities/MathFunctions.ts#L84)
 
 ___
 
@@ -65,7 +65,7 @@ Transforms an array of Float 32 to an array of unsigned Int16.
 
 #### Defined in
 
-[Utilities/MathFunctions.ts:337](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Utilities/MathFunctions.ts#L337)
+[Utilities/MathFunctions.ts:337](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Utilities/MathFunctions.ts#L337)
 
 ___
 
@@ -92,7 +92,7 @@ and returns the 16 bit float.
 
 #### Defined in
 
-[Utilities/MathFunctions.ts:316](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Utilities/MathFunctions.ts#L316)
+[Utilities/MathFunctions.ts:316](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Utilities/MathFunctions.ts#L316)
 
 ___
 
@@ -118,7 +118,7 @@ Decodes a Float16 from two unsigned Int8
 
 #### Defined in
 
-[Utilities/MathFunctions.ts:197](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Utilities/MathFunctions.ts#L197)
+[Utilities/MathFunctions.ts:197](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Utilities/MathFunctions.ts#L197)
 
 ___
 
@@ -144,7 +144,7 @@ Converts Degrees to Radiants
 
 #### Defined in
 
-[Utilities/MathFunctions.ts:33](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Utilities/MathFunctions.ts#L33)
+[Utilities/MathFunctions.ts:33](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Utilities/MathFunctions.ts#L33)
 
 ___
 
@@ -170,7 +170,7 @@ Transforms a 16 bit float to an encoded integer.
 
 #### Defined in
 
-[Utilities/MathFunctions.ts:263](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Utilities/MathFunctions.ts#L263)
+[Utilities/MathFunctions.ts:263](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Utilities/MathFunctions.ts#L263)
 
 ___
 
@@ -196,7 +196,7 @@ Encodes an array of two unsigned Int8 to a Float16
 
 #### Defined in
 
-[Utilities/MathFunctions.ts:221](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Utilities/MathFunctions.ts#L221)
+[Utilities/MathFunctions.ts:221](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Utilities/MathFunctions.ts#L221)
 
 ___
 
@@ -222,7 +222,7 @@ Returns the fractional component of a number
 
 #### Defined in
 
-[Utilities/MathFunctions.ts:138](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Utilities/MathFunctions.ts#L138)
+[Utilities/MathFunctions.ts:138](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Utilities/MathFunctions.ts#L138)
 
 ___
 
@@ -248,7 +248,7 @@ Verifies if the specified parameter is numeric.
 
 #### Defined in
 
-[Utilities/MathFunctions.ts:44](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Utilities/MathFunctions.ts#L44)
+[Utilities/MathFunctions.ts:44](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Utilities/MathFunctions.ts#L44)
 
 ___
 
@@ -276,7 +276,7 @@ Calculates a lineal interpolation between two inputs for the specified parameter
 
 #### Defined in
 
-[Utilities/MathFunctions.ts:71](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Utilities/MathFunctions.ts#L71)
+[Utilities/MathFunctions.ts:71](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Utilities/MathFunctions.ts#L71)
 
 ___
 
@@ -304,7 +304,7 @@ Performs - interpolation between two values
 
 #### Defined in
 
-[Utilities/MathFunctions.ts:186](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Utilities/MathFunctions.ts#L186)
+[Utilities/MathFunctions.ts:186](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Utilities/MathFunctions.ts#L186)
 
 ___
 
@@ -330,7 +330,7 @@ Returns the nearest pow of ten value of the specified number.
 
 #### Defined in
 
-[Utilities/MathFunctions.ts:106](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Utilities/MathFunctions.ts#L106)
+[Utilities/MathFunctions.ts:106](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Utilities/MathFunctions.ts#L106)
 
 ___
 
@@ -356,7 +356,7 @@ Returns the nearest pow of two value of the specified number.
 
 #### Defined in
 
-[Utilities/MathFunctions.ts:95](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Utilities/MathFunctions.ts#L95)
+[Utilities/MathFunctions.ts:95](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Utilities/MathFunctions.ts#L95)
 
 ___
 
@@ -382,7 +382,7 @@ Returns the next pow of two value of the specified number.
 
 #### Defined in
 
-[Utilities/MathFunctions.ts:117](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Utilities/MathFunctions.ts#L117)
+[Utilities/MathFunctions.ts:117](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Utilities/MathFunctions.ts#L117)
 
 ___
 
@@ -408,7 +408,7 @@ Converts Radians to Degrees
 
 #### Defined in
 
-[Utilities/MathFunctions.ts:22](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Utilities/MathFunctions.ts#L22)
+[Utilities/MathFunctions.ts:22](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Utilities/MathFunctions.ts#L22)
 
 ___
 
@@ -435,7 +435,7 @@ Generates and returns a random integer within the specified range.
 
 #### Defined in
 
-[Utilities/MathFunctions.ts:56](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Utilities/MathFunctions.ts#L56)
+[Utilities/MathFunctions.ts:56](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Utilities/MathFunctions.ts#L56)
 
 ___
 
@@ -465,7 +465,7 @@ Moves the specified value from one numeric domain(range) to another.
 
 #### Defined in
 
-[Utilities/MathFunctions.ts:159](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Utilities/MathFunctions.ts#L159)
+[Utilities/MathFunctions.ts:159](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Utilities/MathFunctions.ts#L159)
 
 ___
 
@@ -493,5 +493,5 @@ Perform Hermite interpolation between two values
 
 #### Defined in
 
-[Utilities/MathFunctions.ts:172](https://github.com/ZeaInc/zea-engine/blob/f5f8fb8b9/src/Utilities/MathFunctions.ts#L172)
+[Utilities/MathFunctions.ts:172](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Utilities/MathFunctions.ts#L172)
 
