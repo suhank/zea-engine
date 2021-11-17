@@ -73,7 +73,7 @@ You can also pass one JSON object parameter.
 
 #### Defined in
 
-[Math/Vec2.ts:64](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec2.ts#L64)
+[Math/Vec2.ts:64](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Vec2.ts#L64)
 
 ## Properties
 
@@ -83,7 +83,7 @@ You can also pass one JSON object parameter.
 
 #### Defined in
 
-[Math/Vec2.ts:12](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec2.ts#L12)
+[Math/Vec2.ts:12](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Vec2.ts#L12)
 
 ## Accessors
 
@@ -101,7 +101,7 @@ Getter for `x` component.
 
 #### Defined in
 
-[Math/Vec2.ts:83](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec2.ts#L83)
+[Math/Vec2.ts:83](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Vec2.ts#L83)
 
 • `set` **x**(`val`): `void`
 
@@ -121,7 +121,7 @@ Setter for `x` component.
 
 #### Defined in
 
-[Math/Vec2.ts:91](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec2.ts#L91)
+[Math/Vec2.ts:91](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Vec2.ts#L91)
 
 ___
 
@@ -139,7 +139,7 @@ Getter for `y` component.
 
 #### Defined in
 
-[Math/Vec2.ts:99](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec2.ts#L99)
+[Math/Vec2.ts:99](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Vec2.ts#L99)
 
 • `set` **y**(`val`): `void`
 
@@ -159,7 +159,7 @@ Setter for `y` component.
 
 #### Defined in
 
-[Math/Vec2.ts:107](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec2.ts#L107)
+[Math/Vec2.ts:107](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Vec2.ts#L107)
 
 ## Methods
 
@@ -183,7 +183,7 @@ Adds other to this Vec2 and returns the result as a new Vec2.
 
 #### Defined in
 
-[Math/Vec2.ts:168](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec2.ts#L168)
+[Math/Vec2.ts:168](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Vec2.ts#L168)
 
 ___
 
@@ -205,7 +205,7 @@ Adds a Vec2 to this Vec2.
 
 #### Defined in
 
-[Math/Vec2.ts:177](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec2.ts#L177)
+[Math/Vec2.ts:177](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Vec2.ts#L177)
 
 ___
 
@@ -229,7 +229,7 @@ Gets the angle between this Vec2 and other assuming both are normalized vectors.
 
 #### Defined in
 
-[Math/Vec2.ts:356](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec2.ts#L356)
+[Math/Vec2.ts:356](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Vec2.ts#L356)
 
 ___
 
@@ -254,7 +254,7 @@ Returns true if this Vec2 is approximately the same as other.
 
 #### Defined in
 
-[Math/Vec2.ts:158](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec2.ts#L158)
+[Math/Vec2.ts:158](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Vec2.ts#L158)
 
 ___
 
@@ -272,7 +272,7 @@ Returns current Vec2 data as array. Often used to pass types to the GPU.
 
 #### Defined in
 
-[Math/Vec2.ts:439](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec2.ts#L439)
+[Math/Vec2.ts:439](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Vec2.ts#L439)
 
 ___
 
@@ -290,7 +290,7 @@ Clones this Vec2 and returns a new Vec2.
 
 #### Defined in
 
-[Math/Vec2.ts:430](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec2.ts#L430)
+[Math/Vec2.ts:430](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Vec2.ts#L430)
 
 ___
 
@@ -314,7 +314,7 @@ Calculates the cross product of this Vec2 against another Vec2.
 
 #### Defined in
 
-[Math/Vec2.ts:345](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec2.ts#L345)
+[Math/Vec2.ts:345](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Vec2.ts#L345)
 
 ___
 
@@ -338,7 +338,7 @@ Calculates the distance to another vector.
 
 #### Defined in
 
-[Math/Vec2.ts:290](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec2.ts#L290)
+[Math/Vec2.ts:290](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Vec2.ts#L290)
 
 ___
 
@@ -362,7 +362,7 @@ Calculates the dot product of this Vec2 against another Vec2.
 
 #### Defined in
 
-[Math/Vec2.ts:335](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec2.ts#L335)
+[Math/Vec2.ts:335](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Vec2.ts#L335)
 
 ___
 
@@ -384,7 +384,7 @@ Decodes a JSON object to set the state of this class.
 
 #### Defined in
 
-[Math/Vec2.ts:473](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec2.ts#L473)
+[Math/Vec2.ts:473](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Vec2.ts#L473)
 
 ___
 
@@ -402,7 +402,7 @@ Inverts this Vec2 and returns the result as a new Vec2.
 
 #### Defined in
 
-[Math/Vec2.ts:229](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec2.ts#L229)
+[Math/Vec2.ts:229](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Vec2.ts#L229)
 
 ___
 
@@ -420,7 +420,7 @@ Inverts this Vec2.
 
 #### Defined in
 
-[Math/Vec2.ts:238](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec2.ts#L238)
+[Math/Vec2.ts:238](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Vec2.ts#L238)
 
 ___
 
@@ -444,7 +444,7 @@ Checks if this Vec2 contains the same values as the other Vec2.
 
 #### Defined in
 
-[Math/Vec2.ts:137](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec2.ts#L137)
+[Math/Vec2.ts:137](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Vec2.ts#L137)
 
 ___
 
@@ -458,7 +458,7 @@ ___
 
 #### Defined in
 
-[Math/Vec2.ts:525](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec2.ts#L525)
+[Math/Vec2.ts:525](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Vec2.ts#L525)
 
 ___
 
@@ -476,7 +476,7 @@ Calculates the length of this Vec2.
 
 #### Defined in
 
-[Math/Vec2.ts:280](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec2.ts#L280)
+[Math/Vec2.ts:280](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Vec2.ts#L280)
 
 ___
 
@@ -494,7 +494,7 @@ Calculates the squared length of this Vec2.
 
 #### Defined in
 
-[Math/Vec2.ts:269](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec2.ts#L269)
+[Math/Vec2.ts:269](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Vec2.ts#L269)
 
 ___
 
@@ -519,7 +519,7 @@ Performs a linear interpolation between this Vec2 and other Vec2.
 
 #### Defined in
 
-[Math/Vec2.ts:394](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec2.ts#L394)
+[Math/Vec2.ts:394](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Vec2.ts#L394)
 
 ___
 
@@ -543,7 +543,7 @@ Multiplies a Vec2 with this Vec2 and returns the result as a new Vec2.
 
 #### Defined in
 
-[Math/Vec2.ts:250](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec2.ts#L250)
+[Math/Vec2.ts:250](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Vec2.ts#L250)
 
 ___
 
@@ -565,7 +565,7 @@ Multiplies a Vec2 with this Vec2.
 
 #### Defined in
 
-[Math/Vec2.ts:259](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec2.ts#L259)
+[Math/Vec2.ts:259](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Vec2.ts#L259)
 
 ___
 
@@ -584,7 +584,7 @@ Multiplies coordinates value by the inverse of the vector length.
 
 #### Defined in
 
-[Math/Vec2.ts:302](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec2.ts#L302)
+[Math/Vec2.ts:302](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Vec2.ts#L302)
 
 ___
 
@@ -600,7 +600,7 @@ Normalizes this Vec2 multiplying coordinate values by the inverse of the vector 
 
 #### Defined in
 
-[Math/Vec2.ts:318](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec2.ts#L318)
+[Math/Vec2.ts:318](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Vec2.ts#L318)
 
 ___
 
@@ -624,7 +624,7 @@ Checks if this Vec2 is different from another Vec2.
 
 #### Defined in
 
-[Math/Vec2.ts:147](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec2.ts#L147)
+[Math/Vec2.ts:147](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Vec2.ts#L147)
 
 ___
 
@@ -646,7 +646,7 @@ Loads the state of the value from a binary reader.
 
 #### Defined in
 
-[Math/Vec2.ts:483](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec2.ts#L483)
+[Math/Vec2.ts:483](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Vec2.ts#L483)
 
 ___
 
@@ -670,7 +670,7 @@ Rotates a Vec2 in a clockwise direction and returns a new rotated Vec2.
 
 #### Defined in
 
-[Math/Vec2.ts:381](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec2.ts#L381)
+[Math/Vec2.ts:381](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Vec2.ts#L381)
 
 ___
 
@@ -694,7 +694,7 @@ Scales this Vec2 by scalar and returns the result as a new Vec2.
 
 #### Defined in
 
-[Math/Vec2.ts:210](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec2.ts#L210)
+[Math/Vec2.ts:210](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Vec2.ts#L210)
 
 ___
 
@@ -716,7 +716,7 @@ Scales this Vec2 by scalar.
 
 #### Defined in
 
-[Math/Vec2.ts:219](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec2.ts#L219)
+[Math/Vec2.ts:219](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Vec2.ts#L219)
 
 ___
 
@@ -739,7 +739,7 @@ Setter from scalar components.
 
 #### Defined in
 
-[Math/Vec2.ts:116](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec2.ts#L116)
+[Math/Vec2.ts:116](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Vec2.ts#L116)
 
 ___
 
@@ -761,7 +761,7 @@ Replaces this Vec2 data with the Vec2 data passed as parameter.
 
 #### Defined in
 
-[Math/Vec2.ts:126](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec2.ts#L126)
+[Math/Vec2.ts:126](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Vec2.ts#L126)
 
 ___
 
@@ -785,7 +785,7 @@ Randomizes the scale of this Vec2 coordinates.
 
 #### Defined in
 
-[Math/Vec2.ts:419](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec2.ts#L419)
+[Math/Vec2.ts:419](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Vec2.ts#L419)
 
 ___
 
@@ -809,7 +809,7 @@ Generates a random vector with the given scale.
 
 #### Defined in
 
-[Math/Vec2.ts:406](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec2.ts#L406)
+[Math/Vec2.ts:406](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Vec2.ts#L406)
 
 ___
 
@@ -833,7 +833,7 @@ Gets the angle between this Vec2 and other.
 
 #### Defined in
 
-[Math/Vec2.ts:369](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec2.ts#L369)
+[Math/Vec2.ts:369](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Vec2.ts#L369)
 
 ___
 
@@ -857,7 +857,7 @@ Subtracts a Vec2 from this Vec2 and returns the result as a new Vec2.
 
 #### Defined in
 
-[Math/Vec2.ts:188](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec2.ts#L188)
+[Math/Vec2.ts:188](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Vec2.ts#L188)
 
 ___
 
@@ -881,7 +881,7 @@ Subtracts a Vec2 from this Vec2.
 
 #### Defined in
 
-[Math/Vec2.ts:198](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec2.ts#L198)
+[Math/Vec2.ts:198](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Vec2.ts#L198)
 
 ___
 
@@ -899,7 +899,7 @@ Encodes Vec2 Class as a JSON object for persistence.
 
 #### Defined in
 
-[Math/Vec2.ts:461](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec2.ts#L461)
+[Math/Vec2.ts:461](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Vec2.ts#L461)
 
 ___
 
@@ -917,7 +917,7 @@ Converts this Vec3 to a string in JSON format.
 
 #### Defined in
 
-[Math/Vec2.ts:451](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec2.ts#L451)
+[Math/Vec2.ts:451](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Vec2.ts#L451)
 
 ___
 
@@ -944,5 +944,5 @@ Calculate the intersection point of 2 2d lines, returning the parameters values 
 
 #### Defined in
 
-[Math/Vec2.ts:497](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec2.ts#L497)
+[Math/Vec2.ts:497](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Vec2.ts#L497)
 

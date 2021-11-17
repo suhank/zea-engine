@@ -34,7 +34,7 @@ Create an BaseEvent.
 
 #### Defined in
 
-[Utilities/Events/ResizedEvent.ts:6](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Utilities/Events/ResizedEvent.ts#L6)
+[Utilities/Events/ResizedEvent.ts:6](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Utilities/Events/ResizedEvent.ts#L6)
 
 ## Properties
 
@@ -44,7 +44,7 @@ Create an BaseEvent.
 
 #### Defined in
 
-[Utilities/Events/ResizedEvent.ts:5](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Utilities/Events/ResizedEvent.ts#L5)
+[Utilities/Events/ResizedEvent.ts:5](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Utilities/Events/ResizedEvent.ts#L5)
 
 ___
 
@@ -54,5 +54,5 @@ ___
 
 #### Defined in
 
-[Utilities/Events/ResizedEvent.ts:4](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Utilities/Events/ResizedEvent.ts#L4)
+[Utilities/Events/ResizedEvent.ts:4](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Utilities/Events/ResizedEvent.ts#L4)
 

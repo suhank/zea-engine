@@ -33,7 +33,7 @@ Create an BaseEvent.
 
 #### Defined in
 
-[Utilities/Events/ParameterRemovedEvent.ts:5](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Utilities/Events/ParameterRemovedEvent.ts#L5)
+[Utilities/Events/ParameterRemovedEvent.ts:5](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Utilities/Events/ParameterRemovedEvent.ts#L5)
 
 ## Properties
 
@@ -43,5 +43,5 @@ Create an BaseEvent.
 
 #### Defined in
 
-[Utilities/Events/ParameterRemovedEvent.ts:4](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Utilities/Events/ParameterRemovedEvent.ts#L4)
+[Utilities/Events/ParameterRemovedEvent.ts:4](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Utilities/Events/ParameterRemovedEvent.ts#L4)
 

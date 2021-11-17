@@ -1,19 +1,3 @@
-function api_object(position, file_path, filename, index_path) {
-  const typedoc_options = {
-    id: filename,
-    name: filename,
-    out: file_path + filename,
-    sidebar: {
-      categoryLabel: filename,
-      position: position,
-      fullNames: true,
-    },
-    entryPoints: [index_path],
-    exclude: ['**/*+(**Impl|**PostCommand|**WsCommand|**index).ts', '**/decoders/*', '**/*+(**Utils).ts'],
-  }
-  return ['docusaurus-plugin-typedoc', typedoc_options]
-}
-
 const lightCodeTheme = require('prism-react-renderer/themes/github')
 const darkCodeTheme = require('prism-react-renderer/themes/dracula')
 
@@ -26,7 +10,7 @@ module.exports = {
   baseUrl: '/zea-engine/',
   onBrokenLinks: 'warn',
   onBrokenMarkdownLinks: 'warn',
-  favicon: 'img/favicon.ico',
+  favicon: 'img/favicon2.ico',
   organizationName: 'Zea Inc.', // Usually your GitHub org/user name.
   projectName: 'Zea Engine Docs', // Usually your repo name.
   trailingSlash: false,

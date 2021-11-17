@@ -36,7 +36,7 @@ Create a GroupMemberXfoOperator operator.
 
 #### Defined in
 
-[SceneTree/Operators/GroupMemberXfoOperator.ts:23](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/SceneTree/Operators/GroupMemberXfoOperator.ts#L23)
+[SceneTree/Operators/GroupMemberXfoOperator.ts:23](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/Operators/GroupMemberXfoOperator.ts#L23)
 
 ## Properties
 
@@ -50,7 +50,7 @@ Create a GroupMemberXfoOperator operator.
 
 #### Defined in
 
-[Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Utilities/BaseClass.ts#L11)
+[Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Utilities/BaseClass.ts#L11)
 
 ___
 
@@ -64,7 +64,7 @@ ___
 
 #### Defined in
 
-[SceneTree/Operators/Operator.ts:13](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/SceneTree/Operators/Operator.ts#L13)
+[SceneTree/Operators/Operator.ts:13](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/Operators/Operator.ts#L13)
 
 ___
 
@@ -78,7 +78,7 @@ ___
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:39](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/SceneTree/BaseItem.ts#L39)
+[SceneTree/BaseItem.ts:39](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/BaseItem.ts#L39)
 
 ___
 
@@ -92,7 +92,7 @@ ___
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:34](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/SceneTree/BaseItem.ts#L34)
+[SceneTree/BaseItem.ts:34](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/BaseItem.ts#L34)
 
 ___
 
@@ -106,7 +106,7 @@ ___
 
 #### Defined in
 
-[SceneTree/Operators/Operator.ts:14](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/SceneTree/Operators/Operator.ts#L14)
+[SceneTree/Operators/Operator.ts:14](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/Operators/Operator.ts#L14)
 
 ___
 
@@ -120,7 +120,7 @@ ___
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:35](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/SceneTree/BaseItem.ts#L35)
+[SceneTree/BaseItem.ts:35](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/BaseItem.ts#L35)
 
 ___
 
@@ -134,7 +134,7 @@ ___
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:36](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/SceneTree/BaseItem.ts#L36)
+[SceneTree/BaseItem.ts:36](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/BaseItem.ts#L36)
 
 ___
 
@@ -148,7 +148,7 @@ ___
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:37](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/SceneTree/BaseItem.ts#L37)
+[SceneTree/BaseItem.ts:37](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/BaseItem.ts#L37)
 
 ___
 
@@ -162,7 +162,7 @@ ___
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:38](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/SceneTree/BaseItem.ts#L38)
+[SceneTree/BaseItem.ts:38](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/BaseItem.ts#L38)
 
 ___
 
@@ -172,7 +172,7 @@ ___
 
 #### Defined in
 
-[SceneTree/Operators/GroupMemberXfoOperator.ts:13](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/SceneTree/Operators/GroupMemberXfoOperator.ts#L13)
+[SceneTree/Operators/GroupMemberXfoOperator.ts:13](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/Operators/GroupMemberXfoOperator.ts#L13)
 
 ___
 
@@ -186,7 +186,7 @@ ___
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:23](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/SceneTree/ParameterOwner.ts#L23)
+[SceneTree/ParameterOwner.ts:23](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/ParameterOwner.ts#L23)
 
 ___
 
@@ -196,7 +196,7 @@ ___
 
 #### Defined in
 
-[SceneTree/Operators/GroupMemberXfoOperator.ts:15](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/SceneTree/Operators/GroupMemberXfoOperator.ts#L15)
+[SceneTree/Operators/GroupMemberXfoOperator.ts:15](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/Operators/GroupMemberXfoOperator.ts#L15)
 
 ___
 
@@ -206,7 +206,7 @@ ___
 
 #### Defined in
 
-[SceneTree/Operators/GroupMemberXfoOperator.ts:16](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/SceneTree/Operators/GroupMemberXfoOperator.ts#L16)
+[SceneTree/Operators/GroupMemberXfoOperator.ts:16](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/Operators/GroupMemberXfoOperator.ts#L16)
 
 ___
 
@@ -216,7 +216,7 @@ ___
 
 #### Defined in
 
-[SceneTree/Operators/GroupMemberXfoOperator.ts:14](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/SceneTree/Operators/GroupMemberXfoOperator.ts#L14)
+[SceneTree/Operators/GroupMemberXfoOperator.ts:14](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/Operators/GroupMemberXfoOperator.ts#L14)
 
 ___
 
@@ -230,7 +230,7 @@ ___
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Utilities/EventEmitter.ts#L26)
+[Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Utilities/EventEmitter.ts#L26)
 
 ___
 
@@ -244,7 +244,7 @@ ___
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:20](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/SceneTree/ParameterOwner.ts#L20)
+[SceneTree/ParameterOwner.ts:20](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/ParameterOwner.ts#L20)
 
 ___
 
@@ -258,7 +258,7 @@ ___
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:21](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/SceneTree/ParameterOwner.ts#L21)
+[SceneTree/ParameterOwner.ts:21](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/ParameterOwner.ts#L21)
 
 ___
 
@@ -272,7 +272,7 @@ ___
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:22](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/SceneTree/ParameterOwner.ts#L22)
+[SceneTree/ParameterOwner.ts:22](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/ParameterOwner.ts#L22)
 
 ## Methods
 
@@ -300,7 +300,7 @@ The addInput method.
 
 #### Defined in
 
-[SceneTree/Operators/Operator.ts:53](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/SceneTree/Operators/Operator.ts#L53)
+[SceneTree/Operators/Operator.ts:53](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/Operators/Operator.ts#L53)
 
 ___
 
@@ -328,7 +328,7 @@ The addOutput method.
 
 #### Defined in
 
-[SceneTree/Operators/Operator.ts:103](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/SceneTree/Operators/Operator.ts#L103)
+[SceneTree/Operators/Operator.ts:103](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/Operators/Operator.ts#L103)
 
 ___
 
@@ -358,7 +358,7 @@ Adds `Parameter` object to the owner's parameter list.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:133](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/SceneTree/ParameterOwner.ts#L133)
+[SceneTree/ParameterOwner.ts:133](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/ParameterOwner.ts#L133)
 
 ___
 
@@ -388,7 +388,7 @@ This is used to handle migrating parameters to new names.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:90](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/SceneTree/ParameterOwner.ts#L90)
+[SceneTree/ParameterOwner.ts:90](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/ParameterOwner.ts#L90)
 
 ___
 
@@ -421,7 +421,7 @@ to its inputs.
 
 #### Defined in
 
-[SceneTree/Operators/Operator.ts:172](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/SceneTree/Operators/Operator.ts#L172)
+[SceneTree/Operators/Operator.ts:172](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/Operators/Operator.ts#L172)
 
 ___
 
@@ -449,7 +449,7 @@ Clones this base item and returns a new base item.
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:317](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/SceneTree/BaseItem.ts#L317)
+[SceneTree/BaseItem.ts:317](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/BaseItem.ts#L317)
 
 ___
 
@@ -482,7 +482,7 @@ data from the source object.
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:333](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/SceneTree/BaseItem.ts#L333)
+[SceneTree/BaseItem.ts:333](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/BaseItem.ts#L333)
 
 ___
 
@@ -508,7 +508,7 @@ Removes metadata for a given key.
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:261](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/SceneTree/BaseItem.ts#L261)
+[SceneTree/BaseItem.ts:261](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/BaseItem.ts#L261)
 
 ___
 
@@ -528,7 +528,7 @@ The detach method.
 
 #### Defined in
 
-[SceneTree/Operators/Operator.ts:243](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/SceneTree/Operators/Operator.ts#L243)
+[SceneTree/Operators/Operator.ts:243](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/Operators/Operator.ts#L243)
 
 ___
 
@@ -555,7 +555,7 @@ Triggers all listener functions in an event.
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Utilities/EventEmitter.ts#L154)
+[Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Utilities/EventEmitter.ts#L154)
 
 ___
 
@@ -575,7 +575,7 @@ The evaluate method.
 
 #### Defined in
 
-[SceneTree/Operators/GroupMemberXfoOperator.ts:44](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/SceneTree/Operators/GroupMemberXfoOperator.ts#L44)
+[SceneTree/Operators/GroupMemberXfoOperator.ts:44](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/Operators/GroupMemberXfoOperator.ts#L44)
 
 ___
 
@@ -602,7 +602,7 @@ The fromJSON method decodes a json object for this type.
 
 #### Defined in
 
-[SceneTree/Operators/Operator.ts:208](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/SceneTree/Operators/Operator.ts#L208)
+[SceneTree/Operators/Operator.ts:208](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/Operators/Operator.ts#L208)
 
 ___
 
@@ -624,7 +624,7 @@ Returns the unmangled name of the class.
 
 #### Defined in
 
-[Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Utilities/BaseClass.ts#L33)
+[Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Utilities/BaseClass.ts#L33)
 
 ___
 
@@ -648,7 +648,7 @@ Returns the unique id of the object.
 
 #### Defined in
 
-[Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Utilities/BaseClass.ts#L25)
+[Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Utilities/BaseClass.ts#L25)
 
 ___
 
@@ -676,7 +676,7 @@ The getInput method.
 
 #### Defined in
 
-[SceneTree/Operators/Operator.ts:92](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/SceneTree/Operators/Operator.ts#L92)
+[SceneTree/Operators/Operator.ts:92](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/Operators/Operator.ts#L92)
 
 ___
 
@@ -704,7 +704,7 @@ The getInputByIndex method.
 
 #### Defined in
 
-[SceneTree/Operators/Operator.ts:83](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/SceneTree/Operators/Operator.ts#L83)
+[SceneTree/Operators/Operator.ts:83](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/Operators/Operator.ts#L83)
 
 ___
 
@@ -732,7 +732,7 @@ Gets Item's meta-data value by passing the `key` string.
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:232](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/SceneTree/BaseItem.ts#L232)
+[SceneTree/BaseItem.ts:232](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/BaseItem.ts#L232)
 
 ___
 
@@ -754,7 +754,7 @@ Returns the name of the base item.
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:74](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/SceneTree/BaseItem.ts#L74)
+[SceneTree/BaseItem.ts:74](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/BaseItem.ts#L74)
 
 ___
 
@@ -776,7 +776,7 @@ Getter for the number of inputs in this operator.
 
 #### Defined in
 
-[SceneTree/Operators/Operator.ts:74](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/SceneTree/Operators/Operator.ts#L74)
+[SceneTree/Operators/Operator.ts:74](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/Operators/Operator.ts#L74)
 
 ___
 
@@ -798,7 +798,7 @@ Getter for the number of outputs in this operator.
 
 #### Defined in
 
-[SceneTree/Operators/Operator.ts:128](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/SceneTree/Operators/Operator.ts#L128)
+[SceneTree/Operators/Operator.ts:128](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/Operators/Operator.ts#L128)
 
 ___
 
@@ -820,7 +820,7 @@ Returns the number of parameters current object has.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:39](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/SceneTree/ParameterOwner.ts#L39)
+[SceneTree/ParameterOwner.ts:39](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/ParameterOwner.ts#L39)
 
 ___
 
@@ -848,7 +848,7 @@ The getOutput method.
 
 #### Defined in
 
-[SceneTree/Operators/Operator.ts:146](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/SceneTree/Operators/Operator.ts#L146)
+[SceneTree/Operators/Operator.ts:146](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/Operators/Operator.ts#L146)
 
 ___
 
@@ -876,7 +876,7 @@ The getOutputByIndex method.
 
 #### Defined in
 
-[SceneTree/Operators/Operator.ts:137](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/SceneTree/Operators/Operator.ts#L137)
+[SceneTree/Operators/Operator.ts:137](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/Operators/Operator.ts#L137)
 
 ___
 
@@ -899,7 +899,7 @@ The item is a child of the current owner.
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:154](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/SceneTree/BaseItem.ts#L154)
+[SceneTree/BaseItem.ts:154](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/BaseItem.ts#L154)
 
 ___
 
@@ -927,7 +927,7 @@ Returns `Parameter` object using the given name
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:100](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/SceneTree/ParameterOwner.ts#L100)
+[SceneTree/ParameterOwner.ts:100](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/ParameterOwner.ts#L100)
 
 ___
 
@@ -955,7 +955,7 @@ Returns `Parameter` object in a given index
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:68](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/SceneTree/ParameterOwner.ts#L68)
+[SceneTree/ParameterOwner.ts:68](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/ParameterOwner.ts#L68)
 
 ___
 
@@ -983,7 +983,7 @@ Returns the index of a parameter in parameter list.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:58](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/SceneTree/ParameterOwner.ts#L58)
+[SceneTree/ParameterOwner.ts:58](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/ParameterOwner.ts#L58)
 
 ___
 
@@ -1005,7 +1005,7 @@ Returns all the parameters of the object.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:48](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/SceneTree/ParameterOwner.ts#L48)
+[SceneTree/ParameterOwner.ts:48](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/ParameterOwner.ts#L48)
 
 ___
 
@@ -1027,7 +1027,7 @@ Returns the current path of the item in the tree as an array of names.
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:111](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/SceneTree/BaseItem.ts#L111)
+[SceneTree/BaseItem.ts:111](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/BaseItem.ts#L111)
 
 ___
 
@@ -1055,7 +1055,7 @@ Checks to see if there is metadata for a given key.
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:242](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/SceneTree/BaseItem.ts#L242)
+[SceneTree/BaseItem.ts:242](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/BaseItem.ts#L242)
 
 ___
 
@@ -1083,7 +1083,7 @@ Validates if the specified parameter exists in the object.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:78](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/SceneTree/ParameterOwner.ts#L78)
+[SceneTree/ParameterOwner.ts:78](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/ParameterOwner.ts#L78)
 
 ___
 
@@ -1115,7 +1115,7 @@ It replaces the event in the specified index.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:147](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/SceneTree/ParameterOwner.ts#L147)
+[SceneTree/ParameterOwner.ts:147](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/ParameterOwner.ts#L147)
 
 ___
 
@@ -1137,7 +1137,7 @@ Returns a boolean indicating if this item is selectable.
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:183](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/SceneTree/BaseItem.ts#L183)
+[SceneTree/BaseItem.ts:183](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/BaseItem.ts#L183)
 
 ___
 
@@ -1159,7 +1159,7 @@ The isSelected method.
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:207](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/SceneTree/BaseItem.ts#L207)
+[SceneTree/BaseItem.ts:207](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/BaseItem.ts#L207)
 
 ___
 
@@ -1186,7 +1186,7 @@ Removes a listener function from the specified event, using either the function 
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Utilities/EventEmitter.ts#L97)
+[Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Utilities/EventEmitter.ts#L97)
 
 ___
 
@@ -1215,7 +1215,7 @@ Adds a listener function for a given event name.
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Utilities/EventEmitter.ts#L44)
+[Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Utilities/EventEmitter.ts#L44)
 
 ___
 
@@ -1253,7 +1253,7 @@ asset.once('loaded', () => {
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Utilities/EventEmitter.ts#L82)
+[Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Utilities/EventEmitter.ts#L82)
 
 ___
 
@@ -1280,7 +1280,7 @@ to perform general updates (see GLPass or BaseItem).
 
 #### Defined in
 
-[SceneTree/Operators/Operator.ts:43](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/SceneTree/Operators/Operator.ts#L43)
+[SceneTree/Operators/Operator.ts:43](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/Operators/Operator.ts#L43)
 
 ___
 
@@ -1307,7 +1307,7 @@ Sets state of current Item(Including parameters) using a binary reader object.
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:298](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/SceneTree/BaseItem.ts#L298)
+[SceneTree/BaseItem.ts:298](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/BaseItem.ts#L298)
 
 ___
 
@@ -1327,7 +1327,7 @@ The reattach method.
 
 #### Defined in
 
-[SceneTree/Operators/Operator.ts:251](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/SceneTree/Operators/Operator.ts#L251)
+[SceneTree/Operators/Operator.ts:251](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/Operators/Operator.ts#L251)
 
 ___
 
@@ -1347,7 +1347,7 @@ The rebind method.
 
 #### Defined in
 
-[SceneTree/Operators/Operator.ts:259](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/SceneTree/Operators/Operator.ts#L259)
+[SceneTree/Operators/Operator.ts:259](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/Operators/Operator.ts#L259)
 
 ___
 
@@ -1373,7 +1373,7 @@ The removeInput method.
 
 #### Defined in
 
-[SceneTree/Operators/Operator.ts:64](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/SceneTree/Operators/Operator.ts#L64)
+[SceneTree/Operators/Operator.ts:64](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/Operators/Operator.ts#L64)
 
 ___
 
@@ -1400,7 +1400,7 @@ remove listener by ID returned from #on
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Utilities/EventEmitter.ts#L134)
+[Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Utilities/EventEmitter.ts#L134)
 
 ___
 
@@ -1426,7 +1426,7 @@ The removeOutput method.
 
 #### Defined in
 
-[SceneTree/Operators/Operator.ts:115](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/SceneTree/Operators/Operator.ts#L115)
+[SceneTree/Operators/Operator.ts:115](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/Operators/Operator.ts#L115)
 
 ___
 
@@ -1454,7 +1454,7 @@ Removes `Parameter` from owner, by using parameter's name.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:174](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/SceneTree/ParameterOwner.ts#L174)
+[SceneTree/ParameterOwner.ts:174](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/ParameterOwner.ts#L174)
 
 ___
 
@@ -1482,7 +1482,7 @@ Replaces old `Parameter` by passing a new one with the same name.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:196](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/SceneTree/ParameterOwner.ts#L196)
+[SceneTree/ParameterOwner.ts:196](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/ParameterOwner.ts#L196)
 
 ___
 
@@ -1513,7 +1513,7 @@ end of the path.
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:126](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/SceneTree/BaseItem.ts#L126)
+[SceneTree/BaseItem.ts:126](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/BaseItem.ts#L126)
 
 ___
 
@@ -1535,7 +1535,7 @@ Create a GroupMemberXfoOperator operator.
 
 #### Defined in
 
-[SceneTree/Operators/GroupMemberXfoOperator.ts:35](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/SceneTree/Operators/GroupMemberXfoOperator.ts#L35)
+[SceneTree/Operators/GroupMemberXfoOperator.ts:35](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/Operators/GroupMemberXfoOperator.ts#L35)
 
 ___
 
@@ -1558,7 +1558,7 @@ then the chain of operators are cleaned by triggering evaluation.
 
 #### Defined in
 
-[SceneTree/Operators/Operator.ts:32](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/SceneTree/Operators/Operator.ts#L32)
+[SceneTree/Operators/Operator.ts:32](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/Operators/Operator.ts#L32)
 
 ___
 
@@ -1585,7 +1585,7 @@ Assigns metadata to a given key.
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:252](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/SceneTree/BaseItem.ts#L252)
+[SceneTree/BaseItem.ts:252](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/BaseItem.ts#L252)
 
 ___
 
@@ -1613,7 +1613,7 @@ Sets the name of the base item(Updates path).
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:84](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/SceneTree/BaseItem.ts#L84)
+[SceneTree/BaseItem.ts:84](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/BaseItem.ts#L84)
 
 ___
 
@@ -1639,7 +1639,7 @@ The setOwner method assigns a new owner to the item.
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:164](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/SceneTree/BaseItem.ts#L164)
+[SceneTree/BaseItem.ts:164](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/BaseItem.ts#L164)
 
 ___
 
@@ -1667,7 +1667,7 @@ Modifies the selectability of this item.
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:193](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/SceneTree/BaseItem.ts#L193)
+[SceneTree/BaseItem.ts:193](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/BaseItem.ts#L193)
 
 ___
 
@@ -1695,7 +1695,7 @@ Changes the current state of the selection of this item.
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:217](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/SceneTree/BaseItem.ts#L217)
+[SceneTree/BaseItem.ts:217](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/BaseItem.ts#L217)
 
 ___
 
@@ -1723,7 +1723,7 @@ The toJSON method encodes this type as a json object for persistence.
 
 #### Defined in
 
-[SceneTree/Operators/Operator.ts:186](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/SceneTree/Operators/Operator.ts#L186)
+[SceneTree/Operators/Operator.ts:186](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/Operators/Operator.ts#L186)
 
 ___
 
@@ -1751,7 +1751,7 @@ Converts object's JSON value and converts it to a string.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:301](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/SceneTree/ParameterOwner.ts#L301)
+[SceneTree/ParameterOwner.ts:301](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/ParameterOwner.ts#L301)
 
 ___
 
@@ -1772,7 +1772,7 @@ recomputes and caches the path of this item.
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:99](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/SceneTree/BaseItem.ts#L99)
+[SceneTree/BaseItem.ts:99](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/BaseItem.ts#L99)
 
 ___
 
@@ -1795,5 +1795,5 @@ This method is used in debugging memory consumption.
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:62](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/SceneTree/BaseItem.ts#L62)
+[SceneTree/BaseItem.ts:62](https://github.com/ZeaInc/zea-engine/blob/41278600/src/SceneTree/BaseItem.ts#L62)
 

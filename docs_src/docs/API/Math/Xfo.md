@@ -31,7 +31,7 @@ Initializes the Xfo object.
 
 #### Defined in
 
-[Math/Xfo.ts:27](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Xfo.ts#L27)
+[Math/Xfo.ts:27](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Xfo.ts#L27)
 
 ## Properties
 
@@ -41,7 +41,7 @@ Initializes the Xfo object.
 
 #### Defined in
 
-[Math/Xfo.ts:12](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Xfo.ts#L12)
+[Math/Xfo.ts:12](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Xfo.ts#L12)
 
 ___
 
@@ -51,7 +51,7 @@ ___
 
 #### Defined in
 
-[Math/Xfo.ts:13](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Xfo.ts#L13)
+[Math/Xfo.ts:13](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Xfo.ts#L13)
 
 ___
 
@@ -61,7 +61,7 @@ ___
 
 #### Defined in
 
-[Math/Xfo.ts:14](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Xfo.ts#L14)
+[Math/Xfo.ts:14](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Xfo.ts#L14)
 
 ## Methods
 
@@ -86,7 +86,7 @@ Returns true if this Vec2 is approximately the same as other.
 
 #### Defined in
 
-[Math/Xfo.ts:105](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Xfo.ts#L105)
+[Math/Xfo.ts:105](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Xfo.ts#L105)
 
 ___
 
@@ -104,7 +104,7 @@ Clones this Xfo and returns a new Xfo.
 
 #### Defined in
 
-[Math/Xfo.ts:249](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Xfo.ts#L249)
+[Math/Xfo.ts:249](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Xfo.ts#L249)
 
 ___
 
@@ -126,7 +126,7 @@ The fromJSON method decodes a json object for this type.
 
 #### Defined in
 
-[Math/Xfo.ts:276](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Xfo.ts#L276)
+[Math/Xfo.ts:276](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Xfo.ts#L276)
 
 ___
 
@@ -144,7 +144,7 @@ Returns the inverse of the Xfo object, but returns. the result as a new Xfo.
 
 #### Defined in
 
-[Math/Xfo.ts:158](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Xfo.ts#L158)
+[Math/Xfo.ts:158](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Xfo.ts#L158)
 
 ___
 
@@ -168,7 +168,7 @@ Checks if this Vec3 contains the same values as the other Vec3.
 
 #### Defined in
 
-[Math/Xfo.ts:94](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Xfo.ts#L94)
+[Math/Xfo.ts:94](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Xfo.ts#L94)
 
 ___
 
@@ -186,7 +186,7 @@ Verifies that the Xfo object is an `identity`, checking that the translation, or
 
 #### Defined in
 
-[Math/Xfo.ts:84](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Xfo.ts#L84)
+[Math/Xfo.ts:84](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Xfo.ts#L84)
 
 ___
 
@@ -210,7 +210,7 @@ Multiplies two Xfo transforms.
 
 #### Defined in
 
-[Math/Xfo.ts:137](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Xfo.ts#L137)
+[Math/Xfo.ts:137](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Xfo.ts#L137)
 
 ___
 
@@ -232,7 +232,7 @@ Loads the state of the value from a binary reader.
 
 #### Defined in
 
-[Math/Xfo.ts:289](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Xfo.ts#L289)
+[Math/Xfo.ts:289](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Xfo.ts#L289)
 
 ___
 
@@ -256,7 +256,7 @@ Sets the state of the Xfo object.
 
 #### Defined in
 
-[Math/Xfo.ts:62](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Xfo.ts#L62)
+[Math/Xfo.ts:62](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Xfo.ts#L62)
 
 ___
 
@@ -280,7 +280,7 @@ Sets the state of the Xfo object using an `Float32array`.
 
 #### Defined in
 
-[Math/Xfo.ts:222](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Xfo.ts#L222)
+[Math/Xfo.ts:222](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Xfo.ts#L222)
 
 ___
 
@@ -302,7 +302,7 @@ Sets the state of the Xfo object using Mat4.
 
 #### Defined in
 
-[Math/Xfo.ts:210](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Xfo.ts#L210)
+[Math/Xfo.ts:210](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Xfo.ts#L210)
 
 ___
 
@@ -324,7 +324,7 @@ Sets the state of the Xfo object using another Xfo object.
 
 #### Defined in
 
-[Math/Xfo.ts:73](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Xfo.ts#L73)
+[Math/Xfo.ts:73](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Xfo.ts#L73)
 
 ___
 
@@ -348,7 +348,7 @@ The setLookAt method.
 
 #### Defined in
 
-[Math/Xfo.ts:119](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Xfo.ts#L119)
+[Math/Xfo.ts:119](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Xfo.ts#L119)
 
 ___
 
@@ -366,7 +366,7 @@ The toJSON method encodes this type as a json object for persistence.
 
 #### Defined in
 
-[Math/Xfo.ts:261](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Xfo.ts#L261)
+[Math/Xfo.ts:261](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Xfo.ts#L261)
 
 ___
 
@@ -384,7 +384,7 @@ Converts this Xfo to a Mat4 (a 4x4 matrix).
 
 #### Defined in
 
-[Math/Xfo.ts:195](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Xfo.ts#L195)
+[Math/Xfo.ts:195](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Xfo.ts#L195)
 
 ___
 
@@ -402,7 +402,7 @@ The fromJSON method decodes a json object for this type.
 
 #### Defined in
 
-[Math/Xfo.ts:300](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Xfo.ts#L300)
+[Math/Xfo.ts:300](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Xfo.ts#L300)
 
 ___
 
@@ -426,5 +426,5 @@ Transforms Xfo object using a `Vec3` object. First scaling it, then rotating and
 
 #### Defined in
 
-[Math/Xfo.ts:186](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Xfo.ts#L186)
+[Math/Xfo.ts:186](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Math/Xfo.ts#L186)
 

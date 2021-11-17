@@ -36,7 +36,7 @@ Create a GL material geom item set.
 
 #### Defined in
 
-[Renderer/Drawing/GLMaterialGeomItemSets.ts:23](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Renderer/Drawing/GLMaterialGeomItemSets.ts#L23)
+[Renderer/Drawing/GLMaterialGeomItemSets.ts:23](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Renderer/Drawing/GLMaterialGeomItemSets.ts#L23)
 
 ## Properties
 
@@ -46,7 +46,7 @@ Create a GL material geom item set.
 
 #### Defined in
 
-[Renderer/Drawing/GLMaterialGeomItemSets.ts:14](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Renderer/Drawing/GLMaterialGeomItemSets.ts#L14)
+[Renderer/Drawing/GLMaterialGeomItemSets.ts:14](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Renderer/Drawing/GLMaterialGeomItemSets.ts#L14)
 
 ___
 
@@ -60,7 +60,7 @@ ___
 
 #### Defined in
 
-[Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Utilities/BaseClass.ts#L11)
+[Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Utilities/BaseClass.ts#L11)
 
 ___
 
@@ -70,7 +70,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLMaterialGeomItemSets.ts:17](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Renderer/Drawing/GLMaterialGeomItemSets.ts#L17)
+[Renderer/Drawing/GLMaterialGeomItemSets.ts:17](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Renderer/Drawing/GLMaterialGeomItemSets.ts#L17)
 
 ___
 
@@ -80,7 +80,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLMaterialGeomItemSets.ts:16](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Renderer/Drawing/GLMaterialGeomItemSets.ts#L16)
+[Renderer/Drawing/GLMaterialGeomItemSets.ts:16](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Renderer/Drawing/GLMaterialGeomItemSets.ts#L16)
 
 ___
 
@@ -90,7 +90,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLMaterialGeomItemSets.ts:15](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Renderer/Drawing/GLMaterialGeomItemSets.ts#L15)
+[Renderer/Drawing/GLMaterialGeomItemSets.ts:15](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Renderer/Drawing/GLMaterialGeomItemSets.ts#L15)
 
 ___
 
@@ -104,7 +104,7 @@ ___
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Utilities/EventEmitter.ts#L26)
+[Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Utilities/EventEmitter.ts#L26)
 
 ___
 
@@ -114,7 +114,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLMaterialGeomItemSets.ts:13](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Renderer/Drawing/GLMaterialGeomItemSets.ts#L13)
+[Renderer/Drawing/GLMaterialGeomItemSets.ts:13](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Renderer/Drawing/GLMaterialGeomItemSets.ts#L13)
 
 ## Methods
 
@@ -130,7 +130,7 @@ The __materialChanged method.
 
 #### Defined in
 
-[Renderer/Drawing/GLMaterialGeomItemSets.ts:84](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Renderer/Drawing/GLMaterialGeomItemSets.ts#L84)
+[Renderer/Drawing/GLMaterialGeomItemSets.ts:84](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Renderer/Drawing/GLMaterialGeomItemSets.ts#L84)
 
 ___
 
@@ -153,7 +153,7 @@ The addGLGeomItem method.
 
 #### Defined in
 
-[Renderer/Drawing/GLMaterialGeomItemSets.ts:60](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Renderer/Drawing/GLMaterialGeomItemSets.ts#L60)
+[Renderer/Drawing/GLMaterialGeomItemSets.ts:60](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Renderer/Drawing/GLMaterialGeomItemSets.ts#L60)
 
 ___
 
@@ -175,7 +175,7 @@ The addGeomItemSet method.
 
 #### Defined in
 
-[Renderer/Drawing/GLMaterialGeomItemSets.ts:102](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Renderer/Drawing/GLMaterialGeomItemSets.ts#L102)
+[Renderer/Drawing/GLMaterialGeomItemSets.ts:102](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Renderer/Drawing/GLMaterialGeomItemSets.ts#L102)
 
 ___
 
@@ -197,7 +197,7 @@ Draws all elements, binding the shader and continuing into the GLGeomItemSet
 
 #### Defined in
 
-[Renderer/Drawing/GLMaterialGeomItemSets.ts:132](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Renderer/Drawing/GLMaterialGeomItemSets.ts#L132)
+[Renderer/Drawing/GLMaterialGeomItemSets.ts:132](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Renderer/Drawing/GLMaterialGeomItemSets.ts#L132)
 
 ___
 
@@ -219,7 +219,7 @@ The drawCountChanged method.
 
 #### Defined in
 
-[Renderer/Drawing/GLMaterialGeomItemSets.ts:75](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Renderer/Drawing/GLMaterialGeomItemSets.ts#L75)
+[Renderer/Drawing/GLMaterialGeomItemSets.ts:75](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Renderer/Drawing/GLMaterialGeomItemSets.ts#L75)
 
 ___
 
@@ -241,7 +241,7 @@ The drawHighlightedGeoms method.
 
 #### Defined in
 
-[Renderer/Drawing/GLMaterialGeomItemSets.ts:158](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Renderer/Drawing/GLMaterialGeomItemSets.ts#L158)
+[Renderer/Drawing/GLMaterialGeomItemSets.ts:158](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Renderer/Drawing/GLMaterialGeomItemSets.ts#L158)
 
 ___
 
@@ -263,7 +263,7 @@ The drawHighlighted method.
 
 #### Defined in
 
-[Renderer/Drawing/GLMaterialGeomItemSets.ts:146](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Renderer/Drawing/GLMaterialGeomItemSets.ts#L146)
+[Renderer/Drawing/GLMaterialGeomItemSets.ts:146](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Renderer/Drawing/GLMaterialGeomItemSets.ts#L146)
 
 ___
 
@@ -290,7 +290,7 @@ Triggers all listener functions in an event.
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Utilities/EventEmitter.ts#L154)
+[Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Utilities/EventEmitter.ts#L154)
 
 ___
 
@@ -312,7 +312,7 @@ Returns the unmangled name of the class.
 
 #### Defined in
 
-[Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Utilities/BaseClass.ts#L33)
+[Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Utilities/BaseClass.ts#L33)
 
 ___
 
@@ -330,7 +330,7 @@ The getGLMaterial method.
 
 #### Defined in
 
-[Renderer/Drawing/GLMaterialGeomItemSets.ts:50](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Renderer/Drawing/GLMaterialGeomItemSets.ts#L50)
+[Renderer/Drawing/GLMaterialGeomItemSets.ts:50](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Renderer/Drawing/GLMaterialGeomItemSets.ts#L50)
 
 ___
 
@@ -354,7 +354,7 @@ Returns the unique id of the object.
 
 #### Defined in
 
-[Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Utilities/BaseClass.ts#L25)
+[Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Utilities/BaseClass.ts#L25)
 
 ___
 
@@ -381,7 +381,7 @@ Removes a listener function from the specified event, using either the function 
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Utilities/EventEmitter.ts#L97)
+[Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Utilities/EventEmitter.ts#L97)
 
 ___
 
@@ -410,7 +410,7 @@ Adds a listener function for a given event name.
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Utilities/EventEmitter.ts#L44)
+[Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Utilities/EventEmitter.ts#L44)
 
 ___
 
@@ -448,7 +448,7 @@ asset.once('loaded', () => {
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Utilities/EventEmitter.ts#L82)
+[Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Utilities/EventEmitter.ts#L82)
 
 ___
 
@@ -475,5 +475,5 @@ remove listener by ID returned from #on
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Utilities/EventEmitter.ts#L134)
+[Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/41278600/src/Utilities/EventEmitter.ts#L134)
 
