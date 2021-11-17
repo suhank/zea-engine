@@ -176,8 +176,7 @@ class Camera extends TreeItem {
    */
   setFrustumHeight(value: number) {
     this.viewHeight = value
-    console.warn('event emitted is null')
-    this.emit('projectionParamChanged') // event
+    this.emit('projectionParamChanged')
   }
 
   /**
