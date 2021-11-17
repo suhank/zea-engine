@@ -37,7 +37,7 @@ You can also pass one JSON object parameter.
 
 #### Defined in
 
-[Math/Vec4.ts:28](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Vec4.ts#L28)
+[Math/Vec4.ts:28](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec4.ts#L28)
 
 ## Properties
 
@@ -47,7 +47,7 @@ You can also pass one JSON object parameter.
 
 #### Defined in
 
-[Math/Vec4.ts:12](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Vec4.ts#L12)
+[Math/Vec4.ts:12](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec4.ts#L12)
 
 ## Accessors
 
@@ -63,7 +63,7 @@ Getter for `t` value.
 
 #### Defined in
 
-[Math/Vec4.ts:109](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Vec4.ts#L109)
+[Math/Vec4.ts:109](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec4.ts#L109)
 
 • `set` **t**(`val`): `void`
 
@@ -81,7 +81,7 @@ Setter for `t` value.
 
 #### Defined in
 
-[Math/Vec4.ts:118](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Vec4.ts#L118)
+[Math/Vec4.ts:118](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec4.ts#L118)
 
 ___
 
@@ -97,7 +97,7 @@ Getter for `w` value.
 
 #### Defined in
 
-[Math/Vec4.ts:127](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Vec4.ts#L127)
+[Math/Vec4.ts:127](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec4.ts#L127)
 
 • `set` **w**(`val`): `void`
 
@@ -115,7 +115,7 @@ Setter for `w` value.
 
 #### Defined in
 
-[Math/Vec4.ts:136](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Vec4.ts#L136)
+[Math/Vec4.ts:136](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec4.ts#L136)
 
 ___
 
@@ -133,7 +133,7 @@ Getter for `x` value.
 
 #### Defined in
 
-[Math/Vec4.ts:55](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Vec4.ts#L55)
+[Math/Vec4.ts:55](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec4.ts#L55)
 
 • `set` **x**(`val`): `void`
 
@@ -153,7 +153,7 @@ Setter for `x` value.
 
 #### Defined in
 
-[Math/Vec4.ts:64](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Vec4.ts#L64)
+[Math/Vec4.ts:64](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec4.ts#L64)
 
 ___
 
@@ -171,7 +171,7 @@ Getter for `xyz` swizzel.
 
 #### Defined in
 
-[Math/Vec4.ts:145](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Vec4.ts#L145)
+[Math/Vec4.ts:145](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec4.ts#L145)
 
 ___
 
@@ -189,7 +189,7 @@ Getter for `y` value.
 
 #### Defined in
 
-[Math/Vec4.ts:73](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Vec4.ts#L73)
+[Math/Vec4.ts:73](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec4.ts#L73)
 
 • `set` **y**(`val`): `void`
 
@@ -209,7 +209,7 @@ Setter for `y` value.
 
 #### Defined in
 
-[Math/Vec4.ts:82](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Vec4.ts#L82)
+[Math/Vec4.ts:82](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec4.ts#L82)
 
 ___
 
@@ -225,7 +225,7 @@ Getter for `z` value.
 
 #### Defined in
 
-[Math/Vec4.ts:91](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Vec4.ts#L91)
+[Math/Vec4.ts:91](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec4.ts#L91)
 
 • `set` **z**(`val`): `void`
 
@@ -243,7 +243,7 @@ Setter for `z` value.
 
 #### Defined in
 
-[Math/Vec4.ts:100](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Vec4.ts#L100)
+[Math/Vec4.ts:100](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec4.ts#L100)
 
 ## Methods
 
@@ -267,7 +267,7 @@ Adds other to this Vec4 and returns the result as a new Vec4.
 
 #### Defined in
 
-[Math/Vec4.ts:218](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Vec4.ts#L218)
+[Math/Vec4.ts:218](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec4.ts#L218)
 
 ___
 
@@ -289,7 +289,7 @@ Adds other to this Vec4 mutating the values of this instance
 
 #### Defined in
 
-[Math/Vec4.ts:227](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Vec4.ts#L227)
+[Math/Vec4.ts:227](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec4.ts#L227)
 
 ___
 
@@ -313,7 +313,7 @@ Gets the angle between this Vec4 and b.
 
 #### Defined in
 
-[Math/Vec4.ts:417](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Vec4.ts#L417)
+[Math/Vec4.ts:417](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec4.ts#L417)
 
 ___
 
@@ -338,7 +338,7 @@ Returns true if this Vec4 is approximately the same as other.
 
 #### Defined in
 
-[Math/Vec4.ts:203](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Vec4.ts#L203)
+[Math/Vec4.ts:203](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec4.ts#L203)
 
 ___
 
@@ -356,7 +356,7 @@ Returns the type as an array. Often used to pass types to the GPU.
 
 #### Defined in
 
-[Math/Vec4.ts:484](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Vec4.ts#L484)
+[Math/Vec4.ts:484](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec4.ts#L484)
 
 ___
 
@@ -374,7 +374,7 @@ Clones this Vec4 and returns a new Vec4.
 
 #### Defined in
 
-[Math/Vec4.ts:466](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Vec4.ts#L466)
+[Math/Vec4.ts:466](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec4.ts#L466)
 
 ___
 
@@ -398,7 +398,7 @@ Calculates the cross product of two Vec4s and returns the result as a new Vec4.
 
 #### Defined in
 
-[Math/Vec4.ts:398](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Vec4.ts#L398)
+[Math/Vec4.ts:398](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec4.ts#L398)
 
 ___
 
@@ -422,7 +422,7 @@ Divides two Vec4s and returns the result as a new Vec4.
 
 #### Defined in
 
-[Math/Vec4.ts:284](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Vec4.ts#L284)
+[Math/Vec4.ts:284](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec4.ts#L284)
 
 ___
 
@@ -444,7 +444,7 @@ Divides two Vec4s.
 
 #### Defined in
 
-[Math/Vec4.ts:293](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Vec4.ts#L293)
+[Math/Vec4.ts:293](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec4.ts#L293)
 
 ___
 
@@ -468,7 +468,7 @@ Calculates the dot product of this Vec4 against another Vec4.
 
 #### Defined in
 
-[Math/Vec4.ts:388](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Vec4.ts#L388)
+[Math/Vec4.ts:388](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec4.ts#L388)
 
 ___
 
@@ -490,7 +490,7 @@ Decodes a JSON object to set the state of this class.
 
 #### Defined in
 
-[Math/Vec4.ts:519](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Vec4.ts#L519)
+[Math/Vec4.ts:519](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec4.ts#L519)
 
 ___
 
@@ -514,7 +514,7 @@ Checks if this Vec4 contains the same values as the other Vec4.
 
 #### Defined in
 
-[Math/Vec4.ts:182](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Vec4.ts#L182)
+[Math/Vec4.ts:182](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec4.ts#L182)
 
 ___
 
@@ -534,7 +534,7 @@ Returns `false` If at least one of the values is either [Infinity](https://devel
 
 #### Defined in
 
-[Math/Vec4.ts:545](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Vec4.ts#L545)
+[Math/Vec4.ts:545](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec4.ts#L545)
 
 ___
 
@@ -552,7 +552,7 @@ Calculates the length of this Vec4.
 
 #### Defined in
 
-[Math/Vec4.ts:324](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Vec4.ts#L324)
+[Math/Vec4.ts:324](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec4.ts#L324)
 
 ___
 
@@ -570,7 +570,7 @@ Calculates the squared length of this Vec4.
 
 #### Defined in
 
-[Math/Vec4.ts:337](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Vec4.ts#L337)
+[Math/Vec4.ts:337](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec4.ts#L337)
 
 ___
 
@@ -595,7 +595,7 @@ Performs a linear interpolation between this Vec4 and other.
 
 #### Defined in
 
-[Math/Vec4.ts:436](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Vec4.ts#L436)
+[Math/Vec4.ts:436](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec4.ts#L436)
 
 ___
 
@@ -619,7 +619,7 @@ Multiplies two Vec4s and returns the result as a new Vec4.
 
 #### Defined in
 
-[Math/Vec4.ts:262](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Vec4.ts#L262)
+[Math/Vec4.ts:262](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec4.ts#L262)
 
 ___
 
@@ -641,7 +641,7 @@ Multiplies two Vec4s mutating the values of this instance
 
 #### Defined in
 
-[Math/Vec4.ts:271](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Vec4.ts#L271)
+[Math/Vec4.ts:271](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec4.ts#L271)
 
 ___
 
@@ -660,7 +660,7 @@ Multiplies coordinates value by the inverse of the vector length.
 
 #### Defined in
 
-[Math/Vec4.ts:351](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Vec4.ts#L351)
+[Math/Vec4.ts:351](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec4.ts#L351)
 
 ___
 
@@ -676,7 +676,7 @@ Normalizes this Vec4 multiplying coordinate values by the inverse of the vector 
 
 #### Defined in
 
-[Math/Vec4.ts:369](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Vec4.ts#L369)
+[Math/Vec4.ts:369](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec4.ts#L369)
 
 ___
 
@@ -700,7 +700,7 @@ Checks if this Vec4 is different from another Vec4.
 
 #### Defined in
 
-[Math/Vec4.ts:192](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Vec4.ts#L192)
+[Math/Vec4.ts:192](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec4.ts#L192)
 
 ___
 
@@ -722,7 +722,7 @@ Loads the state of the value from a binary reader.
 
 #### Defined in
 
-[Math/Vec4.ts:531](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Vec4.ts#L531)
+[Math/Vec4.ts:531](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec4.ts#L531)
 
 ___
 
@@ -746,7 +746,7 @@ Scales this Vec4 by scalar and returns the result as a new Vec4.
 
 #### Defined in
 
-[Math/Vec4.ts:306](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Vec4.ts#L306)
+[Math/Vec4.ts:306](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec4.ts#L306)
 
 ___
 
@@ -768,7 +768,7 @@ Scales this Vec4 by scalar.
 
 #### Defined in
 
-[Math/Vec4.ts:315](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Vec4.ts#L315)
+[Math/Vec4.ts:315](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec4.ts#L315)
 
 ___
 
@@ -793,7 +793,7 @@ Setter from scalar components.
 
 #### Defined in
 
-[Math/Vec4.ts:157](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Vec4.ts#L157)
+[Math/Vec4.ts:157](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec4.ts#L157)
 
 ___
 
@@ -815,7 +815,7 @@ Sets the state of a Vec4 Object from another Vec4.
 
 #### Defined in
 
-[Math/Vec4.ts:169](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Vec4.ts#L169)
+[Math/Vec4.ts:169](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec4.ts#L169)
 
 ___
 
@@ -839,7 +839,7 @@ Subtracts other from this Vec4 and returns then result as a new Vec4.
 
 #### Defined in
 
-[Math/Vec4.ts:240](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Vec4.ts#L240)
+[Math/Vec4.ts:240](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec4.ts#L240)
 
 ___
 
@@ -861,7 +861,7 @@ Subtracts other from this Vec4 mutating the values of this instance
 
 #### Defined in
 
-[Math/Vec4.ts:249](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Vec4.ts#L249)
+[Math/Vec4.ts:249](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec4.ts#L249)
 
 ___
 
@@ -879,7 +879,7 @@ The toJSON method encodes this type as a json object for persistence.
 
 #### Defined in
 
-[Math/Vec4.ts:505](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Vec4.ts#L505)
+[Math/Vec4.ts:505](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec4.ts#L505)
 
 ___
 
@@ -897,7 +897,7 @@ Converts this Vec3 to a string in JSON format.
 
 #### Defined in
 
-[Math/Vec4.ts:496](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Vec4.ts#L496)
+[Math/Vec4.ts:496](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec4.ts#L496)
 
 ___
 
@@ -915,5 +915,5 @@ Converts this Vec4 into a Vec3.
 
 #### Defined in
 
-[Math/Vec4.ts:475](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Math/Vec4.ts#L475)
+[Math/Vec4.ts:475](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Math/Vec4.ts#L475)
 

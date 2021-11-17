@@ -35,7 +35,7 @@ Create an BaseEvent.
 
 #### Defined in
 
-[Utilities/Events/XRPoseEvent.ts:21](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Utilities/Events/XRPoseEvent.ts#L21)
+[Utilities/Events/XRPoseEvent.ts:21](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Utilities/Events/XRPoseEvent.ts#L21)
 
 ## Properties
 
@@ -45,7 +45,7 @@ Create an BaseEvent.
 
 #### Defined in
 
-[Utilities/Events/XRPoseEvent.ts:19](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Utilities/Events/XRPoseEvent.ts#L19)
+[Utilities/Events/XRPoseEvent.ts:19](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Utilities/Events/XRPoseEvent.ts#L19)
 
 ___
 
@@ -59,7 +59,7 @@ ___
 
 #### Defined in
 
-[Utilities/Events/XRPoseEvent.ts:20](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Utilities/Events/XRPoseEvent.ts#L20)
+[Utilities/Events/XRPoseEvent.ts:20](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Utilities/Events/XRPoseEvent.ts#L20)
 
 ___
 
@@ -73,7 +73,7 @@ ___
 
 #### Defined in
 
-[Utilities/Events/ZeaPointerEvent.ts:19](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Utilities/Events/ZeaPointerEvent.ts#L19)
+[Utilities/Events/ZeaPointerEvent.ts:19](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Utilities/Events/ZeaPointerEvent.ts#L19)
 
 ___
 
@@ -87,7 +87,7 @@ ___
 
 #### Defined in
 
-[Utilities/Events/ZeaPointerEvent.ts:14](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Utilities/Events/ZeaPointerEvent.ts#L14)
+[Utilities/Events/ZeaPointerEvent.ts:14](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Utilities/Events/ZeaPointerEvent.ts#L14)
 
 ___
 
@@ -101,7 +101,7 @@ ___
 
 #### Defined in
 
-[Utilities/Events/ZeaPointerEvent.ts:16](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Utilities/Events/ZeaPointerEvent.ts#L16)
+[Utilities/Events/ZeaPointerEvent.ts:16](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Utilities/Events/ZeaPointerEvent.ts#L16)
 
 ___
 
@@ -111,7 +111,7 @@ ___
 
 #### Defined in
 
-[Utilities/Events/XRPoseEvent.ts:18](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Utilities/Events/XRPoseEvent.ts#L18)
+[Utilities/Events/XRPoseEvent.ts:18](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Utilities/Events/XRPoseEvent.ts#L18)
 
 ___
 
@@ -125,7 +125,7 @@ ___
 
 #### Defined in
 
-[Utilities/Events/ZeaPointerEvent.ts:15](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Utilities/Events/ZeaPointerEvent.ts#L15)
+[Utilities/Events/ZeaPointerEvent.ts:15](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Utilities/Events/ZeaPointerEvent.ts#L15)
 
 ## Methods
 
@@ -143,7 +143,7 @@ ___
 
 #### Defined in
 
-[Utilities/Events/ZeaPointerEvent.ts:34](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Utilities/Events/ZeaPointerEvent.ts#L34)
+[Utilities/Events/ZeaPointerEvent.ts:34](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Utilities/Events/ZeaPointerEvent.ts#L34)
 
 ___
 
@@ -161,7 +161,7 @@ ___
 
 #### Defined in
 
-[Utilities/Events/ZeaPointerEvent.ts:38](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Utilities/Events/ZeaPointerEvent.ts#L38)
+[Utilities/Events/ZeaPointerEvent.ts:38](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Utilities/Events/ZeaPointerEvent.ts#L38)
 
 ___
 
@@ -185,7 +185,7 @@ ___
 
 #### Defined in
 
-[Utilities/Events/ZeaPointerEvent.ts:30](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Utilities/Events/ZeaPointerEvent.ts#L30)
+[Utilities/Events/ZeaPointerEvent.ts:30](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Utilities/Events/ZeaPointerEvent.ts#L30)
 
 ___
 
@@ -203,5 +203,5 @@ ___
 
 #### Defined in
 
-[Utilities/Events/ZeaPointerEvent.ts:26](https://github.com/ZeaInc/zea-engine/blob/2a869013/src/Utilities/Events/ZeaPointerEvent.ts#L26)
+[Utilities/Events/ZeaPointerEvent.ts:26](https://github.com/ZeaInc/zea-engine/blob/9ada8c18/src/Utilities/Events/ZeaPointerEvent.ts#L26)
 
