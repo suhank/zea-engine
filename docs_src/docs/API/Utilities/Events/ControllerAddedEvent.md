@@ -33,7 +33,7 @@ Create an BaseEvent.
 
 #### Defined in
 
-Utilities/Events/ControllerAddedEvent.ts:7
+[Utilities/Events/ControllerAddedEvent.ts:7](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/Utilities/Events/ControllerAddedEvent.ts#L7)
 
 ## Properties
 
@@ -43,5 +43,5 @@ Utilities/Events/ControllerAddedEvent.ts:7
 
 #### Defined in
 
-Utilities/Events/ControllerAddedEvent.ts:5
+[Utilities/Events/ControllerAddedEvent.ts:5](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/Utilities/Events/ControllerAddedEvent.ts#L5)
 

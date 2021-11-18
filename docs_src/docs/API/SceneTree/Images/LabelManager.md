@@ -29,7 +29,7 @@ Create a label manager.
 
 #### Defined in
 
-SceneTree/Images/LabelManager.ts:56
+[SceneTree/Images/LabelManager.ts:56](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/SceneTree/Images/LabelManager.ts#L56)
 
 ## Properties
 
@@ -39,7 +39,7 @@ SceneTree/Images/LabelManager.ts:56
 
 #### Defined in
 
-SceneTree/Images/LabelManager.ts:51
+[SceneTree/Images/LabelManager.ts:51](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/SceneTree/Images/LabelManager.ts#L51)
 
 ___
 
@@ -53,7 +53,7 @@ ___
 
 #### Defined in
 
-Utilities/BaseClass.ts:11
+[Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/Utilities/BaseClass.ts#L11)
 
 ___
 
@@ -63,7 +63,7 @@ ___
 
 #### Defined in
 
-SceneTree/Images/LabelManager.ts:52
+[SceneTree/Images/LabelManager.ts:52](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/SceneTree/Images/LabelManager.ts#L52)
 
 ___
 
@@ -73,7 +73,7 @@ ___
 
 #### Defined in
 
-SceneTree/Images/LabelManager.ts:50
+[SceneTree/Images/LabelManager.ts:50](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/SceneTree/Images/LabelManager.ts#L50)
 
 ___
 
@@ -87,7 +87,7 @@ ___
 
 #### Defined in
 
-Utilities/EventEmitter.ts:26
+[Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/Utilities/EventEmitter.ts#L26)
 
 ## Methods
 
@@ -114,7 +114,7 @@ Triggers all listener functions in an event.
 
 #### Defined in
 
-Utilities/EventEmitter.ts:154
+[Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/Utilities/EventEmitter.ts#L154)
 
 ___
 
@@ -136,7 +136,7 @@ Returns the unmangled name of the class.
 
 #### Defined in
 
-Utilities/BaseClass.ts:33
+[Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/Utilities/BaseClass.ts#L33)
 
 ___
 
@@ -160,7 +160,7 @@ Returns the unique id of the object.
 
 #### Defined in
 
-Utilities/BaseClass.ts:25
+[Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/Utilities/BaseClass.ts#L25)
 
 ___
 
@@ -185,7 +185,7 @@ The getLabelText method.
 
 #### Defined in
 
-SceneTree/Images/LabelManager.ts:134
+[SceneTree/Images/LabelManager.ts:134](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/SceneTree/Images/LabelManager.ts#L134)
 
 ___
 
@@ -209,7 +209,7 @@ Checks if the library is found.
 
 #### Defined in
 
-SceneTree/Images/LabelManager.ts:115
+[SceneTree/Images/LabelManager.ts:115](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/SceneTree/Images/LabelManager.ts#L115)
 
 ___
 
@@ -233,7 +233,7 @@ Checks if the library is loaded.
 
 #### Defined in
 
-SceneTree/Images/LabelManager.ts:124
+[SceneTree/Images/LabelManager.ts:124](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/SceneTree/Images/LabelManager.ts#L124)
 
 ___
 
@@ -256,7 +256,7 @@ Load a label library into the manager.
 
 #### Defined in
 
-SceneTree/Images/LabelManager.ts:69
+[SceneTree/Images/LabelManager.ts:69](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/SceneTree/Images/LabelManager.ts#L69)
 
 ___
 
@@ -283,7 +283,7 @@ Removes a listener function from the specified event, using either the function 
 
 #### Defined in
 
-Utilities/EventEmitter.ts:97
+[Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/Utilities/EventEmitter.ts#L97)
 
 ___
 
@@ -312,7 +312,7 @@ Adds a listener function for a given event name.
 
 #### Defined in
 
-Utilities/EventEmitter.ts:44
+[Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/Utilities/EventEmitter.ts#L44)
 
 ___
 
@@ -350,7 +350,7 @@ asset.once('loaded', () => {
 
 #### Defined in
 
-Utilities/EventEmitter.ts:82
+[Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/Utilities/EventEmitter.ts#L82)
 
 ___
 
@@ -377,7 +377,7 @@ remove listener by ID returned from #on
 
 #### Defined in
 
-Utilities/EventEmitter.ts:134
+[Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/Utilities/EventEmitter.ts#L134)
 
 ___
 
@@ -401,7 +401,7 @@ The setLabelText method.
 
 #### Defined in
 
-SceneTree/Images/LabelManager.ts:171
+[SceneTree/Images/LabelManager.ts:171](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/SceneTree/Images/LabelManager.ts#L171)
 
 ___
 
@@ -421,5 +421,5 @@ ___
 
 #### Defined in
 
-SceneTree/Images/LabelManager.ts:186
+[SceneTree/Images/LabelManager.ts:186](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/SceneTree/Images/LabelManager.ts#L186)
 

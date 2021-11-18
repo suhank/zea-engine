@@ -34,7 +34,7 @@ Create an BaseEvent.
 
 #### Defined in
 
-Utilities/Events/TexturedChangedEvent.ts:8
+[Utilities/Events/TexturedChangedEvent.ts:8](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/Utilities/Events/TexturedChangedEvent.ts#L8)
 
 ## Properties
 
@@ -44,7 +44,7 @@ Utilities/Events/TexturedChangedEvent.ts:8
 
 #### Defined in
 
-Utilities/Events/TexturedChangedEvent.ts:6
+[Utilities/Events/TexturedChangedEvent.ts:6](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/Utilities/Events/TexturedChangedEvent.ts#L6)
 
 ___
 
@@ -54,5 +54,5 @@ ___
 
 #### Defined in
 
-Utilities/Events/TexturedChangedEvent.ts:7
+[Utilities/Events/TexturedChangedEvent.ts:7](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/Utilities/Events/TexturedChangedEvent.ts#L7)
 

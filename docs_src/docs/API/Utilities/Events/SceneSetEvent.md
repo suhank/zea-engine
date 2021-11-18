@@ -33,7 +33,7 @@ Create an BaseEvent.
 
 #### Defined in
 
-Utilities/Events/SceneSetEvent.ts:6
+[Utilities/Events/SceneSetEvent.ts:6](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/Utilities/Events/SceneSetEvent.ts#L6)
 
 ## Properties
 
@@ -43,5 +43,5 @@ Utilities/Events/SceneSetEvent.ts:6
 
 #### Defined in
 
-Utilities/Events/SceneSetEvent.ts:5
+[Utilities/Events/SceneSetEvent.ts:5](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/Utilities/Events/SceneSetEvent.ts#L5)
 

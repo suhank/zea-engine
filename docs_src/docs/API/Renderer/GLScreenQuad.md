@@ -26,7 +26,7 @@ Create a GL screen quad.
 
 #### Defined in
 
-Renderer/GLScreenQuad.ts:22
+[Renderer/GLScreenQuad.ts:22](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/Renderer/GLScreenQuad.ts#L22)
 
 ## Properties
 
@@ -36,7 +36,7 @@ Renderer/GLScreenQuad.ts:22
 
 #### Defined in
 
-Renderer/GLScreenQuad.ts:10
+[Renderer/GLScreenQuad.ts:10](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/Renderer/GLScreenQuad.ts#L10)
 
 ___
 
@@ -46,7 +46,7 @@ ___
 
 #### Defined in
 
-Renderer/GLScreenQuad.ts:14
+[Renderer/GLScreenQuad.ts:14](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/Renderer/GLScreenQuad.ts#L14)
 
 ___
 
@@ -56,7 +56,7 @@ ___
 
 #### Defined in
 
-Renderer/GLScreenQuad.ts:11
+[Renderer/GLScreenQuad.ts:11](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/Renderer/GLScreenQuad.ts#L11)
 
 ___
 
@@ -66,7 +66,7 @@ ___
 
 #### Defined in
 
-Renderer/GLScreenQuad.ts:15
+[Renderer/GLScreenQuad.ts:15](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/Renderer/GLScreenQuad.ts#L15)
 
 ___
 
@@ -76,7 +76,7 @@ ___
 
 #### Defined in
 
-Renderer/GLScreenQuad.ts:12
+[Renderer/GLScreenQuad.ts:12](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/Renderer/GLScreenQuad.ts#L12)
 
 ___
 
@@ -86,7 +86,7 @@ ___
 
 #### Defined in
 
-Renderer/GLScreenQuad.ts:13
+[Renderer/GLScreenQuad.ts:13](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/Renderer/GLScreenQuad.ts#L13)
 
 ___
 
@@ -96,7 +96,7 @@ ___
 
 #### Defined in
 
-Renderer/GLScreenQuad.ts:16
+[Renderer/GLScreenQuad.ts:16](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/Renderer/GLScreenQuad.ts#L16)
 
 ## Methods
 
@@ -121,7 +121,7 @@ The bind method.
 
 #### Defined in
 
-Renderer/GLScreenQuad.ts:49
+[Renderer/GLScreenQuad.ts:49](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/Renderer/GLScreenQuad.ts#L49)
 
 ___
 
@@ -145,7 +145,7 @@ The bindShader method.
 
 #### Defined in
 
-Renderer/GLScreenQuad.ts:84
+[Renderer/GLScreenQuad.ts:84](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/Renderer/GLScreenQuad.ts#L84)
 
 ___
 
@@ -162,7 +162,7 @@ Users should never need to call this method directly.
 
 #### Defined in
 
-Renderer/GLScreenQuad.ts:105
+[Renderer/GLScreenQuad.ts:105](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/Renderer/GLScreenQuad.ts#L105)
 
 ___
 
@@ -187,5 +187,5 @@ The draw method.
 
 #### Defined in
 
-Renderer/GLScreenQuad.ts:95
+[Renderer/GLScreenQuad.ts:95](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/Renderer/GLScreenQuad.ts#L95)
 

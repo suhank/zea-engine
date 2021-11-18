@@ -34,7 +34,7 @@ Create an BaseEvent.
 
 #### Defined in
 
-Utilities/Events/StreamFileParsedEvent.ts:6
+[Utilities/Events/StreamFileParsedEvent.ts:6](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/Utilities/Events/StreamFileParsedEvent.ts#L6)
 
 ## Properties
 
@@ -44,7 +44,7 @@ Utilities/Events/StreamFileParsedEvent.ts:6
 
 #### Defined in
 
-Utilities/Events/StreamFileParsedEvent.ts:5
+[Utilities/Events/StreamFileParsedEvent.ts:5](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/Utilities/Events/StreamFileParsedEvent.ts#L5)
 
 ___
 
@@ -54,5 +54,5 @@ ___
 
 #### Defined in
 
-Utilities/Events/StreamFileParsedEvent.ts:4
+[Utilities/Events/StreamFileParsedEvent.ts:4](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/Utilities/Events/StreamFileParsedEvent.ts#L4)
 

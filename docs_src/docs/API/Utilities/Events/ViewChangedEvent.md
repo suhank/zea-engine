@@ -36,7 +36,7 @@ Create an BaseEvent.
 
 #### Defined in
 
-Utilities/Events/ViewChangedEvent.ts:10
+[Utilities/Events/ViewChangedEvent.ts:10](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/Utilities/Events/ViewChangedEvent.ts#L10)
 
 ## Properties
 
@@ -46,7 +46,7 @@ Utilities/Events/ViewChangedEvent.ts:10
 
 #### Defined in
 
-Utilities/Events/ViewChangedEvent.ts:6
+[Utilities/Events/ViewChangedEvent.ts:6](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/Utilities/Events/ViewChangedEvent.ts#L6)
 
 ___
 
@@ -56,7 +56,7 @@ ___
 
 #### Defined in
 
-Utilities/Events/ViewChangedEvent.ts:7
+[Utilities/Events/ViewChangedEvent.ts:7](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/Utilities/Events/ViewChangedEvent.ts#L7)
 
 ___
 
@@ -66,5 +66,5 @@ ___
 
 #### Defined in
 
-Utilities/Events/ViewChangedEvent.ts:8
+[Utilities/Events/ViewChangedEvent.ts:8](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/Utilities/Events/ViewChangedEvent.ts#L8)
 

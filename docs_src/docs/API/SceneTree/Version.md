@@ -27,7 +27,7 @@ major, minor and patch separated by a dot(`.`) and parts separated by a dash(`-`
 
 #### Defined in
 
-SceneTree/Version.ts:16
+[SceneTree/Version.ts:16](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/SceneTree/Version.ts#L16)
 
 ## Properties
 
@@ -37,7 +37,7 @@ SceneTree/Version.ts:16
 
 #### Defined in
 
-SceneTree/Version.ts:8
+[SceneTree/Version.ts:8](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/SceneTree/Version.ts#L8)
 
 ___
 
@@ -47,7 +47,7 @@ ___
 
 #### Defined in
 
-SceneTree/Version.ts:5
+[SceneTree/Version.ts:5](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/SceneTree/Version.ts#L5)
 
 ___
 
@@ -57,7 +57,7 @@ ___
 
 #### Defined in
 
-SceneTree/Version.ts:6
+[SceneTree/Version.ts:6](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/SceneTree/Version.ts#L6)
 
 ___
 
@@ -67,7 +67,7 @@ ___
 
 #### Defined in
 
-SceneTree/Version.ts:7
+[SceneTree/Version.ts:7](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/SceneTree/Version.ts#L7)
 
 ## Methods
 
@@ -91,5 +91,5 @@ Compare a version object against a version numbers array.
 
 #### Defined in
 
-SceneTree/Version.ts:37
+[SceneTree/Version.ts:37](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/SceneTree/Version.ts#L37)
 
