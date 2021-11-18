@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Circle saves to JSON (serialization). 1`] = `
+Object {
+  "params": Object {
+    "Angle": Object {
+      "value": 6.283185307179586,
+    },
+    "Radius": Object {
+      "value": 2,
+    },
+    "Sides": Object {
+      "range": Array [
+        3,
+        200,
+      ],
+      "step": 1,
+      "value": 6,
+    },
+  },
+  "type": "Circle",
+  "vertexAttributes": Object {},
+}
+`;

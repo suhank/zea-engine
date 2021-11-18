@@ -18,8 +18,11 @@ Zea Engine is a web-based 3D rendering solution designed from the ground up for 
 - Reach
   Applications that leverage the web browser are already available on all modern devices. These web applications provide a friction-free and straightforward way to deliver content without requiring users to install a player. Zea Engine is designed for the web and enables new categories of high performance and versatile web applications.
 
+<div class = "display-half">
+
 ![zea-hexagon-black](/img/misc/zea-hexagon-black.png)
 
+</div>
 No one size fits all. The Zea Engine is designed around a plugin architecture that enables anyone to build and publish plugins that expand capabilities of the engine. We provide a range of plugins and tools to make working with the engine easier and more productive.
 
 For more information on the templates and plugins see the page on [Templates and Plugins](../Plugins/plugins-templates-overview.md)
