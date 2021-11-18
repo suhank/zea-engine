@@ -257,14 +257,8 @@ class Camera extends TreeItem {
     if (dist < 0.0001) console.error('Never set focal distance to zero')
     this.focalDistanceParam.value = dist
     if (this.adjustNearAndFarPlanesToFocalDist) {
-      const near = dist * this.nearDistFactor
-      if (near < this.nearParam.value) {
-        this.nearParam.value = near
-      }
-      const far = dist * this.farDistFactor
-      if (far > this.farParam.value) {
-        this.farParam.value = far
-      }
+      this.nearParam.value = dist * this.nearDistFactor
+      this.farParam.value = dist * this.farDistFactor
     }
   }
 
