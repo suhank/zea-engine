@@ -40,7 +40,7 @@ Create a GL geom item.
 
 #### Defined in
 
-[Renderer/Drawing/GLGeomItem.ts:59](https://github.com/ZeaInc/zea-engine/blob/9080cb30e/src/Renderer/Drawing/GLGeomItem.ts#L59)
+[Renderer/Drawing/GLGeomItem.ts:59](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Renderer/Drawing/GLGeomItem.ts#L59)
 
 ## Properties
 
@@ -50,7 +50,7 @@ Create a GL geom item.
 
 #### Defined in
 
-[Renderer/Drawing/GLGeomItem.ts:27](https://github.com/ZeaInc/zea-engine/blob/9080cb30e/src/Renderer/Drawing/GLGeomItem.ts#L27)
+[Renderer/Drawing/GLGeomItem.ts:27](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Renderer/Drawing/GLGeomItem.ts#L27)
 
 ___
 
@@ -60,7 +60,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLGeomItem.ts:30](https://github.com/ZeaInc/zea-engine/blob/9080cb30e/src/Renderer/Drawing/GLGeomItem.ts#L30)
+[Renderer/Drawing/GLGeomItem.ts:30](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Renderer/Drawing/GLGeomItem.ts#L30)
 
 ___
 
@@ -74,7 +74,7 @@ ___
 
 #### Defined in
 
-[Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/9080cb30e/src/Utilities/BaseClass.ts#L11)
+[Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Utilities/BaseClass.ts#L11)
 
 ___
 
@@ -84,7 +84,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLGeomItem.ts:40](https://github.com/ZeaInc/zea-engine/blob/9080cb30e/src/Renderer/Drawing/GLGeomItem.ts#L40)
+[Renderer/Drawing/GLGeomItem.ts:40](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Renderer/Drawing/GLGeomItem.ts#L40)
 
 ___
 
@@ -94,7 +94,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLGeomItem.ts:48](https://github.com/ZeaInc/zea-engine/blob/9080cb30e/src/Renderer/Drawing/GLGeomItem.ts#L48)
+[Renderer/Drawing/GLGeomItem.ts:48](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Renderer/Drawing/GLGeomItem.ts#L48)
 
 ___
 
@@ -104,7 +104,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLGeomItem.ts:42](https://github.com/ZeaInc/zea-engine/blob/9080cb30e/src/Renderer/Drawing/GLGeomItem.ts#L42)
+[Renderer/Drawing/GLGeomItem.ts:42](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Renderer/Drawing/GLGeomItem.ts#L42)
 
 ___
 
@@ -114,7 +114,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLGeomItem.ts:41](https://github.com/ZeaInc/zea-engine/blob/9080cb30e/src/Renderer/Drawing/GLGeomItem.ts#L41)
+[Renderer/Drawing/GLGeomItem.ts:41](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Renderer/Drawing/GLGeomItem.ts#L41)
 
 ___
 
@@ -124,7 +124,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLGeomItem.ts:34](https://github.com/ZeaInc/zea-engine/blob/9080cb30e/src/Renderer/Drawing/GLGeomItem.ts#L34)
+[Renderer/Drawing/GLGeomItem.ts:34](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Renderer/Drawing/GLGeomItem.ts#L34)
 
 ___
 
@@ -134,7 +134,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLGeomItem.ts:43](https://github.com/ZeaInc/zea-engine/blob/9080cb30e/src/Renderer/Drawing/GLGeomItem.ts#L43)
+[Renderer/Drawing/GLGeomItem.ts:43](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Renderer/Drawing/GLGeomItem.ts#L43)
 
 ___
 
@@ -144,7 +144,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLGeomItem.ts:35](https://github.com/ZeaInc/zea-engine/blob/9080cb30e/src/Renderer/Drawing/GLGeomItem.ts#L35)
+[Renderer/Drawing/GLGeomItem.ts:35](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Renderer/Drawing/GLGeomItem.ts#L35)
 
 ___
 
@@ -154,7 +154,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLGeomItem.ts:33](https://github.com/ZeaInc/zea-engine/blob/9080cb30e/src/Renderer/Drawing/GLGeomItem.ts#L33)
+[Renderer/Drawing/GLGeomItem.ts:33](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Renderer/Drawing/GLGeomItem.ts#L33)
 
 ___
 
@@ -164,7 +164,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLGeomItem.ts:28](https://github.com/ZeaInc/zea-engine/blob/9080cb30e/src/Renderer/Drawing/GLGeomItem.ts#L28)
+[Renderer/Drawing/GLGeomItem.ts:28](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Renderer/Drawing/GLGeomItem.ts#L28)
 
 ___
 
@@ -174,7 +174,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLGeomItem.ts:47](https://github.com/ZeaInc/zea-engine/blob/9080cb30e/src/Renderer/Drawing/GLGeomItem.ts#L47)
+[Renderer/Drawing/GLGeomItem.ts:47](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Renderer/Drawing/GLGeomItem.ts#L47)
 
 ___
 
@@ -184,7 +184,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLGeomItem.ts:44](https://github.com/ZeaInc/zea-engine/blob/9080cb30e/src/Renderer/Drawing/GLGeomItem.ts#L44)
+[Renderer/Drawing/GLGeomItem.ts:44](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Renderer/Drawing/GLGeomItem.ts#L44)
 
 ___
 
@@ -194,7 +194,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLGeomItem.ts:38](https://github.com/ZeaInc/zea-engine/blob/9080cb30e/src/Renderer/Drawing/GLGeomItem.ts#L38)
+[Renderer/Drawing/GLGeomItem.ts:38](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Renderer/Drawing/GLGeomItem.ts#L38)
 
 ___
 
@@ -204,7 +204,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLGeomItem.ts:32](https://github.com/ZeaInc/zea-engine/blob/9080cb30e/src/Renderer/Drawing/GLGeomItem.ts#L32)
+[Renderer/Drawing/GLGeomItem.ts:32](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Renderer/Drawing/GLGeomItem.ts#L32)
 
 ___
 
@@ -214,7 +214,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLGeomItem.ts:49](https://github.com/ZeaInc/zea-engine/blob/9080cb30e/src/Renderer/Drawing/GLGeomItem.ts#L49)
+[Renderer/Drawing/GLGeomItem.ts:49](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Renderer/Drawing/GLGeomItem.ts#L49)
 
 ___
 
@@ -224,7 +224,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLGeomItem.ts:24](https://github.com/ZeaInc/zea-engine/blob/9080cb30e/src/Renderer/Drawing/GLGeomItem.ts#L24)
+[Renderer/Drawing/GLGeomItem.ts:24](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Renderer/Drawing/GLGeomItem.ts#L24)
 
 ___
 
@@ -238,7 +238,7 @@ ___
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/9080cb30e/src/Utilities/EventEmitter.ts#L26)
+[Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Utilities/EventEmitter.ts#L26)
 
 ___
 
@@ -248,7 +248,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLGeomItem.ts:26](https://github.com/ZeaInc/zea-engine/blob/9080cb30e/src/Renderer/Drawing/GLGeomItem.ts#L26)
+[Renderer/Drawing/GLGeomItem.ts:26](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Renderer/Drawing/GLGeomItem.ts#L26)
 
 ___
 
@@ -258,7 +258,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLGeomItem.ts:36](https://github.com/ZeaInc/zea-engine/blob/9080cb30e/src/Renderer/Drawing/GLGeomItem.ts#L36)
+[Renderer/Drawing/GLGeomItem.ts:36](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Renderer/Drawing/GLGeomItem.ts#L36)
 
 ___
 
@@ -268,7 +268,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLGeomItem.ts:45](https://github.com/ZeaInc/zea-engine/blob/9080cb30e/src/Renderer/Drawing/GLGeomItem.ts#L45)
+[Renderer/Drawing/GLGeomItem.ts:45](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Renderer/Drawing/GLGeomItem.ts#L45)
 
 ___
 
@@ -278,7 +278,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLGeomItem.ts:37](https://github.com/ZeaInc/zea-engine/blob/9080cb30e/src/Renderer/Drawing/GLGeomItem.ts#L37)
+[Renderer/Drawing/GLGeomItem.ts:37](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Renderer/Drawing/GLGeomItem.ts#L37)
 
 ___
 
@@ -288,7 +288,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLGeomItem.ts:39](https://github.com/ZeaInc/zea-engine/blob/9080cb30e/src/Renderer/Drawing/GLGeomItem.ts#L39)
+[Renderer/Drawing/GLGeomItem.ts:39](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Renderer/Drawing/GLGeomItem.ts#L39)
 
 ## Methods
 
@@ -312,7 +312,7 @@ The bind method.
 
 #### Defined in
 
-[Renderer/Drawing/GLGeomItem.ts:167](https://github.com/ZeaInc/zea-engine/blob/9080cb30e/src/Renderer/Drawing/GLGeomItem.ts#L167)
+[Renderer/Drawing/GLGeomItem.ts:167](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Renderer/Drawing/GLGeomItem.ts#L167)
 
 ___
 
@@ -329,7 +329,7 @@ Users should never need to call this method directly.
 
 #### Defined in
 
-[Renderer/Drawing/GLGeomItem.ts:207](https://github.com/ZeaInc/zea-engine/blob/9080cb30e/src/Renderer/Drawing/GLGeomItem.ts#L207)
+[Renderer/Drawing/GLGeomItem.ts:207](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Renderer/Drawing/GLGeomItem.ts#L207)
 
 ___
 
@@ -356,7 +356,7 @@ Triggers all listener functions in an event.
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/9080cb30e/src/Utilities/EventEmitter.ts#L154)
+[Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Utilities/EventEmitter.ts#L154)
 
 ___
 
@@ -378,7 +378,7 @@ Returns the unmangled name of the class.
 
 #### Defined in
 
-[Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/9080cb30e/src/Utilities/BaseClass.ts#L33)
+[Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Utilities/BaseClass.ts#L33)
 
 ___
 
@@ -396,7 +396,7 @@ The getId method.
 
 #### Defined in
 
-[Renderer/Drawing/GLGeomItem.ts:130](https://github.com/ZeaInc/zea-engine/blob/9080cb30e/src/Renderer/Drawing/GLGeomItem.ts#L130)
+[Renderer/Drawing/GLGeomItem.ts:130](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Renderer/Drawing/GLGeomItem.ts#L130)
 
 ___
 
@@ -414,7 +414,7 @@ The getGeomItem method.
 
 #### Defined in
 
-[Renderer/Drawing/GLGeomItem.ts:114](https://github.com/ZeaInc/zea-engine/blob/9080cb30e/src/Renderer/Drawing/GLGeomItem.ts#L114)
+[Renderer/Drawing/GLGeomItem.ts:114](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Renderer/Drawing/GLGeomItem.ts#L114)
 
 ___
 
@@ -438,7 +438,7 @@ Returns the unique id of the object.
 
 #### Defined in
 
-[Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/9080cb30e/src/Utilities/BaseClass.ts#L25)
+[Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Utilities/BaseClass.ts#L25)
 
 ___
 
@@ -456,7 +456,7 @@ The isVisible method.
 
 #### Defined in
 
-[Renderer/Drawing/GLGeomItem.ts:122](https://github.com/ZeaInc/zea-engine/blob/9080cb30e/src/Renderer/Drawing/GLGeomItem.ts#L122)
+[Renderer/Drawing/GLGeomItem.ts:122](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Renderer/Drawing/GLGeomItem.ts#L122)
 
 ___
 
@@ -483,7 +483,7 @@ Removes a listener function from the specified event, using either the function 
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/9080cb30e/src/Utilities/EventEmitter.ts#L97)
+[Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Utilities/EventEmitter.ts#L97)
 
 ___
 
@@ -512,7 +512,7 @@ Adds a listener function for a given event name.
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/9080cb30e/src/Utilities/EventEmitter.ts#L44)
+[Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Utilities/EventEmitter.ts#L44)
 
 ___
 
@@ -550,7 +550,7 @@ asset.once('loaded', () => {
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/9080cb30e/src/Utilities/EventEmitter.ts#L82)
+[Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Utilities/EventEmitter.ts#L82)
 
 ___
 
@@ -577,7 +577,7 @@ remove listener by ID returned from #on
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/9080cb30e/src/Utilities/EventEmitter.ts#L134)
+[Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Utilities/EventEmitter.ts#L134)
 
 ___
 
@@ -599,7 +599,7 @@ Sets the additional culled value which controls visiblity
 
 #### Defined in
 
-[Renderer/Drawing/GLGeomItem.ts:152](https://github.com/ZeaInc/zea-engine/blob/9080cb30e/src/Renderer/Drawing/GLGeomItem.ts#L152)
+[Renderer/Drawing/GLGeomItem.ts:152](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Renderer/Drawing/GLGeomItem.ts#L152)
 
 ___
 
@@ -615,5 +615,5 @@ The updateVisibility method.
 
 #### Defined in
 
-[Renderer/Drawing/GLGeomItem.ts:137](https://github.com/ZeaInc/zea-engine/blob/9080cb30e/src/Renderer/Drawing/GLGeomItem.ts#L137)
+[Renderer/Drawing/GLGeomItem.ts:137](https://github.com/ZeaInc/zea-engine/blob/434f018d2/src/Renderer/Drawing/GLGeomItem.ts#L137)
 

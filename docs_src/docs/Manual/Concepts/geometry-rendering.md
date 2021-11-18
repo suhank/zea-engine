@@ -3,7 +3,6 @@ sidebar_position: 4
 title: Geometry and Rendering
 ---
 
-
 The Zea Engine comes with definitions for standard geometry types, such as Points, Lines and Mesh.
 
 ### Geometry types
