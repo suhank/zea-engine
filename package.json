@@ -23,6 +23,7 @@
     "copyJSFilesToDist": "copyfiles -u 1 src/**/*.{js,wasm,glsl,vert,frag} dist",
     "copyPackageJson": "copyfiles -f \"./package.json\" dist",
     "docs": "cp CHANGELOG.md docs_src/docs/Manual/ && yarn --cwd ./docs_src/ changelog && yarn --cwd ./docs_src/ run docs",
+    "docs2": "cp CHANGELOG.md docs_src/docs/Manual/ && yarn --cwd ./docs_src/ changelog && yarn --cwd ./docs_src/ run docs2",
     "prepare": "yarn run build",
     "generate": "plop",
     "release": "standard-version",

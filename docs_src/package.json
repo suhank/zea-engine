@@ -8,6 +8,7 @@
     "start": "docusaurus start",
     "build": "docusaurus build",
     "move":"rm -rf ../docs && mv build ../docs",
+    "docs2": "rm -rf ../docs && yarn extract-api && docusaurus build --out-dir ../docs",
     "docs": "docusaurus build && yarn extract-api && yarn move",
     "changelog": "node ./scripts/changelog.js",
     "swizzle": "docusaurus swizzle",
