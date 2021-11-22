@@ -48,7 +48,6 @@
     }
   },
   "dependencies": {
-    "husky-run": "^0.0.0",
     "lodash": "^4.17.21",
     "rollup-plugin-base64": "^1.0.1"
   },
@@ -83,7 +82,7 @@
     "cypress": "^5.1.0",
     "es-dev-server": "^2.1.0",
     "http-server": "^13.0.1",
-    "husky": "^7.0.2",
+    "husky": "^7.0.4",
     "jest": "^27.0.6",
     "jest-coverage-badges": "^1.1.2",
     "npm-run-all": "^4.1.5",
