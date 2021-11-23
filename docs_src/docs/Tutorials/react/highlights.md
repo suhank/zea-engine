@@ -34,7 +34,7 @@ When a click happens within the viewport, we will check to see if there are any 
   componentDidMount() {
     this.renderer = new GLRenderer(this.canvasRef.current)
     this.renderer.setScene(this.scene)
-    this.scene.setupGrid(10, 10)
+    this.scene.setGrid(10, 10)
 
     const camera = this.renderer.getViewport().getCamera()
     camera.setPositionAndTarget(new Vec3(6, 6, 5), new Vec3(0, 0, 1.5))
