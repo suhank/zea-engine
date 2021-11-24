@@ -8,7 +8,7 @@ import { Material } from '../Material'
 export class PointsMaterial extends Material {
   baseColorParam: MaterialColorParam = new MaterialColorParam('BaseColor', new Color(1.0, 1, 0.5))
 
-  pointSizeParam: NumberParameter = new NumberParameter('PointSize', 2)
+  pointSizeParam: NumberParameter = new MaterialFloatParam('PointSize', 2)
   overlayParam: MaterialFloatParam = new MaterialFloatParam('Overlay', 0.00002) // Provide a slight overlay so lines draw over meshes
 
   constructor(name?: string) {
