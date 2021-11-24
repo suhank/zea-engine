@@ -147,8 +147,12 @@ function getGPUDesc(): GPUDescription {
     gpuVendor = 'Apple'
   } else if (renderer.match(/Adreno/i)) {
     gpuVendor = 'Adreno'
-  } else if (renderer.match(/Google Swiftshader/i)) {
+  } else if (renderer.match(/Swiftshader/i)) {
     gpuVendor = 'Google'
+    console.warn(
+      'Hardware rendering is disabled or not working on your system. Falling back to the Swiftshader. Expect poor performance:',
+      renderer
+    )
   } else {
     console.warn('Unable to determine GPU vendor:', renderer)
   }

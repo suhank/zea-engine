@@ -21,7 +21,7 @@
           'header header header'
           'nav main right'
           'footer footer footer';
-        grid-template-columns: 20% 1fr 5px;
+        grid-template-columns: 5px 1fr 5px;
         grid-template-rows: 50px 1fr 20px;
       }
 
@@ -40,19 +40,19 @@
         gap: 1em;
       }
     </style>
-    <script src="https://websocket-staging.zea.live/socket.io/socket.io.js"></script>
-    <script src="https://www.gstatic.com/draco/v1/decoders/draco_decoder_gltf.js"></script>
+    <!-- <script src="https://websocket-staging.zea.live/socket.io/socket.io.js"></script>
+    <script src="https://www.gstatic.com/draco/v1/decoders/draco_decoder_gltf.js"></script> -->
     <script type="module">
       import '../dist/index.umd.js'
       import '../node_modules/@zeainc/zea-cad/dist/index.umd.js'
-      import '../node_modules/@zeainc/zea-ux/dist/index.umd.js'
-      import '../node_modules/@zeainc/zea-potree/dist/index.umd.js'
+      // import '../node_modules/@zeainc/zea-ux/dist/index.umd.js'
+      // import '../node_modules/@zeainc/zea-potree/dist/index.umd.js'
 
-      // import 'https://websocket-staging.zea.live/socket.io/socket.io.js'
-      import '../node_modules/@zeainc/zea-collab/dist/index.umd.js'
+      // // import 'https://websocket-staging.zea.live/socket.io/socket.io.js'
+      // import '../node_modules/@zeainc/zea-collab/dist/index.umd.js'
 
-      // import 'https://www.gstatic.com/draco/v1/decoders/draco_decoder_gltf.js'
-      import '../node_modules/@zeainc/gltf-loader/dist/index.umd.js'
+      // // import 'https://www.gstatic.com/draco/v1/decoders/draco_decoder_gltf.js'
+      // import '../node_modules/@zeainc/gltf-loader/dist/index.umd.js'
 
       const urlParams = new URLSearchParams(window.location.search)
 
@@ -86,8 +86,15 @@
 
       scene.setupGrid(1.0, 10, new Color(0.2, 0.2, 0.2))
 
-      const boundingBoxPass = new GLBoundingBoxPass()
-      renderer.addPass(boundingBoxPass)
+      canvas.addEventListener(
+        'webglcontextlost',
+        function (event) {
+          event.preventDefault()
+        },
+        false
+      )
+      // const boundingBoxPass = new GLBoundingBoxPass()
+      // renderer.addPass(boundingBoxPass)
 
       /** HIGHLIGHT START */
       let highlightedItem
@@ -217,7 +224,6 @@
 
       /** LOAD ASSETS START */
       const { CADAsset, CADBody } = window.zeaCad
-      const { GLTFAsset } = gltfLoader
 
       const loadZCADAsset = (url, filename) => {
         const asset = new CADAsset()
@@ -234,6 +240,7 @@
         return asset
       }
       const loadGLTFAsset = (url, filename) => {
+        const { GLTFAsset } = gltfLoader
         const asset = new GLTFAsset()
         asset.load(url, filename).then(() => {
           renderer.frameAll()
@@ -250,7 +257,7 @@
         } else if (filename.endsWith('gltf') || filename.endsWith('glb')) {
           res = loadGLTFAsset(url, filename)
         }
-        boundingBoxPass.addTreeItem(res, true)
+        // boundingBoxPass.addTreeItem(res, true)
         return res
       }
       let assetUrl = 'data/Dead_eye_bearing.zcad'
@@ -314,18 +321,7 @@
   </head>
   <body class="bg-blue-100 h-full">
     <div class="main-wrapper grid h-screen">
-      <header class="border border-blue-400 flex justify-center items-center">
-        <div id="controllers">
-          <div>
-            <label for="camera">Camera Manipulator</label>
-            <input type="checkbox" id="camera" value="CameraManipulator" class="tool" />
-          </div>
-          <div>
-            <label for="selection">Selection Tool</label>
-            <input type="checkbox" id="selection" value="SelectionTool" class="tool" />
-          </div>
-        </div>
-      </header>
+      <header class="border border-blue-400 flex justify-center items-center"></header>
       <nav class="border border-blue-400 flex justify-center items-center">nav</nav>
       <main>
         <canvas id="viewport"></canvas>
