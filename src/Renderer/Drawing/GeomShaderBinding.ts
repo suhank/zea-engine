@@ -291,7 +291,7 @@ class VAOGeomShaderBinding extends IGeomShaderBinding {
    */
   destroy(): void {
     const gl = this.gl
-    // Ensure we detach the index buffere before deleting the VAO.
+    // Ensure we detach the index buffer before deleting the VAO.
     if (this.indexBuffer) {
       gl.bindVertexArray(this.vao)
       gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null)
