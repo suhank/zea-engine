@@ -17,8 +17,6 @@ import { BaseItem } from '../BaseItem'
  * @extends BaseGroup
  */
 class SelectionSet extends BaseGroup {
-  protected listenerIDs: Record<string, number> = {}
-
   /**
    * @member highlightedParam - Whether or not the TreeItem should be highlighted.
    */
@@ -47,7 +45,7 @@ class SelectionSet extends BaseGroup {
       this.updateHighlight()
     })
     this.addParameter(this.highlightColorParam)
-    this.listenerIDs['valueChanged'] = this.highlightColorParam.on('valueChanged', (event) => {
+    this.highlightColorParam.on('valueChanged', () => {
       this.updateHighlight()
     })
     this.addParameter(this.highlightFillParam)
