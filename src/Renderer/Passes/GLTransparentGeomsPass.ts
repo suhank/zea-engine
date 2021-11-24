@@ -21,6 +21,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
   protected prevSortCameraPos: Vec3 = new Vec3()
   protected sortCameraMovementDistance: number = 0 // meters
   protected reSort: boolean = false
+  public twoSidedRendering: boolean = true
 
   /**
    * Create GL transparent geoms pass.
@@ -392,8 +393,15 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
 
     // Only draw font faces. BEcause all faces are drawn, it can make a mess to see the back faces through the front faces.
     // e.g. we might see the triangles on the other side of a sphere rendered over the top of triangles on the near side.
-    gl.enable(gl.CULL_FACE)
-    gl.cullFace(gl.BACK)
+    // Note: we often have transparent surfaces that are only a single polygon.
+    // e.g. Windows, or planes used as 'Construction items', Cutting planes, textured planes etc..
+    // It seems more often than not, we want 2 sided rendering of transparent geoms.
+    if (this.twoSidedRendering) {
+      gl.disable(gl.CULL_FACE) // 2-sided rendering.
+    } else {
+      gl.enable(gl.CULL_FACE)
+      gl.cullFace(gl.BACK)
+    }
 
     this._drawItems(renderstate)
 
@@ -457,7 +465,12 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
   drawGeomData(renderstate: GeomDataRenderState): void {
     const gl = this.__gl!
     gl.disable(gl.BLEND)
-    gl.disable(gl.CULL_FACE)
+    if (this.twoSidedRendering) {
+      gl.disable(gl.CULL_FACE) // 2-sided rendering.
+    } else {
+      gl.enable(gl.CULL_FACE)
+      gl.cullFace(gl.BACK)
+    }
     gl.enable(gl.DEPTH_TEST)
     gl.depthFunc(gl.LESS)
     gl.depthMask(true)
