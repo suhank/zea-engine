@@ -16,10 +16,8 @@ import pkg from './package.json'
 const glslOptions = {
   // Default
   include: ['**/*.vs', '**/*.fs', '**/*.vert', '**/*.frag', '**/*.glsl'],
-
   // Undefined by default
   exclude: 'node_modules/**',
-
   // Compress shader by default using logic from rollup-plugin-glsl -- need to update parser to use this option -- it removes newlines
   compress: false,
 }
@@ -40,25 +38,34 @@ const plugins = [
   glslify(glslOptions),
 ]
 
-const isProduction = !process.env.ROLLUP_WATCH
-
-if (isProduction) {
-  plugins.push(terser())
-}
-
-const sourcemap = true
-
-const result = [
+export default [
+  {
+    input: 'dist/index.js',
+    output: [
+      { file: pkg.main, format: 'cjs' },
+      {
+        file: pkg.browser,
+        format: 'es',
+      },
+    ],
+    plugins,
+  },
   {
     input: 'dist/index.js',
     output: {
       name: 'zeaEngine',
-      file: pkg.browser,
+      file: pkg.umd,
       format: 'umd',
-      sourcemap,
     },
     plugins,
   },
+  {
+    input: 'dist/index.js',
+    output: {
+      name: 'zeaEngine',
+      file: pkg['umd.min'],
+      format: 'umd',
+    },
+    plugins: [...plugins, terser()],
+  },
 ]
-
-export default result

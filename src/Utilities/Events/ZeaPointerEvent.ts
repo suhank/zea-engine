@@ -39,4 +39,5 @@ class ZeaPointerEvent extends BaseEvent {
     capturedItem = null
   }
 }
+
 export { ZeaPointerEvent, POINTER_TYPES }
