@@ -1,3 +1,4 @@
+import 'GLSLUtils.glsl'
 
 #ifdef ENABLE_FLOAT_TEXTURES
 
@@ -9,7 +10,7 @@ uniform highp int instancesTextureSize;
 const int pixelsPerItem = 8;
 
 vec4 getInstanceData(int id) {
-    return fetchTexel(instancesTexture, instancesTextureSize, (id * pixelsPerItem) + 0);
+  return fetchTexel(instancesTexture, instancesTextureSize, (id * pixelsPerItem) + 0);
 }
 
 #else
@@ -17,7 +18,7 @@ vec4 getInstanceData(int id) {
 uniform vec4 drawItemData;
 
 vec4 getInstanceData(int id) {
-    return drawItemData;
+  return drawItemData;
 }
 
 #endif

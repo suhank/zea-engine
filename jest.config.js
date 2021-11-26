@@ -1,12 +1,21 @@
-// For a detailed explanation regarding each configuration property, visit:
-// https://jestjs.io/docs/en/configuration.html
-
 module.exports = {
-  testEnvironment: 'node',
   coverageDirectory: 'coverage',
   coverageReporters: ['json-summary', 'json', 'text', 'lcov', 'clover'],
-  // modulePathIgnorePatterns: ['<rootDir>/src/Renderer/Shaders/'],
   moduleNameMapper: {
     '\\.(glsl|vert|frag|vs|fs|geom|comp)$': '<rootDir>/__mocks__/fileMock.js',
+    'web-worker:.*': '<rootDir>/__mocks__/fileMock.js',
   },
+  transform: {
+    '.(ts|tsx)$': require.resolve('ts-jest'),
+    '.(js|jsx)$': require.resolve('babel-jest'), // jest's default
+  },
+  transformIgnorePatterns: ['node_modules/(.*)'],
+  globals: {
+    'ts-jest': {
+      tsconfig: 'tsconfig.json',
+    },
+  },
+  testEnvironment: 'node',
+  testRegex: '(/__tests__/.*|\\.(test|spec))\\.(js|ts)$',
+  moduleFileExtensions: ['ts', 'js'],
 }

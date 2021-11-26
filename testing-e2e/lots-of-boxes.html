@@ -9,18 +9,71 @@
 
     <!-- import the webpage's stylesheet -->
     <link rel="stylesheet" href="styles/tailwind.min.css" />
+    <style>
+      body {
+        height: 100vh;
+        overflow: hidden;
+        margin: 0em;
+        position: relative;
+      }
+      #canvas {
+        position: relative;
+        height: 100%;
+        width: 100%;
+        touch-action: none;
+      }
+      .fps-display {
+        position: fixed;
+        bottom: 10px;
+        right: 10px;
+        color: #333333;
+        font-size: 45px;
+      }
+      .label {
+        position: absolute;
+        left: 10px;
+        top: 10px;
+        margin: 0px;
+        font-family: 'arial';
+        user-select: none;
+      }
+
+      .button {
+        position: absolute;
+        left: 10px;
+        bottom: 10px;
+        margin: 10px;
+
+        font-family: 'arial';
+        background-color: #4caf50; /* Green */
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        user-select: none;
+      }
+      .button:hover {
+        background-color: #78b87a; /* Green */
+      }
+      .button:focus {
+        background-color: #78b87a;
+      }
+    </style>
 
     <script src="../dist/index.umd.js"></script>
-    <script src="../dist/plugins.umd.js"></script>
     <script type="module">
-      const { Vec3, Xfo, Color, Cuboid, Material, GeomItem, Scene, GLRenderer, TreeItem } = window.zeaEngine
+      const { Vec3, Xfo, Color, Cuboid, FlatSurfaceMaterial, GeomItem, Scene, GLRenderer, TreeItem } = window.zeaEngine
 
-      const domElement = document.getElementById('renderer')
+      const domElement = document.getElementById('viewport')
 
       const scene = new Scene()
       // scene.setupGrid(10, 10)
 
       const renderer = new GLRenderer(domElement, {
+        outlineThickness: 1.5,
         enableFrustumCulling: true,
         enableOcclusionCulling: true,
       })
@@ -28,8 +81,8 @@
       renderer.solidAngleLimit = 0.0
       renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(70, 70, 30), new Vec3(30, 30, 0.2))
 
-      // const material = new Material('surfaces', 'SimpleSurfaceShader');
-      // material.getParameter('BaseColor').setValue(new Color(89 / 255, 182 / 255, 92 / 255));
+      // const material = new SimpleSurfaceMaterial('surfaces');
+      // material.baseColorParam.value = new Color(89 / 255, 182 / 255, 92 / 255);
 
       const urlParams = new URLSearchParams(window.location.search)
 
@@ -39,16 +92,16 @@
 
       const cuboid = new Cuboid(0.5, 0.5, 0.5)
       // const geomItem = new GeomItem('cube', cube, material);
-      // geomItem.getParameter('GlobalXfo').setValue(new Xfo(new Vec3(0, 0, 1)));
+      // geomItem.globalXfoParam.value = new Xfo(new Vec3(0, 0, 1)))
 
       // scene.getRoot().addChild(geomItem)
-      const simpleMaterial = new Material('mat', 'SimpleSurfaceShader')
-      const flatMaterial = new Material('mat', 'FlatSurfaceShader')
+      const simpleMaterial = new SimpleSurfaceMaterial('mat')
+      const flatMaterial = new FlatSurfaceMaterial('mat')
 
       const addLayers = (layerId, treeItem) => {
         for (let j = 0; j < dim; j += 1) {
-          // const material = new Material('mat', 'SimpleSurfaceShader')
-          // material.getParameter('BaseColor').setValue(new Color(layerId / dim, j / dim, 1))
+          // const material = new SimpleSurfaceMaterial('mat')
+          // material.baseColorParam.value = new Color(layerId / dim, j / dim, 1)
           const material = simpleMaterial //layerId > dim / 2 ? simpleMaterial : flatMaterial
           const treeItemJ = new TreeItem('TreeItem' + j)
           treeItem.addChild(treeItemJ)
@@ -59,7 +112,7 @@
 
             const xfo = new Xfo()
             xfo.tr.set(j, k, layerId)
-            geomItem.getParameter('GlobalXfo').setValue(xfo)
+            geomItem.globalXfoParam.value = xfo
           }
         }
       }
@@ -78,9 +131,69 @@
         }
       })
 
-      // //////////////////////////////
-      // Fps counter
+      // //////////////////////////////////////
+      // Setup Highlighting
+      let geomItem
+      scene.getRoot().on('pointerEnter', (event) => {
+        if (event.intersectionData && event.intersectionData.geomItem) {
+          geomItem = event.intersectionData.geomItem
+          if (geomItem) {
+            geomItem.addHighlight('pointerEnter', new Color(1, 0, 0, 0.3))
+          }
+        }
+      })
+      scene.getRoot().on('pointerLeave', (event) => {
+        if (event.leftGeometry == geomItem) {
+          geomItem.removeHighlight('pointerEnter')
+        }
+      })
+      scene.getRoot().on('pointerDown', (event) => {
+        if (event.intersectionData && event.intersectionData.geomItem) {
+          event.setCapture(geomItem)
+          geomItem.addHighlight('pointerDown', new Color(0, 1, 0, 0.3))
+          geomItem = event.intersectionData.geomItem
+        }
+      })
+      scene.getRoot().on('pointerUp', (event) => {
+        if (event.getCapture() == geomItem) event.releaseCapture()
+        const intersectionData = event.controller ? event.controller.getGeomItemAtTip() : event.intersectionData
+        geomItem.removeHighlight('pointerDown')
+      })
 
+      // //////////////////////////////////////
+      // Setup VR
+
+      const h = document.querySelector('#buttonHolder')
+      const b = document.querySelector('#button')
+
+      renderer.getXRViewport().then((xrvp) => {
+        h.textContent = 'XR Device Detected'
+        b.textContent = 'Launch VR'
+
+        xrvp.on('presentingChanged', (event) => {
+          const { state } = event
+          if (state) {
+            h.textContent = 'Session In Progress'
+            b.textContent = 'Exit VR'
+          } else {
+            h.textContent = 'XR Device Detected'
+            b.textContent = 'Launch VR'
+          }
+        })
+
+        b.addEventListener('click', function (event) {
+          xrvp.togglePresenting()
+        })
+
+        document.addEventListener('keydown', (event) => {
+          if (event.key == ' ') {
+            xrvp.togglePresenting()
+          }
+        })
+      })
+
+      // //////////////////////////////////////
+      // Setup FPS Counter
       let frameCounter = 0
       let fps = 0
       renderer.on('redrawOccurred', () => {
@@ -102,30 +215,11 @@
 
       // renderer.startContinuousDrawing()
     </script>
-    <style>
-      body {
-        height: 100vh;
-        overflow: hidden;
-        margin: 0em;
-        position: relative;
-      }
-      #canvas {
-        position: relative;
-        height: 100%;
-        width: 100%;
-        touch-action: none;
-      }
-      .fps-display {
-        position: fixed;
-        bottom: 10px;
-        right: 10px;
-        color: #333333;
-        font-size: 45px;
-      }
-    </style>
   </head>
   <body>
     <canvas id="renderer"></canvas>
+    <div class="label" id="buttonHolder"></div>
+    <div class="button" id="button">XR Device Not Detected</div>
     <div class="fps-display" id="fps"></div>
   </body>
 </html>

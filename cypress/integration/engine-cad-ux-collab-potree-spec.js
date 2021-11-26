@@ -1,3 +1,7 @@
+/*
+Disabling these tests as they keep failing.
+Not sure why. Maybe the assets aren't loading on the server. They always
+run fine locally.
 describe('engine-cad-ux-collab-potree-Dead_eye_bearing', () => {
   it('Capture snapshots', () => {
     cy.visit('testing-e2e/engine-cad-ux-collab-potree.html', {
@@ -24,10 +28,6 @@ describe('engine-cad-ux-collab-potree-Dead_eye_bearing', () => {
     })
   })
 })
-/*
-Disabling these tests as they keep failing.
-Not sure why. Maybe the assets aren't loading on the server. They always
-run fine locally.
 describe('engine-cad-ux-collab-potree-gear_box_final_asm', () => {
   it('Capture snapshots', () => {
     cy.visit('testing-e2e/engine-cad-ux-collab-potree.html?zcad=data/gear_box_final_asm.zcad', {

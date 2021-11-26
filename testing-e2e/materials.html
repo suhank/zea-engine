@@ -10,7 +10,6 @@
 
     <link rel="stylesheet" href="styles/tailwind.min.css" />
     <style>
-
       /* The slider itself */
       .slider {
         position: absolute;
@@ -51,7 +50,6 @@
     </style>
 
     <script src="../dist/index.umd.js"></script>
-    <script src="../dist/plugins.umd.js"></script>
 
     <script type="module">
       const {
@@ -62,17 +60,17 @@
         Xfo,
         Sphere,
         GeomItem,
-        Material,
+        StandardSurfaceMaterial,
         EnvMap,
         Label,
         BillboardItem,
-        EulerAngles
+        EulerAngles,
       } = window.zeaEngine
 
-      const canvas = document.querySelector('#renderer')
+      const canvas = document.getElementById('viewport')
 
       const scene = new Scene()
-      const renderer = new GLRenderer(canvas, { hideSplash: true, antialias: false })
+      const renderer = new GLRenderer(canvas, { antialias: false })
       renderer.setScene(scene)
 
       scene.setupGrid(10.0, 10)
@@ -80,13 +78,13 @@
       //////////////////////////////
 
       const envMap = new EnvMap()
-      envMap.getParameter('FilePath').setValue('data/pisa-webp.zenv')
-      // envMap.getParameter('FilePath').setValue('data/AutomnRoad-webp.zenv')
-      // envMap.getParameter('FilePath').setValue('data/StudioG.zenv')
-      // envMap.getParameter('FilePath').setValue('data/StudioD.zenv')
-      // envMap.getParameter('FilePath').setValue('data/HDR_041_Path_Ref-webp.zenv')
+      envMap.load('data/pisa-webp.zenv')
+      // envMap.load('data/AutomnRoad-webp.zenv')
+      // envMap.load('data/StudioG.zenv')
+      // envMap.load('data/StudioD.zenv')
+      // envMap.load('data/HDR_041_Path_Ref-webp.zenv')
       scene.setEnvMap(envMap)
-      scene.getSettings().getParameter('Display EnvMap').setValue(true)
+      scene.displayEnvMapParam.value = true
 
       const addMeshShape = (name, shape, pos, mat) => {
         const geomItem = new GeomItem(name, shape, mat, new Xfo(pos))
@@ -94,37 +92,33 @@
       }
 
       const addLabel = (name, xfo) => {
-          const label = new Label(name)
-          label.getParameter('FontSize').setValue(48)
-          // label.getParameter('FontColor').setValue(color)
-          label.getParameter('BackgroundColor').setValue(new Color(0.6, 0.6, 0.6))
+        const label = new Label(name)
+        label.fontSizeParam.value = 48
+        // label.fontColorParam.value = color
+        label.backgroundColorParam.value = new Color(0.6, 0.6, 0.6)
 
-          const billboard = new BillboardItem(name, label)
-          billboard.getParameter('LocalXfo').setValue(xfo)
-          billboard.getParameter('PixelsPerMeter').setValue(80)
-          billboard.getParameter('AlignedToCamera').setValue(false)
-          scene.getRoot().addChild(billboard)
+        const billboard = new BillboardItem(name, label)
+        billboard.localXfoParam.value = xfo
+        billboard.pixelsPerMeterParam.value = 80
+        billboard.alignedToCameraParam.value = false
+        scene.getRoot().addChild(billboard)
       }
 
-      let yoffset = -30;
+      let yoffset = -30
       const sphere = new Sphere(1.4, 80)
-      const addRow = (name, baseColor, metallic, reflectance, lerpOpacity=false) => {
+      const addRow = (name, baseColor, metallic, reflectance, lerpOpacity = false) => {
         {
           const xfo = new Xfo(new Vec3(0.5 * 35, yoffset, 0))
           xfo.ori.setFromEulerAngles(new EulerAngles(Math.PI * 0.5, 0, Math.PI * 0.5, 'ZYX'))
           addLabel(name, xfo)
         }
         for (let i = 0; i < 10; i++) {
-          const material = new Material('surfaces', 'StandardSurfaceShader')
-          material.getParameter('BaseColor').setValue(baseColor)
-          material.getParameter('Metallic').setValue(metallic)
-          material.getParameter('Reflectance').setValue(reflectance)
-          material.getParameter('Roughness').setValue(i / 9)
-          addMeshShape(
-            name + i, sphere,
-            new Vec3((i / 9 - 0.5) * 30, yoffset, 1.4),
-            material
-          )
+          const material = new StandardSurfaceMaterial('surfaces')
+          material.baseColorParam.value = baseColor
+          material.metallicParam.value = metallic
+          material.reflectanceParam.value = reflectance
+          material.roughnessParam.value = i / 9
+          addMeshShape(name + i, sphere, new Vec3((i / 9 - 0.5) * 30, yoffset, 1.4), material)
         }
         {
           const xfo = new Xfo(new Vec3(-0.5 * 35, yoffset, 0))
@@ -161,12 +155,9 @@
         renderer.exposure = event.target.value / 100
       })
 
-
       renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(35, -35, 20), new Vec3(0, 0, -10))
 
-      Promise.all([
-        new Promise((resolve) => envMap.once('loaded', resolve)),
-      ]).then(() => {
+      Promise.all([new Promise((resolve) => envMap.once('loaded', resolve))]).then(() => {
         window.postMessage('done-loading')
       })
 
@@ -179,7 +170,7 @@
           renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-35, 35, 20), new Vec3(0, 0, -10))
           window.postMessage(`done-${data}`)
         } else if (data === 'variant-02') {
-          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-35,-35, 20), new Vec3(0, 0, -10))
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-35, -35, 20), new Vec3(0, 0, -10))
           window.postMessage(`done-${data}`)
         }
       }
@@ -190,7 +181,7 @@
   </head>
   <body class="bg-blue-100 h-full">
     <div class="h-full">
-      <canvas class="absolute" id="renderer"></canvas></canvas>
+      <canvas id="viewport"></canvas></canvas>
     </div>
 
     <input type="range" min="0" max="400" value="100" class="slider" id="exposureControl" />

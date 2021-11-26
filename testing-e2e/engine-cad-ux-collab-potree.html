@@ -10,16 +10,6 @@
 
     <link rel="stylesheet" href="styles/tailwind.min.css" />
 
-    <script src="../dist/index.umd.js"></script>
-    <script src="../dist/plugins.umd.js"></script>
-
-    <script crossorigin src="https://cdn.jsdelivr.net/npm/@zeainc/zea-cad@3.3.0/dist/index.umd.js"></script>
-    <script crossorigin src="https://cdn.jsdelivr.net/npm/@zeainc/zea-ux/dist/index.umd.js"></script>
-    <script src="https://websocket-staging.zea.live/socket.io/socket.io.js"></script>
-    <script crossorigin src="https://cdn.jsdelivr.net/npm/@zeainc/zea-collab/dist/index.umd.js"></script>
-    <script src="https://www.gstatic.com/draco/v1/decoders/draco_decoder_gltf.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@zeainc/gltf-loader/dist/index.umd.js"></script>
-
     <style>
       body {
         height: 100vh;
@@ -31,7 +21,7 @@
           'header header header'
           'nav main right'
           'footer footer footer';
-        grid-template-columns: 20% 1fr 5px;
+        grid-template-columns: 5px 1fr 5px;
         grid-template-rows: 50px 1fr 20px;
       }
 
@@ -50,7 +40,20 @@
         gap: 1em;
       }
     </style>
+    <!-- <script src="https://websocket-staging.zea.live/socket.io/socket.io.js"></script>
+    <script src="https://www.gstatic.com/draco/v1/decoders/draco_decoder_gltf.js"></script> -->
     <script type="module">
+      import '../dist/index.umd.js'
+      import '../node_modules/@zeainc/zea-cad/dist/index.umd.js'
+      // import '../node_modules/@zeainc/zea-ux/dist/index.umd.js'
+      // import '../node_modules/@zeainc/zea-potree/dist/index.umd.js'
+
+      // // import 'https://websocket-staging.zea.live/socket.io/socket.io.js'
+      // import '../node_modules/@zeainc/zea-collab/dist/index.umd.js'
+
+      // // import 'https://www.gstatic.com/draco/v1/decoders/draco_decoder_gltf.js'
+      // import '../node_modules/@zeainc/gltf-loader/dist/index.umd.js'
+
       const urlParams = new URLSearchParams(window.location.search)
 
       const {
@@ -64,16 +67,17 @@
         InstanceItem,
         CameraManipulator,
         GLBoundingBoxPass,
-      } = window.zeaEngine
+        AssetLoadContext,
+      } = zeaEngine
 
-      const canvas = document.querySelector('#renderer')
+      const canvas = document.getElementById('viewport')
 
       const scene = new Scene()
       const renderer = new GLRenderer(canvas, { debugGeomIds: false, antialias: false })
       renderer.setScene(scene)
       renderer.outlineThickness = 0.5
       renderer.outlineColor = new Color(0.2, 0.2, 0.2, 1)
-      scene.getSettings().getParameter('BackgroundColor').setValue(new Color(0.85, 0.85, 0.85, 1))
+      renderer.getViewport().backgroundColorParam.value = new Color(0.85, 0.85, 0.85, 1)
       renderer.getViewport().debugGeomShader = urlParams.has('debugGeomShader')
 
       const envMap = new EnvMap()
@@ -82,17 +86,15 @@
 
       scene.setupGrid(1.0, 10, new Color(0.2, 0.2, 0.2))
 
-      const boundingBoxPass = new GLBoundingBoxPass()
-      renderer.addPass(boundingBoxPass)
-
-      /** UX START */
-      const { SelectionManager, UndoRedoManager, ToolManager, SelectionTool, CreateFreehandLineTool } = window.zeaUx
-
-      const appData = { scene, renderer }
-
-      const cameraManipulator = renderer.getViewport().getManipulator()
-      cameraManipulator.setDefaultManipulationMode(CameraManipulator.MANIPULATION_MODES.tumbler)
-      appData.cameraManipulator = cameraManipulator
+      canvas.addEventListener(
+        'webglcontextlost',
+        function (event) {
+          event.preventDefault()
+        },
+        false
+      )
+      // const boundingBoxPass = new GLBoundingBoxPass()
+      // renderer.addPass(boundingBoxPass)
 
       /** HIGHLIGHT START */
       let highlightedItem
@@ -125,15 +127,25 @@
       })
       /** HIGHLIGHT START */
 
-      /** UNDO START */
+      /** UX START * /
+      const { SelectionManager, UndoRedoManager, ToolManager, SelectionTool, CreateFreehandLineTool } = window.zeaUx
+
+      const appData = { scene, renderer }
+
+      const cameraManipulator = renderer.getViewport().getManipulator()
+      cameraManipulator.setDefaultManipulationMode(CameraManipulator.MANIPULATION_MODES.tumbler)
+      appData.cameraManipulator = cameraManipulator
+
+
+      /** UNDO START * /
       const undoRedoManager = UndoRedoManager.getInstance()
       appData.undoRedoManager = undoRedoManager
       /** UNDO END */
 
-      /** SELECTION START */
+      /** SELECTION START * /
 
       const selectionManager = new SelectionManager(appData, {
-        enableXfoHandles: true,
+        enableXfoHandles: true
       })
       appData.selectionManager = selectionManager
 
@@ -141,7 +153,7 @@
       selectionManager.showHandles(false)
 
       const selectionTool = new SelectionTool(appData)
-      const filterItemSelection = (item) => {
+      const filterItemSelection = item => {
         return item
       }
       selectionTool.setSelectionFilter(filterItemSelection)
@@ -150,24 +162,28 @@
       const selectionColor = new Color('#F9CE03')
       selectionColor.a = 0.1
       const subtreeColor = selectionColor //.lerp(new Color(1, 1, 1, 0), 0.5)
-      selectionManager.selectionGroup.getParameter('HighlightColor').setValue(selectionColor)
-      selectionManager.selectionGroup.getParameter('SubtreeHighlightColor').setValue(subtreeColor)
+      selectionManager.selectionGroup.highlightColorParam.value = selectionColor
+      selectionManager.selectionGroup.subtreeHighlightColorParam.value = subtreeColor
 
       // Color the selection rect.
       const selectionRectColor = new Color(0, 0, 0, 1)
-      selectionTool.rectItem.getParameter('Material').getValue().getParameter('BaseColor').setValue(selectionRectColor)
+      selectionTool.rectItem
+        .materialParam
+        .getValue()
+        .baseColorParam
+        .value = selectionRectColor
 
-      /** SELECTION END */
+      /** SELECTION END * /
 
-      /** FREEHAND LINES TOOL START */
+      /** FREEHAND LINES TOOL START * /
       const freeHandLineTool = new CreateFreehandLineTool(appData)
-      freeHandLineTool.getParameter('LineThickness').setValue(0.01)
+      freeHandLineTool.lineThicknessParam.value = 0.01
 
-      /** FREEHAND LINES TOOL END */
+      /** FREEHAND LINES TOOL END * /
 
-      /** TOOL MANAGER START */
+      /** TOOL MANAGER START * /
 
-      /** TOOL MANAGER START */
+      /** TOOL MANAGER START * /
       const toolManager = new ToolManager()
       toolManager.registerTool('CameraManipulator', cameraManipulator)
       toolManager.registerTool('SelectionTool', selectionTool)
@@ -180,7 +196,7 @@
       const tools = document.querySelectorAll('.tool')
 
       const disableSelectedTools = () => {
-        tools.forEach((toolCbx) => (toolCbx.disabled = false))
+        tools.forEach(toolCbx => (toolCbx.disabled = false))
         for (let i = 0; i < toolStack.length; i++) {
           const chkBox = document.querySelector(`input[type='checkbox'][value='${toolStack[i]}']`)
           if (i === 0 || i < toolStack.length - 1) chkBox.disabled = true
@@ -188,8 +204,8 @@
         }
       }
 
-      tools.forEach((tool) => {
-        tool.addEventListener('change', (e) => {
+      tools.forEach(tool => {
+        tool.addEventListener('change', e => {
           if (e.target.checked) {
             const value = e.target.value
             toolStack.push(value)
@@ -208,11 +224,13 @@
 
       /** LOAD ASSETS START */
       const { CADAsset, CADBody } = window.zeaCad
-      const { GLTFAsset } = gltfLoader
 
       const loadZCADAsset = (url, filename) => {
         const asset = new CADAsset()
-        asset.load(url).then(() => {
+        const context = new AssetLoadContext()
+        context.units = 'millimeters'
+        context.camera = context
+        asset.load(url, context).then(() => {
           renderer.frameAll()
         })
         asset.getGeometryLibrary().on('loaded', () => {
@@ -222,6 +240,7 @@
         return asset
       }
       const loadGLTFAsset = (url, filename) => {
+        const { GLTFAsset } = gltfLoader
         const asset = new GLTFAsset()
         asset.load(url, filename).then(() => {
           renderer.frameAll()
@@ -238,7 +257,7 @@
         } else if (filename.endsWith('gltf') || filename.endsWith('glb')) {
           res = loadGLTFAsset(url, filename)
         }
-        boundingBoxPass.addTreeItem(res, true)
+        // boundingBoxPass.addTreeItem(res, true)
         return res
       }
       let assetUrl = 'data/Dead_eye_bearing.zcad'
@@ -250,11 +269,12 @@
       loadAsset(assetUrl, assetUrl)
       /** LOAD ASSETS END */
 
-      /** COLLAB START*/
-      const { Session, SessionSync } = window.zeaCollab
-      {
+      /** COLLAB START* /
+
+      if (urlParams.has('collab')) {
+        const { Session, SessionSync } = window.zeaCollab
         const userData = {
-          id: Math.random(),
+          id: Math.random()
         }
         appData.userData = userData
 
@@ -264,10 +284,10 @@
         if (roomId) session.joinRoom(roomId)
 
         const sessionSync = new SessionSync(session, appData, userData, {
-          /* Avatars scale based on the distance to the target */
+          /* Avatars scale based on the distance to the target * /
           scaleAvatarWithFocalDistance: true,
-          /* The overal size multiplier of the avatar. */
-          avatarScale: 2.0,
+          /* The overal size multiplier of the avatar. * /
+          avatarScale: 2.0
         })
 
         appData.session = session
@@ -301,21 +321,10 @@
   </head>
   <body class="bg-blue-100 h-full">
     <div class="main-wrapper grid h-screen">
-      <header class="border border-blue-400 flex justify-center items-center">
-        <div id="controllers">
-          <div>
-            <label for="camera">Camera Manipulator</label>
-            <input type="checkbox" id="camera" value="CameraManipulator" class="tool" />
-          </div>
-          <div>
-            <label for="selection">Selection Tool</label>
-            <input type="checkbox" id="selection" value="SelectionTool" class="tool" />
-          </div>
-        </div>
-      </header>
+      <header class="border border-blue-400 flex justify-center items-center"></header>
       <nav class="border border-blue-400 flex justify-center items-center">nav</nav>
       <main>
-        <canvas class="absolute" id="renderer"></canvas>
+        <canvas id="viewport"></canvas>
       </main>
       <aside class="border border-blue-400 flex justify-center items-center"></aside>
       <footer class="border border-blue-400 flex justify-center items-center"></footer>

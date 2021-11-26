@@ -11,12 +11,22 @@
     <link rel="stylesheet" href="styles/tailwind.min.css" />
 
     <script src="../dist/index.umd.js"></script>
-    <script src="../dist/plugins.umd.js"></script>
 
     <script type="module">
-      const { GLRenderer, Scene, Vec3, Xfo, Color, Sphere, Material, TreeItem, GeomItem, GLBoundingBoxPass } = zeaEngine
+      const {
+        GLRenderer,
+        Scene,
+        Vec3,
+        Xfo,
+        Color,
+        Sphere,
+        SimpleSurfaceMaterial,
+        TreeItem,
+        GeomItem,
+        GLBoundingBoxPass,
+      } = zeaEngine
 
-      const canvas = document.querySelector('#renderer')
+      const canvas = document.getElementById('viewport')
 
       const scene = new Scene()
       const renderer = new GLRenderer(canvas, { enableFrustumCulling: true, antialias: false })
@@ -24,7 +34,7 @@
 
       scene.setupGrid(10.0, 10)
 
-      const standardMaterial = new Material('surfaces', 'SimpleSurfaceShader')
+      const standardMaterial = new SimpleSurfaceMaterial('surfaces')
       const sphere = new Sphere(0.4, 20, 10)
 
       const buildSubTree = (xfo) => {
@@ -33,19 +43,19 @@
         treeItem.addChild(new GeomItem('Sphere2', sphere, standardMaterial, new Xfo(new Vec3(1, 1, 0))))
         treeItem.addChild(new GeomItem('Sphere3', sphere, standardMaterial, new Xfo(new Vec3(0, 1, 0))))
         treeItem.addChild(new GeomItem('Sphere4', sphere, standardMaterial, new Xfo(new Vec3(0, 0, 1))))
-        treeItem.getParameter('GlobalXfo').setValue(xfo)
+        treeItem.globalXfoParam.value = xfo
         return treeItem
       }
       const tree1 = buildSubTree(new Xfo(new Vec3(0, -1, 1)))
       const tree2 = buildSubTree(new Xfo(new Vec3(0, 1, 1)))
 
-      const xfo1 = tree1.getParameter('GlobalXfo').getValue()
-      const xfo2 = tree2.getParameter('GlobalXfo').getValue()
+      const xfo1 = tree1.globalXfoParam.getValue()
+      const xfo2 = tree2.globalXfoParam.getValue()
       const updateTreePositions = (t) => {
         xfo1.tr.x = Math.sin(t) * 5
         xfo2.tr.y = Math.sin(t) * 5
-        tree1.getParameter('GlobalXfo').setValue(xfo1)
-        tree2.getParameter('GlobalXfo').setValue(xfo2)
+        tree1.globalXfoParam.value = xfo1
+        tree2.globalXfoParam.value = xfo2
       }
       // let t = 0
       // setInterval(() => {
@@ -83,7 +93,7 @@
   </head>
   <body class="bg-blue-100">
     <div class="h-screen">
-      <canvas class="absolute" id="renderer"></canvas>
+      <canvas id="viewport"></canvas>
     </div>
   </body>
 </html>

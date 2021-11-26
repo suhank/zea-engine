@@ -20,49 +20,39 @@
           Stats:
             Create scene: 14765.61865234375 ms
             Load GPU: 11439.541748046875 ms
-            Used Memory: 1.56 GB
+            Used Memory: 1.56 Gb
+            after migration to TypeScript
+            Used Memory: 1.65 Gb
 
         Mauro's MacBook Pro:
           Stats:
             Create scene: 10588.175048828125 ms
             Load GPU: 7655.34765625 ms
-            Used Memory: 1.39 GB
+            Used Memory: 1.39 Gb
           Specs:
             2.6 GHz 6-Core Intel Core i7
-            16 GB 2667 MHz DDR4
-            AMD Radeon Pro 5300M 4 GB
+            16 Gb 2667 MHz DDR4
+            AMD Radeon Pro 5300M 4 Gb
             Intel UHD Graphics 630 1536 MB
       */
 
-      const {
-        Vec3,
-        EulerAngles,
-        Xfo,
-        Color,
-        Cuboid,
-        Material,
-        GeomItem,
-        TreeItem,
-        Scene,
-        GLRenderer,
-      } = window.zeaEngine
+      const { Vec3, EulerAngles, Xfo, Color, Cuboid, SimpleSurfaceMaterial, GeomItem, TreeItem, Scene, GLRenderer } =
+        window.zeaEngine
 
-      const canvas = document.getElementById('renderer')
-      const renderer = new GLRenderer(canvas, { hideSplash: true, antialias: false })
+      const canvas = document.getElementById('viewport')
+      const renderer = new GLRenderer(canvas, { antialias: false })
       renderer.solidAngleLimit = 0.0
 
       const scene = new Scene()
+      scene.setupGrid(10, 10)
+      renderer.setScene(scene)
+      // window.scene = scene
 
       const cuboid = new Cuboid(0.3, 0.4, 0.5)
 
       const count = 160_000
       const dim = Math.round(Math.cbrt(count))
       console.log('Will render GeomItem count:', Math.pow(dim, 3))
-
-      renderer
-        .getViewport()
-        .getCamera()
-        .setPositionAndTarget(new Vec3(dim * 2, dim * 2, dim), new Vec3(dim * 0.5, dim * 0.5, dim * 0.5))
 
       renderer.getViewport().on('keyDown', (event) => {
         if (event.key == 'f') {
@@ -74,11 +64,13 @@
       const TIME_LIMIT = 45_000
 
       document.querySelector('#memoryLimit').textContent = MEMORY_LIMIT
+      // const material = new SimpleSurfaceMaterial('mat')
+      // material.baseColorParam.value = new Color(1, 1, 0)
 
       const addColumns = (row, treeItem) => {
         for (let j = 0; j < dim; j += 1) {
-          const material = new Material('mat', 'SimpleSurfaceShader')
-          material.getParameter('BaseColor').setValue(new Color(row / dim, j / dim, 1))
+          const material = new SimpleSurfaceMaterial('mat')
+          material.baseColorParam.value = new Color(row / dim, j / dim, 1)
 
           const treeItemJ = new TreeItem('TreeItem' + j)
           treeItem.addChild(treeItemJ)
@@ -89,48 +81,59 @@
 
             const xfo = new Xfo()
             xfo.tr.set(row, j, k)
-            geomItem.getParameter('GlobalXfo').setValue(xfo)
+            geomItem.globalXfoParam.value = xfo
           }
         }
       }
 
       const run = () => {
-        document.querySelector('#wrapper').classList.remove('hidden')
+        renderer
+          .getViewport()
+          .getCamera()
+          .setPositionAndTarget(new Vec3(dim * 2, dim * 2, dim), new Vec3(dim * 0.5, dim * 0.5, dim * 0.5))
 
         const startTime = performance.now()
 
         console.time('Create scene')
+        const root = new TreeItem('Root')
         for (let i = 0; i < dim; i += 1) {
           const treeItem = new TreeItem('TreeItem' + i)
-          scene.getRoot().addChild(treeItem)
+          root.addChild(treeItem)
 
           addColumns(i, treeItem)
         }
+        scene.getRoot().addChild(root)
         console.timeEnd('Create scene')
 
         console.time('Load GPU')
-        renderer.setScene(scene)
-        console.timeEnd('Load GPU')
+        renderer.once('redrawOccurred', () => {
+          console.timeEnd('Load GPU')
 
-        const totalTime = performance.now() - startTime
+          const totalTime = performance.now() - startTime
 
-        const { usedJSHeapSize } = performance.memory
+          const { usedJSHeapSize } = performance.memory
 
-        const isGoodMemory = usedJSHeapSize <= MEMORY_LIMIT
-        const isGoodTime = totalTime <= TIME_LIMIT
+          const isGoodMemory = usedJSHeapSize <= MEMORY_LIMIT
+          const isGoodTime = totalTime <= TIME_LIMIT
 
-        const memoryStatus = isGoodMemory ? 'Good' : `Bad: ${usedJSHeapSize}`
-        const timeStatus = isGoodTime ? 'Good' : `Bad: ${Math.round(totalTime / 1000)} sec`
+          const memoryStatus = isGoodMemory ? 'Good' : `Bad: ${usedJSHeapSize}`
+          const timeStatus = isGoodTime ? 'Good' : `Bad: ${Math.round(totalTime / 1000)} sec`
 
-        console.log('Used Memory:', usedJSHeapSize)
+          console.log('Used Memory:', usedJSHeapSize)
+          console.log('Total Time:', totalTime)
 
-        document.querySelector('#memoryStatus').textContent = memoryStatus
-        document.querySelector('#usedJSHeapSize').textContent = usedJSHeapSize
-        document.querySelector('#timeStatus').textContent = timeStatus
+          document.querySelector('#memoryStatus').textContent = memoryStatus
+          document.querySelector('#usedJSHeapSize').textContent = usedJSHeapSize
+          document.querySelector('#timeStatus').textContent = timeStatus
+        })
+        renderer.requestRedraw()
       }
 
       const runAsync = () => {
-        document.querySelector('#wrapper').classList.remove('hidden')
+        renderer
+          .getViewport()
+          .getCamera()
+          .setPositionAndTarget(new Vec3(dim * 2, dim * 2, dim), new Vec3(dim * 0.5, dim * 0.5, dim * 0.5))
 
         const startTime = performance.now()
 
@@ -196,6 +199,24 @@
 
       document.querySelector('#runAsync').addEventListener('click', runAsync)
       document.querySelector('#run').addEventListener('click', run)
+
+      // //////////////////////////////////////
+      // Setup FPS Counter
+      let frameCounter = 0
+      let fps = 0
+      renderer.on('redrawOccurred', () => {
+        frameCounter++
+      })
+
+      const fpsElement = document.getElementById('fps')
+      setInterval(() => {
+        if (fps != frameCounter * 2) {
+          fps = frameCounter * 2
+          fpsElement.textContent = `FPS: ${fps}`
+        }
+        frameCounter = 0
+      }, 500)
+      // renderer.startContinuousDrawing()
     </script>
   </head>
   <body class="bg-blue-100 h-full">
@@ -207,14 +228,34 @@
       <p>
         Click the
         <button
-          class="bg-yellow-300 rounded px-2 px-2 py-1 border border-yellow-400 shadow mr-1 hover:bg-yellow-200 cursor-default"
+          class="
+            bg-yellow-300
+            rounded
+            px-2 px-2
+            py-1
+            border border-yellow-400
+            shadow
+            mr-1
+            hover:bg-yellow-200
+            cursor-default
+          "
           id="run"
         >
           Run
         </button>
         or the
         <button
-          class="bg-yellow-300 rounded px-2 px-2 py-1 border border-yellow-400 shadow mr-1 hover:bg-yellow-200 cursor-default"
+          class="
+            bg-yellow-300
+            rounded
+            px-2 px-2
+            py-1
+            border border-yellow-400
+            shadow
+            mr-1
+            hover:bg-yellow-200
+            cursor-default
+          "
           id="runAsync"
         >
           Run Async
@@ -222,7 +263,7 @@
         button to begin.
       </p>
 
-      <div class="flex flex-col flex-1 hidden" id="wrapper">
+      <div class="flex flex-col flex-1" id="wrapper">
         <dl>
           <dt>Memory:</dt>
           <dd>
@@ -237,10 +278,14 @@
           <dd>
             <p id="progressStatus"></p>
           </dd>
+          <dt>Performance:</dt>
+          <dd>
+            <div class="fps-display" id="fps"></div>
+          </dd>
         </dl>
 
         <div class="flex-1">
-          <canvas class="absolute" id="renderer" />
+          <canvas id="viewport"></canvas>
         </div>
       </div>
     </div>

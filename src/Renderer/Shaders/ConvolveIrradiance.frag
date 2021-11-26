@@ -1,8 +1,6 @@
 
 precision highp float;
-
 import 'constants.glsl'
-import 'GLSLUtils.glsl'
 import 'convolve-helpers.glsl'
 
 uniform float roughness;

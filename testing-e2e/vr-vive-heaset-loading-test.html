@@ -9,17 +9,15 @@
     <link href="data/zea-logo.png" rel="shortcut icon" />
 
     <link rel="stylesheet" href="styles/tailwind.min.css" />
-
     <script src="../dist/index.umd.js"></script>
-    <script src="../dist/plugins.umd.js"></script>
 
     <script type="module">
-      const { GLRenderer, Scene, Vec3, Xfo, VLAAsset } = window.zeaEngine
+      const { GLRenderer, Scene, Vec3, Xfo, VLAAsset } = zeaEngine
 
-      const canvas = document.querySelector('#renderer')
+      const canvas = document.getElementById('viewport')
 
       const scene = new Scene()
-      const renderer = new GLRenderer(canvas, { hideSplash: true, antialias: false })
+      const renderer = new GLRenderer(canvas, { antialias: false })
       renderer.setScene(scene)
 
       scene.setupGrid(10.0, 10)
@@ -27,16 +25,16 @@
       renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(0.5, 0.5, 0.5), new Vec3(0, 0, 0))
 
       const asset = new VLAAsset()
-      asset.load('/dist/public-resources/Vive.vla')
+      asset.load('/public-resources/Vive.vla')
       asset.getGeometryLibrary().on('loaded', () => {
         const HMD = asset.getChildByName('HMD')
-        HMD.getParameter('LocalXfo').setValue(new Xfo(new Vec3(0, 0, 200)))
+        HMD.localXfoParam.value = new Xfo(new Vec3(0, 0, 200))
 
         const Controller = asset.getChildByName('Controller')
-        Controller.getParameter('LocalXfo').setValue(new Xfo(new Vec3(-200, 0, 0)))
+        Controller.localXfoParam.value = new Xfo(new Vec3(-200, 0, 0))
 
         const Controller2 = Controller.clone()
-        Controller2.getParameter('LocalXfo').setValue(new Xfo(new Vec3(200, 0, 0)))
+        Controller2.localXfoParam.value = new Xfo(new Vec3(200, 0, 0))
         asset.addChild(Controller2, false)
 
         window.postMessage('done-loading')
@@ -68,7 +66,7 @@
   </head>
   <body class="bg-blue-100 h-full">
     <div class="h-full">
-      <canvas class="absolute" id="renderer"></canvas>
+      <canvas id="viewport"></canvas>
     </div>
   </body>
 </html>

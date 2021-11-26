@@ -8,15 +8,39 @@
     <script src="../dist/index.umd.js"></script>
 
     <script type="module">
-      const { GLRenderer, Scene, Vec3, Color, Plane, Material, GeomItem } = zeaEngine
+      const { GLRenderer, Scene, Vec3, Color, Plane, SimpleSurfaceMaterial, GeomItem } = zeaEngine
 
       const scene = new Scene()
-      const domElement = document.getElementById('app')
-      const renderer = new GLRenderer(domElement, { hideSplash: true, antialias: false })
+      const domElement = document.getElementById('viewport')
+      const renderer = new GLRenderer(domElement, { antialias: false })
       renderer.setScene(scene)
 
-      const standardMaterial = new Material('surfaces', 'SimpleSurfaceShader')
-      standardMaterial.getParameter('BaseColor').setValue(new Color(89 / 255, 182 / 255, 92 / 255))
+      const urlParams = new URLSearchParams(window.location.search)
+      renderer.getViewport().debugGeomShader = urlParams.has('debugGeomShader')
+
+      /** HIGHLIGHT START */
+      let highlightedItem
+      renderer.getViewport().on('pointerOverGeom', (event) => {
+        const item = event.intersectionData.geomItem
+        if (item) {
+          highlightedItem = item
+          highlightedItem.addHighlight('pointerOverGeom', new Color(1.0, 0.0, 0, 0.3), true)
+        }
+      })
+      renderer.getViewport().on('pointerLeaveGeom', (event) => {
+        highlightedItem.removeHighlight('pointerOverGeom', true)
+        highlightedItem = null
+      })
+      renderer.getViewport().on('pointerUp', (event) => {
+        if (event.intersectionData) {
+          const geomItem = event.intersectionData.geomItem
+          console.log('', geomItem.getPath())
+        }
+      })
+      /** HIGHLIGHT END */
+
+      const standardMaterial = new SimpleSurfaceMaterial('surfaces')
+      standardMaterial.baseColorParam.value = new Color(89 / 255, 182 / 255, 92 / 255)
 
       const geomItem = new GeomItem('Plane', new Plane(2.0, 1.5, 3, 3), standardMaterial)
       scene.getRoot().addChild(geomItem)
@@ -28,7 +52,7 @@
   </head>
   <body class="bg-blue-100 h-full">
     <div class="h-full">
-      <canvas class="absolute" id="app"></canvas>
+      <canvas id="viewport"></canvas>
     </div>
   </body>
 </html>

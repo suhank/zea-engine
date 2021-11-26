@@ -11,7 +11,6 @@
     <link rel="stylesheet" href="styles/tailwind.min.css" />
 
     <script src="../dist/index.umd.js"></script>
-    <script src="../dist/plugins.umd.js"></script>
     <style>
       /* The slider itself */
       .slider {
@@ -53,27 +52,52 @@
     </style>
 
     <script type="module">
-      const { GLRenderer, Scene, EnvMap, Xfo, Vec3, Color, Sphere, Material, GeomItem, FileImage } = window.zeaEngine
+      const { GLRenderer, Scene, EnvMap, Xfo, Vec3, Color, Sphere, StandardSurfaceMaterial, GeomItem, FileImage } =
+        window.zeaEngine
 
-      const canvas = document.querySelector('#renderer')
+      const canvas = document.getElementById('viewport')
 
       const scene = new Scene()
-      const renderer = new GLRenderer(canvas, { hideSplash: true, webglOptions: { antialias: false } })
+      const renderer = new GLRenderer(canvas, { antialias: false })
       renderer.setScene(scene)
 
       // scene.setupGrid(10.0, 10)
       const promises = []
 
       const envMap = new EnvMap()
-      envMap.getParameter('FilePath').setValue('data/pisa-webp.zenv')
+      envMap.load('data/pisa-webp.zenv')
       promises.push(new Promise((resolve) => envMap.on('loaded', resolve)))
       scene.setEnvMap(envMap)
-      scene.getSettings().getParameter('Display EnvMap').setValue(true)
+      scene.displayEnvMapParam.value = true
+
+      const urlParams = new URLSearchParams(window.location.search)
+      renderer.getViewport().debugGeomShader = urlParams.has('debugGeomShader')
+
+      /** HIGHLIGHT START */
+      let highlightedItem
+      renderer.getViewport().on('pointerOverGeom', (event) => {
+        const item = event.intersectionData.geomItem
+        if (item) {
+          highlightedItem = item
+          highlightedItem.addHighlight('pointerOverGeom', new Color(1.0, 1.0, 0, 0.3), true)
+        }
+      })
+      renderer.getViewport().on('pointerLeaveGeom', (event) => {
+        highlightedItem.removeHighlight('pointerOverGeom', true)
+        highlightedItem = null
+      })
+      renderer.getViewport().on('pointerUp', (event) => {
+        if (event.intersectionData) {
+          const geomItem = event.intersectionData.geomItem
+          console.log('', geomItem.getPath())
+        }
+      })
+      /** HIGHLIGHT END */
 
       let posX = -3
       const sphere = new Sphere(0.4, 90, 60)
       const createSphere = (materialParams) => {
-        const material = new Material('surfaces', 'StandardSurfaceShader')
+        const material = new StandardSurfaceMaterial('surfaces')
         const setupParam = (param, value) => {
           if (typeof value == 'string') {
             const texture = new FileImage('FileImage')
@@ -155,7 +179,7 @@
   </head>
   <body class="bg-blue-100 h-full">
     <div class="h-full">
-      <canvas class="absolute" id="renderer"></canvas>
+      <canvas id="viewport"></canvas>
     </div>
     <input type="range" min="0" max="400" value="100" class="slider" id="exposureControl" />
   </body>

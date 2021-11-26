@@ -18,3 +18,16 @@ import './commands'
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
+
+// This addresses a bug in Cypress.
+// See:
+// https://stackoverflow.com/a/63519375/320791
+Cypress.on('uncaught:exception', (err) => {
+  if (err.message.includes('ResizeObserver')) {
+    // returning false here prevents Cypress from
+    // failing the test
+    return false
+  }
+
+  return true
+})

@@ -7,16 +7,15 @@
   </head>
   <body class="bg-blue-100 h-full">
     <div class="h-full">
-      <canvas class="absolute" id="app"></canvas>
+      <canvas id="viewport"></canvas>
     </div>
 
     <script src="../dist/index.umd.js"></script>
-    <script src="../dist/plugins.umd.js"></script>
 
     <script type="module">
       const { Vec3, EulerAngles, Xfo, ObjAsset, Scene, GLRenderer, EnvMap } = zeaEngine
 
-      const domElement = document.getElementById('app')
+      const domElement = document.getElementById('viewport')
 
       const scene = new Scene()
       scene.setupGrid(10.0, 10)
@@ -30,9 +29,9 @@
       renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(12, 12, 10), new Vec3(0, 0, 1.5))
 
       const envMap = new EnvMap()
-      envMap.getParameter('FilePath').setValue('data/pisa-webp.zenv')
+      envMap.load('data/pisa-webp.zenv')
       scene.setEnvMap(envMap)
-      scene.getSettings().getParameter('Display EnvMap').setValue(true)
+      scene.displayEnvMapParam.value = true
 
       const objAsset = new ObjAsset('cow')
       objAsset.getParameter('splitGroupsIntoObjects').setValue(true)
@@ -42,7 +41,7 @@
       const xfo = new Xfo()
       xfo.tr.set(0, 0, 3.55)
       xfo.ori.setFromEulerAngles(new EulerAngles(90 * (Math.PI / 180), 0, 0))
-      objAsset.getParameter('GlobalXfo').setValue(xfo)
+      objAsset.globalXfoParam.value = xfo
 
       const promises = []
       promises.push(new Promise((resolve) => envMap.once('loaded', resolve)))

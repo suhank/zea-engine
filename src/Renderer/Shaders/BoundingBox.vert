@@ -48,6 +48,11 @@ void main(void) {
   } else {
     v_color = fetchTexel(instancesTexture, instancesTextureSize, (drawItemId * pixelsPerItem) + 4);
   }
+
+  // // Use cross platform bit flags methods
+  // if (drawOnTop) {
+  //   gl_Position.z = mix(gl_Position.z, -gl_Position.w, 0.5);
+  // }
  
   vec4 pos = positions;
   if (pos.x < 0.0) pos.x = bboxMin.x;

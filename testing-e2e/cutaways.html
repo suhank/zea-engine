@@ -28,13 +28,17 @@
         Torus,
         GeomItem,
         TreeItem,
-        Material,
+        StandardSurfaceMaterial,
+        SimpleSurfaceMaterial,
+        FlatSurfaceMaterial,
         CuttingPlane,
       } = zeaEngine
+      const urlParams = new URLSearchParams(window.location.search)
 
       const scene = new Scene()
-      const domElement = document.getElementById('renderer')
-      const renderer = new GLRenderer(domElement, { hideSplash: true, antialias: false })
+      const domElement = document.getElementById('viewport')
+      const renderer = new GLRenderer(domElement, { antialias: false })
+      renderer.getViewport().debugGeomShader = urlParams.has('debugGeomShader')
       renderer.setScene(scene)
 
       scene.setupGrid(40.0, 10)
@@ -45,38 +49,48 @@
       const cuttingPlaneXfo = new Xfo()
       cuttingPlaneXfo.tr.set(6, 0, 0)
       cuttingPlaneXfo.ori.setFromAxisAndAngle(new Vec3(1, 0, 0), -1)
-      cuttingPlane.getParameter('LocalXfo').setValue(cuttingPlaneXfo)
+      cuttingPlane.localXfoParam.value = cuttingPlaneXfo
       scene.getRoot().addChild(cuttingPlane)
 
-      const standardMaterial = new Material('surfaces', 'SimpleSurfaceShader')
-      standardMaterial.getParameter('BaseColor').setValue(new Color(89 / 255, 182 / 255, 92 / 255))
+      const standardMaterial = new StandardSurfaceMaterial('surfaces')
+      standardMaterial.baseColorParam.value = new Color(89 / 255, 182 / 255, 92 / 255)
+
+      const flatSurfaceMaterial = new FlatSurfaceMaterial('Material')
+      flatSurfaceMaterial.baseColorParam.value = new Color(0.6, 0, 1)
+
+      const simpleSurfaceMaterial = new SimpleSurfaceMaterial('Material')
+      simpleSurfaceMaterial.baseColorParam.value = new Color(0, 0.6, 1)
 
       let i = 0
 
-      const addMeshShape = (shape) => {
-        const geomItem = new GeomItem(`item-${i}`, shape, standardMaterial)
-        geomItem.getParameter('LocalXfo').setValue(new Xfo(new Vec3(i * 3, 0, 0)))
+      const addMeshShape = (shape, material) => {
+        const geomItem = new GeomItem(`item-${i}`, shape, material)
+        geomItem.localXfoParam.value = new Xfo(new Vec3(i * 3, 0, 0))
         tree1.addChild(geomItem)
 
         cuttingPlane.addItem(geomItem)
 
+        if (i % 2 == 0) {
+          geomItem.addHighlight('highlight', new Color(1, 0, 0, 0.01))
+        }
+
         i += 1
       }
 
-      addMeshShape(new Sphere(1, 20))
-      addMeshShape(new Torus(0.5, 1))
-      addMeshShape(new Cuboid(1, 1, 1))
-      addMeshShape(new Cone(1, 2), 4)
-      addMeshShape(new Cylinder(1, 2, 20, 2, true))
+      addMeshShape(new Sphere(1, 20), standardMaterial)
+      addMeshShape(new Torus(0.5, 1), standardMaterial)
+      addMeshShape(new Cuboid(1, 1, 1), simpleSurfaceMaterial)
+      addMeshShape(new Cone(1, 2), flatSurfaceMaterial)
+      addMeshShape(new Cylinder(1, 2, 20, 2, true), flatSurfaceMaterial)
 
-      cuttingPlane.getParameter('CutAwayEnabled').setValue(true)
+      cuttingPlane.cutAwayEnabledParam.value = true
 
       // let angle = -1
       // setInterval(() => {
       //   angle += 0.1
       //   cuttingPlaneXfo.tr.set(6, Math.cos(angle) * 2, 0)
       //   cuttingPlaneXfo.ori.setFromAxisAndAngle(new Vec3(1, 0, 0), angle)
-      //   cuttingPlane.getParameter('LocalXfo').setValue(cuttingPlaneXfo)
+      //   cuttingPlane.localXfoParam.value = cuttingPlaneXfo
       // }, 50)
 
       renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(25, 25, 13), new Vec3(10, 0, 0))
@@ -93,15 +107,17 @@
           const xfo = new Xfo()
           xfo.tr.set(6, Math.cos(angle) * 2, 0)
           xfo.ori.setFromAxisAndAngle(new Vec3(1, 0, 0), angle)
-          cuttingPlane.getParameter('LocalXfo').setValue(xfo)
+          cuttingPlane.localXfoParam.value = xfo
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(15, -15, -5), new Vec3(8, 0, 0))
           window.postMessage(`done-${data}`)
         } else if (data === 'variant-02') {
           const angle = 3
           const xfo = new Xfo()
           xfo.tr.set(6, Math.cos(angle) * 2, 0)
           xfo.ori.setFromAxisAndAngle(new Vec3(1, 0, 0), angle)
-          cuttingPlane.getParameter('LocalXfo').setValue(xfo)
-          renderer.frameAll()
+          cuttingPlane.localXfoParam.value = xfo
+
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(15, -15, -5), new Vec3(8, 0, 0))
           window.postMessage(`done-${data}`)
         }
       }
@@ -112,7 +128,7 @@
   </head>
   <body class="bg-blue-100 h-full">
     <div class="h-full">
-      <canvas class="absolute" id="renderer"></canvas>
+      <canvas id="viewport"></canvas>
     </div>
   </body>
 </html>

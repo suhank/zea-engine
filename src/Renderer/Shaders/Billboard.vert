@@ -1,5 +1,6 @@
 
 precision highp float;
+precision highp int;
 
 import 'quadVertexFromID.glsl'
 
@@ -22,9 +23,9 @@ uniform vec4 atlasBillboards_desc;
 
 uniform sampler2D instancesTexture;
 uniform int instancesTextureSize;
+uniform int passId;
 
-
-const int cols_per_instance = 6;
+const int cols_per_instance = 7;
 
 mat4 getMatrix(sampler2D texture, int textureSize, int index) {
   // Unpack 3 x 4 matix columns into a 4 x 4 matrix.
@@ -45,7 +46,6 @@ vec4 getInstanceData(int id) {
 vec4 getPivot(int id) {
   return fetchTexel(instancesTexture, instancesTextureSize, (id * cols_per_instance) + 4);
 }
-
 vec4 getTintColor(int id) {
   return fetchTexel(instancesTexture, instancesTextureSize, (id * cols_per_instance) + 5);
 }
@@ -80,15 +80,18 @@ float map(float value, float inMin, float inMax, float outMin, float outMax) {
 }
 
 /* VS Outputs */
+varying float v_instanceID;
 varying vec2 v_texCoord;
 varying float v_alpha;
 varying vec4 v_tint;
+varying vec3 v_viewPos;
 
 void main(void) {
 
 #ifdef ENABLE_FLOAT_TEXTURES
 
   int instanceID = int(instanceIds);
+  v_instanceID = float(instanceID) + 0.25;
 
   mat4 modelMatrix = getModelMatrix(instanceID);
   vec2 pivot = getPivot(instanceID).xy;
@@ -121,17 +124,19 @@ void main(void) {
   bool fixedSizeOnscreen = testFlag(flags, 16); // flag = 1 << 4
 
   mat4 modelViewMatrix = viewMatrix * modelMatrix;
+
+  // Note: items in front of the camera will have a negative value here.
   float sc = 1.0;
-  if(fixedSizeOnscreen) {
-    float dist = modelViewMatrix[3][2];
-    sc = abs(dist); // Note: items in front of the camera will have a negative value here.
+  if (fixedSizeOnscreen) {
+    sc = -modelViewMatrix[3][2];;
   }
   
   mat4 modelViewProjectionMatrix;
-  if(alignedToCamera){
+  if (alignedToCamera) {
     if (inVR == 0) {
       gl_Position = modelViewMatrix * vec4(0.0, 0.0, 0.0, 1.0);
       gl_Position += vec4(pos.x * width * sc, (pos.y + 0.5) * height * sc, 0.0, 0.0);
+      v_viewPos = gl_Position.xyz;
       gl_Position = projectionMatrix * gl_Position;
     } else {
       vec3 cameraPos = vec3(cameraMatrix[3][0], cameraMatrix[3][1], cameraMatrix[3][2]);
@@ -139,15 +144,17 @@ void main(void) {
       mat4 lookAt = calcLookAtMatrix(billboardPos, cameraPos, 0.0);
       mat4 modelViewProjectionMatrix = projectionMatrix * viewMatrix * lookAt;
       gl_Position = modelViewProjectionMatrix * vec4(pos.x * width * sc, (pos.y + 0.5) * height * sc, 0.0, 1.0);
+      v_viewPos = (modelViewMatrix * vec4(pos.x * width * sc, (pos.y + 0.5) * height * sc, 0.0, 1.0)).xyz;
     }
   }
-  else{
+  else {
     modelViewProjectionMatrix = projectionMatrix * viewMatrix * modelMatrix;
     gl_Position = modelViewProjectionMatrix * vec4(pos.x * width, (pos.y + 0.5) * height, 0.0, 1.0);
+    v_viewPos = (modelViewMatrix * vec4(pos.x * width, (pos.y + 0.5) * height, 0.0, 1.0)).xyz;
   }
 
   // Use cross platform bit flags methods
-  if(drawOnTop){
+  if (drawOnTop) {
     gl_Position.z = mix(gl_Position.z, -gl_Position.w, 0.5);
   }
 }

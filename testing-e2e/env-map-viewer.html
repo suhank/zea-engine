@@ -11,7 +11,6 @@
     <link rel="stylesheet" href="styles/tailwind.min.css" />
 
     <script src="../dist/index.umd.js"></script>
-    <script src="../dist/plugins.umd.js"></script>
     <style>
       /* The slider itself */
       .slider {
@@ -53,20 +52,20 @@
     </style>
 
     <script type="module">
-      const { GLRenderer, Scene, Vec3, Color, Xfo, Sphere, GeomItem, Material, EnvMap } = window.zeaEngine
+      const { GLRenderer, Scene, Vec3, Color, Xfo, Sphere, GeomItem, EnvMap } = window.zeaEngine
 
-      const canvas = document.querySelector('#renderer')
+      const canvas = document.getElementById('viewport')
 
       const scene = new Scene()
-      const renderer = new GLRenderer(canvas, { hideSplash: true, antialias: false })
+      const renderer = new GLRenderer(canvas, { antialias: false })
       renderer.setScene(scene)
 
-      // scene.setupGrid(10.0, 10)
+      scene.setupGrid(10.0, 10)
 
       const envMap = new EnvMap()
       envMap.load('data/HDR_041_Path_Ref-webp.zenv')
       scene.setEnvMap(envMap)
-      scene.getSettings().getParameter('Display EnvMap').setValue(true)
+      scene.displayEnvMapParam.value = true
 
       renderer.getViewport().getCamera().setLensFocalLength('20mm')
       renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 0, 0), new Vec3(0, 0, 0))
@@ -101,7 +100,7 @@
   </head>
   <body class="bg-blue-100 h-full">
     <div class="h-full">
-      <canvas class="absolute" id="renderer"></canvas>
+      <canvas id="viewport"></canvas>
     </div>
     <input type="range" min="0" max="400" value="100" class="slider" id="exposureControl" />
   </body>

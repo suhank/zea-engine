@@ -27,12 +27,14 @@
         Cone,
         Circle,
         PointGrid,
-        Material,
+        StandardSurfaceMaterial,
+        SimpleSurfaceMaterial,
+        PointsMaterial,
         GeomItem,
       } = zeaEngine
 
       const urlParams = new URLSearchParams(window.location.search)
-      const canvas = document.querySelector('#renderer')
+      const canvas = document.getElementById('viewport')
 
       const scene = new Scene()
       // scene.setupGrid(10, 10)
@@ -43,22 +45,22 @@
       })
       renderer.setScene(scene)
 
-      const material1 = new Material('surfaces', 'StandardSurfaceShader')
-      material1.getParameter('BaseColor').setValue(new Color(1, 1, 0))
+      const material1 = new StandardSurfaceMaterial('surfaces')
+      material1.baseColorParam.value = new Color(1, 1, 0)
 
-      const material2 = new Material('surfaces', 'StandardSurfaceShader')
-      material2.getParameter('BaseColor').setValue(new Color(0, 1, 0))
+      const material2 = new StandardSurfaceMaterial('surfaces')
+      material2.baseColorParam.value = new Color(0, 1, 0)
 
-      const material3 = new Material('surfaces', 'SimpleSurfaceShader')
-      material3.getParameter('BaseColor').setValue(new Color(1, 0, 1))
+      const material3 = new SimpleSurfaceMaterial('surfaces')
+      material3.baseColorParam.value = new Color(1, 0, 1)
 
-      const material4 = new Material('surfaces', 'PointsShader')
-      material4.getParameter('BaseColor').setValue(new Color(1, 0, 1))
-      material4.getParameter('PointSize').setValue(2)
+      const material4 = new PointsMaterial('points')
+      material4.baseColorParam.value = new Color(1, 0, 1)
+      material4.pointSizeParam.value = 2
 
       const addShape = (name, shape, pos, material) => {
         const geomItem = new GeomItem(name + 'Item', shape, material)
-        geomItem.getParameter('LocalXfo').setValue(new Xfo(pos))
+        geomItem.localXfoParam.value = new Xfo(pos)
         scene.getRoot().addChild(geomItem)
 
         return geomItem
@@ -100,7 +102,7 @@
       let highlightedItem
       renderer.getViewport().on('pointerOverGeom', (event) => {
         const geomItem = event.intersectionData.geomItem
-        const geomParam = geomItem.getParameter('Geometry')
+        const geomParam = geomItem.geomParam
         if (geomParam) {
           const geom = geomParam.getValue()
           if (geom instanceof Lines) {
@@ -145,7 +147,7 @@
   </head>
   <body class="bg-blue-100 h-full">
     <div class="h-full">
-      <canvas class="absolute" id="renderer"></canvas>
+      <canvas id="viewport"></canvas>
     </div>
   </body>
 </html>
