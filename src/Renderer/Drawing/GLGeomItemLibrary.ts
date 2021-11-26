@@ -46,7 +46,7 @@ class GLGeomItemLibrary extends EventEmitter {
 
   // Occlusion Culling
   protected floatOcclusionBuffer: boolean = true
-  protected occlusionDataBuffer: GLRenderTarget
+  occlusionDataBuffer: GLRenderTarget
   protected reductionDataBuffer: GLRenderTarget
   protected bbox: GLMesh
   protected reductionShader: ReductionShader
@@ -314,7 +314,9 @@ class GLGeomItemLibrary extends EventEmitter {
         this.bbox = new GLMesh(gl, new Cuboid(1, 1, 1, false))
         this.reductionShader = new ReductionShader(gl)
         this.boundingBoxShader = new BoundingBoxShader(gl)
-        this.boundingBoxShader.compileForTarget('GLGeomItemLibrary')
+        this.boundingBoxShader.compileForTarget('GLGeomItemLibrary', {
+          directives: this.renderer.directives,
+        })
         this.inFrustumIndicesCount = 0
       }
     }
