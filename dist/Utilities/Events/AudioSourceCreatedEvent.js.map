@@ -1,0 +1,1 @@
+{"version":3,"file":"AudioSourceCreatedEvent.js","sourceRoot":"","sources":["../../../src/Utilities/Events/AudioSourceCreatedEvent.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,SAAS,EAAE,MAAM,cAAc,CAAA;AAExC,MAAM,uBAAwB,SAAQ,SAAS;IAE7C,YAAY,WAAgB;QAC1B,KAAK,EAAE,CAAA;QACP,IAAI,CAAC,WAAW,GAAG,WAAW,CAAA;IAChC,CAAC;CACF;AACD,OAAO,EAAE,uBAAuB,EAAE,CAAA"}

@@ -27,7 +27,7 @@ Create a VR controller.
 
 #### Defined in
 
-[Renderer/VR/VRController.ts:30](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/Renderer/VR/VRController.ts#L30)
+[Renderer/VR/VRController.ts:30](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Renderer/VR/VRController.ts#L30)
 
 ## Properties
 
@@ -37,7 +37,7 @@ Create a VR controller.
 
 #### Defined in
 
-[Renderer/VR/VRController.ts:18](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/Renderer/VR/VRController.ts#L18)
+[Renderer/VR/VRController.ts:18](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Renderer/VR/VRController.ts#L18)
 
 ___
 
@@ -47,7 +47,7 @@ ___
 
 #### Defined in
 
-[Renderer/VR/VRController.ts:11](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/Renderer/VR/VRController.ts#L11)
+[Renderer/VR/VRController.ts:11](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Renderer/VR/VRController.ts#L11)
 
 ___
 
@@ -57,7 +57,7 @@ ___
 
 #### Defined in
 
-[Renderer/VR/VRController.ts:21](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/Renderer/VR/VRController.ts#L21)
+[Renderer/VR/VRController.ts:21](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Renderer/VR/VRController.ts#L21)
 
 ___
 
@@ -67,7 +67,7 @@ ___
 
 #### Defined in
 
-[Renderer/VR/VRController.ts:10](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/Renderer/VR/VRController.ts#L10)
+[Renderer/VR/VRController.ts:10](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Renderer/VR/VRController.ts#L10)
 
 ___
 
@@ -77,7 +77,7 @@ ___
 
 #### Defined in
 
-[Renderer/VR/VRController.ts:13](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/Renderer/VR/VRController.ts#L13)
+[Renderer/VR/VRController.ts:13](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Renderer/VR/VRController.ts#L13)
 
 ___
 
@@ -87,7 +87,7 @@ ___
 
 #### Defined in
 
-[Renderer/VR/VRController.ts:23](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/Renderer/VR/VRController.ts#L23)
+[Renderer/VR/VRController.ts:23](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Renderer/VR/VRController.ts#L23)
 
 ___
 
@@ -97,7 +97,7 @@ ___
 
 #### Defined in
 
-[Renderer/VR/VRController.ts:14](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/Renderer/VR/VRController.ts#L14)
+[Renderer/VR/VRController.ts:14](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Renderer/VR/VRController.ts#L14)
 
 ___
 
@@ -107,7 +107,7 @@ ___
 
 #### Defined in
 
-[Renderer/VR/VRController.ts:22](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/Renderer/VR/VRController.ts#L22)
+[Renderer/VR/VRController.ts:22](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Renderer/VR/VRController.ts#L22)
 
 ___
 
@@ -117,7 +117,7 @@ ___
 
 #### Defined in
 
-[Renderer/VR/VRController.ts:19](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/Renderer/VR/VRController.ts#L19)
+[Renderer/VR/VRController.ts:19](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Renderer/VR/VRController.ts#L19)
 
 ___
 
@@ -127,7 +127,7 @@ ___
 
 #### Defined in
 
-[Renderer/VR/VRController.ts:17](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/Renderer/VR/VRController.ts#L17)
+[Renderer/VR/VRController.ts:17](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Renderer/VR/VRController.ts#L17)
 
 ___
 
@@ -137,7 +137,7 @@ ___
 
 #### Defined in
 
-[Renderer/VR/VRController.ts:20](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/Renderer/VR/VRController.ts#L20)
+[Renderer/VR/VRController.ts:20](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Renderer/VR/VRController.ts#L20)
 
 ___
 
@@ -147,7 +147,7 @@ ___
 
 #### Defined in
 
-[Renderer/VR/VRController.ts:16](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/Renderer/VR/VRController.ts#L16)
+[Renderer/VR/VRController.ts:16](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Renderer/VR/VRController.ts#L16)
 
 ___
 
@@ -157,7 +157,7 @@ ___
 
 #### Defined in
 
-[Renderer/VR/VRController.ts:15](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/Renderer/VR/VRController.ts#L15)
+[Renderer/VR/VRController.ts:15](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Renderer/VR/VRController.ts#L15)
 
 ___
 
@@ -167,7 +167,7 @@ ___
 
 #### Defined in
 
-[Renderer/VR/VRController.ts:12](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/Renderer/VR/VRController.ts#L12)
+[Renderer/VR/VRController.ts:12](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Renderer/VR/VRController.ts#L12)
 
 ## Methods
 
@@ -185,7 +185,7 @@ The getControllerStageLocalXfo method.
 
 #### Defined in
 
-[Renderer/VR/VRController.ts:194](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/Renderer/VR/VRController.ts#L194)
+[Renderer/VR/VRController.ts:194](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Renderer/VR/VRController.ts#L194)
 
 ___
 
@@ -203,7 +203,7 @@ The getControllerTipStageLocalXfo method.
 
 #### Defined in
 
-[Renderer/VR/VRController.ts:202](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/Renderer/VR/VRController.ts#L202)
+[Renderer/VR/VRController.ts:202](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Renderer/VR/VRController.ts#L202)
 
 ___
 
@@ -221,7 +221,7 @@ The getGeomItemAtTip method.
 
 #### Defined in
 
-[Renderer/VR/VRController.ts:272](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/Renderer/VR/VRController.ts#L272)
+[Renderer/VR/VRController.ts:272](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Renderer/VR/VRController.ts#L272)
 
 ___
 
@@ -239,7 +239,7 @@ The getHandedness method.
 
 #### Defined in
 
-[Renderer/VR/VRController.ts:138](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/Renderer/VR/VRController.ts#L138)
+[Renderer/VR/VRController.ts:138](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Renderer/VR/VRController.ts#L138)
 
 ___
 
@@ -257,7 +257,7 @@ The getId method.
 
 #### Defined in
 
-[Renderer/VR/VRController.ts:146](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/Renderer/VR/VRController.ts#L146)
+[Renderer/VR/VRController.ts:146](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Renderer/VR/VRController.ts#L146)
 
 ___
 
@@ -275,7 +275,7 @@ The getTipItem method.
 
 #### Defined in
 
-[Renderer/VR/VRController.ts:162](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/Renderer/VR/VRController.ts#L162)
+[Renderer/VR/VRController.ts:162](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Renderer/VR/VRController.ts#L162)
 
 ___
 
@@ -293,7 +293,7 @@ The getTipXfo method.
 
 #### Defined in
 
-[Renderer/VR/VRController.ts:170](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/Renderer/VR/VRController.ts#L170)
+[Renderer/VR/VRController.ts:170](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Renderer/VR/VRController.ts#L170)
 
 ___
 
@@ -311,7 +311,7 @@ The getTouchPadValue method.
 
 #### Defined in
 
-[Renderer/VR/VRController.ts:178](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/Renderer/VR/VRController.ts#L178)
+[Renderer/VR/VRController.ts:178](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Renderer/VR/VRController.ts#L178)
 
 ___
 
@@ -329,7 +329,7 @@ The getTreeItem method.
 
 #### Defined in
 
-[Renderer/VR/VRController.ts:154](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/Renderer/VR/VRController.ts#L154)
+[Renderer/VR/VRController.ts:154](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Renderer/VR/VRController.ts#L154)
 
 ___
 
@@ -347,7 +347,7 @@ The isButtonPressed method.
 
 #### Defined in
 
-[Renderer/VR/VRController.ts:186](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/Renderer/VR/VRController.ts#L186)
+[Renderer/VR/VRController.ts:186](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Renderer/VR/VRController.ts#L186)
 
 ___
 
@@ -372,5 +372,5 @@ The updatePose method.
 
 #### Defined in
 
-[Renderer/VR/VRController.ts:215](https://github.com/ZeaInc/zea-engine/blob/87b3133d3/src/Renderer/VR/VRController.ts#L215)
+[Renderer/VR/VRController.ts:215](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Renderer/VR/VRController.ts#L215)
 

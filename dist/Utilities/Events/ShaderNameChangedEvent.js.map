@@ -1,0 +1,1 @@
+{"version":3,"file":"ShaderNameChangedEvent.js","sourceRoot":"","sources":["../../../src/Utilities/Events/ShaderNameChangedEvent.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,SAAS,EAAE,MAAM,cAAc,CAAA;AAExC,MAAM,sBAAuB,SAAQ,SAAS;IAE5C,YAAY,UAAkB;QAC5B,KAAK,EAAE,CAAA;QACP,IAAI,CAAC,UAAU,GAAG,UAAU,CAAA;IAC9B,CAAC;CACF;AACD,OAAO,EAAE,sBAAsB,EAAE,CAAA"}

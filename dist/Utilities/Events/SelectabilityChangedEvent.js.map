@@ -1,0 +1,1 @@
+{"version":3,"file":"SelectabilityChangedEvent.js","sourceRoot":"","sources":["../../../src/Utilities/Events/SelectabilityChangedEvent.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,SAAS,EAAE,MAAM,cAAc,CAAA;AAExC,MAAM,yBAA0B,SAAQ,SAAS;IAE/C,YAAY,KAAc;QACxB,KAAK,EAAE,CAAA;QACP,IAAI,CAAC,KAAK,GAAG,KAAK,CAAA;IACpB,CAAC;CACF;AACD,OAAO,EAAE,yBAAyB,EAAE,CAAA"}

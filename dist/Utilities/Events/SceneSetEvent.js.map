@@ -1,0 +1,1 @@
+{"version":3,"file":"SceneSetEvent.js","sourceRoot":"","sources":["../../../src/Utilities/Events/SceneSetEvent.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,SAAS,EAAE,MAAM,cAAc,CAAA;AAExC,MAAM,aAAc,SAAQ,SAAS;IAEnC,YAAY,KAAY;QACtB,KAAK,EAAE,CAAA;QACP,IAAI,CAAC,KAAK,GAAG,KAAK,CAAA;IACpB,CAAC;CACF;AAED,OAAO,EAAE,aAAa,EAAE,CAAA"}

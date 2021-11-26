@@ -1,0 +1,1 @@
+{"version":3,"file":"StateChangedEvent.js","sourceRoot":"","sources":["../../../src/Utilities/Events/StateChangedEvent.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,SAAS,EAAE,MAAM,cAAc,CAAA;AAExC,MAAM,iBAAkB,SAAQ,SAAS;IAEvC,YAAY,KAAc;QACxB,KAAK,EAAE,CAAA;QACP,IAAI,CAAC,KAAK,GAAG,KAAK,CAAA;IACpB,CAAC;CACF;AACD,OAAO,EAAE,iBAAiB,EAAE,CAAA"}

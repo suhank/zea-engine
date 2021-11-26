@@ -1,0 +1,1 @@
+{"version":3,"file":"ViewChangedEvent.js","sourceRoot":"","sources":["../../../src/Utilities/Events/ViewChangedEvent.ts"],"names":[],"mappings":"AAEA,OAAO,EAAE,SAAS,EAAE,MAAM,cAAc,CAAA;AAExC,MAAM,gBAAiB,SAAQ,SAAS;IAKtC,YAAY,aAAqB,EAAE,OAAY;QAC7C,KAAK,EAAE,CAAA;QACP,IAAI,CAAC,aAAa,GAAG,aAAa,CAAA;QAClC,IAAI,CAAC,OAAO,GAAG,OAAO,CAAA;IACxB,CAAC;CACF;AAED,OAAO,EAAE,gBAAgB,EAAE,CAAA"}

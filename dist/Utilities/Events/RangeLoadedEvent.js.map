@@ -1,0 +1,1 @@
+{"version":3,"file":"RangeLoadedEvent.js","sourceRoot":"","sources":["../../../src/Utilities/Events/RangeLoadedEvent.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,SAAS,EAAE,MAAM,cAAc,CAAA;AAExC,MAAM,gBAAiB,SAAQ,SAAS;IAEtC,YAAY,KAAY;QACtB,KAAK,EAAE,CAAA;QACP,IAAI,CAAC,KAAK,GAAG,KAAK,CAAA;IACpB,CAAC;CACF;AACD,OAAO,EAAE,gBAAgB,EAAE,CAAA"}

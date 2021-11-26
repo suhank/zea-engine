@@ -1,0 +1,1 @@
+{"version":3,"file":"SelectedEvent.js","sourceRoot":"","sources":["../../../src/Utilities/Events/SelectedEvent.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,SAAS,EAAE,MAAM,cAAc,CAAA;AAExC,MAAM,aAAc,SAAQ,SAAS;IAEnC,YAAY,QAAiB;QAC3B,KAAK,EAAE,CAAA;QACP,IAAI,CAAC,QAAQ,GAAG,QAAQ,CAAA;IAC1B,CAAC;CACF;AACD,OAAO,EAAE,aAAa,EAAE,CAAA"}

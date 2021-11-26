@@ -1,0 +1,1 @@
+{"version":3,"file":"ResizedEvent.js","sourceRoot":"","sources":["../../../src/Utilities/Events/ResizedEvent.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,SAAS,EAAE,MAAM,cAAc,CAAA;AAExC,MAAM,YAAa,SAAQ,SAAS;IAGlC,YAAY,QAAgB,EAAE,SAAiB;QAC7C,KAAK,EAAE,CAAA;QACP,IAAI,CAAC,KAAK,GAAG,QAAQ,CAAA;QACrB,IAAI,CAAC,MAAM,GAAG,SAAS,CAAA;IACzB,CAAC;CACF;AAED,OAAO,EAAE,YAAY,EAAE,CAAA"}

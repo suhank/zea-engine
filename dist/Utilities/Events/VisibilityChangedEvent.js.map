@@ -1,0 +1,1 @@
+{"version":3,"file":"VisibilityChangedEvent.js","sourceRoot":"","sources":["../../../src/Utilities/Events/VisibilityChangedEvent.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,SAAS,EAAE,MAAM,cAAc,CAAA;AAExC,MAAM,sBAAuB,SAAQ,SAAS;IAE5C,YAAY,OAAgB;QAC1B,KAAK,EAAE,CAAA;QACP,IAAI,CAAC,OAAO,GAAG,OAAO,CAAA;IACxB,CAAC;CACF;AAED,OAAO,EAAE,sBAAsB,EAAE,CAAA"}
