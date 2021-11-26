@@ -29,11 +29,18 @@ describe('Registry', () => {
   //   expect(() => Registry.register('Foo', Bar)).toThrow()
   // })
 
-  it('returns blueprint name for class/type', () => {
+  it('Class Instance returns class name for class/type', () => {
     Registry.register('Foo', Foo)
 
     const foo = new Foo()
     expect(foo.getClassName()).toEqual('Foo')
+  })
+
+  it('Registry returns class name for class/type', () => {
+    Registry.register('Foo', Foo)
+
+    const foo = new Foo()
+    expect(Registry.getClassName(Object.getPrototypeOf(foo).constructor)).toEqual('Foo')
   })
 
   it('throws on unregistered class construction', () => {
