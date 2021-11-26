@@ -18,6 +18,41 @@ All notable changes to this project will be documented in this file. See [standa
 
 ## [4.0.0](https://github.com/ZeaInc/zea-engine/compare/v3.12.3...v4.0.0) (2021-11-10)
 
+Version 4.0.0 is a majior release for Zea Engine, as the entire codebase was ported and updated to work with TypeScript. This change caused a few breaking changes as TypeScript did not allow methods with any ambiguity in the signatures. 
+Porting to TypeScript addressed a wide range or minor issues, picked up by the strict typeing of TypeScript. 
+
+A second and very important benefit of the port to TypeScript, is to provide TypeScript support within client developed applications.
+We highly recomend you install the engine and its libraries as depndencies using npm, yarn or your favorite package manager, and import the engine into your code using the bundler tools that come with React or Svelte. 
+
+### Old code
+Previously, our engine did not support module bundlers for a few technical reasons that have now been addressed. Instead, we recommended users load our engine using script tags, and then access the classes using a global variable. This approach had a few concerns and limitations. 
+
+* The engine code was not installed in a clients application, creating a dependency on servers such as jsdeliver.
+* using incomplete version numbers, like the one shown below, caused automatic and silent updates to the engine on already deployed applications. These updates sometimes had unintended negative consequences.
+* Any other resources in the module bundle were not available, such as TypeScript definitions.
+
+```html
+<script  src="https://cdn.jsdelivr.net/npm/@zeainc/zea-engine@3.11/dist/index.umd.js"></script>
+```
+
+```javascript
+// Load the classes out of the global variable.
+const { Scene, GLRenderer } = zeaEngine
+```
+
+### New code
+```bash
+npm install '@zeainc/zea-engine'
+```
+
+```javascript
+// Import the classes from the installed module
+import { Scene, GLRenderer } from '@zeainc/zea-engine'
+```
+
+We will containue to implement improvements in the typings and inline documentation. 
+Our commitment to our users from this version forward is to maintain a stable and backwards compatible and developer friendly API. 
+
 
 ### ⚠ BREAKING CHANGES
 
@@ -85,7 +120,6 @@ line.getVertexAttribute('positions').setValue(1, new Vec3(0, 0, 1))
 ```
 
 
-
 * VertexAttributes.length was removed and replaced with getCount
 
 Old code
@@ -137,7 +171,6 @@ envMap.load('data/pisa-webp.zenv').then(() => {
   ...
 })
 ```
-
 
 * EnvMap are now loaded using the 'load' method instead of using the 'FilePath' parameters.
 
@@ -195,10 +228,39 @@ New code
   }
 ```
 
+
+
+* Registry.getBlueprintName was Registry.getClassName 
+The registry, which stores all class definitions, and a mapping to the names they were registered under, can be used to retrieve the registered name of a class instance.
+Due to the strict typing of TypeScript, the interface needed to change. Instead of passing a class, you must pass the definition of the class to getClassName
+
+Old code
+```javascript
+  const myClassInst = ...
+  const className = Registry.getBlueprintName(myClassInst)
+  console.log("className:", className)
+```
+
+New code
+```javascript
+  const myClassInst = ...
+  const className = Registry.getClassName(Object.getPrototypeOf(myClassInst).constructor)
+  console.log("className:", className)
+```
+
 * The deprecated Group class was removed from the build. You must now use one of the specialized classes based on BaseGroup. e.g. SelectionSet, or KinematicGroup.
 
 ### Features
 
+* The engine and each library now logs it version to the console to let the user know the exact version of the engine or library that is installed.  ([8e35d43](https://github.com/ZeaInc/zea-engine/commit/8e35d43b9fbd18c2a73efaed86b9446122a51508))
+```bash
+Zea Engine v4.0.0
+main.js:16 Registered lib '@zeainc/zea-ux' v4.0.0
+main.js:16 Registered lib '@zeainc/zea-kinematics' v4.0.1
+main.js:16 Registered lib '@zeainc/zea-potree' v4.0.0
+```
+
+* The entire engine was ported to TypeScript with TypeDefinitions now being bundled in the package. ([e949662](https://github.com/ZeaInc/zea-engine/commit/e949662cab88f2b8e799c51e4995229a73bfd10f))
 * auto-position the canvas and its parent ([18b8a90](https://github.com/ZeaInc/zea-engine/commit/18b8a90d4b9da50e232dccc5d10cb1f8e773d5db))
 * The engine now provides various statically defined Materials. This simplifies the process of assigning materials to Geometries, as the parameters are exposed as public properties. ([ae92d20](https://github.com/ZeaInc/zea-engine/commit/ae92d20fae158c4f4fbb746227bc4ce8f04ef494))
 * zcad files when loading now construct statically defined materials when possible. ([4acad4e](https://github.com/ZeaInc/zea-engine/commit/4acad4e7aafd938aab58fa310a4e45be166f2cbd))
@@ -214,6 +276,15 @@ geomItem.getParameter('LocalXfo').setValue(xfo)
 The new, more convenient access looks like the following.
 ```javascript
 geomItem.localXfoParam.value = xfo
+```
+
+* SceneTree classes now all provide a .getClassName() method that returns the name of the class.  ([e949662](https://github.com/ZeaInc/zea-engine/commit/e949662cab88f2b8e799c51e4995229a73bfd10f
+
+New code
+```javascript
+  const treeItem = new TreeItem()
+  const className = treeItem.getClassName()
+  console.log("className:", className)
 ```
 
 ### Bug Fixes
