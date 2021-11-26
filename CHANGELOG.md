@@ -50,8 +50,8 @@ npm install '@zeainc/zea-engine'
 import { Scene, GLRenderer } from '@zeainc/zea-engine'
 ```
 
-We will containue to implement improvements in the typings and inline documentation. 
-Our commitment to our users from this version forward is to maintain a stable and backwards compatible and developer friendly API. 
+We will continue to implement improvements in the typings and inline documentation. 
+Our commitment to our users from this version forward is to maintain a stable, backwards compatible and developer friendly API. 
 
 
 ### ⚠ BREAKING CHANGES
