@@ -1,5 +1,5 @@
 /* eslint-disable guard-for-in */
-import throttle from 'lodash/throttle'
+import throttle from 'lodash-es/throttle'
 import { TreeItem, GeomItem, ParameterOwner, Scene } from '../SceneTree/index'
 import { SystemDesc } from '../SystemDesc'
 import { create3DContext } from './GLContext'

@@ -147,7 +147,7 @@ describe('Operator', () => {
 
     evaluate() {
       let scaleValue = 2.0
-      const inParam = this.getInput('ScaleValue').getParam()
+      const inParam = this.scaleValue.getParam()
       if (inParam) {
         scaleValue = inParam.getValue()
       }
@@ -176,11 +176,11 @@ describe('Operator', () => {
     //     Param C: > ['setC', 'scaleBC']
     // Parameter 'B' is modified by both scale operators.
     const setA = new SetFloatOperator('setA', 2)
-    setA.getOutput('Output').setParam(aParam)
+    setA.output.setParam(aParam)
     const setB = new SetFloatOperator('setB', 2)
-    setB.getOutput('Output').setParam(bParam)
+    setB.output.setParam(bParam)
     const setC = new SetFloatOperator('setC', 2)
-    setC.getOutput('Output').setParam(cParam)
+    setC.output.setParam(cParam)
 
     const scaleAB = new ScaleFloatsOperator('scaleAB')
     scaleAB.outputA.setParam(aParam)
@@ -240,9 +240,9 @@ describe('Operator', () => {
     const scaleABParam2 = new NumberParameter('scaleABParam2', 2)
 
     const setA = new SetFloatOperator('setA', 2)
-    setA.getOutput('Output').setParam(aParam)
+    setA.output.setParam(aParam)
     const setB = new SetFloatOperator('setB', 2)
-    setB.getOutput('Output').setParam(bParam)
+    setB.output.setParam(bParam)
 
     const scaleAB1 = new ScaleFloatsOperator('scaleAB1')
     scaleAB1.getInput('ScaleValue').setParam(scaleABParam1)
@@ -278,9 +278,9 @@ describe('Operator', () => {
     const scaleABParam2 = new NumberParameter('scaleABParam2', 2)
 
     const setA = new SetFloatOperator('setA', 2)
-    setA.getOutput('Output').setParam(aParam)
+    setA.output.setParam(aParam)
     const setB = new SetFloatOperator('setB', 2)
-    setB.getOutput('Output').setParam(bParam)
+    setB.output.setParam(bParam)
 
     const scaleAB1 = new ScaleFloatsOperator('scaleAB1')
     scaleAB1.getInput('ScaleValue').setParam(scaleABParam1)
@@ -397,6 +397,35 @@ describe('Operator', () => {
     expect(aParam.getValue()).toBe(3)
     expect(bParam.getValue()).toBe(3)
     expect(cParam.getValue()).toBe(3)
+  })
+
+  test('clean then dirty by adding op', () => {
+    const inParamA = new NumberParameter('inA')
+    const inParamB = new NumberParameter('inB')
+    const param = new NumberParameter('A')
+
+    const doubleOperator0 = new DoubleFloatsOperator()
+    doubleOperator0.input.setParam(inParamA)
+    doubleOperator0.out.setParam(param)
+
+    inParamA.setValue(2)
+    inParamB.setValue(3)
+    expect(param.getValue()).toBe(4)
+
+    let paramIsDirty = false
+    param.on('valueChanged', () => {
+      paramIsDirty = true
+    })
+
+    const addOperator = new AddFloatsOperator()
+    addOperator.getInput('A').setParam(inParamA)
+    addOperator.getInput('B').setParam(inParamB)
+    addOperator.getOutput('C').setParam(param)
+
+    // Simply applying the operator, we expect this parameter to be dirty.
+    expect(paramIsDirty).toBe(true)
+
+    expect(param.getValue()).toBe(5)
   })
 
   test('save to JSON (serialization).', () => {

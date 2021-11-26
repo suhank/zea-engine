@@ -57,7 +57,7 @@ class KinematicGroup extends BaseGroup {
     this.memberXfoOps = []
 
     this.addParameter(this.initialXfoModeParam)
-    this.initialXfoModeParam.on('valueChanged', (event) => {
+    this.initialXfoModeParam.on('valueChanged', () => {
       this.calcGroupXfo()
     })
     this.addParameter(this.groupTransformParam)
@@ -189,7 +189,8 @@ class KinematicGroup extends BaseGroup {
    * @param index - The index value.
    * @private
    */
-  bindItem(item: TreeItem, index: number) {
+  protected bindItem(item: TreeItem, index: number): void {
+    super.bindItem(item, index)
     if (!(item instanceof TreeItem)) return
 
     // ///////////////////////////////
@@ -220,7 +221,7 @@ class KinematicGroup extends BaseGroup {
    * @param index - The index value.
    * @private
    */
-  unbindItem(item: TreeItem, index: number) {
+  protected unbindItem(item: TreeItem, index: number): void {
     super.unbindItem(<TreeItem>item, index)
     if (!(item instanceof TreeItem)) return
 
