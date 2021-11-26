@@ -43,7 +43,7 @@ Creates an instance of ProceduralMesh.
 
 #### Defined in
 
-[SceneTree/Geometry/Shapes/ProceduralMesh.ts:18](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/Shapes/ProceduralMesh.ts#L18)
+[SceneTree/Geometry/Shapes/ProceduralMesh.ts:18](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/Shapes/ProceduralMesh.ts#L18)
 
 ## Properties
 
@@ -57,7 +57,7 @@ Creates an instance of ProceduralMesh.
 
 #### Defined in
 
-[SceneTree/Geometry/BaseGeom.ts:20](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/BaseGeom.ts#L20)
+[SceneTree/Geometry/BaseGeom.ts:20](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/BaseGeom.ts#L20)
 
 ___
 
@@ -71,7 +71,7 @@ ___
 
 #### Defined in
 
-[SceneTree/Geometry/BaseGeom.ts:21](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/BaseGeom.ts#L21)
+[SceneTree/Geometry/BaseGeom.ts:21](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/BaseGeom.ts#L21)
 
 ___
 
@@ -85,7 +85,7 @@ ___
 
 #### Defined in
 
-[SceneTree/Geometry/Mesh.ts:33](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/Mesh.ts#L33)
+[SceneTree/Geometry/Mesh.ts:33](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/Mesh.ts#L33)
 
 ___
 
@@ -99,7 +99,7 @@ ___
 
 #### Defined in
 
-[SceneTree/Geometry/Mesh.ts:34](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/Mesh.ts#L34)
+[SceneTree/Geometry/Mesh.ts:34](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/Mesh.ts#L34)
 
 ___
 
@@ -113,7 +113,7 @@ ___
 
 #### Defined in
 
-[SceneTree/Geometry/Mesh.ts:30](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/Mesh.ts#L30)
+[SceneTree/Geometry/Mesh.ts:30](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/Mesh.ts#L30)
 
 ___
 
@@ -127,7 +127,7 @@ ___
 
 #### Defined in
 
-[Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Utilities/BaseClass.ts#L11)
+[Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Utilities/BaseClass.ts#L11)
 
 ___
 
@@ -141,7 +141,7 @@ ___
 
 #### Defined in
 
-[SceneTree/Geometry/Mesh.ts:31](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/Mesh.ts#L31)
+[SceneTree/Geometry/Mesh.ts:31](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/Mesh.ts#L31)
 
 ___
 
@@ -155,7 +155,7 @@ ___
 
 #### Defined in
 
-[SceneTree/Geometry/BaseGeom.ts:22](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/BaseGeom.ts#L22)
+[SceneTree/Geometry/BaseGeom.ts:22](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/BaseGeom.ts#L22)
 
 ___
 
@@ -169,7 +169,7 @@ ___
 
 #### Defined in
 
-[SceneTree/Geometry/BaseGeom.ts:23](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/BaseGeom.ts#L23)
+[SceneTree/Geometry/BaseGeom.ts:23](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/BaseGeom.ts#L23)
 
 ___
 
@@ -183,7 +183,7 @@ ___
 
 #### Defined in
 
-[SceneTree/Geometry/BaseGeom.ts:24](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/BaseGeom.ts#L24)
+[SceneTree/Geometry/BaseGeom.ts:24](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/BaseGeom.ts#L24)
 
 ___
 
@@ -197,7 +197,7 @@ ___
 
 #### Defined in
 
-[SceneTree/Geometry/BaseGeom.ts:25](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/BaseGeom.ts#L25)
+[SceneTree/Geometry/BaseGeom.ts:25](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/BaseGeom.ts#L25)
 
 ___
 
@@ -211,7 +211,7 @@ ___
 
 #### Defined in
 
-[SceneTree/Geometry/BaseGeom.ts:26](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/BaseGeom.ts#L26)
+[SceneTree/Geometry/BaseGeom.ts:26](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/BaseGeom.ts#L26)
 
 ___
 
@@ -225,7 +225,7 @@ ___
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:23](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/ParameterOwner.ts#L23)
+[SceneTree/ParameterOwner.ts:23](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/ParameterOwner.ts#L23)
 
 ___
 
@@ -235,7 +235,7 @@ ___
 
 #### Defined in
 
-[SceneTree/Geometry/Shapes/ProceduralMesh.ts:11](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/Shapes/ProceduralMesh.ts#L11)
+[SceneTree/Geometry/Shapes/ProceduralMesh.ts:11](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/Shapes/ProceduralMesh.ts#L11)
 
 ___
 
@@ -245,7 +245,7 @@ ___
 
 #### Defined in
 
-[SceneTree/Geometry/Shapes/ProceduralMesh.ts:12](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/Shapes/ProceduralMesh.ts#L12)
+[SceneTree/Geometry/Shapes/ProceduralMesh.ts:12](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/Shapes/ProceduralMesh.ts#L12)
 
 ___
 
@@ -259,7 +259,7 @@ ___
 
 #### Defined in
 
-[SceneTree/Geometry/Mesh.ts:38](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/Mesh.ts#L38)
+[SceneTree/Geometry/Mesh.ts:38](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/Mesh.ts#L38)
 
 ___
 
@@ -273,7 +273,7 @@ ___
 
 #### Defined in
 
-[SceneTree/Geometry/Mesh.ts:40](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/Mesh.ts#L40)
+[SceneTree/Geometry/Mesh.ts:40](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/Mesh.ts#L40)
 
 ___
 
@@ -287,7 +287,7 @@ ___
 
 #### Defined in
 
-[SceneTree/Geometry/Mesh.ts:39](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/Mesh.ts#L39)
+[SceneTree/Geometry/Mesh.ts:39](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/Mesh.ts#L39)
 
 ___
 
@@ -301,7 +301,7 @@ ___
 
 #### Defined in
 
-[SceneTree/Geometry/Mesh.ts:37](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/Mesh.ts#L37)
+[SceneTree/Geometry/Mesh.ts:37](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/Mesh.ts#L37)
 
 ___
 
@@ -315,7 +315,7 @@ ___
 
 #### Defined in
 
-[SceneTree/Geometry/Mesh.ts:29](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/Mesh.ts#L29)
+[SceneTree/Geometry/Mesh.ts:29](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/Mesh.ts#L29)
 
 ___
 
@@ -329,7 +329,7 @@ ___
 
 #### Defined in
 
-[SceneTree/Geometry/Mesh.ts:41](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/Mesh.ts#L41)
+[SceneTree/Geometry/Mesh.ts:41](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/Mesh.ts#L41)
 
 ___
 
@@ -343,7 +343,7 @@ ___
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Utilities/EventEmitter.ts#L26)
+[Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Utilities/EventEmitter.ts#L26)
 
 ___
 
@@ -357,7 +357,7 @@ ___
 
 #### Defined in
 
-[SceneTree/Geometry/BaseGeom.ts:27](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/BaseGeom.ts#L27)
+[SceneTree/Geometry/BaseGeom.ts:27](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/BaseGeom.ts#L27)
 
 ___
 
@@ -371,7 +371,7 @@ ___
 
 #### Defined in
 
-[SceneTree/Geometry/Mesh.ts:36](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/Mesh.ts#L36)
+[SceneTree/Geometry/Mesh.ts:36](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/Mesh.ts#L36)
 
 ___
 
@@ -385,7 +385,7 @@ ___
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:20](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/ParameterOwner.ts#L20)
+[SceneTree/ParameterOwner.ts:20](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/ParameterOwner.ts#L20)
 
 ___
 
@@ -399,7 +399,7 @@ ___
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:21](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/ParameterOwner.ts#L21)
+[SceneTree/ParameterOwner.ts:21](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/ParameterOwner.ts#L21)
 
 ___
 
@@ -413,7 +413,7 @@ ___
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:22](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/ParameterOwner.ts#L22)
+[SceneTree/ParameterOwner.ts:22](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/ParameterOwner.ts#L22)
 
 ___
 
@@ -423,7 +423,7 @@ ___
 
 #### Defined in
 
-[SceneTree/Geometry/Shapes/ProceduralMesh.ts:13](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/Shapes/ProceduralMesh.ts#L13)
+[SceneTree/Geometry/Shapes/ProceduralMesh.ts:13](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/Shapes/ProceduralMesh.ts#L13)
 
 ___
 
@@ -437,7 +437,7 @@ ___
 
 #### Defined in
 
-[SceneTree/Geometry/Mesh.ts:42](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/Mesh.ts#L42)
+[SceneTree/Geometry/Mesh.ts:42](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/Mesh.ts#L42)
 
 ## Accessors
 
@@ -457,7 +457,7 @@ Mesh.positions
 
 #### Defined in
 
-[SceneTree/Geometry/BaseGeom.ts:100](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/BaseGeom.ts#L100)
+[SceneTree/Geometry/BaseGeom.ts:100](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/BaseGeom.ts#L100)
 
 ## Methods
 
@@ -484,7 +484,7 @@ The addEdgeAttribute method.
 
 #### Defined in
 
-[SceneTree/Geometry/Mesh.ts:307](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/Mesh.ts#L307)
+[SceneTree/Geometry/Mesh.ts:307](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/Mesh.ts#L307)
 
 ___
 
@@ -512,7 +512,7 @@ Adds a new face to the mesh
 
 #### Defined in
 
-[SceneTree/Geometry/Mesh.ts:214](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/Mesh.ts#L214)
+[SceneTree/Geometry/Mesh.ts:214](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/Mesh.ts#L214)
 
 ___
 
@@ -539,7 +539,7 @@ The addFaceAttribute method.
 
 #### Defined in
 
-[SceneTree/Geometry/Mesh.ts:275](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/Mesh.ts#L275)
+[SceneTree/Geometry/Mesh.ts:275](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/Mesh.ts#L275)
 
 ___
 
@@ -569,7 +569,7 @@ Adds `Parameter` object to the owner's parameter list.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:133](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/ParameterOwner.ts#L133)
+[SceneTree/ParameterOwner.ts:133](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/ParameterOwner.ts#L133)
 
 ___
 
@@ -599,7 +599,7 @@ This is used to handle migrating parameters to new names.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:90](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/ParameterOwner.ts#L90)
+[SceneTree/ParameterOwner.ts:90](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/ParameterOwner.ts#L90)
 
 ___
 
@@ -626,7 +626,7 @@ Adds a new vertex attribute to the geometry.
 
 #### Defined in
 
-[SceneTree/Geometry/Mesh.ts:94](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/Mesh.ts#L94)
+[SceneTree/Geometry/Mesh.ts:94](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/Mesh.ts#L94)
 
 ___
 
@@ -646,7 +646,7 @@ Calculates the angles at each edge between the adjoining faces
 
 #### Defined in
 
-[SceneTree/Geometry/Mesh.ts:464](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/Mesh.ts#L464)
+[SceneTree/Geometry/Mesh.ts:464](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/Mesh.ts#L464)
 
 ___
 
@@ -666,7 +666,7 @@ The clear method.
 
 #### Defined in
 
-[SceneTree/Geometry/Mesh.ts:76](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/Mesh.ts#L76)
+[SceneTree/Geometry/Mesh.ts:76](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/Mesh.ts#L76)
 
 ___
 
@@ -686,7 +686,7 @@ Computes a normal value per face by averaging the triangle normals of the face.
 
 #### Defined in
 
-[SceneTree/Geometry/Mesh.ts:433](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/Mesh.ts#L433)
+[SceneTree/Geometry/Mesh.ts:433](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/Mesh.ts#L433)
 
 ___
 
@@ -714,7 +714,7 @@ The computeHardEdgesIndices method.
 
 #### Defined in
 
-[SceneTree/Geometry/Shapes/ProceduralMesh.ts:103](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/Shapes/ProceduralMesh.ts#L103)
+[SceneTree/Geometry/Shapes/ProceduralMesh.ts:103](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/Shapes/ProceduralMesh.ts#L103)
 
 ___
 
@@ -736,7 +736,7 @@ Compute the number of triangles. For higher degree polygons, they are divided in
 
 #### Defined in
 
-[SceneTree/Geometry/Mesh.ts:823](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/Mesh.ts#L823)
+[SceneTree/Geometry/Mesh.ts:823](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/Mesh.ts#L823)
 
 ___
 
@@ -764,7 +764,7 @@ Compute vertex normals.
 
 #### Defined in
 
-[SceneTree/Geometry/Shapes/ProceduralMesh.ts:93](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/Shapes/ProceduralMesh.ts#L93)
+[SceneTree/Geometry/Shapes/ProceduralMesh.ts:93](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/Shapes/ProceduralMesh.ts#L93)
 
 ___
 
@@ -791,7 +791,7 @@ Copies Parameters from another `ParameterOwner` to current object.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:314](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/ParameterOwner.ts#L314)
+[SceneTree/ParameterOwner.ts:314](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/ParameterOwner.ts#L314)
 
 ___
 
@@ -817,7 +817,7 @@ Removes metadata value from the geometry with the specified key.
 
 #### Defined in
 
-[SceneTree/Geometry/BaseGeom.ts:208](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/BaseGeom.ts#L208)
+[SceneTree/Geometry/BaseGeom.ts:208](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/BaseGeom.ts#L208)
 
 ___
 
@@ -844,7 +844,7 @@ Triggers all listener functions in an event.
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Utilities/EventEmitter.ts#L154)
+[Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Utilities/EventEmitter.ts#L154)
 
 ___
 
@@ -891,7 +891,7 @@ mesh.fromJSON({
 
 #### Defined in
 
-[SceneTree/Geometry/Mesh.ts:991](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/Mesh.ts#L991)
+[SceneTree/Geometry/Mesh.ts:991](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/Mesh.ts#L991)
 
 ___
 
@@ -919,7 +919,7 @@ The genBuffers method.
 
 #### Defined in
 
-[SceneTree/Geometry/Shapes/ProceduralMesh.ts:115](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/Shapes/ProceduralMesh.ts#L115)
+[SceneTree/Geometry/Shapes/ProceduralMesh.ts:115](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/Shapes/ProceduralMesh.ts#L115)
 
 ___
 
@@ -939,7 +939,7 @@ The genTopologyInfo method.
 
 #### Defined in
 
-[SceneTree/Geometry/Mesh.ts:335](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/Mesh.ts#L335)
+[SceneTree/Geometry/Mesh.ts:335](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/Mesh.ts#L335)
 
 ___
 
@@ -970,7 +970,7 @@ only triangles. This is used during rendering and the resulting indices uploaded
 
 #### Defined in
 
-[SceneTree/Geometry/Mesh.ts:842](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/Mesh.ts#L842)
+[SceneTree/Geometry/Mesh.ts:842](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/Mesh.ts#L842)
 
 ___
 
@@ -992,7 +992,7 @@ Returns the bounding box for geometry.
 
 #### Defined in
 
-[SceneTree/Geometry/Shapes/ProceduralMesh.ts:73](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/Shapes/ProceduralMesh.ts#L73)
+[SceneTree/Geometry/Shapes/ProceduralMesh.ts:73](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/Shapes/ProceduralMesh.ts#L73)
 
 ___
 
@@ -1014,7 +1014,7 @@ Returns the unmangled name of the class.
 
 #### Defined in
 
-[Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Utilities/BaseClass.ts#L33)
+[Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Utilities/BaseClass.ts#L33)
 
 ___
 
@@ -1042,7 +1042,7 @@ The getEdgeAttribute method.
 
 #### Defined in
 
-[SceneTree/Geometry/Mesh.ts:326](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/Mesh.ts#L326)
+[SceneTree/Geometry/Mesh.ts:326](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/Mesh.ts#L326)
 
 ___
 
@@ -1070,7 +1070,7 @@ The getFaceAttribute method.
 
 #### Defined in
 
-[SceneTree/Geometry/Mesh.ts:295](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/Mesh.ts#L295)
+[SceneTree/Geometry/Mesh.ts:295](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/Mesh.ts#L295)
 
 ___
 
@@ -1092,7 +1092,7 @@ The getFaceCounts method.
 
 #### Defined in
 
-[SceneTree/Geometry/Mesh.ts:103](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/Mesh.ts#L103)
+[SceneTree/Geometry/Mesh.ts:103](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/Mesh.ts#L103)
 
 ___
 
@@ -1120,7 +1120,7 @@ Returns the number of vertices indexed by this face
 
 #### Defined in
 
-[SceneTree/Geometry/Mesh.ts:159](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/Mesh.ts#L159)
+[SceneTree/Geometry/Mesh.ts:159](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/Mesh.ts#L159)
 
 ___
 
@@ -1149,7 +1149,7 @@ Returns a single vertex index for a given face and faceVertex.
 
 #### Defined in
 
-[SceneTree/Geometry/Mesh.ts:262](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/Mesh.ts#L262)
+[SceneTree/Geometry/Mesh.ts:262](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/Mesh.ts#L262)
 
 ___
 
@@ -1177,7 +1177,7 @@ Returns the vertex indices of the specified face.
 
 #### Defined in
 
-[SceneTree/Geometry/Mesh.ts:246](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/Mesh.ts#L246)
+[SceneTree/Geometry/Mesh.ts:246](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/Mesh.ts#L246)
 
 ___
 
@@ -1205,7 +1205,7 @@ Returns the offset of the face indices within the entire index array.
 
 #### Defined in
 
-[SceneTree/Geometry/Mesh.ts:178](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/Mesh.ts#L178)
+[SceneTree/Geometry/Mesh.ts:178](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/Mesh.ts#L178)
 
 ___
 
@@ -1229,7 +1229,7 @@ Returns the unique id of the object.
 
 #### Defined in
 
-[Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Utilities/BaseClass.ts#L25)
+[Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Utilities/BaseClass.ts#L25)
 
 ___
 
@@ -1257,7 +1257,7 @@ Returns metadata value of the specified name.
 
 #### Defined in
 
-[SceneTree/Geometry/BaseGeom.ts:179](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/BaseGeom.ts#L179)
+[SceneTree/Geometry/BaseGeom.ts:179](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/BaseGeom.ts#L179)
 
 ___
 
@@ -1279,7 +1279,7 @@ The getNumFaces method.
 
 #### Defined in
 
-[SceneTree/Geometry/Mesh.ts:111](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/Mesh.ts#L111)
+[SceneTree/Geometry/Mesh.ts:111](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/Mesh.ts#L111)
 
 ___
 
@@ -1301,7 +1301,7 @@ Returns the number of parameters current object has.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:39](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/ParameterOwner.ts#L39)
+[SceneTree/ParameterOwner.ts:39](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/ParameterOwner.ts#L39)
 
 ___
 
@@ -1323,7 +1323,7 @@ Returns the number of vertex attributes.
 
 #### Defined in
 
-[SceneTree/Geometry/Shapes/ProceduralMesh.ts:83](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/Shapes/ProceduralMesh.ts#L83)
+[SceneTree/Geometry/Shapes/ProceduralMesh.ts:83](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/Shapes/ProceduralMesh.ts#L83)
 
 ___
 
@@ -1351,7 +1351,7 @@ Returns `Parameter` object using the given name
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:100](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/ParameterOwner.ts#L100)
+[SceneTree/ParameterOwner.ts:100](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/ParameterOwner.ts#L100)
 
 ___
 
@@ -1379,7 +1379,7 @@ Returns `Parameter` object in a given index
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:68](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/ParameterOwner.ts#L68)
+[SceneTree/ParameterOwner.ts:68](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/ParameterOwner.ts#L68)
 
 ___
 
@@ -1407,7 +1407,7 @@ Returns the index of a parameter in parameter list.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:58](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/ParameterOwner.ts#L58)
+[SceneTree/ParameterOwner.ts:58](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/ParameterOwner.ts#L58)
 
 ___
 
@@ -1429,7 +1429,7 @@ Returns all the parameters of the object.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:48](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/ParameterOwner.ts#L48)
+[SceneTree/ParameterOwner.ts:48](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/ParameterOwner.ts#L48)
 
 ___
 
@@ -1457,7 +1457,7 @@ Returns vertex attribute with the specified name.
 
 #### Defined in
 
-[SceneTree/Geometry/BaseGeom.ts:81](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/BaseGeom.ts#L81)
+[SceneTree/Geometry/BaseGeom.ts:81](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/BaseGeom.ts#L81)
 
 ___
 
@@ -1479,7 +1479,7 @@ Returns all vertex attributes in an object with their names.
 
 #### Defined in
 
-[SceneTree/Geometry/BaseGeom.ts:90](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/BaseGeom.ts#L90)
+[SceneTree/Geometry/BaseGeom.ts:90](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/BaseGeom.ts#L90)
 
 ___
 
@@ -1507,7 +1507,7 @@ The hasEdgeAttribute method.
 
 #### Defined in
 
-[SceneTree/Geometry/Mesh.ts:317](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/Mesh.ts#L317)
+[SceneTree/Geometry/Mesh.ts:317](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/Mesh.ts#L317)
 
 ___
 
@@ -1535,7 +1535,7 @@ The hasFaceAttribute method.
 
 #### Defined in
 
-[SceneTree/Geometry/Mesh.ts:286](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/Mesh.ts#L286)
+[SceneTree/Geometry/Mesh.ts:286](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/Mesh.ts#L286)
 
 ___
 
@@ -1563,7 +1563,7 @@ Verifies if geometry's metadata contains a value with the specified key.
 
 #### Defined in
 
-[SceneTree/Geometry/BaseGeom.ts:189](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/BaseGeom.ts#L189)
+[SceneTree/Geometry/BaseGeom.ts:189](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/BaseGeom.ts#L189)
 
 ___
 
@@ -1591,7 +1591,7 @@ Validates if the specified parameter exists in the object.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:78](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/ParameterOwner.ts#L78)
+[SceneTree/ParameterOwner.ts:78](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/ParameterOwner.ts#L78)
 
 ___
 
@@ -1619,7 +1619,7 @@ Checks if the the geometry has an attribute with the specified name.
 
 #### Defined in
 
-[SceneTree/Geometry/BaseGeom.ts:71](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/BaseGeom.ts#L71)
+[SceneTree/Geometry/BaseGeom.ts:71](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/BaseGeom.ts#L71)
 
 ___
 
@@ -1639,7 +1639,7 @@ The init method.
 
 #### Defined in
 
-[SceneTree/Geometry/Mesh.ts:71](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/Mesh.ts#L71)
+[SceneTree/Geometry/Mesh.ts:71](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/Mesh.ts#L71)
 
 ___
 
@@ -1671,7 +1671,7 @@ It replaces the event in the specified index.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:147](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/ParameterOwner.ts#L147)
+[SceneTree/ParameterOwner.ts:147](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/ParameterOwner.ts#L147)
 
 ___
 
@@ -1697,7 +1697,7 @@ Sets state of current Geometry(Including Vertices and Bounding Box) using a bina
 
 #### Defined in
 
-[SceneTree/Geometry/BaseGeom.ts:237](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/BaseGeom.ts#L237)
+[SceneTree/Geometry/BaseGeom.ts:237](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/BaseGeom.ts#L237)
 
 ___
 
@@ -1719,7 +1719,7 @@ Returns the number of vertex attributes.
 
 #### Defined in
 
-[SceneTree/Geometry/BaseGeom.ts:109](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/BaseGeom.ts#L109)
+[SceneTree/Geometry/BaseGeom.ts:109](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/BaseGeom.ts#L109)
 
 ___
 
@@ -1746,7 +1746,7 @@ Removes a listener function from the specified event, using either the function 
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Utilities/EventEmitter.ts#L97)
+[Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Utilities/EventEmitter.ts#L97)
 
 ___
 
@@ -1775,7 +1775,7 @@ Adds a listener function for a given event name.
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Utilities/EventEmitter.ts#L44)
+[Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Utilities/EventEmitter.ts#L44)
 
 ___
 
@@ -1813,7 +1813,7 @@ asset.once('loaded', () => {
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Utilities/EventEmitter.ts#L82)
+[Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Utilities/EventEmitter.ts#L82)
 
 ___
 
@@ -1840,7 +1840,7 @@ to perform general updates (see GLPass or BaseItem).
 
 #### Defined in
 
-[SceneTree/Geometry/Shapes/ProceduralMesh.ts:38](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/Shapes/ProceduralMesh.ts#L38)
+[SceneTree/Geometry/Shapes/ProceduralMesh.ts:38](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/Shapes/ProceduralMesh.ts#L38)
 
 ___
 
@@ -1867,7 +1867,7 @@ Restores mesh properties from a binary reader.
 
 #### Defined in
 
-[SceneTree/Geometry/Mesh.ts:885](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/Mesh.ts#L885)
+[SceneTree/Geometry/Mesh.ts:885](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/Mesh.ts#L885)
 
 ___
 
@@ -1881,7 +1881,7 @@ ___
 
 #### Defined in
 
-[SceneTree/Geometry/Shapes/ProceduralMesh.ts:29](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/Shapes/ProceduralMesh.ts#L29)
+[SceneTree/Geometry/Shapes/ProceduralMesh.ts:29](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/Shapes/ProceduralMesh.ts#L29)
 
 ___
 
@@ -1908,7 +1908,7 @@ remove listener by ID returned from #on
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Utilities/EventEmitter.ts#L134)
+[Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Utilities/EventEmitter.ts#L134)
 
 ___
 
@@ -1936,7 +1936,7 @@ Removes `Parameter` from owner, by using parameter's name.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:174](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/ParameterOwner.ts#L174)
+[SceneTree/ParameterOwner.ts:174](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/ParameterOwner.ts#L174)
 
 ___
 
@@ -1964,7 +1964,7 @@ Replaces old `Parameter` by passing a new one with the same name.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:196](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/ParameterOwner.ts#L196)
+[SceneTree/ParameterOwner.ts:196](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/ParameterOwner.ts#L196)
 
 ___
 
@@ -1978,7 +1978,7 @@ ___
 
 #### Defined in
 
-[SceneTree/Geometry/Shapes/ProceduralMesh.ts:30](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/Shapes/ProceduralMesh.ts#L30)
+[SceneTree/Geometry/Shapes/ProceduralMesh.ts:30](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/Shapes/ProceduralMesh.ts#L30)
 
 ___
 
@@ -1998,7 +1998,7 @@ The setBoundingBoxDirty method.
 
 #### Defined in
 
-[SceneTree/Geometry/BaseGeom.ts:149](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/BaseGeom.ts#L149)
+[SceneTree/Geometry/BaseGeom.ts:149](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/BaseGeom.ts#L149)
 
 ___
 
@@ -2024,7 +2024,7 @@ Establishes a name for the geometry.
 
 #### Defined in
 
-[SceneTree/Geometry/BaseGeom.ts:49](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/BaseGeom.ts#L49)
+[SceneTree/Geometry/BaseGeom.ts:49](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/BaseGeom.ts#L49)
 
 ___
 
@@ -2052,7 +2052,7 @@ e.g. to specify 2 triangles, and 7 quads, we would pass [2, 7]
 
 #### Defined in
 
-[SceneTree/Geometry/Mesh.ts:121](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/Mesh.ts#L121)
+[SceneTree/Geometry/Mesh.ts:121](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/Mesh.ts#L121)
 
 ___
 
@@ -2079,7 +2079,7 @@ The setFaceVertexIndices method.
 
 #### Defined in
 
-[SceneTree/Geometry/Mesh.ts:198](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/Mesh.ts#L198)
+[SceneTree/Geometry/Mesh.ts:198](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/Mesh.ts#L198)
 
 ___
 
@@ -2106,7 +2106,7 @@ Sets metadata value to the geometry.
 
 #### Defined in
 
-[SceneTree/Geometry/BaseGeom.ts:199](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/BaseGeom.ts#L199)
+[SceneTree/Geometry/BaseGeom.ts:199](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/BaseGeom.ts#L199)
 
 ___
 
@@ -2132,7 +2132,7 @@ Sets the number of vertices the geometry has.
 
 #### Defined in
 
-[SceneTree/Geometry/BaseGeom.ts:127](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/BaseGeom.ts#L127)
+[SceneTree/Geometry/BaseGeom.ts:127](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/BaseGeom.ts#L127)
 
 ___
 
@@ -2160,7 +2160,7 @@ The toJSON method encodes this type as a json object for persistence.
 
 #### Defined in
 
-[SceneTree/Geometry/Shapes/ProceduralMesh.ts:129](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/Shapes/ProceduralMesh.ts#L129)
+[SceneTree/Geometry/Shapes/ProceduralMesh.ts:129](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/Shapes/ProceduralMesh.ts#L129)
 
 ___
 
@@ -2182,7 +2182,7 @@ Returns geometry data value in json format.
 
 #### Defined in
 
-[SceneTree/Geometry/BaseGeom.ts:435](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/BaseGeom.ts#L435)
+[SceneTree/Geometry/BaseGeom.ts:435](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/BaseGeom.ts#L435)
 
 ___
 
@@ -2199,7 +2199,7 @@ this method explicitly forces the geometry to be recomputed.
 
 #### Defined in
 
-[SceneTree/Geometry/Shapes/ProceduralMesh.ts:56](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/Shapes/ProceduralMesh.ts#L56)
+[SceneTree/Geometry/Shapes/ProceduralMesh.ts:56](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/Shapes/ProceduralMesh.ts#L56)
 
 ___
 
@@ -2219,5 +2219,5 @@ The updateBoundingBox method.
 
 #### Defined in
 
-[SceneTree/Geometry/BaseGeom.ts:157](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/SceneTree/Geometry/BaseGeom.ts#L157)
+[SceneTree/Geometry/BaseGeom.ts:157](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/Geometry/BaseGeom.ts#L157)
 

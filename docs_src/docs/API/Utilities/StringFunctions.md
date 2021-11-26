@@ -39,7 +39,7 @@ Transforms the given string into a numeric value.
 
 #### Defined in
 
-[Utilities/StringFunctions.ts:45](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Utilities/StringFunctions.ts#L45)
+[Utilities/StringFunctions.ts:45](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Utilities/StringFunctions.ts#L45)
 
 ___
 
@@ -67,7 +67,7 @@ Replaces all matches in a string.
 
 #### Defined in
 
-[Utilities/StringFunctions.ts:15](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Utilities/StringFunctions.ts#L15)
+[Utilities/StringFunctions.ts:15](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Utilities/StringFunctions.ts#L15)
 
 ___
 
@@ -95,5 +95,5 @@ Returns JSON object as a formatted string, but the numeric values are fixed to t
 
 #### Defined in
 
-[Utilities/StringFunctions.ts:28](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Utilities/StringFunctions.ts#L28)
+[Utilities/StringFunctions.ts:28](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Utilities/StringFunctions.ts#L28)
 

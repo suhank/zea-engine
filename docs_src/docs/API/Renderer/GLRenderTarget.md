@@ -38,7 +38,7 @@ Create a GL render target.
 
 #### Defined in
 
-[Renderer/GLRenderTarget.ts:32](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Renderer/GLRenderTarget.ts#L32)
+[Renderer/GLRenderTarget.ts:32](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Renderer/GLRenderTarget.ts#L32)
 
 ## Properties
 
@@ -48,7 +48,7 @@ Create a GL render target.
 
 #### Defined in
 
-[Renderer/GLRenderTarget.ts:7](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Renderer/GLRenderTarget.ts#L7)
+[Renderer/GLRenderTarget.ts:7](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Renderer/GLRenderTarget.ts#L7)
 
 ___
 
@@ -62,7 +62,7 @@ ___
 
 #### Defined in
 
-[Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Utilities/BaseClass.ts#L11)
+[Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Utilities/BaseClass.ts#L11)
 
 ___
 
@@ -72,7 +72,7 @@ ___
 
 #### Defined in
 
-[Renderer/GLRenderTarget.ts:26](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Renderer/GLRenderTarget.ts#L26)
+[Renderer/GLRenderTarget.ts:26](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Renderer/GLRenderTarget.ts#L26)
 
 ___
 
@@ -82,7 +82,7 @@ ___
 
 #### Defined in
 
-[Renderer/GLRenderTarget.ts:22](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Renderer/GLRenderTarget.ts#L22)
+[Renderer/GLRenderTarget.ts:22](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Renderer/GLRenderTarget.ts#L22)
 
 ___
 
@@ -92,7 +92,7 @@ ___
 
 #### Defined in
 
-[Renderer/GLRenderTarget.ts:23](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Renderer/GLRenderTarget.ts#L23)
+[Renderer/GLRenderTarget.ts:23](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Renderer/GLRenderTarget.ts#L23)
 
 ___
 
@@ -102,7 +102,7 @@ ___
 
 #### Defined in
 
-[Renderer/GLRenderTarget.ts:9](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Renderer/GLRenderTarget.ts#L9)
+[Renderer/GLRenderTarget.ts:9](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Renderer/GLRenderTarget.ts#L9)
 
 ___
 
@@ -112,7 +112,7 @@ ___
 
 #### Defined in
 
-[Renderer/GLRenderTarget.ts:17](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Renderer/GLRenderTarget.ts#L17)
+[Renderer/GLRenderTarget.ts:17](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Renderer/GLRenderTarget.ts#L17)
 
 ___
 
@@ -122,7 +122,7 @@ ___
 
 #### Defined in
 
-[Renderer/GLRenderTarget.ts:19](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Renderer/GLRenderTarget.ts#L19)
+[Renderer/GLRenderTarget.ts:19](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Renderer/GLRenderTarget.ts#L19)
 
 ___
 
@@ -132,7 +132,7 @@ ___
 
 #### Defined in
 
-[Renderer/GLRenderTarget.ts:15](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Renderer/GLRenderTarget.ts#L15)
+[Renderer/GLRenderTarget.ts:15](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Renderer/GLRenderTarget.ts#L15)
 
 ___
 
@@ -142,7 +142,7 @@ ___
 
 #### Defined in
 
-[Renderer/GLRenderTarget.ts:11](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Renderer/GLRenderTarget.ts#L11)
+[Renderer/GLRenderTarget.ts:11](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Renderer/GLRenderTarget.ts#L11)
 
 ___
 
@@ -152,7 +152,7 @@ ___
 
 #### Defined in
 
-[Renderer/GLRenderTarget.ts:21](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Renderer/GLRenderTarget.ts#L21)
+[Renderer/GLRenderTarget.ts:21](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Renderer/GLRenderTarget.ts#L21)
 
 ___
 
@@ -162,7 +162,7 @@ ___
 
 #### Defined in
 
-[Renderer/GLRenderTarget.ts:16](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Renderer/GLRenderTarget.ts#L16)
+[Renderer/GLRenderTarget.ts:16](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Renderer/GLRenderTarget.ts#L16)
 
 ___
 
@@ -176,7 +176,7 @@ ___
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Utilities/EventEmitter.ts#L26)
+[Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Utilities/EventEmitter.ts#L26)
 
 ___
 
@@ -186,7 +186,7 @@ ___
 
 #### Defined in
 
-[Renderer/GLRenderTarget.ts:13](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Renderer/GLRenderTarget.ts#L13)
+[Renderer/GLRenderTarget.ts:13](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Renderer/GLRenderTarget.ts#L13)
 
 ___
 
@@ -196,7 +196,7 @@ ___
 
 #### Defined in
 
-[Renderer/GLRenderTarget.ts:10](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Renderer/GLRenderTarget.ts#L10)
+[Renderer/GLRenderTarget.ts:10](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Renderer/GLRenderTarget.ts#L10)
 
 ___
 
@@ -206,7 +206,7 @@ ___
 
 #### Defined in
 
-[Renderer/GLRenderTarget.ts:8](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Renderer/GLRenderTarget.ts#L8)
+[Renderer/GLRenderTarget.ts:8](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Renderer/GLRenderTarget.ts#L8)
 
 ___
 
@@ -216,7 +216,7 @@ ___
 
 #### Defined in
 
-[Renderer/GLRenderTarget.ts:24](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Renderer/GLRenderTarget.ts#L24)
+[Renderer/GLRenderTarget.ts:24](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Renderer/GLRenderTarget.ts#L24)
 
 ___
 
@@ -226,7 +226,7 @@ ___
 
 #### Defined in
 
-[Renderer/GLRenderTarget.ts:14](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Renderer/GLRenderTarget.ts#L14)
+[Renderer/GLRenderTarget.ts:14](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Renderer/GLRenderTarget.ts#L14)
 
 ___
 
@@ -236,7 +236,7 @@ ___
 
 #### Defined in
 
-[Renderer/GLRenderTarget.ts:20](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Renderer/GLRenderTarget.ts#L20)
+[Renderer/GLRenderTarget.ts:20](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Renderer/GLRenderTarget.ts#L20)
 
 ___
 
@@ -246,7 +246,7 @@ ___
 
 #### Defined in
 
-[Renderer/GLRenderTarget.ts:18](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Renderer/GLRenderTarget.ts#L18)
+[Renderer/GLRenderTarget.ts:18](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Renderer/GLRenderTarget.ts#L18)
 
 ## Methods
 
@@ -272,7 +272,7 @@ The bindColorTexture method.
 
 #### Defined in
 
-[Renderer/GLRenderTarget.ts:249](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Renderer/GLRenderTarget.ts#L249)
+[Renderer/GLRenderTarget.ts:249](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Renderer/GLRenderTarget.ts#L249)
 
 ___
 
@@ -297,7 +297,7 @@ The bindDepthTexture method.
 
 #### Defined in
 
-[Renderer/GLRenderTarget.ts:264](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Renderer/GLRenderTarget.ts#L264)
+[Renderer/GLRenderTarget.ts:264](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Renderer/GLRenderTarget.ts#L264)
 
 ___
 
@@ -313,7 +313,7 @@ Binds the render target in preparation for 'readPixels' calls to pull data back 
 
 #### Defined in
 
-[Renderer/GLRenderTarget.ts:228](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Renderer/GLRenderTarget.ts#L228)
+[Renderer/GLRenderTarget.ts:228](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Renderer/GLRenderTarget.ts#L228)
 
 ___
 
@@ -336,7 +336,7 @@ The bindForWriting method.
 
 #### Defined in
 
-[Renderer/GLRenderTarget.ts:186](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Renderer/GLRenderTarget.ts#L186)
+[Renderer/GLRenderTarget.ts:186](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Renderer/GLRenderTarget.ts#L186)
 
 ___
 
@@ -362,7 +362,7 @@ The bindToUniform method.
 
 #### Defined in
 
-[Renderer/GLRenderTarget.ts:425](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Renderer/GLRenderTarget.ts#L425)
+[Renderer/GLRenderTarget.ts:425](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Renderer/GLRenderTarget.ts#L425)
 
 ___
 
@@ -378,7 +378,7 @@ The checkFramebuffer method.
 
 #### Defined in
 
-[Renderer/GLRenderTarget.ts:152](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Renderer/GLRenderTarget.ts#L152)
+[Renderer/GLRenderTarget.ts:152](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Renderer/GLRenderTarget.ts#L152)
 
 ___
 
@@ -400,7 +400,7 @@ The clear method.
 
 #### Defined in
 
-[Renderer/GLRenderTarget.ts:213](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Renderer/GLRenderTarget.ts#L213)
+[Renderer/GLRenderTarget.ts:213](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Renderer/GLRenderTarget.ts#L213)
 
 ___
 
@@ -422,7 +422,7 @@ The configure method.
 
 #### Defined in
 
-[Renderer/GLRenderTarget.ts:50](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Renderer/GLRenderTarget.ts#L50)
+[Renderer/GLRenderTarget.ts:50](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Renderer/GLRenderTarget.ts#L50)
 
 ___
 
@@ -439,7 +439,7 @@ Users should never need to call this method directly.
 
 #### Defined in
 
-[Renderer/GLRenderTarget.ts:457](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Renderer/GLRenderTarget.ts#L457)
+[Renderer/GLRenderTarget.ts:457](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Renderer/GLRenderTarget.ts#L457)
 
 ___
 
@@ -466,7 +466,7 @@ Triggers all listener functions in an event.
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Utilities/EventEmitter.ts#L154)
+[Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Utilities/EventEmitter.ts#L154)
 
 ___
 
@@ -488,7 +488,7 @@ Returns the unmangled name of the class.
 
 #### Defined in
 
-[Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Utilities/BaseClass.ts#L33)
+[Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Utilities/BaseClass.ts#L33)
 
 ___
 
@@ -512,7 +512,7 @@ Returns the unique id of the object.
 
 #### Defined in
 
-[Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Utilities/BaseClass.ts#L25)
+[Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Utilities/BaseClass.ts#L25)
 
 ___
 
@@ -539,7 +539,7 @@ Removes a listener function from the specified event, using either the function 
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Utilities/EventEmitter.ts#L97)
+[Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Utilities/EventEmitter.ts#L97)
 
 ___
 
@@ -568,7 +568,7 @@ Adds a listener function for a given event name.
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Utilities/EventEmitter.ts#L44)
+[Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Utilities/EventEmitter.ts#L44)
 
 ___
 
@@ -606,7 +606,7 @@ asset.once('loaded', () => {
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Utilities/EventEmitter.ts#L82)
+[Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Utilities/EventEmitter.ts#L82)
 
 ___
 
@@ -633,7 +633,7 @@ remove listener by ID returned from #on
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Utilities/EventEmitter.ts#L134)
+[Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Utilities/EventEmitter.ts#L134)
 
 ___
 
@@ -657,7 +657,7 @@ The resize method.
 
 #### Defined in
 
-[Renderer/GLRenderTarget.ts:286](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Renderer/GLRenderTarget.ts#L286)
+[Renderer/GLRenderTarget.ts:286](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Renderer/GLRenderTarget.ts#L286)
 
 ___
 
@@ -679,7 +679,7 @@ The unbind method.
 
 #### Defined in
 
-[Renderer/GLRenderTarget.ts:276](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Renderer/GLRenderTarget.ts#L276)
+[Renderer/GLRenderTarget.ts:276](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Renderer/GLRenderTarget.ts#L276)
 
 ___
 
@@ -695,7 +695,7 @@ The unbindForReading method.
 
 #### Defined in
 
-[Renderer/GLRenderTarget.ts:237](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Renderer/GLRenderTarget.ts#L237)
+[Renderer/GLRenderTarget.ts:237](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Renderer/GLRenderTarget.ts#L237)
 
 ___
 
@@ -717,5 +717,5 @@ The unbindForWriting method.
 
 #### Defined in
 
-[Renderer/GLRenderTarget.ts:202](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Renderer/GLRenderTarget.ts#L202)
+[Renderer/GLRenderTarget.ts:202](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Renderer/GLRenderTarget.ts#L202)
 

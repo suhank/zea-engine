@@ -33,7 +33,7 @@ Create an BaseEvent.
 
 #### Defined in
 
-[Utilities/Events/XrViewportEvent.ts:5](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Utilities/Events/XrViewportEvent.ts#L5)
+[Utilities/Events/XrViewportEvent.ts:5](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Utilities/Events/XrViewportEvent.ts#L5)
 
 ## Properties
 
@@ -43,5 +43,5 @@ Create an BaseEvent.
 
 #### Defined in
 
-[Utilities/Events/XrViewportEvent.ts:4](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Utilities/Events/XrViewportEvent.ts#L4)
+[Utilities/Events/XrViewportEvent.ts:4](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Utilities/Events/XrViewportEvent.ts#L4)
 

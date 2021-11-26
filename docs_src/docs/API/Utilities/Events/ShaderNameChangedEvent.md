@@ -33,7 +33,7 @@ Create an BaseEvent.
 
 #### Defined in
 
-[Utilities/Events/ShaderNameChangedEvent.ts:5](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Utilities/Events/ShaderNameChangedEvent.ts#L5)
+[Utilities/Events/ShaderNameChangedEvent.ts:5](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Utilities/Events/ShaderNameChangedEvent.ts#L5)
 
 ## Properties
 
@@ -43,5 +43,5 @@ Create an BaseEvent.
 
 #### Defined in
 
-[Utilities/Events/ShaderNameChangedEvent.ts:4](https://github.com/ZeaInc/zea-engine/blob/cc691d16b/src/Utilities/Events/ShaderNameChangedEvent.ts#L4)
+[Utilities/Events/ShaderNameChangedEvent.ts:4](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Utilities/Events/ShaderNameChangedEvent.ts#L4)
 
