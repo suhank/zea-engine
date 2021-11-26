@@ -10,19 +10,19 @@ All notable changes to this project will be documented in this file. See [standa
 * Cleaned up auto near/far plane auto adjust code so that the near plane gets moved away when zooming out. ([17f037e](https://github.com/ZeaInc/zea-engine/commit/17f037e95515c10778f8db5d703b4871a2bd6000))
 * Cleaned up regression when loading ZCAD files containing points materials. ([92ebb71](https://github.com/ZeaInc/zea-engine/commit/92ebb71807fa8435d235c87dcc063a089bb409c4))
 * ES modules support ([1d49056](https://github.com/ZeaInc/zea-engine/commit/1d4905648c8253aa66b749afef81e6ebd55b39ae))
-* KinematicGroup was not calling super.bindItem, which meant poitner events were not propagating from members to the group. ([0e454dd](https://github.com/ZeaInc/zea-engine/commit/0e454dd60437036152e26db7c7792f5545f14b56))
+* KinematicGroup was not calling super.bindItem(), which meant pointer events were not propagating from members to the group. ([0e454dd](https://github.com/ZeaInc/zea-engine/commit/0e454dd60437036152e26db7c7792f5545f14b56))
 * Near and Far planes are now automatically adapted by 4 orders of magnitude. ([7000916](https://github.com/ZeaInc/zea-engine/commit/70009162e6e1fb662c9a373d9df90600ce0e76e0))
 * Parameter becomes dirty by setting 'clean' just prior to calling 'setDirty' to ensure a change in state. ([21b1440](https://github.com/ZeaInc/zea-engine/commit/21b1440f678a949000ae1f2811cf58b9a9faa571))
 * When an OperatorOutput with mode OP_READ_WRITE is connected to a parameter, the parameter should be dirtied back to the first OP_WRITE index. ([145c45a](https://github.com/ZeaInc/zea-engine/commit/145c45a77397e1f663a720eb3fb6ce3e3cabf58d))
-* When deleting the VAO, ensure to detatch the indexBuffer first. ([991c2b1](https://github.com/ZeaInc/zea-engine/commit/991c2b1f9f26cc7400fbcf7df1e724196d4b7c69))
+* When deleting the VAO, ensure to detach the indexBuffer first. ([991c2b1](https://github.com/ZeaInc/zea-engine/commit/991c2b1f9f26cc7400fbcf7df1e724196d4b7c69))
 
 ## [4.0.0](https://github.com/ZeaInc/zea-engine/compare/v3.12.3...v4.0.0) (2021-11-10)
 
-Version 4.0.0 is a majior release for Zea Engine, as the entire codebase was ported and updated to work with TypeScript. This change caused a few breaking changes as TypeScript did not allow methods with any ambiguity in the signatures. 
-Porting to TypeScript addressed a wide range or minor issues, picked up by the strict typeing of TypeScript. 
+Version 4.0.0 is a major release for Zea Engine, as the entire codebase was ported and updated to work with TypeScript. This change caused a few breaking changes as TypeScript did not allow methods with any ambiguity in the signatures. 
+Porting to TypeScript addressed a wide range or minor issues, picked up by the strict typing of TypeScript. 
 
 A second and very important benefit of the port to TypeScript, is to provide TypeScript support within client developed applications.
-We highly recomend you install the engine and its libraries as depndencies using npm, yarn or your favorite package manager, and import the engine into your code using the bundler tools that come with React or Svelte. 
+We highly recommend you install the engine and its libraries as dependencies using npm, yarn or your favorite package manager, and import the engine into your code using the bundler tools that come with React or Svelte. 
 
 ### Old code
 Previously, our engine did not support module bundlers for a few technical reasons that have now been addressed. Instead, we recommended users load our engine using script tags, and then access the classes using a global variable. This approach had a few concerns and limitations. 
