@@ -1158,7 +1158,15 @@
   resolved "https://registry.yarnpkg.com/@docsearch/css/-/css-3.0.0-alpha.41.tgz#c5c8e803541bd157ad86e764c2c1e9f1b5a68592"
   integrity sha512-AP1jqcF/9jCrm4s0lcES3QAtHueyipKjd14L/pguk0CZYK7uI7hC0FWodmRmrgK3/HST9jiHa1waUMR6ZYedlQ==
 
-"@docsearch/react@^3.0.0-alpha.39":
+"@docsearch/js@^3.0.0-alpha.41":
+  version "3.0.0-alpha.41"
+  resolved "https://registry.yarnpkg.com/@docsearch/js/-/js-3.0.0-alpha.41.tgz#f669e50fb93037f28dfc7d2407da043c4299ef97"
+  integrity sha512-dD9r+ygmzJEE50wtnRUs6I7TMD4ui7igEQlt74jZsn0SUPk6AlIP2ldII8brJHr0I4qs4OzlyrvV6ikAqjR6sw==
+  dependencies:
+    "@docsearch/react" "3.0.0-alpha.41"
+    preact "^10.0.0"
+
+"@docsearch/react@3.0.0-alpha.41", "@docsearch/react@^3.0.0-alpha.39":
   version "3.0.0-alpha.41"
   resolved "https://registry.yarnpkg.com/@docsearch/react/-/react-3.0.0-alpha.41.tgz#07e85a664e85f251ce3d13153abce65a4d5997ab"
   integrity sha512-UL0Gdter/NUea04lGuBGH0GzQ2/2q/hBfn7Rjo71rRKbjtfkQCM92leJ9tZ+9j9sFLoyuHb9XMm/B8vCjWwTEg==
@@ -7603,6 +7611,11 @@ postcss@^8.2.15, postcss@^8.3.11, postcss@^8.3.5, postcss@^8.3.7:
     nanoid "^3.1.30"
     picocolors "^1.0.0"
     source-map-js "^0.6.2"
+
+preact@^10.0.0:
+  version "10.6.2"
+  resolved "https://registry.yarnpkg.com/preact/-/preact-10.6.2.tgz#c849f91df9ad36bfa64d1a5d5880977f767c69e5"
+  integrity sha512-ppDjurt75nSxyikpyali+uKwRl8CK9N6ntOPovGIEGQagjMLVzEgVqFEsUUyUrqyE9Ch90KE0jmFc9q2QcPLBA==
 
 prepend-http@^2.0.0:
   version "2.0.0"
