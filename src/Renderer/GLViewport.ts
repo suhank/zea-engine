@@ -885,23 +885,6 @@ class GLViewport extends GLBaseViewport {
       const imageInif = <Uniform>renderstate.unifs.image
       occlusionDataBuffer.bindColorTexture(renderstate, imageInif)
       screenQuad.draw(renderstate, null, new Vec2(0, 0), new Vec2(1, 1))
-      // if (occlusionDataBuffer) {
-      //   gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null)
-      //   occlusionDataBuffer.bindForReading()
-      //   gl.clearBufferfv(gl.COLOR, 0, [0.0, 0.0, 0.0, 0.0])
-      //   gl.blitFramebuffer(
-      //     0,
-      //     0,
-      //     occlusionDataBuffer.width,
-      //     occlusionDataBuffer.height,
-      //     0,
-      //     0,
-      //     this.__width,
-      //     this.__height,
-      //     gl.COLOR_BUFFER_BIT,
-      //     gl.NEAREST
-      //   )
-      // }
     }
   }
 }
