@@ -82,7 +82,7 @@ Create a GL shader.
 
 #### Defined in
 
-[Renderer/GLShader.ts:38](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Renderer/GLShader.ts#L38)
+[Renderer/GLShader.ts:38](https://github.com/ZeaInc/zea-engine/blob/339201283/src/Renderer/GLShader.ts#L38)
 
 ## Properties
 
@@ -92,7 +92,7 @@ Create a GL shader.
 
 #### Defined in
 
-[Renderer/GLShader.ts:26](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Renderer/GLShader.ts#L26)
+[Renderer/GLShader.ts:26](https://github.com/ZeaInc/zea-engine/blob/339201283/src/Renderer/GLShader.ts#L26)
 
 ___
 
@@ -102,7 +102,7 @@ ___
 
 #### Defined in
 
-[Renderer/GLShader.ts:30](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Renderer/GLShader.ts#L30)
+[Renderer/GLShader.ts:30](https://github.com/ZeaInc/zea-engine/blob/339201283/src/Renderer/GLShader.ts#L30)
 
 ___
 
@@ -116,7 +116,7 @@ ___
 
 #### Defined in
 
-[Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Utilities/BaseClass.ts#L11)
+[Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/339201283/src/Utilities/BaseClass.ts#L11)
 
 ___
 
@@ -130,7 +130,7 @@ ___
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:39](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/BaseItem.ts#L39)
+[SceneTree/BaseItem.ts:39](https://github.com/ZeaInc/zea-engine/blob/339201283/src/SceneTree/BaseItem.ts#L39)
 
 ___
 
@@ -144,7 +144,7 @@ ___
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:34](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/BaseItem.ts#L34)
+[SceneTree/BaseItem.ts:34](https://github.com/ZeaInc/zea-engine/blob/339201283/src/SceneTree/BaseItem.ts#L34)
 
 ___
 
@@ -158,7 +158,7 @@ ___
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:35](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/BaseItem.ts#L35)
+[SceneTree/BaseItem.ts:35](https://github.com/ZeaInc/zea-engine/blob/339201283/src/SceneTree/BaseItem.ts#L35)
 
 ___
 
@@ -172,7 +172,7 @@ ___
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:36](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/BaseItem.ts#L36)
+[SceneTree/BaseItem.ts:36](https://github.com/ZeaInc/zea-engine/blob/339201283/src/SceneTree/BaseItem.ts#L36)
 
 ___
 
@@ -186,7 +186,7 @@ ___
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:37](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/BaseItem.ts#L37)
+[SceneTree/BaseItem.ts:37](https://github.com/ZeaInc/zea-engine/blob/339201283/src/SceneTree/BaseItem.ts#L37)
 
 ___
 
@@ -200,7 +200,7 @@ ___
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:38](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/BaseItem.ts#L38)
+[SceneTree/BaseItem.ts:38](https://github.com/ZeaInc/zea-engine/blob/339201283/src/SceneTree/BaseItem.ts#L38)
 
 ___
 
@@ -210,7 +210,7 @@ ___
 
 #### Defined in
 
-[Renderer/GLShader.ts:33](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Renderer/GLShader.ts#L33)
+[Renderer/GLShader.ts:33](https://github.com/ZeaInc/zea-engine/blob/339201283/src/Renderer/GLShader.ts#L33)
 
 ___
 
@@ -220,7 +220,7 @@ ___
 
 #### Defined in
 
-[Renderer/GLShader.ts:29](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Renderer/GLShader.ts#L29)
+[Renderer/GLShader.ts:29](https://github.com/ZeaInc/zea-engine/blob/339201283/src/Renderer/GLShader.ts#L29)
 
 ___
 
@@ -230,7 +230,7 @@ ___
 
 #### Defined in
 
-[Renderer/GLShader.ts:28](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Renderer/GLShader.ts#L28)
+[Renderer/GLShader.ts:28](https://github.com/ZeaInc/zea-engine/blob/339201283/src/Renderer/GLShader.ts#L28)
 
 ___
 
@@ -240,7 +240,7 @@ ___
 
 #### Defined in
 
-[Renderer/GLShader.ts:27](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Renderer/GLShader.ts#L27)
+[Renderer/GLShader.ts:27](https://github.com/ZeaInc/zea-engine/blob/339201283/src/Renderer/GLShader.ts#L27)
 
 ___
 
@@ -254,7 +254,7 @@ ___
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:23](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/ParameterOwner.ts#L23)
+[SceneTree/ParameterOwner.ts:23](https://github.com/ZeaInc/zea-engine/blob/339201283/src/SceneTree/ParameterOwner.ts#L23)
 
 ___
 
@@ -268,7 +268,7 @@ ___
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Utilities/EventEmitter.ts#L26)
+[Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/339201283/src/Utilities/EventEmitter.ts#L26)
 
 ___
 
@@ -282,7 +282,7 @@ ___
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:20](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/ParameterOwner.ts#L20)
+[SceneTree/ParameterOwner.ts:20](https://github.com/ZeaInc/zea-engine/blob/339201283/src/SceneTree/ParameterOwner.ts#L20)
 
 ___
 
@@ -296,7 +296,7 @@ ___
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:21](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/ParameterOwner.ts#L21)
+[SceneTree/ParameterOwner.ts:21](https://github.com/ZeaInc/zea-engine/blob/339201283/src/SceneTree/ParameterOwner.ts#L21)
 
 ___
 
@@ -310,7 +310,7 @@ ___
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:22](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/ParameterOwner.ts#L22)
+[SceneTree/ParameterOwner.ts:22](https://github.com/ZeaInc/zea-engine/blob/339201283/src/SceneTree/ParameterOwner.ts#L22)
 
 ## Methods
 
@@ -337,7 +337,7 @@ The __compileShaderStage method.
 
 #### Defined in
 
-[Renderer/GLShader.ts:122](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Renderer/GLShader.ts#L122)
+[Renderer/GLShader.ts:122](https://github.com/ZeaInc/zea-engine/blob/339201283/src/Renderer/GLShader.ts#L122)
 
 ___
 
@@ -361,7 +361,7 @@ The __createProgram method.
 
 #### Defined in
 
-[Renderer/GLShader.ts:211](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Renderer/GLShader.ts#L211)
+[Renderer/GLShader.ts:211](https://github.com/ZeaInc/zea-engine/blob/339201283/src/Renderer/GLShader.ts#L211)
 
 ___
 
@@ -386,7 +386,7 @@ The __extractAttributeAndUniformLocations method.
 
 #### Defined in
 
-[Renderer/GLShader.ts:295](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Renderer/GLShader.ts#L295)
+[Renderer/GLShader.ts:295](https://github.com/ZeaInc/zea-engine/blob/339201283/src/Renderer/GLShader.ts#L295)
 
 ___
 
@@ -416,7 +416,7 @@ Adds `Parameter` object to the owner's parameter list.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:133](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/ParameterOwner.ts#L133)
+[SceneTree/ParameterOwner.ts:133](https://github.com/ZeaInc/zea-engine/blob/339201283/src/SceneTree/ParameterOwner.ts#L133)
 
 ___
 
@@ -446,7 +446,7 @@ This is used to handle migrating parameters to new names.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:90](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/ParameterOwner.ts#L90)
+[SceneTree/ParameterOwner.ts:90](https://github.com/ZeaInc/zea-engine/blob/339201283/src/SceneTree/ParameterOwner.ts#L90)
 
 ___
 
@@ -471,7 +471,7 @@ The bind method.
 
 #### Defined in
 
-[Renderer/GLShader.ts:425](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Renderer/GLShader.ts#L425)
+[Renderer/GLShader.ts:425](https://github.com/ZeaInc/zea-engine/blob/339201283/src/Renderer/GLShader.ts#L425)
 
 ___
 
@@ -487,7 +487,7 @@ Clears all cached shader compilations for this shader.
 
 #### Defined in
 
-[Renderer/GLShader.ts:81](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Renderer/GLShader.ts#L81)
+[Renderer/GLShader.ts:81](https://github.com/ZeaInc/zea-engine/blob/339201283/src/Renderer/GLShader.ts#L81)
 
 ___
 
@@ -515,7 +515,7 @@ Clones this base item and returns a new base item.
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:317](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/BaseItem.ts#L317)
+[SceneTree/BaseItem.ts:317](https://github.com/ZeaInc/zea-engine/blob/339201283/src/SceneTree/BaseItem.ts#L317)
 
 ___
 
@@ -531,7 +531,7 @@ The compile method.
 
 #### Defined in
 
-[Renderer/GLShader.ts:415](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Renderer/GLShader.ts#L415)
+[Renderer/GLShader.ts:415](https://github.com/ZeaInc/zea-engine/blob/339201283/src/Renderer/GLShader.ts#L415)
 
 ___
 
@@ -556,7 +556,7 @@ The compileForTarget method.
 
 #### Defined in
 
-[Renderer/GLShader.ts:398](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Renderer/GLShader.ts#L398)
+[Renderer/GLShader.ts:398](https://github.com/ZeaInc/zea-engine/blob/339201283/src/Renderer/GLShader.ts#L398)
 
 ___
 
@@ -589,7 +589,7 @@ data from the source object.
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:333](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/BaseItem.ts#L333)
+[SceneTree/BaseItem.ts:333](https://github.com/ZeaInc/zea-engine/blob/339201283/src/SceneTree/BaseItem.ts#L333)
 
 ___
 
@@ -615,7 +615,7 @@ Removes metadata for a given key.
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:261](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/BaseItem.ts#L261)
+[SceneTree/BaseItem.ts:261](https://github.com/ZeaInc/zea-engine/blob/339201283/src/SceneTree/BaseItem.ts#L261)
 
 ___
 
@@ -632,7 +632,7 @@ Users should never need to call this method directly.
 
 #### Defined in
 
-[Renderer/GLShader.ts:524](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Renderer/GLShader.ts#L524)
+[Renderer/GLShader.ts:524](https://github.com/ZeaInc/zea-engine/blob/339201283/src/Renderer/GLShader.ts#L524)
 
 ___
 
@@ -659,7 +659,7 @@ Triggers all listener functions in an event.
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Utilities/EventEmitter.ts#L154)
+[Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/339201283/src/Utilities/EventEmitter.ts#L154)
 
 ___
 
@@ -686,7 +686,7 @@ Decodes a json object for this type.
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:287](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/BaseItem.ts#L287)
+[SceneTree/BaseItem.ts:287](https://github.com/ZeaInc/zea-engine/blob/339201283/src/SceneTree/BaseItem.ts#L287)
 
 ___
 
@@ -704,7 +704,7 @@ The getAttributes method.
 
 #### Defined in
 
-[Renderer/GLShader.ts:359](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Renderer/GLShader.ts#L359)
+[Renderer/GLShader.ts:359](https://github.com/ZeaInc/zea-engine/blob/339201283/src/Renderer/GLShader.ts#L359)
 
 ___
 
@@ -726,7 +726,7 @@ Returns the unmangled name of the class.
 
 #### Defined in
 
-[Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Utilities/BaseClass.ts#L33)
+[Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/339201283/src/Utilities/BaseClass.ts#L33)
 
 ___
 
@@ -744,7 +744,7 @@ The getGeomDataShaderName method.
 
 #### Defined in
 
-[Renderer/GLShader.ts:478](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Renderer/GLShader.ts#L478)
+[Renderer/GLShader.ts:478](https://github.com/ZeaInc/zea-engine/blob/339201283/src/Renderer/GLShader.ts#L478)
 
 ___
 
@@ -768,7 +768,7 @@ Returns the unique id of the object.
 
 #### Defined in
 
-[Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Utilities/BaseClass.ts#L25)
+[Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/339201283/src/Utilities/BaseClass.ts#L25)
 
 ___
 
@@ -796,7 +796,7 @@ Gets Item's meta-data value by passing the `key` string.
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:232](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/BaseItem.ts#L232)
+[SceneTree/BaseItem.ts:232](https://github.com/ZeaInc/zea-engine/blob/339201283/src/SceneTree/BaseItem.ts#L232)
 
 ___
 
@@ -818,7 +818,7 @@ Returns the name of the base item.
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:74](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/BaseItem.ts#L74)
+[SceneTree/BaseItem.ts:74](https://github.com/ZeaInc/zea-engine/blob/339201283/src/SceneTree/BaseItem.ts#L74)
 
 ___
 
@@ -840,7 +840,7 @@ Returns the number of parameters current object has.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:39](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/ParameterOwner.ts#L39)
+[SceneTree/ParameterOwner.ts:39](https://github.com/ZeaInc/zea-engine/blob/339201283/src/SceneTree/ParameterOwner.ts#L39)
 
 ___
 
@@ -863,7 +863,7 @@ The item is a child of the current owner.
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:154](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/BaseItem.ts#L154)
+[SceneTree/BaseItem.ts:154](https://github.com/ZeaInc/zea-engine/blob/339201283/src/SceneTree/BaseItem.ts#L154)
 
 ___
 
@@ -891,7 +891,7 @@ Returns `Parameter` object using the given name
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:100](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/ParameterOwner.ts#L100)
+[SceneTree/ParameterOwner.ts:100](https://github.com/ZeaInc/zea-engine/blob/339201283/src/SceneTree/ParameterOwner.ts#L100)
 
 ___
 
@@ -919,7 +919,7 @@ Returns `Parameter` object in a given index
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:68](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/ParameterOwner.ts#L68)
+[SceneTree/ParameterOwner.ts:68](https://github.com/ZeaInc/zea-engine/blob/339201283/src/SceneTree/ParameterOwner.ts#L68)
 
 ___
 
@@ -947,7 +947,7 @@ Returns the index of a parameter in parameter list.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:58](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/ParameterOwner.ts#L58)
+[SceneTree/ParameterOwner.ts:58](https://github.com/ZeaInc/zea-engine/blob/339201283/src/SceneTree/ParameterOwner.ts#L58)
 
 ___
 
@@ -969,7 +969,7 @@ Returns all the parameters of the object.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:48](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/ParameterOwner.ts#L48)
+[SceneTree/ParameterOwner.ts:48](https://github.com/ZeaInc/zea-engine/blob/339201283/src/SceneTree/ParameterOwner.ts#L48)
 
 ___
 
@@ -991,7 +991,7 @@ Returns the current path of the item in the tree as an array of names.
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:111](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/BaseItem.ts#L111)
+[SceneTree/BaseItem.ts:111](https://github.com/ZeaInc/zea-engine/blob/339201283/src/SceneTree/BaseItem.ts#L111)
 
 ___
 
@@ -1007,7 +1007,7 @@ The getSelectedShaderName method.
 
 #### Defined in
 
-[Renderer/GLShader.ts:485](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Renderer/GLShader.ts#L485)
+[Renderer/GLShader.ts:485](https://github.com/ZeaInc/zea-engine/blob/339201283/src/Renderer/GLShader.ts#L485)
 
 ___
 
@@ -1031,7 +1031,7 @@ Gets the GLSL code for a given shader stage.
 
 #### Defined in
 
-[Renderer/GLShader.ts:74](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Renderer/GLShader.ts#L74)
+[Renderer/GLShader.ts:74](https://github.com/ZeaInc/zea-engine/blob/339201283/src/Renderer/GLShader.ts#L74)
 
 ___
 
@@ -1049,7 +1049,7 @@ The getUniforms method.
 
 #### Defined in
 
-[Renderer/GLShader.ts:373](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Renderer/GLShader.ts#L373)
+[Renderer/GLShader.ts:373](https://github.com/ZeaInc/zea-engine/blob/339201283/src/Renderer/GLShader.ts#L373)
 
 ___
 
@@ -1077,7 +1077,7 @@ Checks to see if there is metadata for a given key.
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:242](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/BaseItem.ts#L242)
+[SceneTree/BaseItem.ts:242](https://github.com/ZeaInc/zea-engine/blob/339201283/src/SceneTree/BaseItem.ts#L242)
 
 ___
 
@@ -1105,7 +1105,7 @@ Validates if the specified parameter exists in the object.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:78](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/ParameterOwner.ts#L78)
+[SceneTree/ParameterOwner.ts:78](https://github.com/ZeaInc/zea-engine/blob/339201283/src/SceneTree/ParameterOwner.ts#L78)
 
 ___
 
@@ -1137,7 +1137,7 @@ It replaces the event in the specified index.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:147](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/ParameterOwner.ts#L147)
+[SceneTree/ParameterOwner.ts:147](https://github.com/ZeaInc/zea-engine/blob/339201283/src/SceneTree/ParameterOwner.ts#L147)
 
 ___
 
@@ -1161,7 +1161,7 @@ Checks to see if the engine is compiled for the target specified by the key
 
 #### Defined in
 
-[Renderer/GLShader.ts:387](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Renderer/GLShader.ts#L387)
+[Renderer/GLShader.ts:387](https://github.com/ZeaInc/zea-engine/blob/339201283/src/Renderer/GLShader.ts#L387)
 
 ___
 
@@ -1183,7 +1183,7 @@ Returns a boolean indicating if this item is selectable.
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:183](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/BaseItem.ts#L183)
+[SceneTree/BaseItem.ts:183](https://github.com/ZeaInc/zea-engine/blob/339201283/src/SceneTree/BaseItem.ts#L183)
 
 ___
 
@@ -1205,7 +1205,7 @@ The isSelected method.
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:207](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/BaseItem.ts#L207)
+[SceneTree/BaseItem.ts:207](https://github.com/ZeaInc/zea-engine/blob/339201283/src/SceneTree/BaseItem.ts#L207)
 
 ___
 
@@ -1232,7 +1232,7 @@ Removes a listener function from the specified event, using either the function 
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Utilities/EventEmitter.ts#L97)
+[Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/339201283/src/Utilities/EventEmitter.ts#L97)
 
 ___
 
@@ -1261,7 +1261,7 @@ Adds a listener function for a given event name.
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Utilities/EventEmitter.ts#L44)
+[Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/339201283/src/Utilities/EventEmitter.ts#L44)
 
 ___
 
@@ -1299,7 +1299,7 @@ asset.once('loaded', () => {
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Utilities/EventEmitter.ts#L82)
+[Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/339201283/src/Utilities/EventEmitter.ts#L82)
 
 ___
 
@@ -1326,7 +1326,7 @@ to perform general updates (see GLPass or BaseItem).
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:122](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/ParameterOwner.ts#L122)
+[SceneTree/ParameterOwner.ts:122](https://github.com/ZeaInc/zea-engine/blob/339201283/src/SceneTree/ParameterOwner.ts#L122)
 
 ___
 
@@ -1353,7 +1353,7 @@ Sets state of current Item(Including parameters) using a binary reader object.
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:298](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/BaseItem.ts#L298)
+[SceneTree/BaseItem.ts:298](https://github.com/ZeaInc/zea-engine/blob/339201283/src/SceneTree/BaseItem.ts#L298)
 
 ___
 
@@ -1380,7 +1380,7 @@ remove listener by ID returned from #on
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Utilities/EventEmitter.ts#L134)
+[Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/339201283/src/Utilities/EventEmitter.ts#L134)
 
 ___
 
@@ -1408,7 +1408,7 @@ Removes `Parameter` from owner, by using parameter's name.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:174](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/ParameterOwner.ts#L174)
+[SceneTree/ParameterOwner.ts:174](https://github.com/ZeaInc/zea-engine/blob/339201283/src/SceneTree/ParameterOwner.ts#L174)
 
 ___
 
@@ -1436,7 +1436,7 @@ Replaces old `Parameter` by passing a new one with the same name.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:196](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/ParameterOwner.ts#L196)
+[SceneTree/ParameterOwner.ts:196](https://github.com/ZeaInc/zea-engine/blob/339201283/src/SceneTree/ParameterOwner.ts#L196)
 
 ___
 
@@ -1467,7 +1467,7 @@ end of the path.
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:126](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/BaseItem.ts#L126)
+[SceneTree/BaseItem.ts:126](https://github.com/ZeaInc/zea-engine/blob/339201283/src/SceneTree/BaseItem.ts#L126)
 
 ___
 
@@ -1490,7 +1490,7 @@ Sets the GL context to the shader.
 
 #### Defined in
 
-[Renderer/GLShader.ts:55](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Renderer/GLShader.ts#L55)
+[Renderer/GLShader.ts:55](https://github.com/ZeaInc/zea-engine/blob/339201283/src/Renderer/GLShader.ts#L55)
 
 ___
 
@@ -1517,7 +1517,7 @@ Assigns metadata to a given key.
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:252](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/BaseItem.ts#L252)
+[SceneTree/BaseItem.ts:252](https://github.com/ZeaInc/zea-engine/blob/339201283/src/SceneTree/BaseItem.ts#L252)
 
 ___
 
@@ -1545,7 +1545,7 @@ Sets the name of the base item(Updates path).
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:84](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/BaseItem.ts#L84)
+[SceneTree/BaseItem.ts:84](https://github.com/ZeaInc/zea-engine/blob/339201283/src/SceneTree/BaseItem.ts#L84)
 
 ___
 
@@ -1571,7 +1571,7 @@ The setOwner method assigns a new owner to the item.
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:164](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/BaseItem.ts#L164)
+[SceneTree/BaseItem.ts:164](https://github.com/ZeaInc/zea-engine/blob/339201283/src/SceneTree/BaseItem.ts#L164)
 
 ___
 
@@ -1599,7 +1599,7 @@ Modifies the selectability of this item.
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:193](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/BaseItem.ts#L193)
+[SceneTree/BaseItem.ts:193](https://github.com/ZeaInc/zea-engine/blob/339201283/src/SceneTree/BaseItem.ts#L193)
 
 ___
 
@@ -1627,7 +1627,7 @@ Changes the current state of the selection of this item.
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:217](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/BaseItem.ts#L217)
+[SceneTree/BaseItem.ts:217](https://github.com/ZeaInc/zea-engine/blob/339201283/src/SceneTree/BaseItem.ts#L217)
 
 ___
 
@@ -1650,7 +1650,7 @@ Sets the GLSL code for a given shader stage.
 
 #### Defined in
 
-[Renderer/GLShader.ts:64](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Renderer/GLShader.ts#L64)
+[Renderer/GLShader.ts:64](https://github.com/ZeaInc/zea-engine/blob/339201283/src/Renderer/GLShader.ts#L64)
 
 ___
 
@@ -1678,7 +1678,7 @@ Encodes the current object as a json object.
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:274](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/BaseItem.ts#L274)
+[SceneTree/BaseItem.ts:274](https://github.com/ZeaInc/zea-engine/blob/339201283/src/SceneTree/BaseItem.ts#L274)
 
 ___
 
@@ -1706,7 +1706,7 @@ Converts object's JSON value and converts it to a string.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:301](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/ParameterOwner.ts#L301)
+[SceneTree/ParameterOwner.ts:301](https://github.com/ZeaInc/zea-engine/blob/339201283/src/SceneTree/ParameterOwner.ts#L301)
 
 ___
 
@@ -1730,7 +1730,7 @@ The unbind method.
 
 #### Defined in
 
-[Renderer/GLShader.ts:463](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Renderer/GLShader.ts#L463)
+[Renderer/GLShader.ts:463](https://github.com/ZeaInc/zea-engine/blob/339201283/src/Renderer/GLShader.ts#L463)
 
 ___
 
@@ -1751,7 +1751,7 @@ recomputes and caches the path of this item.
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:99](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/BaseItem.ts#L99)
+[SceneTree/BaseItem.ts:99](https://github.com/ZeaInc/zea-engine/blob/339201283/src/SceneTree/BaseItem.ts#L99)
 
 ___
 
@@ -1771,7 +1771,7 @@ the material provides values to the shader during rendering.
 
 #### Defined in
 
-[Renderer/GLShader.ts:513](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Renderer/GLShader.ts#L513)
+[Renderer/GLShader.ts:513](https://github.com/ZeaInc/zea-engine/blob/339201283/src/Renderer/GLShader.ts#L513)
 
 ___
 
@@ -1794,7 +1794,7 @@ This method is used in debugging memory consumption.
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:62](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/SceneTree/BaseItem.ts#L62)
+[SceneTree/BaseItem.ts:62](https://github.com/ZeaInc/zea-engine/blob/339201283/src/SceneTree/BaseItem.ts#L62)
 
 ___
 
@@ -1818,7 +1818,7 @@ The getPackedMaterialData method.
 
 #### Defined in
 
-[Renderer/GLShader.ts:502](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Renderer/GLShader.ts#L502)
+[Renderer/GLShader.ts:502](https://github.com/ZeaInc/zea-engine/blob/339201283/src/Renderer/GLShader.ts#L502)
 
 ___
 
@@ -1836,7 +1836,7 @@ The isOverlay method.
 
 #### Defined in
 
-[Renderer/GLShader.ts:106](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Renderer/GLShader.ts#L106)
+[Renderer/GLShader.ts:106](https://github.com/ZeaInc/zea-engine/blob/339201283/src/Renderer/GLShader.ts#L106)
 
 ___
 
@@ -1854,7 +1854,7 @@ The isTransparent method.
 
 #### Defined in
 
-[Renderer/GLShader.ts:98](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Renderer/GLShader.ts#L98)
+[Renderer/GLShader.ts:98](https://github.com/ZeaInc/zea-engine/blob/339201283/src/Renderer/GLShader.ts#L98)
 
 ___
 
@@ -1872,5 +1872,5 @@ The supportsInstancing method.
 
 #### Defined in
 
-[Renderer/GLShader.ts:493](https://github.com/ZeaInc/zea-engine/blob/7209671e2/src/Renderer/GLShader.ts#L493)
+[Renderer/GLShader.ts:493](https://github.com/ZeaInc/zea-engine/blob/339201283/src/Renderer/GLShader.ts#L493)
 
