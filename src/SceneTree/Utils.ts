@@ -34,7 +34,7 @@ const loadFile = function (
     xhr.send()
     // xhr.open();
   } catch (err) {
-    onFail(err)
+    onFail(err as string)
   }
 }
 
