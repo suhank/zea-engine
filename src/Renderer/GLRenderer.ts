@@ -482,7 +482,7 @@ class GLRenderer extends GLBaseRenderer {
           if (geomItemAndDist) {
             const intersectionPos = ray.start.add(ray.dir.scale(geomItemAndDist.dist))
             result.push({
-              ray,
+              pointerRay: ray,
               intersectionPos,
               geomItem: geomItemAndDist.geomItem,
               dist: geomItemAndDist.dist,

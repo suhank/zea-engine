@@ -1,4 +1,5 @@
 /* eslint-disable guard-for-in */
+// @ts-ignore
 import throttle from 'lodash-es/throttle'
 import { TreeItem, GeomItem, ParameterOwner, Scene } from '../SceneTree/index'
 import { SystemDesc } from '../SystemDesc'
@@ -571,7 +572,7 @@ class GLBaseRenderer extends ParameterOwner {
     // FrameBuffer objects would end up all black. So here we throttle
     // the resizing of the canvas to ensure 2 resize commands are not
     // closer than 100ms appart.
-    const throttledResize = throttle((entries) => {
+    const throttledResize = throttle((entries: any) => {
       for (const entry of entries) {
         if (!Array.isArray(entries) || !entries.length || !entry.contentRect) {
           return

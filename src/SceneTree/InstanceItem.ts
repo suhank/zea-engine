@@ -60,15 +60,15 @@ class InstanceItem extends TreeItem {
       try {
         context.resolvePath(
           path,
-          (treeItem) => {
+          (treeItem: TreeItem) => {
             this.setSrcTree(treeItem, context)
           },
-          (error) => {
+          (error: Error) => {
             console.warn(`Error loading InstanceItem: ${this.getPath()}, unable to resolve: ${path}. ` + error.message)
           }
         )
-      } catch (error) {
-        console.warn(`Error loading InstanceItem: ${this.getPath()}: ` + error.message)
+      } catch (error: any) {
+        console.warn(`Error loading InstanceItem: ${this.getPath()}: ` + error)
       }
     }
   }
@@ -109,7 +109,6 @@ class InstanceItem extends TreeItem {
     cloned.copyFrom(this, context)
     return cloned
   }
-
 }
 
 Registry.register('InstanceItem', InstanceItem)

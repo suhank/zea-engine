@@ -420,7 +420,7 @@ class GLViewport extends GLBaseViewport {
       // const x = Math.floor(screenPos.x / this.__geomDataBufferSizeFactor)
       // const y = Math.floor(screenPos.y / this.__geomDataBufferSizeFactor)
       let passId
-      let geomData
+      let geomData: Float32Array | Uint8Array
       if (this.__renderer.floatGeomBuffer) {
         geomData = new Float32Array(4)
         gl.readPixels(x, bufferHeight - y - 1, 1, 1, gl.RGBA, gl.FLOAT, geomData)

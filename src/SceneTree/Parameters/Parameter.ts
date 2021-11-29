@@ -434,7 +434,7 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
    * @param reader - The reader value.
    * @param context - The context value.
    */
-  readBinary(reader: BinReader, context: Record<string, unknown>) {
+  readBinary(reader: BinReader, context?: Record<string, unknown>) {
     console.warn(`TODO: Parameter: ${this.constructor.name} with name: ${this.name} does not implement readBinary`)
   }
 

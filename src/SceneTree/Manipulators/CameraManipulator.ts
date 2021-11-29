@@ -206,7 +206,7 @@ class CameraManipulator extends BaseTool {
    *
    * @param manipulationMode - The manipulation mode value.
    */
-  setDefaultManipulationMode(manipulationMode: string) {
+  setDefaultManipulationMode(manipulationMode: string | number) {
     if (typeof manipulationMode == 'string') {
       this.__defaultManipulationState = MANIPULATION_MODES[manipulationMode]
     } else this.__defaultManipulationState = manipulationMode
@@ -593,7 +593,7 @@ class CameraManipulator extends BaseTool {
    * @memberof CameraManipulator
    */
   onPointerDoublePress(event: ZeaPointerEvent) {
-    const aimFocus = (pointerRay) => {
+    const aimFocus = (pointerRay: Ray) => {
       const viewport = <GLViewport>event.viewport
       const camera = viewport.getCamera()
       const cameraGlobalXfo = camera.globalXfoParam.value

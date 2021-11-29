@@ -298,7 +298,7 @@ class VRViewport extends GLBaseViewport {
             requiredFeatures: ['local-floor'],
             optionalFeatures: ['bounded-floor'],
           })
-          .then((session) => {
+          .then((session: any) => {
             this.__renderer.__xrViewportPresenting = true
 
             const viewport = this.__renderer.getViewport()

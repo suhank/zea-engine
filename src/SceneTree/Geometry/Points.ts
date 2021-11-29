@@ -4,6 +4,7 @@ import { BinReader } from '../BinReader'
 import { Vec3 } from '../../Math/Vec3'
 import { Box3 } from '../../Math/Box3'
 import { Vec3Attribute } from './Vec3Attribute'
+import { AssetLoadContext } from '../AssetLoadContext'
 
 /**
  * Class representing a point primitive drawing type, every vertex specified is a point.
@@ -96,7 +97,7 @@ class Points extends BaseGeom {
    * @param reader - The reader value.
    * @param context - The context value.
    */
-  readBinary(reader: BinReader, context: Record<string, unknown>) {
+  readBinary(reader: BinReader, context: AssetLoadContext) {
     super.loadBaseGeomBinary(reader)
 
     // this.computeVertexNormals();

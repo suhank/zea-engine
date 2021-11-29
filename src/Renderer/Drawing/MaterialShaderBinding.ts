@@ -52,10 +52,10 @@ class SimpleUniformBinding extends ParamUniformBinding {
   protected texBinding: Record<string, Uniform>
   protected gltexture: GLTexture2D | null = null
   protected textureType: number = -1
-  protected val: number | boolean
+  protected val: number
 
   protected uniform1i: (index: number, value: number) => void
-  protected uniformXX: (index: number, value: number | boolean) => void
+  protected uniformXX: (index: number, value: number) => void
   protected update: () => void
 
   /**
@@ -129,7 +129,9 @@ class SimpleUniformBinding extends ParamUniformBinding {
         // Sometimes the value of a color param is an image.
         if (boundImage) {
         } else {
-          this.val = param.value
+          if (typeof param.value == 'boolean') {
+            this.val = param.value ? 1 : 0
+          } else this.val = param.value
         }
       } catch (e) {}
       glMaterial.emit('updated')

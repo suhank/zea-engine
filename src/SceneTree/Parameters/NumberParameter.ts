@@ -3,6 +3,7 @@ import { BinReader } from '../../SceneTree/BinReader'
 import { Registry } from '../../Registry'
 import { Parameter } from './Parameter'
 import { IBinaryReader } from '../../Utilities/IBinaryReader'
+import { AssetLoadContext } from '..'
 
 /**
  * Represents a specific type of parameter, that only stores numeric values.
@@ -124,7 +125,7 @@ class NumberParameter extends Parameter<number> implements IBinaryReader {
 // eslint-disable-next-line require-jsdoc
 class Float32Parameter extends NumberParameter {
   // eslint-disable-next-line require-jsdoc
-  readBinary(reader, context) {
+  readBinary(reader: BinReader, context?: Record<string, unknown>) {
     this.__value = reader.loadFloat32()
   }
 }
@@ -132,7 +133,7 @@ class Float32Parameter extends NumberParameter {
 // eslint-disable-next-line require-jsdoc
 class SInt32Parameter extends NumberParameter {
   // eslint-disable-next-line require-jsdoc
-  readBinary(reader, context) {
+  readBinary(reader: BinReader, context?: Record<string, unknown>) {
     this.__value = reader.loadSInt32()
   }
 }
@@ -140,7 +141,7 @@ class SInt32Parameter extends NumberParameter {
 // eslint-disable-next-line require-jsdoc
 class UInt32Parameter extends NumberParameter {
   // eslint-disable-next-line require-jsdoc
-  readBinary(reader, context) {
+  readBinary(reader: BinReader, context?: Record<string, unknown>) {
     this.__value = reader.loadUInt32()
   }
 }
