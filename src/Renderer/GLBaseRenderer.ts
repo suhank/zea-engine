@@ -1,5 +1,6 @@
 /* eslint-disable guard-for-in */
 // @ts-ignore
+
 import throttle from 'lodash-es/throttle'
 import { TreeItem, GeomItem, ParameterOwner, Scene } from '../SceneTree/index'
 import { SystemDesc } from '../SystemDesc'
@@ -23,6 +24,8 @@ import { ZeaTouchEvent } from '../Utilities/Events/ZeaTouchEvent'
 import { KeyboardEvent } from '../Utilities/Events/KeyboardEvent'
 
 import { GLShader } from './GLShader'
+import { WebGL12RenderingContext } from './types/webgl'
+import { RenderState, Uniforms, GeomDataRenderState } from './types/renderer'
 
 let activeGLRenderer: GLBaseRenderer | undefined
 let pointerIsDown = false
