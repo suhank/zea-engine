@@ -640,6 +640,10 @@ class GLBaseRenderer extends ParameterOwner {
       this.addShaderPreprocessorDirective('ENABLE_FLOAT_TEXTURES')
     }
 
+    if (webglOptions.gammaSpaceMaterials) {
+      this.addShaderPreprocessorDirective('GAMMA_SPACE_COLORS')
+    }
+
     {
       const ext = gl.name == 'webgl2' ? gl.getExtension('WEBGL_multi_draw') : null
       if (ext && !webglOptions.disableMultiDraw) {

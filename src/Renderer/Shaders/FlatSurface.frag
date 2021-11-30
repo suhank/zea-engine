@@ -80,12 +80,21 @@ void main(void) {
 #ifdef ENABLE_MULTI_DRAW
 
   vec2 materialCoords = v_geomItemData.zw;
+  
+#ifdef GAMMA_SPACE_COLORS
   vec4 baseColor = toLinear(getMaterialValue(materialCoords, 0));
+#else
+  vec4 baseColor = getMaterialValue(materialCoords, 0);
+#endif // GAMMA_SPACE_COLORS
 
 #else // ENABLE_MULTI_DRAW
 
 #ifndef ENABLE_TEXTURES
+#ifdef GAMMA_SPACE_COLORS
   vec4 baseColor = toLinear(BaseColor);
+#else
+  vec4 baseColor = BaseColor;
+#endif // GAMMA_SPACE_COLORS
 #else
   vec4 baseColor = getColorParamValue(BaseColor, BaseColorTex, BaseColorTexType, v_textureCoord);
 #endif // ENABLE_TEXTURES
