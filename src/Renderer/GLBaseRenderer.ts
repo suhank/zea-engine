@@ -566,6 +566,9 @@ class GLBaseRenderer extends ParameterOwner {
 
     this.__glcanvas.style['touch-action'] = 'none'
     this.__glcanvas.parentElement.style.position = 'relative'
+    // Now scrollbars can appear causing the content size to change,
+    // causing an infinite loop of resizing.
+    this.__glcanvas.parentElement.style.overflow = 'hidden'
     this.__glcanvas.style.position = 'absolute'
 
     // Rapid resizing of the canvas would cause issues with WebGL.
@@ -573,21 +576,34 @@ class GLBaseRenderer extends ParameterOwner {
     // the resizing of the canvas to ensure 2 resize commands are not
     // closer than 100ms appart.
     const throttledResize = throttle((entries: any) => {
+      if (!Array.isArray(entries) || !entries.length) return
       for (const entry of entries) {
-        if (!Array.isArray(entries) || !entries.length || !entry.contentRect) {
-          return
-        }
-
+        if (!entry.contentRect) return
         const displayWidth = Math.round(entry.contentRect.width)
         const displayHeight = Math.round(entry.contentRect.height)
+        console.log(displayWidth, displayHeight)
         this.handleResize(displayWidth, displayHeight)
       }
     }, 500)
 
-    const resizeObserver = new ResizeObserver(throttledResize)
+    window.addEventListener('resize', () => {
+      // The ResizeObserver below will miss zoom changes, while this
+      // resize event catches them. Both may be triggered by window
+      // resizes, but the throttle function ensures we don't resize
+      // needlessly.
+      const entries = [
+        {
+          contentRect: {
+            width: this.__glcanvas.parentElement.clientWidth,
+            height: this.__glcanvas.parentElement.clientHeight,
+          },
+        },
+      ]
+      throttledResize(entries)
+    })
 
-    this.handleResize(this.__glcanvas.parentElement.clientWidth, this.__glcanvas.parentElement.clientHeight)
     // https://webglfundamentals.org/webgl/lessons/webgl-resizing-the-canvas.html
+    const resizeObserver = new ResizeObserver(throttledResize)
     try {
       // only call us of the number of device pixels changed
       // @ts-ignore
@@ -597,6 +613,8 @@ class GLBaseRenderer extends ParameterOwner {
       // @ts-ignore
       resizeObserver.observe(this.__glcanvas.parentNode, { box: 'content-box' })
     }
+
+    this.handleResize(this.__glcanvas.parentElement.clientWidth, this.__glcanvas.parentElement.clientHeight)
 
     webglOptions.preserveDrawingBuffer = true
     webglOptions.antialias = webglOptions.antialias != undefined ? webglOptions.antialias : true
