@@ -6,6 +6,7 @@ import { GLBaseViewport } from '../GLBaseViewport'
 import { GLEnvMap } from '../GLEnvMap'
 import { GLFbo } from '../GLFbo'
 import { GLShader } from '../GLShader'
+import { GLViewport } from '../GLViewport'
 import { WebGL12RenderingContext } from './webgl'
 
 export interface BaseRenderState {

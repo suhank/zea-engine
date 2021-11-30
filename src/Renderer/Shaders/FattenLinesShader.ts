@@ -6,6 +6,7 @@ import './GLSL/index'
 import vert from './FattenLines.vert'
 // @ts-ignore
 import frag from './FattenLines.frag'
+import { WebGL12RenderingContext } from '../types/webgl'
 
 class FattenLinesShader extends GLShader {
   /**

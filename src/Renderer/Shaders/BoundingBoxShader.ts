@@ -6,6 +6,7 @@ import './GLSL/index'
 import frag from './BoundingBox.frag'
 // @ts-ignore
 import vert from './BoundingBox.vert'
+import { WebGL12RenderingContext } from '../types/webgl'
 
 class BoundingBoxShader extends GLShader {
   /**

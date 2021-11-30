@@ -5,6 +5,8 @@ import { GLStandardGeomsPass } from './GLStandardGeomsPass'
 import { GLRenderer } from '../GLRenderer'
 import { GLShaderGeomSets } from '../Drawing/GLShaderGeomSets'
 import { GLBaseRenderer } from '../GLBaseRenderer'
+import { RenderState, GeomDataRenderState } from '../types/renderer'
+import { GLViewport } from '..'
 
 /** Class representing a GL transparent geoms pass.
  * @extends GLStandardGeomsPass

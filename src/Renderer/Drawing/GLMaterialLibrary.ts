@@ -3,6 +3,7 @@ import { EventEmitter, MathFunctions, Allocator1D, Allocation1D } from '../../Ut
 import { GLMaterial } from './GLMaterial'
 import { GLBaseRenderer } from '../GLBaseRenderer'
 import { Material } from '../../SceneTree'
+import { RenderState } from '../types/renderer'
 
 /** Class representing a GL CAD material library.
  * @ignore

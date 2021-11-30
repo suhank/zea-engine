@@ -11,6 +11,7 @@ import GLGeomItemLibraryCullingWorker from 'web-worker:./GLGeomItemLibraryCullin
 import { GeomItem } from '../../SceneTree/GeomItem'
 import { GLBaseRenderer } from '../GLBaseRenderer'
 import { Material } from '../../SceneTree/Material'
+import { RenderState } from '../types/renderer'
 
 const pixelsPerItem = 6 // The number of RGBA pixels per draw item.
 

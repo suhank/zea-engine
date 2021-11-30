@@ -3,6 +3,8 @@
 import { BaseItem, Material } from '../SceneTree'
 import { StringFunctions } from '../Utilities/StringFunctions'
 import { shaderLibrary } from './ShaderLibrary'
+import { ShaderParseResult, Shaderopts, RenderState } from './types/renderer'
+import { WebGL12RenderingContext } from './types/webgl'
 
 // interface Result {
 //   attrs: Record<string, any>

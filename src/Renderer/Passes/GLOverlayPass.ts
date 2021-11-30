@@ -2,6 +2,7 @@ import { PassType } from './GLPass'
 import { GLOpaqueGeomsPass } from './GLOpaqueGeomsPass'
 import { GLRenderer } from '../GLRenderer'
 import { GeomItem } from '../../SceneTree/GeomItem'
+import { RenderState, GeomDataRenderState } from '../types/renderer'
 
 /** Class representing a GL overlay pass.
  * @extends GLOpaqueGeomsPass

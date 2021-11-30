@@ -1,4 +1,6 @@
 import { BaseGeom, Mesh, RefCounted } from '../../SceneTree/index'
+import { RenderState } from '../types/renderer'
+import { WebGL12RenderingContext } from '../types/webgl'
 import { generateShaderGeomBinding } from './GeomShaderBinding'
 
 /** Class representing a GL geom.
