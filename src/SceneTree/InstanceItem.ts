@@ -27,9 +27,18 @@ class InstanceItem extends TreeItem {
    */
   setSrcTree(treeItem: TreeItem, context: Record<string, any>) {
     this.srcTree = treeItem
-    const clonedTree = this.srcTree.clone(context)
-    clonedTree.localXfoParam.value = new Xfo()
-    this.addChild(clonedTree, false)
+    const numChildren = this.srcTree.getNumChildren()
+    if (numChildren == 0) {
+      const clonedTree = this.srcTree.clone(context)
+      clonedTree.localXfoParam.loadValue(new Xfo())
+      this.addChild(clonedTree, false)
+    } else {
+      const children = this.srcTree.getChildren()
+      children.forEach((child) => {
+        const clonedChild = child.clone(context)
+        this.addChild(clonedChild, false)
+      })
+    }
   }
 
   /**
@@ -109,7 +118,6 @@ class InstanceItem extends TreeItem {
     cloned.copyFrom(this, context)
     return cloned
   }
-
 }
 
 Registry.register('InstanceItem', InstanceItem)
