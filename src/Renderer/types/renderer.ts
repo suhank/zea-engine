@@ -1,4 +1,14 @@
-interface BaseRenderState {
+import { Mat4 } from '../../Math/Mat4'
+import { Vec2 } from '../../Math/Vec2'
+import { Xfo } from '../../Math/Xfo'
+import { GLGeom } from '../Drawing/GLGeom'
+import { GLBaseViewport } from '../GLBaseViewport'
+import { GLEnvMap } from '../GLEnvMap'
+import { GLFbo } from '../GLFbo'
+import { GLShader } from '../GLShader'
+import { WebGL12RenderingContext } from './webgl'
+
+export interface BaseRenderState {
   gl?: WebGL12RenderingContext
   glShader?: GLShader
   shaderkey?: string
@@ -21,37 +31,37 @@ interface BaseRenderState {
   viewport?: GLBaseViewport // Viewport
   viewports?: any //Array<Viewport>
 
-  bindViewports(unifs: Uniforms, cb: function): function
-  bindRendererUnifs(unifs: Uniforms): function // TODO:
+  bindViewports(unifs: Uniforms, cb: any): void
+  bindRendererUnifs(unifs: Uniforms): void
 
   boundTextures: number
   boundRendertarget: WebGLFramebuffer | null
 
   viewXfo?: Xfo
   viewScale: number
-  region?: number[4]
+  region?: number[]
   cameraMatrix?: Mat4
 }
 
-type Shaderopts = Record<string, string[]>
+export type Shaderopts = Record<string, string[]>
 
 //GeomDataRender
-interface GeomDataRenderState extends BaseRenderState {
+export interface GeomDataRenderState extends BaseRenderState {
   geomDataFbo?: GLFbo // only used in geomdata buffer rendering
-  floatGeomBuffer: boolean = true
+  floatGeomBuffer: boolean
 }
 
 // only used in color rendering
-interface ColorRenderState extends BaseRenderState {
+export interface ColorRenderState extends BaseRenderState {
   envMap?: GLEnvMap
 
   exposure: number // must initialize these
   gamma: number
 }
 
-type RenderState = BaseRenderState | GeomDataRenderState | ColorRenderState
+export type RenderState = BaseRenderState | GeomDataRenderState | ColorRenderState
 
-interface Viewport {
+export interface Viewport {
   region?: number[]
   viewMatrix?: Mat4
   projectionMatrix?: Mat4
@@ -60,23 +70,23 @@ interface Viewport {
   fovY?: number
 }
 
-type Uniforms = Record<string, Uniform>
-interface Uniform {
+export type Uniforms = Record<string, Uniform>
+export interface Uniform {
   name: string
   location: number
   type: string
 }
-interface Attribute {
+export interface Attribute {
   type: string
   instanced: boolean
 }
-interface ShaderParseResult {
+export interface ShaderParseResult {
   glsl: string
   numLines: number
   uniforms: Record<string, string>
   attributes: Record<string, Attribute>
 }
-interface AttrBuffer {
+export interface AttrBuffer {
   values: Float32Array
   count: number
   dimension: number
@@ -84,16 +94,16 @@ interface AttrBuffer {
   dataType: string
 }
 
-interface LayoutItem {
+export interface LayoutItem {
   pos: Vec2
   size: Vec2
 }
 
-interface Bindings {
+export interface Bindings {
   textureTypeUnif: WebGLUniformLocation
 }
 
-interface Options {
+export interface Options {
   antialias: boolean
   depth: boolean
   stencil: boolean
@@ -107,4 +117,4 @@ interface Options {
   debugGeomIds: boolean
 }
 
-type JSON = Record<string, any>
+export type JSON = Record<string, any>
