@@ -3,8 +3,10 @@ import { BooleanParameter, NumberParameter } from './Parameters/index'
 import { TreeItem } from './TreeItem'
 import { AudioSourceCreatedEvent } from '../Utilities/Events/AudioSourceCreatedEvent'
 
-interface Window {
-  ZeaAudioaudioCtx: any
+declare global {
+  interface Window {
+    ZeaAudioaudioCtx: any
+  }
 }
 /**
  * A special type of `TreeItem` that let you handle audio files.

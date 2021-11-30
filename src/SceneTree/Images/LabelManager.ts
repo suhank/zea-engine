@@ -1,8 +1,10 @@
 import { EventEmitter } from '../../Utilities/index'
 import { loadTextfile, loadBinfile } from '../Utils'
 
-interface Window {
-  XLSX: any
+declare global {
+  interface Window {
+    XLSX: any
+  }
 }
 
 // eslint-disable-next-line require-jsdoc
