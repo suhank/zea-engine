@@ -1,4 +1,3 @@
-import commonjs from '@rollup/plugin-commonjs'
 import json from '@rollup/plugin-json'
 import resolve from '@rollup/plugin-node-resolve'
 import nodePolyfills from 'rollup-plugin-node-polyfills'
@@ -24,7 +23,6 @@ const glslOptions = {
 
 const plugins = [
   base64({ include: '**/*.wasm' }),
-  commonjs(),
   nodePolyfills(),
   resolve({
     browser: true,
