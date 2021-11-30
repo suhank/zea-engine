@@ -10,7 +10,7 @@ module.exports = {
   baseUrl: "/zea-engine/",
   onBrokenLinks: "warn",
   onBrokenMarkdownLinks: "warn",
-  favicon: "img/favicon2.ico",
+  favicon: "img/favicon.ico",
   organizationName: "Zea Inc.", // Usually your GitHub org/user name.
   projectName: "Zea Engine Docs", // Usually your repo name.
   trailingSlash: false,
