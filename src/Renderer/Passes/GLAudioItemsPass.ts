@@ -4,6 +4,10 @@ import { GeomItem, TreeItem, MaterialColorParam, LDRVideo } from '../../SceneTre
 import { GLBaseRenderer } from '../GLBaseRenderer'
 import { AudioItem } from '../../SceneTree/AudioItem'
 
+interface Window {
+  ZeaAudioaudioCtx: any
+}
+
 const AudioContext =
   window.navigator &&
   (window.AudioContext || // Default
