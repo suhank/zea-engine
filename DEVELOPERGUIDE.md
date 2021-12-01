@@ -152,6 +152,8 @@ Pre-releases are potentially unstable releases meant for tests of new features b
 
 This command automatically calculates the next stable version and a release candidate version.
 
+Please get familiar with the [`yarn version` command](https://classic.yarnpkg.com/en/docs/cli/version).
+
 ```bash
 yarn version --prerelease --preid rc
 ```
