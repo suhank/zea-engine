@@ -1,6 +1,7 @@
 import json from '@rollup/plugin-json'
 import resolve from '@rollup/plugin-node-resolve'
 import nodePolyfills from 'rollup-plugin-node-polyfills'
+import dts from 'rollup-plugin-dts'
 import svg from 'rollup-plugin-svg'
 import { terser } from 'rollup-plugin-terser'
 import webWorkerLoader from 'rollup-plugin-web-worker-loader'
@@ -65,5 +66,10 @@ export default [
       format: 'umd',
     },
     plugins: [...plugins, terser()],
+  },
+  {
+    input: './dist/index.d.ts',
+    output: [{ file: './dist/zea-engine.d.ts', format: 'es' }],
+    plugins: [json(), dts()],
   },
 ]

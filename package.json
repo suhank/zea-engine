@@ -9,9 +9,9 @@
   "umd": "dist/index.umd.js",
   "umd.min": "dist/index.umd.min.js",
   "author": "Zea Inc.",
-  "typings": "dist/index.d.ts",
+  "types": "dist/zea-engine.d.ts",
   "files": [
-    "dist/**/*.d.ts",
+    "dist/zea-engine.d.ts",
     "dist/index.cjs.*",
     "dist/index.esm.*",
     "dist/index.umd.*"
@@ -92,6 +92,7 @@
     "prettier": "^2.4.1",
     "rollup": "^2.60.1",
     "rollup-plugin-base64": "^1.0.1",
+    "rollup-plugin-dts": "^4.0.1",
     "rollup-plugin-glslify": "^1.2.0",
     "rollup-plugin-node-polyfills": "^0.2.1",
     "rollup-plugin-svg": "^2.0.0",
