@@ -11,6 +11,7 @@ import { BinReader } from './BinReader'
  * @extends {TreeItem}
  */
 class InstanceItem extends TreeItem {
+  protected srcTreePath: Array<string> = []
   protected srcTree: TreeItem | null = null
   /**
    * Create an instance item.
@@ -54,17 +55,19 @@ class InstanceItem extends TreeItem {
     super.readBinary(reader, context)
 
     // console.log("numTreeItems:", context.numTreeItems, " numGeomItems:", context.numGeomItems)
-    const path = reader.loadStrArray()
-    if (path.length > 0) {
-      // console.log("InstanceItem of:", path)
+    this.srcTreePath = reader.loadStrArray()
+    if (this.srcTreePath.length > 0) {
+      console.log('InstanceItem of:', this.srcTreePath)
       try {
         context.resolvePath(
-          path,
+          this.srcTreePath,
           (treeItem: TreeItem) => {
             this.setSrcTree(treeItem, context)
           },
           (error: Error) => {
-            console.warn(`Error loading InstanceItem: ${this.getPath()}, unable to resolve: ${path}. ` + error.message)
+            console.warn(
+              `Error loading InstanceItem: ${this.getPath()}, unable to resolve: ${this.srcTreePath}. ` + error.message
+            )
           }
         )
       } catch (error: any) {
@@ -107,7 +110,27 @@ class InstanceItem extends TreeItem {
   clone(context?: Record<string, any>) {
     const cloned = new InstanceItem()
     cloned.copyFrom(this, context)
+
     return cloned
+  }
+
+  /**
+   * Copies current TreeItem with all its children.
+   *
+   * @param src - The tree item to copy from.
+   * @param context - The context value.
+   */
+  copyFrom(src: TreeItem, context?: Record<string, any>): void {
+    super.copyFrom(src, context)
+
+    this.srcTreePath = (<InstanceItem>src).srcTreePath
+    if (this.srcTreePath.length > 0 && this.getNumChildren() == 0) {
+      src.once('childAdded', (event) => {
+        // @ts-ignore
+        const childItem = <TreeItem>event.childItem
+        this.setSrcTree(childItem, context)
+      })
+    }
   }
 }
 
