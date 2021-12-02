@@ -22,13 +22,8 @@ First, we should add Zea Engine to our project. We can do this with the followin
 yarn add @zeainc/zea-engine
 ```
 
-
-## React Components
-In React, a component is a class that extends React.Component and consists of a [render](https://reactjs.org/docs/react-component.html#render)() method, which returns the React elements to be rendered; these elements are written in [JSX/TSX](https://reactjs.org/docs/introducing-jsx.html). A component can also have an optional constructor, custom methods, or lifecycle methods like componentDidMount, componentDidUpdate, which are both used in this tutorial. 
-
-:::tip
-View [react-lifecycle-methods-diagram](https://projects.wojtekmaj.pl/react-lifecycle-methods-diagram/) to learn about the variety of methods that React calls and the order in which those methods execute.
-:::
+<!-- ## React Hooks
+React Hooks are the functional equivalent to React Components. They are often preferred when possible due to greater simplicity. -->
 
 ### App.tsx
 In App.tsx and copy the contents below into the newly created file.
@@ -54,7 +49,12 @@ const App = () => {
 export default App
 ```
 
+## React Components
+In React, a component is a class that extends React.Component and consists of a [render](https://reactjs.org/docs/react-component.html#render)() method, which returns the React elements to be rendered; these elements are written in [JSX/TSX](https://reactjs.org/docs/introducing-jsx.html). A component can also have an optional constructor, custom methods, or lifecycle methods like componentDidMount, componentDidUpdate, which are both used in this tutorial. 
 
+:::tip
+View [react-lifecycle-methods-diagram](https://projects.wojtekmaj.pl/react-lifecycle-methods-diagram/) to learn about the variety of methods that React calls and the order in which those methods execute.
+:::
 ### Viewport3D.tsx
 Create a file Viewport3D.tsx in a new directory src/components/ and copy the contents below into the newly created file.
 
@@ -154,7 +154,7 @@ class Viewport3D extends React.Component<any, any> {
 
 ```
 Along with adding the dependencies and member variables, we will want to initialize the renderer once the HTMLCanvas element is loaded. We can do this by initializing the
-renderer in componentDidMount(), which waits for the canvas to load. In the render() method, we see that the Canvas hook is used/rendered.
+renderer in componentDidMount(), which waits for the canvas to load. 
 
 ```tsx
   // this method is called when the component is initially mounted and initially renders.
@@ -209,7 +209,7 @@ The following method setupScene() simply adds several spheres to our scene in a 
     geomItem2.addChild(geomItem4)
   }
 ```
-After adding this as a method to the Viewport3D component, we can call this method after initializing the scene in the componentDidMount() method.
+After adding this as a method to the Viewport3D component, we can call this method after initializing the scene in the componentDidMount() method. 
 ```tsx
   componentDidMount() {
     // ...
