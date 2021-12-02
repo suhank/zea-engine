@@ -30,33 +30,29 @@ In React, a component is a class that extends React.Component and consists of a 
 View [react-lifecycle-methods-diagram](https://projects.wojtekmaj.pl/react-lifecycle-methods-diagram/) to learn about the variety of methods that React calls and the order in which those methods execute.
 :::
 
-### Main.tsx
-Create a file Main.tsx in a new directory src/components/ and copy the contents below into the newly created file.
+### App.tsx
+In App.tsx and copy the contents below into the newly created file.
 In this component, we will compose the tree view and renderer within the layout component to set up our screen.
 
 
 ```tsx
-import React from "react";
-import { Viewport3D } from "./Viewport3D";
+import { Scene } from '@zeainc/zea-engine'
+import { useEffect, useState } from 'react'
+import { Viewport3D } from './Viewport3D'
 
-class Main extends React.Component<any, any> {
-  constructor(props: any) {
-    super(props)
-    this.state = { 
-      // example: props.example
-    }
-  }
+import './App.css'
 
-  render() {
-    return (
-      <Viewport3D></Viewport3D>
-    )
-  }
+
+const App = () => {
+  const [scene] = useState<Scene>(new Scene())
+
+  return (
+    <Viewport3D scene={scene} />
+  )
 }
 
-export { Main }
+export default App
 ```
-
 
 
 ### Viewport3D.tsx
@@ -95,23 +91,6 @@ class Viewport3D extends React.Component<any, any> {
 
 export { Viewport3D };
 ```
-
-### App.tsx
-Overwrite the existing contents of App.tsx with the code below
-
-```tsx
-import React from "react";
-import "./App.css";
-import { Main } from "./components/Main";
-
-function App() {
-  return <Main></Main>;
-}
-
-export default App;
-
-```
-This code simply imports our newly created Main.tsx component and renders it.
 
 
 ### App.css
