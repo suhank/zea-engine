@@ -90,20 +90,17 @@ This method will execute when any of the component's state changes. Here, we che
 ```
 
 
-### Main.tsx
+### App.tsx
 
-In Main.tsx, we can augment the existing state variable to include "selected." When the selected variable changes, this will cause the render() method of the Main component to execute.
+In App.tsx, we can augment the existing state variable to include "selected." When the selected variable changes, this will cause the render() method of the Main component to execute.
 This is useful since, in the render() method we pass props containing the "selected" variable in. We can use this to later compare the previously selected object and currently selected object to then determine which object we should highlight.
 
 ```tsx
-class Main extends React.Component<any, any> {
-  constructor(props: any) {
-    super(props)
-    this.state = {
-      treeNodes: [],
-      selected: null,
-    }
-  }
+const App = () => {
+  const [scene] = useState<Scene>(new Scene())
+  const [treeNodes, setTree] = useState<any>([])
+  const [selected, setSelected] = useState<any>(null)
+
 ```
 
 This is a handler that is used in the DeniReactTreeView component. When we click on a item in the tree view, it will trigger this code. The code below sets the "selected" state variable.

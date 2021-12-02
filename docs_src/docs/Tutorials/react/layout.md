@@ -11,14 +11,13 @@ For this tutorial, we'll be using the layout component [Re-Flex](https://github.
 
 ```bash
 yarn add react-reflex
-yarn add sass
 ```
 
 ## Integrating the Layout Component
 
 ### Main.tsx
 
-In Main.tsx import the following.
+In App.tsx import the following.
 
 ```tsx
 import 'react-reflex/styles.css'

@@ -30,7 +30,7 @@ yarn add deni-react-treeview
 
 ## Integrating the Tree View
 
-### Main.tsx
+### App.tsx
 
 At the top of Main.tsx, import the component.
 ```tsx
@@ -42,13 +42,12 @@ In the Main component constructor, we can add the member variable "treeNodes" to
 
 We will get the data for this object from the Viewport3D component after the scene is initialized.
 ```tsx
-class Main extends React.Component<any, any> {
-  constructor(props: any) {
-    super(props)
-    this.state = {
-      treeNodes: [],
-    }
-  }
+const App = () => {
+  const [scene] = useState<Scene>(new Scene())
+  const [treeNodes, setTree] = useState<any>([])
+  
+  ...
+  
 ```
 In the render() method, return the new component with the following arguments. View the [live demos](https://deni-react-treeview.vercel.app/?path=/story/1-theming--predefined-themes) with source code to learn more about what you can do with this particular tree view.
 
