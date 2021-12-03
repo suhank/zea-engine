@@ -150,21 +150,29 @@ https://github.com/ZeaInc/zea-engine/actions
 
 Pre-releases are potentially unstable releases meant for tests of new features before they are published to an production release.
 
-This command automatically calculates the next stable version and a release candidate version.
+<!-- This command automatically calculates the next stable version and a release candidate version. -->
 
 Please get familiar with the [`yarn version` command](https://classic.yarnpkg.com/en/docs/cli/version).
 
-```bash
+<!-- ```bash
 yarn version --prerelease --preid rc
 ```
 
 ```bash
 yarn publish --tag preid
-```
+```  -->
+
+
+Navigate to the branch that you wish to use to make a pre-release.
+
 
 Adds an identifier specified by <pre-identifier> to be used to prefix premajor, preminor, prepatch or prerelease version increments.
+
 ```bash
 yarn version --prerelease --preid <pre-identifier>
 ```
 
+```bash
+yarn publish --public --tag <pre-identifier>
+```
 
