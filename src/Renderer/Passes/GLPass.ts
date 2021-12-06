@@ -3,6 +3,8 @@ import { BooleanParameter } from '../../SceneTree/Parameters/index'
 import { TreeItem } from '../../SceneTree/TreeItem'
 import { GeomItemAndDist } from '../../Utilities/IntersectionData'
 import { GLBaseRenderer } from '../GLBaseRenderer'
+import { RenderState, GeomDataRenderState } from '../types/renderer'
+import { WebGL12RenderingContext } from '../types/webgl'
 
 const PassType = {
   OPAQUE: 1 << 0,

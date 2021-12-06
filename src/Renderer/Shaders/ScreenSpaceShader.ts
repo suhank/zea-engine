@@ -6,6 +6,7 @@ import { ScreenSpaceMaterial } from '../../SceneTree/Materials/ScreenSpaceMateri
 import { MaterialColorParam } from '../../SceneTree/Parameters/MaterialColorParam'
 import { GLShader } from '../GLShader'
 import { shaderLibrary } from '../ShaderLibrary'
+import { WebGL12RenderingContext } from '../types/webgl'
 
 import './GLSL/index'
 // @ts-ignore

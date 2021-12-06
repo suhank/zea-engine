@@ -6,6 +6,7 @@ import './GLSL/index'
 import frag from './EnvMap.frag'
 // @ts-ignore
 import vert from './EnvMap.vert'
+import { WebGL12RenderingContext } from '../types/webgl'
 class EnvMapShader extends GLShader {
   /**
    * Create a GL shader.

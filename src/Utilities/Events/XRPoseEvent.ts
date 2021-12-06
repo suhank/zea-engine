@@ -17,7 +17,6 @@ import { ZeaPointerEvent, POINTER_TYPES } from './ZeaPointerEvent'
 class XRPoseEvent extends ZeaPointerEvent {
   viewXfo: Xfo
   controllers: VRController[] = []
-  intersectionData: IntersectionData
   constructor(viewport: VRViewport, viewXfo: Xfo, controllers: VRController[]) {
     super(POINTER_TYPES.xr)
     this.viewport = viewport

@@ -1,3 +1,5 @@
+import { WebGL12RenderingContext } from './types/webgl'
+
 const create3DContext = function (
   canvas: HTMLCanvasElement,
   opt_attribs: Record<string, any>

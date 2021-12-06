@@ -1,5 +1,6 @@
 import { Material } from '../SceneTree'
 import { glslTypes } from './GLSLConstants'
+import { ShaderParseResult } from './types/renderer'
 
 let GlslTypes = <GLSLTypes>glslTypes
 

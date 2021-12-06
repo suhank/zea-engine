@@ -10,6 +10,8 @@ import './GLSL/index'
 import vert from './FatPoints.vert'
 // @ts-ignore
 import frag from './FatPoints.frag'
+import { RenderState } from '../types/renderer'
+import { WebGL12RenderingContext } from '../types/webgl'
 class FatPointsShader extends GLShader {
   /**
    * Create a GL shader.

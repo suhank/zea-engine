@@ -14,6 +14,8 @@ import {
 } from '../../SceneTree'
 import { GLMaterial } from '.'
 import { BaseClass } from '../../Utilities/BaseClass'
+import { Uniform, RenderState, Uniforms } from '../types/renderer'
+import { WebGL12RenderingContext } from '../types/webgl'
 
 class ParamUniformBinding extends BaseClass {
   protected unif: Uniform

@@ -2,6 +2,8 @@ import { GLTexture2D } from './GLTexture2D'
 import { GLFbo } from './GLFbo'
 import { GLImageAtlas } from './GLImageAtlas'
 import { GLScreenQuad } from './GLScreenQuad'
+import { RenderState } from './types/renderer'
+import { WebGL12RenderingContext } from './types/webgl'
 
 const Math_log2 = function (value: number) {
   // IE11 doesn't support Math.log2.

@@ -6,6 +6,8 @@ import { VLHImage } from '../SceneTree/Images/VLHImage'
 import { Color } from '../Math/Color'
 import { BaseImage } from '../SceneTree/BaseImage'
 import { GLShader } from './GLShader'
+import { RenderState, Uniform } from './types/renderer'
+import { WebGL12RenderingContext } from './types/webgl'
 
 /** Class representing a GL high dynamic range (HDR) image.
  * @extends GLTexture2D

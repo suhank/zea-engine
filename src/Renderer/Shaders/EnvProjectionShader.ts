@@ -12,6 +12,7 @@ import OctahedralEnvProjectionFrag from './OctahedralEnvProjection.frag'
 import { shaderLibrary } from '../ShaderLibrary'
 
 import { Material, Vec3Parameter } from '../../SceneTree'
+import { WebGL12RenderingContext } from '../types/webgl'
 
 class EnvProjectionShader extends GLShader {
   /**

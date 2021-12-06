@@ -8,6 +8,7 @@ import { GLShaderGeomSets } from '../Drawing/GLShaderGeomSets'
 import { GLMaterialGeomItemSets } from '../Drawing/GLMaterialGeomItemSets'
 import { GLBaseRenderer } from '../GLBaseRenderer'
 import { GLGeomItem } from '../Drawing'
+import { RenderState, GeomDataRenderState } from '../types/renderer'
 
 /** Class representing a GL opaque geoms pass.
  * @extends GLStandardGeomsPass

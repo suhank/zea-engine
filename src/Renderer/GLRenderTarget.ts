@@ -1,6 +1,8 @@
 import { Color } from '../Math/Color'
 import { EventEmitter } from '../Utilities/index'
 import { processTextureParams } from './processTextureParams'
+import { RenderState, Uniform } from './types/renderer'
+import { WebGL12RenderingContext } from './types/webgl'
 
 /** Class representing a GL render target. */
 class GLRenderTarget extends EventEmitter {

@@ -7,6 +7,7 @@ import { FattenLinesShader } from '../Shaders/FattenLinesShader'
 import { Plane } from '../../SceneTree/index'
 import { GLMesh } from '../Drawing/GLMesh'
 import { GLBaseRenderer } from '../GLBaseRenderer'
+import { RenderState, GeomDataRenderState } from '../types/renderer'
 
 /** Class representing a GL opaque geoms pass.
  * @extends GLOpaqueGeomsPass

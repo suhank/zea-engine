@@ -8,6 +8,7 @@ import { MathFunctions } from '../../Utilities/MathFunctions'
 import { GLBaseRenderer } from '../GLBaseRenderer'
 import { GLGeom } from '../Drawing'
 import { GLShader } from '../GLShader'
+import { RenderState } from '../types/renderer'
 
 const pixelsPerItem = 6 // The number of pixels per draw item.
 
