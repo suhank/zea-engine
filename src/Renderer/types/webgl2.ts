@@ -10,7 +10,7 @@
 //   close(): void;
 // }
 
-interface WebGL12RenderingContext extends WebGLRenderingContext {
+export interface WebGLRenderingContextExtension extends WebGLRenderingContext {
   readonly READ_BUFFER: number // 0x0C02
   readonly UNPACK_ROW_LENGTH: number // 0x0CF2
   readonly UNPACK_SKIP_ROWS: number // 0x0CF3

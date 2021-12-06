@@ -8,6 +8,8 @@ import { generateShaderGeomBinding, IGeomShaderBinding } from './Drawing/GeomSha
 import { MathFunctions } from '../Utilities/MathFunctions'
 import { AtlasLayoutShader } from './Shaders/AtlasLayoutShader'
 import { GLShader } from './GLShader'
+import { LayoutItem, RenderState, Uniform, Uniforms } from './types/renderer'
+import { WebGL12RenderingContext } from './types/webgl'
 
 /**
  * An Image Atlas lays out multiple smaller images within a larger image atlas, and tracks their positions.

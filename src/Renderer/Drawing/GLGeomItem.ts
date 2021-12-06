@@ -3,6 +3,8 @@ import { EventEmitter } from '../../Utilities/index'
 import '../../SceneTree/GeomItem'
 import { GeomItem } from '../../SceneTree/GeomItem'
 import { VisibilityChangedEvent } from '../../Utilities/Events/VisibilityChangedEvent'
+import { RenderState } from '../types/renderer'
+import { WebGL12RenderingContext } from '../types/webgl'
 
 const GLGeomItemChangeType = {
   GEOMITEM_CHANGED: 0,

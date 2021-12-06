@@ -11,6 +11,7 @@ import GLGeomItemLibraryCullingWorker from 'web-worker:./GLGeomItemLibraryCullin
 import { GeomItem } from '../../SceneTree/GeomItem'
 import { GLBaseRenderer } from '../GLBaseRenderer'
 import { Material } from '../../SceneTree/Material'
+import { RenderState } from '../types/renderer'
 
 const pixelsPerItem = 6 // The number of RGBA pixels per draw item.
 
@@ -26,9 +27,11 @@ class GLGeomItemLibrary extends EventEmitter {
   protected dirtyItemIndices: number[]
   protected dirtyWorkerItemIndices: Set<number> = new Set()
   protected removedItemIndices: number[]
-  protected worker: typeof GLGeomItemLibraryCullingWorker
   protected glGeomItemsTexture: GLTexture2D | null = null
-  protected enableFrustumCulling: any
+  protected enableFrustumCulling: boolean
+
+  private worker: GLGeomItemLibraryCullingWorker
+
   /**
    * Create a GLGeomItemLibrary.
    * @param renderer - The renderer instance

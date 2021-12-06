@@ -14,6 +14,8 @@ import { VLHImage } from '../SceneTree/Images/VLHImage'
 import { EnvMapAssignedEvent } from '../Utilities/Events/EnvMapAssignedEvent'
 import { GLViewport } from './GLViewport'
 import { IntersectionData } from '../Utilities/IntersectionData'
+import { GeomDataRenderState, ColorRenderState } from './types/renderer'
+import { WebGL12RenderingContext } from './types/webgl'
 
 const ALL_PASSES = PassType.OPAQUE | PassType.TRANSPARENT | PassType.OVERLAY
 // TODO: move this fn somewhere

@@ -4,6 +4,8 @@ import { generateShaderGeomBinding } from './GeomShaderBinding'
 import { GLTexture2D } from '../GLTexture2D'
 import { Vec3Attribute } from '../../SceneTree/Geometry/Vec3Attribute'
 import { BaseGeom } from '../../SceneTree'
+import { RenderState } from '../types/renderer'
+import { WebGL12RenderingContext } from '../types/webgl'
 
 interface FatBuffers {
   drawCount: number

@@ -1,4 +1,7 @@
-interface WebGL12RenderingContext extends WebGLRenderingContext {
+import { Shaderopts } from './renderer'
+import { WebGLRenderingContextExtension } from './webgl2';
+
+export interface WebGL12RenderingContext extends WebGLRenderingContextExtension {
   name: string
 
   // GLRenderTarget.ts

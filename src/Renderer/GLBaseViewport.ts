@@ -10,6 +10,8 @@ import { ResizedEvent } from '../Utilities/Events/ResizedEvent'
 import { SceneSetEvent } from '../Utilities/Events/SceneSetEvent'
 import { ZeaPointerEvent } from '../Utilities/Events/ZeaPointerEvent'
 import { KeyboardEvent } from '../Utilities/Events/KeyboardEvent'
+import { ColorRenderState, RenderState } from './types/renderer'
+import { WebGL12RenderingContext } from './types/webgl'
 
 const FRAMEBUFFER = {
   MSAA_RENDERBUFFER: 0,

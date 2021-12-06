@@ -1,5 +1,6 @@
 /* eslint-disable require-jsdoc */
 import { GLShader } from '../GLShader'
+import { WebGL12RenderingContext } from '../types/webgl'
 
 import './GLSL/index'
 // @ts-ignore

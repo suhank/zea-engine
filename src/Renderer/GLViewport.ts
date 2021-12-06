@@ -15,6 +15,7 @@ import { ZeaWheelEvent } from '../Utilities/Events/ZeaWheelEvent'
 import { ZeaTouchEvent } from '../Utilities/Events/ZeaTouchEvent'
 import { ZeaMouseEvent } from '../Utilities/Events/ZeaMouseEvent'
 import { ZeaUIEvent } from '../Utilities/Events/ZeaUIEvent'
+import { GeomDataRenderState, RenderState, ColorRenderState } from './types/renderer'
 
 let activeViewport: GLViewport = null
 /**

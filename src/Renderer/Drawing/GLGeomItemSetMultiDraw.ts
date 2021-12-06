@@ -4,6 +4,8 @@ import '../../SceneTree/GeomItem'
 import { EventEmitter, MathFunctions } from '../../Utilities/index'
 import { GLBaseRenderer } from '../GLBaseRenderer'
 import { GLTexture2D } from '../GLTexture2D'
+import { RenderState } from '../types/renderer'
+import { WebGL12RenderingContext } from '../types/webgl'
 import { GLGeomItem } from './GLGeomItem'
 
 /** This class abstracts the rendering of a collection of geometries to screen.
