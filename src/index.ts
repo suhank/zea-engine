@@ -10,6 +10,7 @@ export * from './SystemDesc'
 export * from './Registry'
 export * from './Math/index'
 export * from './Utilities/index'
+export * from './Utilities/Events/index'
 export * from './SceneTree/index'
 export * from './Renderer/index'
 
