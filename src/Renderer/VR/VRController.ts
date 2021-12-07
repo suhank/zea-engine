@@ -1,26 +1,42 @@
 import { SystemDesc } from '../../SystemDesc'
-import { Vec3, Xfo, Mat4 } from '../../Math/index'
-import { TreeItem } from '../../SceneTree/index'
+import { Vec3, Xfo, Mat4, Ray, Color } from '../../Math/index'
+import { GeomItem, Lines, Material, TreeItem, Vec3Attribute } from '../../SceneTree/index'
 import { IntersectionData } from '../../Utilities/IntersectionData'
 import { VRViewport } from '.'
 import { XRPoseEvent } from '../../Utilities/Events/XRPoseEvent'
+
+// const line = new Lines()
+// line.setNumVertices(2)
+// line.setNumSegments(1)
+// line.setSegmentVertexIndices(0, 0, 1)
+// const positions = <Vec3Attribute>line.getVertexAttribute('positions')
+// positions.getValueRef(0).set(0.0, 0.0, 0.0)
+// positions.getValueRef(1).set(0.0, 0.0, -1.0)
+// line.setBoundingBoxDirty()
 
 /** Class representing a VR controller. */
 class VRController {
   id: number
   buttonPressed: boolean
-  protected xrvp: VRViewport
-  protected inputSource: any
-  protected mat4: Mat4
-  protected xfo: Xfo
-  protected treeItem: TreeItem
-  protected tipItem: TreeItem
-  protected activeVolumeSize: number = 0.04
-  protected tick: number
-  protected touchpadValue: any
-  protected hitTested: boolean
-  protected pointerOverItem: any
-  protected intersectionData: IntersectionData
+  private xrvp: VRViewport
+  private inputSource: any
+  private mat4: Mat4
+  private xfo: Xfo
+  private treeItem: TreeItem
+  private tipItem: TreeItem
+
+  // The frequency of raycasting into the scene for this controller
+  raycastTick: number = 5
+  raycastArea: number = 0.04
+  raycastDist: number = 0.04
+  private raycastAreaCache: number = 0
+  private raycastDistCache: number = 0
+  private rayCastRenderTargetProjMatrix: Mat4 = new Mat4()
+  private tick: number
+  private touchpadValue: any
+  private hitTested: boolean
+  private pointerOverItem: any
+  private intersectionData: IntersectionData
   /**
    * Create a VR controller.
    * @param xrvp - The Vr viewport.
@@ -63,6 +79,16 @@ class VRController {
       this.tipItem.localXfoParam.value = tipXfo
       this.treeItem.addChild(this.tipItem, false)
       xrvp.getTreeItem().addChild(this.treeItem)
+
+      // const pointermat = new Material('pointermat', 'LinesShader')
+      // pointermat.setSelectable(false)
+      // pointermat.getParameter('BaseColor').value = new Color(1.2, 0, 0)
+      // const pointerItem = new GeomItem('PointerRay', line, pointermat)
+      // pointerItem.setSelectable(false)
+      // const pointerXfo = new Xfo()
+      // pointerXfo.sc.set(1, 1, this.raycastDist)
+      // pointerItem.localXfoParam.value = pointerXfo
+      // this.tipItem.addChild(pointerItem, false)
 
       if (inputSource.targetRayMode == 'tracked-pointer') {
         // Once we have an input profile, we can determine the XR Device in use.
@@ -239,17 +265,20 @@ class VRController {
     // /////////////////////////////////
     // Simulate Pointer Enter/Leave Events.
     // Check for pointer over every Nth frame (at 90fps this should be fine.)
-    if (this.tick % 5 == 0 && !event.getCapture()) {
+    if (this.raycastTick > 0 && this.tick % this.raycastTick == 0 && !event.getCapture()) {
       const intersectionData = this.getGeomItemAtTip()
       if (intersectionData != undefined) {
         event.intersectionData = intersectionData
         if (intersectionData.geomItem != this.pointerOverItem) {
           if (this.pointerOverItem) {
+            event.leftGeometry = this.pointerOverItem
             this.pointerOverItem.onPointerLeave(event)
+            if (event.propagating) this.xrvp.emit('pointerLeaveGeom', event)
           }
+          event.propagating = true
           this.pointerOverItem = intersectionData.geomItem
-          event.intersectionData = intersectionData
           this.pointerOverItem.onPointerEnter(event)
+          if (event.propagating) this.xrvp.emit('pointerOverGeom', event)
         }
 
         // emit the pointer move event directly to the item.
@@ -275,8 +304,21 @@ class VRController {
 
     const renderer = this.xrvp.getRenderer()
     const xfo = this.tipItem.globalXfoParam.value
-    const vol = this.activeVolumeSize
-    this.intersectionData = renderer.raycastWithXfo(xfo, vol, vol)
+    const ray = new Ray(xfo.tr, xfo.ori.getZaxis().negate())
+    if (this.raycastDist != this.raycastDistCache || this.raycastArea != this.raycastAreaCache) {
+      this.rayCastRenderTargetProjMatrix.setOrthographicMatrix(
+        this.raycastArea * -0.5,
+        this.raycastArea * 0.5,
+        this.raycastArea * -0.5,
+        this.raycastArea * 0.5,
+        0.0,
+        this.raycastDist
+      )
+      this.raycastDistCache = this.raycastDist
+      this.raycastAreaCache = this.raycastArea
+    }
+
+    this.intersectionData = renderer.raycastWithProjection(xfo, this.rayCastRenderTargetProjMatrix, ray)
     return this.intersectionData
   }
 }

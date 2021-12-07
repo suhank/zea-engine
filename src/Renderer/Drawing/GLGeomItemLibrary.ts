@@ -12,6 +12,7 @@ import { GeomItem } from '../../SceneTree/GeomItem'
 import { GLBaseRenderer } from '../GLBaseRenderer'
 import { Material } from '../../SceneTree/Material'
 import { RenderState } from '../types/renderer'
+import { StateChangedEvent } from '../../Utilities/Events/StateChangedEvent'
 
 const pixelsPerItem = 6 // The number of RGBA pixels per draw item.
 
@@ -123,7 +124,7 @@ class GLGeomItemLibrary extends EventEmitter {
 
     renderer.once('xrViewportSetup', (event: Record<string, any>) => {
       const xrvp = event.xrViewport
-      xrvp.on('presentingChanged', (event: Record<string, any>) => {
+      xrvp.on('presentingChanged', (event: StateChangedEvent) => {
         if (event.state) {
           cullFreq = 10
           // Note: We approximate the culling viewport to be

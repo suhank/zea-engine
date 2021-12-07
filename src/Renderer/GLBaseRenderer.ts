@@ -979,7 +979,7 @@ class GLBaseRenderer extends ParameterOwner {
     // Always get the last display. Additional displays are added at the end.(e.g. [Polyfill, HMD])
     const xrvp = new VRViewport(this)
 
-    const emitViewChanged = (event: Record<string, any>) => {
+    const emitViewChanged = (event: ViewChangedEvent) => {
       this.emit('viewChanged', event)
     }
 
