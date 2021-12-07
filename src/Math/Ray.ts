@@ -14,8 +14,8 @@ class Ray {
   /**
    * Create a ray.
    *
-   * @param {Vec3} start - The origin of the ray.
-   * @param {Vec3} dir - The direction of the ray.
+   * @param start - The origin of the ray.
+   * @param dir - The direction of the ray.
    */
   constructor(start?: Vec3, dir?: Vec3) {
     if (start instanceof Vec3) {
@@ -33,8 +33,8 @@ class Ray {
   /**
    * Get the closest point on the ray to the given point.
    *
-   * @param {Vec3} point - The point in 3D space.
-   * @return {Number} - returns a number
+   * @param point - The point in 3D space.
+   * @return - returns a number
    */
 
   closestPoint(point: Vec3): number {
@@ -49,9 +49,9 @@ class Ray {
   /**
    * Get the closest point between the ray and the given line segment made of the 2 points.
    *
-   * @param {Vec3} p0 - The point in 3D space.
-   * @param {Vec3} p1 - The point in 3D space.
-   * @return {Array<number>} - Returns an array containing 2 scalar values indicating 0: the fraction of the line segment, 1: distance along the Ray
+   * @param p0 - The point in 3D space.
+   * @param p1 - The point in 3D space.
+   * @return - Returns an array containing 2 scalar values indicating 0: the fraction of the line segment, 1: distance along the Ray
    */
   closestPointOnLineSegment(p0: Vec3, p1: Vec3): Array<number> {
     const u = this.dir
@@ -98,8 +98,8 @@ class Ray {
   /**
    * Get the closest point at a distance.
    *
-   * @param {number} dist - The distance value.
-   * @return {Vec3} - Returns a Vec3.
+   * @param dist - The distance value.
+   * @return - Returns a Vec3.
    */
   pointAtDist(dist: number): Vec3 {
     return this.start.add(this.dir.scale(dist))
@@ -108,8 +108,8 @@ class Ray {
   /**
    * Returns the two ray params that represent the closest point between the two rays.
    *
-   * @param {Ray} ray - The ray value.
-   * @return {Ray} - Returns a Ray.
+   * @param ray - The ray value.
+   * @return - Returns a Ray.
    */
   intersectRayVector(ray: Ray): number | Vec3 | number[] {
     const u = this.dir
@@ -154,8 +154,8 @@ class Ray {
    * Returns one ray param representing the intersection
    * of this ray against the plane defined by the given ray.
    *
-   * @param {Ray} plane - The plane to intersect with.
-   * @return {number} - The return value.
+   * @param plane - The plane to intersect with.
+   * @return - The return value.
    */
   intersectRayPlane(plane: Ray): number {
     const w = this.start.subtract(plane.start)
@@ -179,9 +179,9 @@ class Ray {
   /**
    * Determines if this Box3 intersects a ray.
    *
-   * @param {Box3} box3 - The box to check for intersection against.
-   * @param {number} tolerance - The tolerance of the test.
-   * @return {boolean} - The return value.
+   * @param box3 - The box to check for intersection against.
+   * @param tolerance - The tolerance of the test.
+   * @return - The return value.
    */
   intersectRayBox3(box3: Box3, tolerance = 0): boolean {
     // https://www.scratchapixel.com/lessons/3d-basic-rendering/minimal-ray-tracer-rendering-simple-shapes/ray-box-intersection
@@ -226,7 +226,7 @@ class Ray {
   /**
    * Clones this Ray and returns a new Ray.
    *
-   * @return {Ray} - Returns a new Ray.
+   * @return - Returns a new Ray.
    */
   clone(): Ray {
     return new Ray(this.start.clone(), this.dir.clone())
@@ -238,7 +238,7 @@ class Ray {
   /**
    * The toJSON method encodes this type as a json object for persistence.
    *
-   * @return {Record<string, Record<string, number>>} - The json object.
+   * @return - The json object.
    */
   toJSON(): Record<string, Record<string, number>> {
     return {
@@ -250,7 +250,7 @@ class Ray {
   /**
    * The fromJSON method decodes a json object for this type.
    *
-   * @param {Record<string, Record<string, number>>} j - The json object.
+   * @param j - The json object.
    */
   fromJSON(j: Record<string, Record<string, number>>): void {
     this.start.fromJSON(j.start)
@@ -260,7 +260,7 @@ class Ray {
   /**
    * Calls `toJSON` method and stringifies it.
    *
-   * @return {string} - The return value.
+   * @return - The return value.
    */
   toString(): string {
     return StringFunctions.stringifyJSONWithFixedPrecision(this.toJSON())

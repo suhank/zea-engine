@@ -4,7 +4,7 @@ describe('BooleanParameter', () => {
   it('has an initial value.', () => {
     const booleanParameter = new BooleanParameter()
 
-    expect(booleanParameter.getValue()).toBeUndefined()
+    expect(booleanParameter.value).toBeDefined()
   })
 
   it('checks value type.', () => {
@@ -15,14 +15,14 @@ describe('BooleanParameter', () => {
 
   it('sets value.', () => {
     const booleanParameter = new BooleanParameter()
-    booleanParameter.setValue(true)
+    booleanParameter.value = true
 
-    expect(booleanParameter.getValue()).toBe(true)
+    expect(booleanParameter.value).toBe(true)
   })
 
   it('saves to JSON (serialization).', () => {
     const booleanParameter = new BooleanParameter()
-    booleanParameter.setValue(true)
+    booleanParameter.value = true
 
     const expOutput = '{"value":true}'
 
@@ -34,14 +34,14 @@ describe('BooleanParameter', () => {
     const input = { value: true }
     booleanParameter.fromJSON(input)
 
-    expect(booleanParameter.getValue()).toBe(true)
+    expect(booleanParameter.value).toBe(true)
   })
 
   // TODO: "do not use boolean as a constructor" was a booleanParameter intended?
   // it('clones parameter object', () => {
   //   const parameter = new BooleanParameter('TestParameter')
   //   const value = new Boolean(1, 2)
-  //   parameter.setValue(value)
+  //   parameter.value =(value)
 
   //   const parameter2 = parameter.clone()
 

@@ -45,11 +45,11 @@ import { GLBaseViewport } from '../Renderer/GLBaseViewport'
  * @extends TreeItem
  */
 class Camera extends TreeItem {
-  protected __isOrthographicParam: Parameter<number>
-  protected __fovParam: Parameter<number>
-  protected __nearParam: Parameter<number>
-  protected __farParam: Parameter<number>
-  protected __focalDistanceParam: Parameter<number>
+  isOrthographicParam = new NumberParameter('isOrthographic', 0.0)
+  fovParam = new NumberParameter('fov', 1.0)
+  nearParam = new NumberParameter('near', 0.1)
+  farParam = new NumberParameter('far', 1000.0)
+  focalDistanceParam = new NumberParameter('focalDistance', 5.0)
 
   protected adjustNearAndFarPlanesToFocalDist: boolean
   protected nearDistFactor: number
@@ -62,24 +62,23 @@ class Camera extends TreeItem {
   /**
    * Instantiates a camera object, setting default configuration like zoom, target and positioning.
    *
-   * @param {string} name - The name of the camera.
+   * @param name - The name of the camera.
    */
   constructor(name: string = 'Camera') {
     super(name)
-
-    this.__isOrthographicParam = this.addParameter(new NumberParameter('isOrthographic', 0.0))
-    this.__fovParam = this.addParameter(new NumberParameter('fov', 1.0))
-    this.__nearParam = this.addParameter(new NumberParameter('near', 0.1))
-    this.__farParam = this.addParameter(new NumberParameter('far', 1000.0))
-    this.__focalDistanceParam = this.addParameter(new NumberParameter('focalDistance', 5.0))
+    this.addParameter(this.isOrthographicParam)
+    this.addParameter(this.fovParam)
+    this.addParameter(this.nearParam)
+    this.addParameter(this.farParam)
+    this.addParameter(this.focalDistanceParam)
 
     const emitProjChanged = (event: Record<string, any>) => {
       this.emit('projectionParamChanged', event)
     }
-    this.__isOrthographicParam.on('valueChanged', emitProjChanged)
-    this.__fovParam.on('valueChanged', emitProjChanged)
-    this.__nearParam.on('valueChanged', emitProjChanged)
-    this.__farParam.on('valueChanged', emitProjChanged)
+    this.isOrthographicParam.on('valueChanged', emitProjChanged)
+    this.fovParam.on('valueChanged', emitProjChanged)
+    this.nearParam.on('valueChanged', emitProjChanged)
+    this.farParam.on('valueChanged', emitProjChanged)
 
     // Initial viewing coords of a person standing 3 meters away from the
     // center of the stage looking at something 1 meter off the ground.
@@ -91,9 +90,9 @@ class Camera extends TreeItem {
     // and far planes.
     this.adjustNearAndFarPlanesToFocalDist = true
     // The factor by which the near plane is adjusted based on the focal distance.
-    this.nearDistFactor = 0.2
+    this.nearDistFactor = 0.01
     // The factor by which the far plane is adjusted based on the focal distance.
-    this.farDistFactor = 5
+    this.farDistFactor = 100
     this.frameOnBoundingSphere = false
   }
 
@@ -103,37 +102,37 @@ class Camera extends TreeItem {
   /**
    * Returns `near` parameter value.
    *
-   * @return {number} - Returns the near value.
+   * @return - Returns the near value.
    */
   getNear(): number {
-    return this.__nearParam.getValue()
+    return this.nearParam.value
   }
 
   /**
    * Sets `near` parameter value
    *
-   * @param {number} value - The near value.
+   * @param value - The near value.
    */
   setNear(value: number) {
-    this.__nearParam.setValue(value)
+    this.nearParam.value = value
   }
 
   /**
    * Returns `far` parameter value.
    *
-   * @return {number} - Returns the far value.
+   * @return - Returns the far value.
    */
   getFar(): number {
-    return this.__farParam.getValue()
+    return this.farParam.value
   }
 
   /**
    * Sets `far` parameter value
    *
-   * @param {number} value - The far value.
+   * @param value - The far value.
    */
   setFar(value: number) {
-    this.__farParam.setValue(value)
+    this.farParam.value = value
   }
 
   /**
@@ -141,10 +140,10 @@ class Camera extends TreeItem {
    * The FOV defines the vertical angle of the view frustum
    * The horizontal angle is calculated from the FOV and the Viewport aspect ratio.
    *
-   * @return {number} - Returns the FOV value.
+   * @return - Returns the FOV value.
    */
   getFov(): number {
-    return this.__fovParam.getValue()
+    return this.fovParam.value
   }
 
   /**
@@ -153,17 +152,17 @@ class Camera extends TreeItem {
    * The horizontal angle is calculated from the FOV and the Viewport aspect ratio.
    * > Note: The Fov can also be set by calling #setLensFocalLength
    *
-   * @param {number} value - The new FOV value.
+   * @param value - The new FOV value.
    */
   setFov(value: number) {
-    this.__fovParam.setValue(value)
+    this.fovParam.value = value
   }
 
   /**
    * Getter for the camera frustum height value.
    * The frustum hight value is used to compute the orthographic projection of the scene.
    *
-   * @return {number} - Returns the Frustum Height value.
+   * @return - Returns the Frustum Height value.
    */
   getFrustumHeight(): number {
     return this.viewHeight
@@ -173,12 +172,11 @@ class Camera extends TreeItem {
    * Setter for the camera frustum height in orthographic mode.
    * > Note: in perspective mode, the frustum height is calculated based on the FOV value and focal distance.
    *
-   * @param {number} value - The new Frustum Height value.
+   * @param value - The new Frustum Height value.
    */
   setFrustumHeight(value: number) {
     this.viewHeight = value
-    console.warn('event emitted is null')
-    this.emit('projectionParamChanged') // event
+    this.emit('projectionParamChanged')
   }
 
   /**
@@ -191,7 +189,7 @@ class Camera extends TreeItem {
    * 85mm, 90mm, 100mm, 105mm, 120mm, 125mm, 135mm, 150mm, 170mm, 180mm, 210mm, 300mm,
    * 400mm, 500mm, 600mm, 800mm
    *
-   * @param {string} value - The lens focal length value.
+   * @param value - The lens focal length value.
    */
   setLensFocalLength(value: string) {
     // https://www.nikonians.org/reviews/fov-tables
@@ -231,51 +229,45 @@ class Camera extends TreeItem {
       '400mm': 3.4,
       '500mm': 2.7,
       '600mm': 2.3,
-      '800mm': 1.7
+      '800mm': 1.7,
     }
     if (!(value in mapping)) {
       console.warn('Camera lense focal length not supported:' + value)
       return
     }
-    this.__fovParam.setValue(MathFunctions.degToRad(mapping[value]))
+    this.fovParam.value = MathFunctions.degToRad(mapping[value])
   }
 
   /**
    * Returns `focalDistance` parameter value.
    *
-   * @return {number} - Returns the lens focal length value..
+   * @return - Returns the lens focal length value..
    */
   getFocalDistance() {
-    return this.__focalDistanceParam.getValue()
+    return this.focalDistanceParam.value
   }
 
   /**
    * Sets `focalDistance` parameter value.
    *
    * @errors on dist value lower or less than zero.
-   * @param {number} dist - The focal distance value.
+   * @param dist - The focal distance value.
    */
   setFocalDistance(dist: number) {
     if (dist < 0.0001) console.error('Never set focal distance to zero')
-    this.__focalDistanceParam.setValue(dist)
+    this.focalDistanceParam.value = dist
     if (this.adjustNearAndFarPlanesToFocalDist) {
-      const near = dist * this.nearDistFactor
-      if (near < this.__nearParam.getValue()) {
-        this.__nearParam.setValue(near)
-      }
-      const far = dist * this.farDistFactor
-      if (far > this.__farParam.getValue()) {
-        this.__farParam.setValue(far)
-      }
+      this.nearParam.value = dist * this.nearDistFactor
+      this.farParam.value = dist * this.farDistFactor
     }
   }
 
   /**
    * Returns true if the camera is providing an orthographic projection.
-   * @return {boolean} - true if orthographic else false
+   * @return - true if orthographic else false
    */
   isOrthographic() {
-    return this.__isOrthographicParam.getValue() == 1.0
+    return this.isOrthographicParam.value == 1.0
   }
 
   /**
@@ -283,25 +275,25 @@ class Camera extends TreeItem {
    * A value of 0 means fully perspective. A value of 1 means fully orthographic.
    * Any value in between produces a linear interpolation of perspective and orthographic.
    *
-   * @param {any} value - The value param.
-   * @param {Number} duration - The duration in milliseconds to change the projection.
+   * @param value - The value param.
+   * @param duration - The duration in milliseconds to change the projection.
    */
-  setIsOrthographic(value: any, duration = 0) {
+  setIsOrthographic(value: number, duration = 0) {
     if (this.__orthoIntervalId) clearInterval(this.__orthoIntervalId)
     if (value > 0.5) {
-      const fov = this.__fovParam.getValue()
-      const focalDistance = this.__focalDistanceParam.getValue()
+      const fov = this.fovParam.value
+      const focalDistance = this.focalDistanceParam.value
       this.viewHeight = Math.sin(fov * 0.5) * focalDistance * 2
     }
     if (duration == 0) {
-      this.__isOrthographicParam.setValue(value)
+      this.isOrthographicParam.value = value
     } else {
       const count = Math.round(duration / 20) // each step is 20ms
       let i = 0
-      const prevValue = this.__isOrthographicParam.getValue()
+      const prevValue = this.isOrthographicParam.value
       const applyMovement = () => {
         const lerpValue = MathFunctions.lerp(prevValue, value, i / count)
-        this.__isOrthographicParam.setValue(lerpValue)
+        this.isOrthographicParam.value = lerpValue
         i++
         if (i <= count) {
           this.__orthoIntervalId = window.setTimeout(applyMovement, 20)
@@ -321,24 +313,24 @@ class Camera extends TreeItem {
    * You can do it this way or using the changing `TreeItem` parameters,
    * although we recommend this one because it also changes focal distance.
    *
-   * @param {Vec3} position - The position of the camera.
-   * @param {Vec3} target - The target of the camera.
+   * @param position - The position of the camera.
+   * @param target - The target of the camera.
    */
   setPositionAndTarget(position: Vec3, target: Vec3) {
     this.setFocalDistance(position.distanceTo(target))
     const xfo = new Xfo()
     xfo.setLookAt(position, target, new Vec3(0.0, 0.0, 1.0))
-    this.getParameter('GlobalXfo')!.setValue(xfo)
+    this.globalXfoParam.value = xfo
     this.emit('movementFinished')
   }
 
   /**
    * Getter for the target position.
-   * @return {Vec3} - Returns the target position.
+   * @return - Returns the target position.
    */
   getTargetPosition() {
-    const focalDistance = this.__focalDistanceParam.getValue()
-    const xfo = this.getParameter('GlobalXfo')!.getValue()
+    const focalDistance = this.focalDistanceParam.value
+    const xfo = this.globalXfoParam.value
     const target = xfo.ori.getZaxis()
     target.scaleInPlace(-focalDistance)
     target.addInPlace(xfo.tr)
@@ -351,16 +343,14 @@ class Camera extends TreeItem {
    * Calculates a new camera position that frames all the items passed in `treeItems` array, moving
    * the camera to a point where we can see all of them.
    *
-   * @param {GLBaseViewport} viewport - The viewport value.
-   * @param {array} treeItems - The treeItems value.
+   * @param viewport - The viewport value.
+   * @param treeItems - The treeItems value.
    */
-  frameView(viewport: GLBaseViewport, treeItems: any) {
-    const focalDistance = this.__focalDistanceParam.getValue()
-    const fovY = this.__fovParam.getValue()
+  frameView(viewport: GLBaseViewport, treeItems: TreeItem[]) {
+    const focalDistance = this.focalDistanceParam.value
+    const fovY = this.fovParam.value
 
-    const globalXfo = this.getParameter('GlobalXfo')!
-      .getValue()
-      .clone()
+    const globalXfo = this.globalXfoParam.value.clone()
     const aspectRatio = viewport.getWidth() / viewport.getHeight()
     const fovX = Math.atan(Math.tan(fovY * 0.5) * aspectRatio) * 2.0
 
@@ -369,7 +359,7 @@ class Camera extends TreeItem {
     if (this.frameOnBoundingSphere) {
       const box3 = new Box3()
       for (const treeItem of treeItems) {
-        box3.addBox3(treeItem.getParameter('BoundingBox').getValue())
+        box3.addBox3(treeItem.boundingBoxParam.value)
       }
 
       if (!box3.isValid()) {
@@ -393,11 +383,11 @@ class Camera extends TreeItem {
       // Based on the solution described here:
       // https://stackoverflow.com/a/66113254/5546902
 
-      const boundaryPoints: any[] = []
+      const boundaryPoints: Vec3[] = []
       if (false) {
         const box3 = new Box3()
         for (const treeItem of treeItems) {
-          box3.addBox3(treeItem.getParameter('BoundingBox').getValue())
+          box3.addBox3(treeItem.boundingBoxParam.value)
         }
 
         if (!box3.isValid()) {
@@ -414,15 +404,17 @@ class Camera extends TreeItem {
         boundaryPoints.push(box3.p1)
       } else {
         treeItems.forEach((treeItem: TreeItem) => {
-          treeItem.traverse(childItem => {
-            if (!(childItem instanceof TreeItem)) return
-            if (childItem.disableBoundingBox) return
+          treeItem.traverse((childItem) => {
+            // Stop traversal when we hig an item with a disabled bounding box
+            // or non-tree item.
+            if (!(childItem instanceof TreeItem)) return false
+            if (childItem.disableBoundingBox) return false
             if (childItem instanceof GeomItem) {
-              const geom = childItem.getParameter('Geometry')!.getValue()
+              const geom = childItem.geomParam.value
               if (geom) {
                 const box3 = geom.getBoundingBox()
                 if (box3.isValid()) {
-                  const mat4 = childItem.getGeomMat4()
+                  const mat4 = childItem.geomMatParam.value
                   boundaryPoints.push(mat4.transformVec3(box3.p0))
                   boundaryPoints.push(mat4.transformVec3(new Vec3(box3.p0.x, box3.p0.y, box3.p1.z)))
                   boundaryPoints.push(mat4.transformVec3(new Vec3(box3.p0.x, box3.p1.y, box3.p0.z)))
@@ -436,7 +428,7 @@ class Camera extends TreeItem {
               }
             }
             if (childItem.getNumChildren() == 0) {
-              const box3 = childItem.getParameter('BoundingBox')!.getValue()
+              const box3 = childItem.boundingBoxParam.value
               if (box3.isValid()) {
                 // Note: passing box3.p0 into boundaryPoints caused corruption later on.
                 // I could not figure out how/why, but by constructing a new vector here,
@@ -559,27 +551,27 @@ class Camera extends TreeItem {
         frustumPlaneOffsets.ZNeg += dolly
         const near = frustumPlaneOffsets.ZNeg * this.nearDistFactor
         const far = -frustumPlaneOffsets.ZPos * this.farDistFactor
-        this.__nearParam.setValue(near)
-        this.__farParam.setValue(far)
+        this.nearParam.value = near
+        this.farParam.value = far
       }
     }
 
     this.setFocalDistance(newFocalDistance)
-    this.getParameter('GlobalXfo')!.setValue(globalXfo)
+    this.globalXfoParam.value = globalXfo
     this.emit('movementFinished')
   }
 
   /**
    * Sets camera perspective from a Mat4 object.
    *
-   * @param {Mat4} mat - The mat value.
-   * @param {number} aspect - The aspect value.
+   * @param mat - The mat value.
+   * @param aspect - The aspect value.
    */
   updateProjectionMatrix(mat: Mat4, aspect: number) {
-    const isOrthographic = this.__isOrthographicParam.getValue()
-    const fov = this.__fovParam.getValue()
-    const near = this.__nearParam.getValue()
-    const far = this.__farParam.getValue()
+    const isOrthographic = this.isOrthographicParam.value
+    const fov = this.fovParam.value
+    const near = this.nearParam.value
+    const far = this.farParam.value
 
     const orthoMat = new Mat4()
     if (isOrthographic > 0.0) {

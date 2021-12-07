@@ -4,43 +4,53 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>geomitem-material-opacity-changes - Zea Engine</title>
+    <title>add-remove-items-from-renderer - Zea Engine</title>
 
     <link href="data/zea-logo.png" rel="shortcut icon" />
 
     <link rel="stylesheet" href="styles/tailwind.min.css" />
 
-    <script src="../dist/index.umd.development.js"></script>
+    <script src="../dist/index.umd.js"></script>
 
     <script type="module">
-      const { GLRenderer, Scene, Vec3, Color, Xfo, Sphere, Material, GeomItem, LDRImage, TreeItem } = zeaEngine
+      const {
+        GLRenderer,
+        Scene,
+        Vec3,
+        Color,
+        Xfo,
+        Sphere,
+        FlatSurfaceMaterial,
+        SimpleSurfaceMaterial,
+        GeomItem,
+        FileImage,
+        TreeItem,
+      } = zeaEngine
 
-      const canvas = document.querySelector('#renderer')
+      const canvas = document.getElementById('viewport')
 
       const scene = new Scene()
-      const renderer = new GLRenderer(canvas, { hideSplash: true, antialias: false })
+      const renderer = new GLRenderer(canvas, { antialias: false })
       renderer.setScene(scene)
 
       scene.setupGrid(10.0, 10)
 
       const promises = []
 
-      const texturedMaterial0 = new Material('Material', 'FlatSurfaceShader')
-      texturedMaterial0.getParameter('BaseColor').setValue(new Color(0.6, 0, 1))
-      const image0 = new LDRImage('LDRImage')
-      image0.setImageURL('data/zea-logo.png', 'RGBA')
-      texturedMaterial0.getParameter('BaseColor').setImage(image0)
-      promises.push(new Promise(resolve => image0.on('loaded', resolve)))
+      const texturedMaterial0 = new FlatSurfaceMaterial('Material')
+      texturedMaterial0.baseColorParam.value = new Color(0.6, 0, 1)
+      const image0 = new FileImage('logo')
+      promises.push(image0.load('data/zea-logo.png', 'RGBA'))
+      texturedMaterial0.baseColorParam.setImage(image0)
 
-      const texturedMaterial1 = new Material('Material', 'FlatSurfaceShader')
-      texturedMaterial1.getParameter('BaseColor').setValue(new Color(0.6, 0, 1))
-      const image1 = new LDRImage('LDRImage')
-      image1.setImageURL('data/avatar1.jpg')
-      texturedMaterial1.getParameter('BaseColor').setImage(image1)
-      promises.push(new Promise(resolve => image1.on('loaded', resolve)))
+      const texturedMaterial1 = new FlatSurfaceMaterial('Material')
+      texturedMaterial1.baseColorParam.value = new Color(0.6, 0, 1)
+      const image1 = new FileImage('avatar1')
+      promises.push(image1.load('data/avatar1.jpg'))
+      texturedMaterial1.baseColorParam.setImage(image1)
 
-      const material = new Material('surfaces', 'SimpleSurfaceShader')
-      material.getParameter('BaseColor').setValue(new Color(1, 0, 1, 1))
+      const material = new SimpleSurfaceMaterial('surfaces')
+      material.baseColorParam.value = new Color(1, 0, 1, 1)
 
       const sphere0 = new Sphere(1, 46)
       const sphere1 = new Sphere(1, 46)
@@ -57,15 +67,12 @@
       const geomItem3 = new GeomItem('Sphere3', sphere1, material, new Xfo(new Vec3(-4, 0, 0)))
       scene.getRoot().addChild(geomItem3)
 
-      renderer
-        .getViewport()
-        .getCamera()
-        .setPositionAndTarget(new Vec3(10, 10, 2.7), new Vec3(0, 0, 0.4))
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(10, 10, 2.7), new Vec3(0, 0, 0.4))
 
       window.postMessage('done-loading')
 
       // {{{ Messages handler.
-      const handleMessage = event => {
+      const handleMessage = (event) => {
         const { data } = event
 
         if (data === 'variant-01') {
@@ -73,28 +80,22 @@
           scene.getRoot().removeChild(scene.getRoot().getChildIndex(geomItem1))
           // Modify the item that is not being removed.
           // Note: this used to cause a crash because indices were confused in the multi-draw class.
-          sphere1.getParameter('Loops').setValue(100)
+          sphere1.loopsParam.value = 100
           window.postMessage(`done-${data}`)
         } else if (data === 'variant-02') {
           // Now look away, so that the scene gets frustum culled.
-          renderer
-            .getViewport()
-            .getCamera()
-            .setPositionAndTarget(new Vec3(10, 10, 2.7), new Vec3(20, 20, 0.4))
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(10, 10, 2.7), new Vec3(20, 20, 0.4))
           window.postMessage(`done-${data}`)
         } else if (data === 'variant-03') {
           // Now look back, so that the scene gets frustum un-culled.
-          renderer
-            .getViewport()
-            .getCamera()
-            .setPositionAndTarget(new Vec3(10, 10, 2.7), new Vec3(0, 0, 0.4))
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(10, 10, 2.7), new Vec3(0, 0, 0.4))
           window.postMessage(`done-${data}`)
         } else if (data === 'variant-04') {
           scene.getRoot().removeChild(scene.getRoot().getChildIndex(geomItem2))
           // Modify the class again, after it has been removed from the renderer.
           // Note: Our GLGeomLibrary still updates the buffers. It doesn't know that
           // no GeomItems track this geom. We need to add ref counting...
-          sphere1.getParameter('Loops').setValue(12)
+          sphere1.loopsParam.value = 12
           window.postMessage(`done-${data}`)
         } else if (data === 'variant-05') {
           scene.getRoot().addChild(geomItem0)
@@ -112,13 +113,13 @@
           treeItem.addChild(geomItem2)
           treeItem.addChild(geomItem3)
 
-          const material = new Material('surfaces', 'SimpleSurfaceShader')
-          material.getParameter('BaseColor').setValue(new Color(1, 1, 0, 0.2))
-          geomItem2.getParameter('Material').setValue(material)
+          const material = new SimpleSurfaceMaterial('surfaces')
+          material.baseColorParam.value = new Color(1, 1, 0, 0.2)
+          geomItem2.materialParam.value = material
 
-          const material2 = new Material('surfaces', 'SimpleSurfaceShader')
-          material2.getParameter('BaseColor').setValue(new Color(1, 1, 0, 1))
-          geomItem3.getParameter('Material').setValue(material2)
+          const material2 = new SimpleSurfaceMaterial('surfaces')
+          material2.baseColorParam.value = new Color(1, 1, 0, 1)
+          geomItem3.materialParam.value = material2
 
           window.postMessage(`done-${data}`)
         }
@@ -130,7 +131,7 @@
   </head>
   <body class="bg-blue-100 h-full">
     <div class="h-full">
-      <canvas class="absolute" id="renderer"></canvas>
+      <canvas id="viewport"></canvas>
     </div>
   </body>
 </html>

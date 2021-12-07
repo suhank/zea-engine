@@ -8,7 +8,7 @@ describe('GeometryParameter', () => {
   it('has an initial value.', () => {
     const geometryParameter = new GeometryParameter()
 
-    expect(geometryParameter.getValue()).toBeUndefined()
+    expect(geometryParameter.value).toBeUndefined()
   })
 
   it('checks value type.', () => {
@@ -22,18 +22,18 @@ describe('GeometryParameter', () => {
   //   const geometryParameter = new GeometryParameter()
   //   const cylinder = new Cylinder(5, 0.2, 32)
   //   const geomItem = new GeomItem('gear', cylinder)
-  //   geometryParameter.setValue(geomItem)
+  //   geometryParameter.value =(geomItem)
 
-  //   expect(geometryParameter.getValue()).toEqual(geomItem)
+  //   expect(geometryParameter.value).toEqual(geomItem)
   // })
 
   it('replaces a value.', () => {
     const geometryParameter = new GeometryParameter('Foo', new Cylinder())
 
     const cuboid = new Cuboid()
-    geometryParameter.setValue(cuboid)
+    geometryParameter.value = cuboid
 
-    expect(geometryParameter.getValue()).toEqual(cuboid)
+    expect(geometryParameter.value).toEqual(cuboid)
   })
 
   it('propagate events.', () => {
@@ -41,14 +41,14 @@ describe('GeometryParameter', () => {
 
     const cuboid = new Cuboid()
     cuboid.getBoundingBox() // force a clean.
-    geometryParameter.setValue(cuboid)
+    geometryParameter.value = cuboid
 
     let changed = false
     geometryParameter.on('boundingBoxChanged', () => {
       changed = true
     })
 
-    cuboid.getParameter('X').setValue(3)
+    cuboid.sizeXParam.value = 3
 
     expect(changed).toEqual(true)
   })
@@ -57,7 +57,7 @@ describe('GeometryParameter', () => {
     const geometryParameter = new GeometryParameter()
     const cylinder = new Cylinder(5, 0.2, 32)
     const geomItem = new GeomItem('gear', cylinder)
-    geometryParameter.setValue(geomItem)
+    geometryParameter.value =(geomItem)
     console.log(geometryParameter.toJSON())
 
     expect(geometryParameter.toJSON()).toEqual(false)
@@ -68,14 +68,14 @@ describe('GeometryParameter', () => {
     const geometry = { value: { a: 1, b: 0, g: 0, r: 1 } }
     geometryParameter.fromJSON(geometry)
 
-    expect(geometryParameter.getValue()).toEqual(new Geometry(1.0, 0.0, 0.0))
+    expect(geometryParameter.value).toEqual(new Geometry(1.0, 0.0, 0.0))
   })*/
 
   it.skip('clones parameter object', () => {
     const parameter = new GeometryParameter('TestParameter')
     const cylinder = new Cylinder(5, 0.2, 32)
     const geomItem = new GeomItem('gear', cylinder)
-    parameter.setValue(<BaseGeom>(<unknown>geomItem))
+    parameter.value = <BaseGeom>(<unknown>geomItem)
 
     const parameter2 = parameter.clone()
 

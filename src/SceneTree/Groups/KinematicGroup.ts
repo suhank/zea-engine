@@ -5,14 +5,13 @@ import { XfoParameter, MultiChoiceParameter } from '../Parameters/index'
 import { BaseGroup } from './BaseGroup'
 import { TreeItem } from '../TreeItem'
 import { GroupTransformXfoOperator, GroupMemberXfoOperator } from '../Operators/GroupMemberXfoOperator'
-import { BaseItem } from '../BaseItem'
 
 const GROUP_XFO_MODES = {
   disabled: 0,
   manual: 1,
   first: 2,
   average: 3,
-  globalOri: 4
+  globalOri: 4,
 }
 
 /**
@@ -29,12 +28,27 @@ const GROUP_XFO_MODES = {
 class KinematicGroup extends BaseGroup {
   protected calculatingGroupXfo: boolean
   protected memberXfoOps: GroupMemberXfoOperator[]
-  protected __initialXfoModeParam: MultiChoiceParameter
+
+  /**
+   * @member initialXfoModeParam - TODO
+   */
+  initialXfoModeParam: MultiChoiceParameter = new MultiChoiceParameter('InitialXfoMode', GROUP_XFO_MODES.average, [
+    'manual',
+    'first',
+    'average',
+    'global',
+  ])
+
+  /**
+   * @member groupTransformParam - TODO
+   */
+  groupTransformParam: XfoParameter = new XfoParameter('GroupTransform', new Xfo())
+
   protected groupTransformOp: GroupTransformXfoOperator
   /**
    * Creates an instance of a group.
    *
-   * @param {string} name - The name of the group.
+   * @param name - The name of the group.
    */
   constructor(name: string = '') {
     super(name)
@@ -42,19 +56,12 @@ class KinematicGroup extends BaseGroup {
     this.calculatingGroupXfo = false
     this.memberXfoOps = []
 
-    this.__initialXfoModeParam = <MultiChoiceParameter>(
-      this.addParameter(
-        new MultiChoiceParameter('InitialXfoMode', GROUP_XFO_MODES.average, ['manual', 'first', 'average', 'global'])
-      )
-    )
-    this.__initialXfoModeParam.on('valueChanged', (event) => {
+    this.addParameter(this.initialXfoModeParam)
+    this.initialXfoModeParam.on('valueChanged', () => {
       this.calcGroupXfo()
     })
-    const groupTransformParam = this.addParameter(new XfoParameter('GroupTransform', new Xfo()))
-    this.groupTransformOp = new GroupTransformXfoOperator(
-      <XfoParameter>this.getParameter('GlobalXfo'),
-      <XfoParameter>groupTransformParam
-    )
+    this.addParameter(this.groupTransformParam)
+    this.groupTransformOp = new GroupTransformXfoOperator(this.globalXfoParam, this.groupTransformParam)
   }
 
   /**
@@ -74,47 +81,39 @@ class KinematicGroup extends BaseGroup {
   // /////////////////////////////
 
   /**
-   * The __updateHighlight method.
+   * The updateHighlight method.
    * @private
    */
-  __updateHighlight() {
+  updateHighlight() {
     // Make this function async so that we don't pull on the
     // graph immediately when we receive a notification.
     // Note: propagating using an operator would be much better.
-    // setTimeout(() => {}, 0)
-
-    // TODO: make this async
-    this.__updateHighlightHelper()
-  }
-  /**
-   * The __updateHighlight method.
-   * @private
-   */
-  __updateHighlightHelper() {
-    let highlighted = false
-    let color: Color
-    if (this.isSelected()) {
-      highlighted = true
-      color = this.getHighlight()
-      color.a = 0.2
-    }
-
-    const key = 'kinematicGroupItemHighlight' + this.getId()
-    Array.from(this.__itemsParam.getValue()).forEach(item => {
-      if (item instanceof TreeItem) {
-        if (highlighted) item.addHighlight(key, color, true)
-        else item.removeHighlight(key, true)
+    setTimeout(() => {
+      let highlighted = false
+      let color: Color
+      if (this.isSelected()) {
+        highlighted = true
+        color = this.getHighlight()
+        color.a = 0.2
       }
-    })
+
+      const key = 'kinematicGroupItemHighlight' + this.getId()
+      Array.from(this.itemsParam.value).forEach((item) => {
+        if (item instanceof TreeItem) {
+          if (highlighted) item.addHighlight(key, color, true)
+          else item.removeHighlight(key, true)
+        }
+      })
+    }, 1)
   }
   /**
    * Changes selection's state of the group with all items it owns.
    *
-   * @param {boolean} sel - Boolean indicating the new selection state.
+   * @param sel - Boolean indicating the new selection state.
    */
   setSelected(sel: boolean) {
     super.setSelected(sel)
-    this.__updateHighlight()
+    this.updateHighlight()
   }
 
   // ////////////////////////////////////////
@@ -123,30 +122,30 @@ class KinematicGroup extends BaseGroup {
   /**
    * Calculate the group Xfo translate.
    * @private
-   * @return {Xfo} - Returns a new Xfo.
+   * @return - Returns a new Xfo.
    */
   calcGroupXfo() {
-    const items = Array.from(this.__itemsParam.getValue())
+    const items = Array.from(this.itemsParam.value)
     if (items.length == 0) return
     this.calculatingGroupXfo = true
 
-    this.memberXfoOps.forEach(op => op.disable())
+    this.memberXfoOps.forEach((op) => op.disable())
 
     // TODO: Disable the group operator?
-    const initialXfoMode = this.__initialXfoModeParam.getValue()
+    const initialXfoMode = this.initialXfoModeParam.value
     let xfo: Xfo
     if (initialXfoMode == GROUP_XFO_MODES.manual) {
       // The xfo is manually set by the current global xfo.
-      xfo = this.getParameter('GlobalXfo')!.getValue()
+      xfo = this.globalXfoParam.value
     } else if (initialXfoMode == GROUP_XFO_MODES.first && items[0] instanceof TreeItem) {
-      xfo = items[0].getParameter('GlobalXfo')!.getValue()
+      xfo = (<TreeItem>items[0]).globalXfoParam.value
     } else if (initialXfoMode == GROUP_XFO_MODES.average) {
       xfo = new Xfo()
       xfo.ori.set(0, 0, 0, 0)
       let numTreeItems = 0
       items.forEach((item, index) => {
         if (item instanceof TreeItem) {
-          const itemXfo = item.getParameter('GlobalXfo')!.getValue()
+          const itemXfo = item.globalXfoParam.value
           xfo.tr.addInPlace(itemXfo.tr)
           xfo.ori.addInPlace(itemXfo.ori)
           numTreeItems++
@@ -160,7 +159,7 @@ class KinematicGroup extends BaseGroup {
       let numTreeItems = 0
       items.forEach((item, index) => {
         if (item instanceof TreeItem) {
-          const itemXfo = item.getParameter('GlobalXfo')!.getValue()
+          const itemXfo = item.globalXfoParam.value
           xfo.tr.addInPlace(itemXfo.tr)
           numTreeItems++
         }
@@ -172,12 +171,12 @@ class KinematicGroup extends BaseGroup {
 
     // Note: if the KinematicGroup global param becomes dirty
     // then it stops propagating dirty to its members.
-    // const newGlobal = this.getParameter('GlobalXfo')!.getValue() // force a cleaning.
+    // const newGlobal = this.globalXfoParam.value // force a cleaning.
     // this.invGroupXfo = newGlobal.inverse()
-    this.getParameter('GlobalXfo')!.setValue(xfo)
+    this.globalXfoParam.value = xfo
     this.groupTransformOp.setBindXfo(xfo)
 
-    this.memberXfoOps.forEach(op => op.enable())
+    this.memberXfoOps.forEach((op) => op.enable())
     this.calculatingGroupXfo = false
   }
 
@@ -186,11 +185,12 @@ class KinematicGroup extends BaseGroup {
 
   /**
    * The __bindItem method.
-   * @param {BaseItem} item - The item value.
-   * @param {number} index - The index value.
+   * @param item - The item value.
+   * @param index - The index value.
    * @private
    */
-  bindItem(item: BaseItem, index: number) {
+  protected bindItem(item: TreeItem, index: number): void {
+    super.bindItem(item, index)
     if (!(item instanceof TreeItem)) return
 
     // ///////////////////////////////
@@ -203,16 +203,13 @@ class KinematicGroup extends BaseGroup {
     }
 
     {
-      const memberGlobalXfoParam = item.getParameter('GlobalXfo')
-      const memberXfoOp = new GroupMemberXfoOperator(
-        <XfoParameter>this.getParameter('GroupTransform'),
-        <XfoParameter>memberGlobalXfoParam
-      )
+      const memberGlobalXfoParam = item.globalXfoParam
+      const memberXfoOp = new GroupMemberXfoOperator(this.groupTransformParam, memberGlobalXfoParam)
       this.memberXfoOps.splice(index, 0, memberXfoOp)
 
       if (!this.__itemsEventHandlers[index]) this.__itemsEventHandlers[index] = {} // initialize
       const listenerIDs = this.__itemsEventHandlers[index]
-      listenerIDs['BoundingBox.valueChanged'] = item.getParameter('BoundingBox')!.on('valueChanged', (event) => {
+      listenerIDs['BoundingBox.valueChanged'] = item.boundingBoxParam.on('valueChanged', (event) => {
         this.setBoundingBoxDirty()
       })
     }
@@ -220,11 +217,11 @@ class KinematicGroup extends BaseGroup {
 
   /**
    * The unbindItem method.
-   * @param {BaseItem} item - The item value.
-   * @param {number} index - The index value.
+   * @param item - The item value.
+   * @param index - The index value.
    * @private
    */
-  unbindItem(item: BaseItem, index: number) {
+  protected unbindItem(item: TreeItem, index: number): void {
     super.unbindItem(<TreeItem>item, index)
     if (!(item instanceof TreeItem)) return
 
@@ -243,10 +240,10 @@ class KinematicGroup extends BaseGroup {
   /**
    * Adds an item to the group(See `Items` parameter).
    *
-   * @param {BaseItem} item - The item value.
-   * @param {boolean} emit - The emit value.
+   * @param item - The item value.
+   * @param emit - The emit value.
    */
-  addItem(item: BaseItem, emit = true) {
+  addItem(item: TreeItem, emit = true) {
     super.addItem(<TreeItem>item, emit)
     if (emit) {
       this.calcGroupXfo()
@@ -256,10 +253,10 @@ class KinematicGroup extends BaseGroup {
   /**
    * Removes an item from the group(See `Items` parameter).
    *
-   * @param {BaseItem} item - The item value.
-   * @param {boolean} emit - The emit value.
+   * @param item - The item value.
+   * @param emit - The emit value.
    */
-  removeItem(item: BaseItem, emit = true) {
+  removeItem(item: TreeItem, emit = true) {
     super.removeItem(<TreeItem>item, emit)
     if (emit) {
       this.calcGroupXfo()
@@ -269,9 +266,9 @@ class KinematicGroup extends BaseGroup {
   /**
    * Sets an entire new array of items to the BaseGroup replacing any previous items.
    *
-   * @param {array} items - List of `BaseItem` you want to add to the group
+   * @param items - List of `TreeItem` you want to add to the group
    */
-  setItems(items: Set<BaseItem>) {
+  setItems(items: Set<TreeItem>) {
     super.setItems(items) // TODO: originally: super.setItems(emit) -- should emit be done here?
     this.calcGroupXfo()
   }
@@ -279,7 +276,7 @@ class KinematicGroup extends BaseGroup {
   /**
    * Removes all items from the group.
    *
-   * @param {boolean} emit - `true` triggers `valueChanged` event.
+   * @param emit - `true` triggers `valueChanged` event.
    */
   clearItems(emit = true) {
     super.clearItems(emit)
@@ -296,7 +293,7 @@ class KinematicGroup extends BaseGroup {
    * called once loading is done.
    * @private
    */
-  __loadDone() {
+  loadDone() {
     this.calculatingGroupXfo = true
     this.calcGroupXfo()
     this.calculatingGroupXfo = false
@@ -309,8 +306,8 @@ class KinematicGroup extends BaseGroup {
    * The clone method constructs a new group,
    * copies its values and returns it.
    *
-   * @param {Record<string, unknown>} context - The context value.
-   * @return {KinematicGroup} - Returns a new cloned group.
+   * @param context - The context value.
+   * @return - Returns a new cloned group.
    */
   clone(context: Record<string, unknown>) {
     const cloned = new KinematicGroup()

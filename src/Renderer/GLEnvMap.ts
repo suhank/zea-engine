@@ -4,6 +4,7 @@ import { EnvMapShader } from './Shaders/EnvMapShader'
 import { generateShaderGeomBinding, IGeomShaderBinding } from './Drawing/GeomShaderBinding'
 import { EnvMap } from '../SceneTree/Images/EnvMap'
 import { GLRenderer } from './GLRenderer'
+import { ColorRenderState } from './types/renderer'
 
 /** Class representing a GL environment map.
  * @extends GLProbe
@@ -19,8 +20,8 @@ class GLEnvMap extends GLProbe {
   protected __lodPyramid: any
   /**
    * Create a GL env map.
-   * @param {GLBaseRenderer} renderer - The renderer value.
-   * @param {EnvMap} envMap - The environment map.
+   * @param renderer - The renderer value.
+   * @param envMap - The environment map.
    */
   constructor(renderer: GLRenderer, envMap: EnvMap) {
     super(renderer.gl, 'EnvMap')
@@ -55,12 +56,11 @@ class GLEnvMap extends GLProbe {
       gl.__quadIndexBuffer
     )
 
-    //
-    const headlightParam = this.__envMap.getParameter('HeadLightMode')!
+    const headlightParam = this.__envMap.headlightModeParam
 
     const updateHeadlightModeFlag = () => {
       const ENVMAP_FLAG_HEADLIGHT = 1 // 1<<0;
-      if (headlightParam.getValue()) {
+      if (headlightParam.value) {
         this.textureDesc[3] |= ENVMAP_FLAG_HEADLIGHT
       } else {
         this.textureDesc[3] &= ~ENVMAP_FLAG_HEADLIGHT
@@ -79,7 +79,7 @@ class GLEnvMap extends GLProbe {
 
   /**
    * The getEnvMap method.
-   * @return {EnvMap} - The return value.
+   * @return - The return value.
    */
   getEnvMap(): EnvMap {
     return this.__envMap
@@ -87,7 +87,7 @@ class GLEnvMap extends GLProbe {
 
   /**
    * The getBackgroundFocus method.
-   * @return {number} - The return value.
+   * @return - The return value.
    */
   getBackgroundFocus(): number {
     return this.__backgroundFocus
@@ -95,7 +95,7 @@ class GLEnvMap extends GLProbe {
 
   /**
    * The setBackgroundFocus method.
-   * @param {number} val - The val param.
+   * @param val - The val param.
    */
   setBackgroundFocus(val: number): void {
     this.__backgroundFocus = val
@@ -104,7 +104,7 @@ class GLEnvMap extends GLProbe {
 
   /**
    * The draw method.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
+   * @param renderstate - The object tracking the current state of the renderer
    */
   draw(renderstate: ColorRenderState): void {
     if (this.__envMap.isLoaded()) {

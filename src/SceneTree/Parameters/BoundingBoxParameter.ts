@@ -22,8 +22,8 @@ class BoundingBoxParameter extends Parameter<Box3> implements IBinaryReader {
   protected treeItem: TreeItem
   /**
    * Creates an instance of BoundingBoxParameter.
-   * @param {string} name - Name of the parameter
-   * @param {TreeItem} treeItem - `TreeItem` that contains `Box3` representing the Bounding Box
+   * @param name - Name of the parameter
+   * @param treeItem - `TreeItem` that contains `Box3` representing the Bounding Box
    */
   constructor(name: string = '', treeItem: TreeItem) {
     super(name, new Box3(), 'Box3')
@@ -53,37 +53,33 @@ class BoundingBoxParameter extends Parameter<Box3> implements IBinaryReader {
   /**
    * Returns bounding box value
    *
-   * @return {Box3} - The return value.
+   * @return - The return value.
    */
   getValue(): Box3 {
     if (this.dirty) {
-      this.value = this.treeItem._cleanBoundingBox(this.value)
+      this.__value = this.treeItem._cleanBoundingBox(this.__value)
     }
-    return this.value
+    return this.__value
   }
 
   toJSON(context?: Record<string, unknown>): Record<string, any> {
     return {
-      value: this.value?.toJSON()
+      value: this.__value?.toJSON(),
     }
   }
 
   fromJSON(j: Record<string, any>, context?: Record<string, unknown>): void {
-    // if (j.value.type) this.value = Registry.constructClass('Box3') as Box3 // TODO: this is now broken
-    this.value?.fromJSON(j.value)
+    // if (j.value.type) this.__value = Registry.constructClass('Box3') as Box3 // TODO: this is now broken
+    this.__value?.fromJSON(j.value)
   }
 
-  readBinary(reader: BinReader, context?: Record<string, unknown>) {
-    // TODO: remove this method and replace with below
+  readBinary(reader: BinReader, context?: Record<string, unknown>): void {
     throw new Error('Method not implemented.')
   }
-  // readBinary(reader: BinReader, context?: Record<string, unknown>): void {
-  //   throw new Error('Method not implemented.')
-  // }
 
   clone(): BoundingBoxParameter {
     const bBox3Clone = new BoundingBoxParameter(this.name, this.treeItem)
-    bBox3Clone.value = this.value?.clone()
+    bBox3Clone.value = this.__value?.clone()
 
     return bBox3Clone
   }

@@ -10,7 +10,7 @@
 
     <link rel="stylesheet" href="styles/tailwind.min.css" />
 
-    <script src="../dist/index.umd.development.js"></script>
+    <script src="../dist/index.umd.js"></script>
     <style>
       /* The slider itself */
       .slider {
@@ -67,70 +67,62 @@
     </style>
 
     <script type="module">
-      const { GLRenderer, Scene, Vec3, Color, Xfo, Sphere, GeomItem, Material, EnvMap } = window.zeaEngine
+      const { GLRenderer, Scene, Vec3, Color, Xfo, Sphere, GeomItem, StandardSurfaceMaterial, EnvMap } =
+        window.zeaEngine
 
-      const canvas = document.querySelector('#renderer')
+      const canvas = document.getElementById('viewport')
 
       const scene = new Scene()
-      const renderer = new GLRenderer(canvas, { hideSplash: true, antialias: false })
+      const renderer = new GLRenderer(canvas, { antialias: false })
       renderer.setScene(scene)
 
       scene.setupGrid(10.0, 10)
 
       const envMap = new EnvMap()
-      // envMap.getParameter('FilePath').setValue('data/AutomnRoad.zenv')
-      // envMap.getParameter('FilePath').setValue('data/Bright-Roof-Multi.zenv')
-      // envMap.getParameter('FilePath').setValue('data/HDR_041_Path_Ref-cube.zenv')
-      envMap.getParameter('FilePath').setValue('data/HDR_041_Path_Ref-webp.zenv')
-      // envMap.getParameter('FilePath').setValue('data/HDR_041_Path_Ref.vlenv')
-      // envMap.getParameter('FilePath').setValue('data/HDR_029_Sky_Cloudy_Ref.vlenv')
+      // envMap.load('data/AutomnRoad.zenv')
+      // envMap.load('data/Bright-Roof-Multi.zenv')
+      // envMap.load('data/HDR_041_Path_Ref-cube.zenv')
+      envMap.load('data/HDR_041_Path_Ref-webp.zenv')
+      // envMap.load('data/HDR_041_Path_Ref.vlenv')
+      // envMap.load('data/HDR_029_Sky_Cloudy_Ref.vlenv')
       scene.setEnvMap(envMap)
-      scene
-        .getSettings()
-        .getParameter('Display EnvMap')
-        .setValue(true)
+      scene.displayEnvMapParam.value = true
 
       // Update the current slider value (each time you drag the slider handle)
       var slider = document.getElementById('exposureControl')
-      slider.oninput = function() {
+      slider.oninput = function () {
         renderer.exposure = slider.value / 100
         console.log('renderer.exposure:', renderer.exposure)
       }
-      renderer
-        .getViewport()
-        .getCamera()
-        .setLensFocalLength('20mm')
-      renderer
-        .getViewport()
-        .getCamera()
-        .setPositionAndTarget(new Vec3(2, 0, 0), new Vec3(0, 0, 0))
+      renderer.getViewport().getCamera().setLensFocalLength('20mm')
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 0, 0), new Vec3(0, 0, 0))
 
-      const material = new Material('surfaces', 'StandardSurfaceShader')
-      material.getParameter('BaseColor').setValue(new Color(0.6, 0.0, 0.0))
-      material.getParameter('Roughness').setValue(0.5)
-      material.getParameter('Metallic').setValue(0.05)
-      material.getParameter('Reflectance').setValue(0.01)
+      const material = new StandardSurfaceMaterial('surfaces')
+      material.baseColorParam.value = new Color(0.6, 0.0, 0.0)
+      material.roughnessParam.value = 0.5
+      material.metallicParam.value = 0.05
+      material.reflectanceParam.value = 0.01
       scene.getRoot().addChild(new GeomItem('sphere', new Sphere(0.4, 40), material))
 
-      document.getElementById('colorControl').addEventListener('input', event => {
-        material.getParameter('BaseColor').setValue(new Color(event.target.value))
+      document.getElementById('colorControl').addEventListener('input', (event) => {
+        material.baseColorParam.value = new Color(event.target.value)
       })
-      document.getElementById('roughnessControl').addEventListener('input', event => {
-        material.getParameter('Roughness').setValue(event.target.value / 100)
+      document.getElementById('roughnessControl').addEventListener('input', (event) => {
+        material.roughnessParam.value = event.target.value / 100
       })
-      document.getElementById('metallicControl').addEventListener('input', event => {
-        material.getParameter('Metallic').setValue(event.target.value / 100)
+      document.getElementById('metallicControl').addEventListener('input', (event) => {
+        material.metallicParam.value = event.target.value / 100
       })
-      document.getElementById('glossinessControl').addEventListener('input', event => {
-        material.getParameter('Reflectance').setValue(event.target.value / 100)
+      document.getElementById('glossinessControl').addEventListener('input', (event) => {
+        material.reflectanceParam.value = event.target.value / 100
       })
 
-      Promise.all([new Promise(resolve => envMap.once('loaded', resolve))]).then(() => {
+      Promise.all([new Promise((resolve) => envMap.once('loaded', resolve))]).then(() => {
         window.postMessage('done-loading')
       })
 
       // {{{ Messages handler.
-      const handleMessage = event => {
+      const handleMessage = (event) => {
         const { data } = event
 
         if (data === 'variant-01') {
@@ -151,7 +143,7 @@
   </head>
   <body class="bg-blue-100 h-full">
     <div class="h-full">
-      <canvas class="absolute" id="renderer"></canvas>
+      <canvas id="viewport"></canvas>
     </div>
 
     <input type="range" min="0" max="400" value="100" class="slider" id="exposureControl" />

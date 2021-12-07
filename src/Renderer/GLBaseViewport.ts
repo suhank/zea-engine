@@ -1,19 +1,22 @@
 import { Color } from '../Math/index'
-import { Plane, ParameterOwner, BaseImage, NumberParameter, BaseTool, Scene } from '../SceneTree/index'
+import { Plane, ParameterOwner, BaseImage, NumberParameter, ColorParameter, BaseTool, Scene } from '../SceneTree/index'
 import { GLRenderer } from './GLRenderer'
 import { GLHDRImage } from './GLHDRImage'
 import { GLTexture2D } from './GLTexture2D'
 import { GLFbo } from './GLFbo'
 import { GLMesh } from './Drawing/GLMesh'
-
 import { VLHImage } from '../SceneTree/Images/VLHImage'
 import { ResizedEvent } from '../Utilities/Events/ResizedEvent'
 import { SceneSetEvent } from '../Utilities/Events/SceneSetEvent'
+import { ZeaPointerEvent } from '../Utilities/Events/ZeaPointerEvent'
+import { KeyboardEvent } from '../Utilities/Events/KeyboardEvent'
+import { ColorRenderState, RenderState } from './types/renderer'
+import { WebGL12RenderingContext } from './types/webgl'
 
 const FRAMEBUFFER = {
   MSAA_RENDERBUFFER: 0,
   COLORBUFFER: 1,
-  DEPTHBUFFER: 2
+  DEPTHBUFFER: 2,
 }
 
 /**
@@ -25,10 +28,7 @@ class GLBaseViewport extends ParameterOwner {
   protected __gl: WebGL12RenderingContext
   protected renderer: GLRenderer
   protected __renderer: GLRenderer
-  protected __doubleClickTimeMSParam: NumberParameter
   protected __fbo: WebGLFramebuffer | null = null
-  protected __ongoingPointers: any[]
-  protected __backgroundColor: Color
   protected quad: GLMesh
   protected offscreenBuffer: GLTexture2D | null = null
   protected depthTexture: GLTexture2D | null = null
@@ -46,20 +46,28 @@ class GLBaseViewport extends ParameterOwner {
   protected depthBuffer: WebGLRenderbuffer | null = null
   protected EXT_frag_depth: EXT_frag_depth | null = null
   protected manipulator: any
-
   protected depthRange: number[] = [0, 0]
+
+  /**
+   * @member backgroundColorParam - Changes background color of the scene
+   */
+  backgroundColorParam: ColorParameter = new ColorParameter('BackgroundColor', new Color('#eeeeee')) // owned by viewport
+
+  /**
+   * @member doubleClickTimeParam - The maximum time between clicks for a double click to be registered.
+   */
+  doubleClickTimeParam: NumberParameter = new NumberParameter('DoubleClickTimeMS', 200)
+
   /**
    * Create a GL base viewport.
-   * @param {GLRenderer} renderer - The renderer value.
+   * @param renderer - The renderer value.
    */
   constructor(renderer: GLRenderer) {
     super()
     this.renderer = renderer
     this.__renderer = renderer
-    this.__doubleClickTimeMSParam = <NumberParameter>this.addParameter(new NumberParameter('DoubleClickTimeMS', 200))
-    // Since there is not multi touch on `PointerEvent`, we need to store pointers pressed.
-    this.__ongoingPointers = []
-    this.__backgroundColor = new Color(0.3, 0.3, 0.3, 1)
+
+    this.addParameter(this.doubleClickTimeParam)
 
     const gl = this.__renderer.gl
     this.__gl = gl
@@ -76,7 +84,7 @@ class GLBaseViewport extends ParameterOwner {
         format: 'RGBA',
         filter: 'LINEAR',
         width: 4,
-        height: 4
+        height: 4,
       })
       this.depthTexture = new GLTexture2D(gl, {
         type: gl.UNSIGNED_INT_24_8,
@@ -85,10 +93,10 @@ class GLBaseViewport extends ParameterOwner {
         filter: gl.NEAREST,
         wrap: gl.CLAMP_TO_EDGE,
         width: 4,
-        height: 4
+        height: 4,
       })
       // this.offscreenBufferFbo = new GLFbo(gl, this.offscreenBuffer, true)
-      // this.offscreenBufferFbo.setClearColor(this.__backgroundColor.asArray())
+      // this.offscreenBufferFbo.setClearColor(this.backgroundColorParam.value.asArray())
     }
 
     this.highlightedGeomsBuffer = new GLTexture2D(gl, {
@@ -96,66 +104,44 @@ class GLBaseViewport extends ParameterOwner {
       format: 'RGBA',
       filter: 'NEAREST',
       width: 4,
-      height: 4
+      height: 4,
     })
     this.highlightedGeomsBufferFbo = new GLFbo(gl, this.highlightedGeomsBuffer, true)
     this.highlightedGeomsBufferFbo.setClearColor(new Color(0, 0, 0, 0))
 
     // //////////////////////////////////
     // Setup Camera Manipulator
-    const sceneSet = (scene: Scene) => {
-      const settings = scene.settings
-      const bgColorParam = settings.getParameter('BackgroundColor')
-      const processBGValue = () => {
-        const value = bgColorParam!.getValue()
-        if (value instanceof BaseImage) {
-          if (value.type === 'FLOAT') {
-            this.__backgroundTexture = value
-            this.__backgroundGLTexture = new GLHDRImage(gl, <VLHImage>value) // TODO: is casting a baseimage to <VLHImage> ok?
-          } else {
-            this.__backgroundTexture = value
-            this.__backgroundGLTexture = new GLTexture2D(gl, value)
-          }
-        } else if (value instanceof Color) {
-          if (this.__backgroundGLTexture) {
-            this.__backgroundGLTexture.destroy()
-            this.__backgroundGLTexture = null
-            this.__backgroundTexture = null
-          }
-          this.__backgroundColor = value
-
-          if (this.offscreenBufferFbo) {
-            this.offscreenBufferFbo.setClearColor(new Color(value.asArray()))
-          }
+    const processBGValue = () => {
+      const value = this.backgroundColorParam.value
+      if (value instanceof BaseImage) {
+        if (value instanceof VLHImage) {
+          this.__backgroundTexture = value
+          this.__backgroundGLTexture = new GLHDRImage(gl, value)
         } else {
-          console.warn('Invalid background:' + value)
+          this.__backgroundTexture = value
+          this.__backgroundGLTexture = new GLTexture2D(gl, value)
         }
-        this.emit('updated')
+      } else if (value instanceof Color) {
+        if (this.__backgroundGLTexture) {
+          this.__backgroundGLTexture.destroy()
+          this.__backgroundGLTexture = null
+          this.__backgroundTexture = null
+        }
+        if (this.offscreenBufferFbo) {
+          this.offscreenBufferFbo.setClearColor(new Color(value.asArray()))
+        }
+      } else {
+        console.warn('Invalid background:' + value)
       }
-      processBGValue()
-      bgColorParam!.on('valueChanged', processBGValue)
+      this.emit('updated')
     }
-    const scene = this.__renderer.getScene()
-    if (scene) {
-      sceneSet(scene)
-    } else {
-      this.__renderer.once('sceneSet', event => {
-        sceneSet((<SceneSetEvent>event).scene)
-      })
-    }
-  }
-
-  /**
-   * The getRenderer method.
-   * @return {GLRenderer} - The return value.
-   */
-  getRenderer(): GLRenderer {
-    return this.__renderer
+    processBGValue()
+    this.backgroundColorParam!.on('valueChanged', processBGValue)
   }
 
   /**
    * The getWidth method.
-   * @return {number} - The return value.
+   * @return - The return value.
    */
   getWidth(): number {
     return this.__width
@@ -163,39 +149,16 @@ class GLBaseViewport extends ParameterOwner {
 
   /**
    * The getHeight method.
-   * @return {number} - The return value.
+   * @return - The return value.
    */
   getHeight(): number {
     return this.__height
   }
 
   /**
-   * The getBackground method.
-   * @return {Color} - The return value.
-   */
-  getBackground(): Color | null {
-    console.warn('Deprecated Function. Please access the Scene Settings object.')
-    const settings = this.__renderer.getScene()!.settings
-    const bgColorParam = settings.getParameter('BackgroundColor')
-    return bgColorParam!.getValue()
-  }
-
-  /**
-   * The setBackground method.
-   * @param {Color} background - The background value.
-   */
-  setBackground(background: Color): void {
-    console.warn('Deprecated Function. Please access the Scene Settings object.')
-    const settings = this.__renderer.getScene()!.settings
-    const bgColorParam = settings.getParameter('BackgroundColor')
-    bgColorParam!.setValue(background)
-    this.emit('updated')
-  }
-
-  /**
    * The resize method.
-   * @param {number} canvasWidth - The canvasWidth value.
-   * @param {number} canvasHeight - The canvasHeight value.
+   * @param canvasWidth - The canvasWidth value.
+   * @param canvasHeight - The canvasHeight value.
    */
   resize(canvasWidth: number, canvasHeight: number) {
     if (this.__canvasWidth == canvasWidth && this.__canvasHeight == canvasHeight) return
@@ -211,8 +174,8 @@ class GLBaseViewport extends ParameterOwner {
   /**
    * Resize any offscreen render targets.
    * > Note: Values ,ay not be the entire canvas with if multiple viewports exists.
-   * @param {number} width - The width used by this viewport.
-   * @param {number} height - The height  used by this viewport.
+   * @param width - The width used by this viewport.
+   * @param height - The height  used by this viewport.
    */
   resizeRenderTargets(width: number, height: number): void {
     // Note: On low end devices, such as Oculus, blitting the multi-sampled depth buffer is throwing errors,
@@ -249,7 +212,15 @@ class GLBaseViewport extends ParameterOwner {
       // COLORBUFFER
       this.fb[FRAMEBUFFER.COLORBUFFER] = gl.createFramebuffer()
       gl.bindFramebuffer(gl.FRAMEBUFFER, this.fb[FRAMEBUFFER.COLORBUFFER])
-      gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.offscreenBuffer!.glTex, 0)
+      gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.offscreenBuffer.glTex, 0)
+      gl.bindFramebuffer(gl.FRAMEBUFFER, null)
+
+      // //////////////////////////////////
+      // DEPTHBUFFER
+      // Create the depth texture that will be bitted to.
+      this.fb[FRAMEBUFFER.DEPTHBUFFER] = gl.createFramebuffer()
+      gl.bindFramebuffer(gl.FRAMEBUFFER, this.fb[FRAMEBUFFER.DEPTHBUFFER])
+      gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.TEXTURE_2D, this.depthTexture.glTex, 0)
       gl.bindFramebuffer(gl.FRAMEBUFFER, null)
 
       const check = gl.checkFramebufferStatus(
@@ -283,7 +254,7 @@ class GLBaseViewport extends ParameterOwner {
 
   /**
    * The draw method.
-   * @param {ColorRenderState} renderstate - The object tracking the current state of the renderer
+   * @param renderstate - The object tracking the current state of the renderer
    */
   draw(renderstate: ColorRenderState): void {
     const gl = this.__renderer.gl
@@ -307,7 +278,7 @@ class GLBaseViewport extends ParameterOwner {
       if (!renderstate.boundRendertarget) gl.bindFramebuffer(gl.FRAMEBUFFER, null)
     }
     gl.viewport(0, 0, this.__width, this.__height)
-    const bg = this.__backgroundColor.asArray()
+    const bg = this.backgroundColorParam.value.asArray()
     gl.clearColor(bg[0], bg[1], bg[2], bg[3])
     // Note: in Chrome's macOS the alpha channel causes strange
     // compositing issues. Here where we disable the alpha channel
@@ -359,7 +330,7 @@ class GLBaseViewport extends ParameterOwner {
 
   /**
    * Draws the Silhouettes around geometries.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
+   * @param renderstate - The object tracking the current state of the renderer
    * @private
    */
   drawSilhouettes(renderstate: RenderState): void {
@@ -370,11 +341,12 @@ class GLBaseViewport extends ParameterOwner {
     const gl = this.__renderer.gl
     if (this.renderer.outlineThickness == 0 || gl.name != 'webgl2' || !this.fb) return
 
-    gl.bindFramebuffer(gl.READ_FRAMEBUFFER, this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER])
-    gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, this.fb[FRAMEBUFFER.DEPTHBUFFER])
-    gl.clearBufferfv(gl.COLOR, 0, [1, 1, 1, 1])
+    const gl2 = <WebGL2RenderingContext>gl
+    gl2.bindFramebuffer(gl2.READ_FRAMEBUFFER, this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER])
+    gl2.bindFramebuffer(gl2.DRAW_FRAMEBUFFER, this.fb[FRAMEBUFFER.DEPTHBUFFER])
+    gl2.clearBufferfv(gl2.COLOR, 0, [1, 1, 1, 1])
 
-    gl.blitFramebuffer(
+    gl2.blitFramebuffer(
       0,
       0,
       this.__width,
@@ -383,49 +355,49 @@ class GLBaseViewport extends ParameterOwner {
       0,
       this.__width,
       this.__height,
-      gl.DEPTH_BUFFER_BIT,
-      gl.NEAREST
+      gl2.DEPTH_BUFFER_BIT,
+      gl2.NEAREST
     )
     // Rebind the MSAA RenderBuffer.
-    gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER])
+    gl2.bindFramebuffer(gl2.DRAW_FRAMEBUFFER, this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER])
     renderstate.boundRendertarget = this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER]
-    gl.viewport(0, 0, this.__width, this.__height)
+    gl2.viewport(0, 0, this.__width, this.__height)
 
     if (this.renderer.outlineThickness == 0) return
 
     // ////////////////////////////////////
     //
-    gl.enable(gl.BLEND)
-    gl.blendEquation(gl.FUNC_ADD)
-    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA) // For add
-    gl.disable(gl.DEPTH_TEST)
-    gl.depthMask(false)
+    gl2.enable(gl2.BLEND)
+    gl2.blendEquation(gl2.FUNC_ADD)
+    gl2.blendFunc(gl2.SRC_ALPHA, gl2.ONE_MINUS_SRC_ALPHA) // For add
+    gl2.disable(gl2.DEPTH_TEST)
+    gl2.depthMask(false)
 
     this.renderer.silhouetteShader.bind(renderstate)
 
     const unifs = renderstate.unifs
 
-    this.depthTexture!.bindToUniform(renderstate, unifs.depthTexture)
+    this.depthTexture.bindToUniform(renderstate, unifs.depthTexture)
 
-    gl.uniform2f(unifs.screenSize.location, this.__width, this.__height)
-    gl.uniform1f(unifs.outlineThickness.location, this.renderer.outlineThickness)
+    gl2.uniform2f(unifs.screenSize.location, this.__width, this.__height)
+    gl2.uniform1f(unifs.outlineThickness.location, this.renderer.outlineThickness)
 
     const oc = this.renderer.outlineColor.asArray()
-    gl.uniform4f(unifs.outlineColor.location, oc[0], oc[1], oc[2], oc[3])
-    gl.uniform1f(unifs.outlineSensitivity.location, this.renderer.outlineSensitivity)
-    gl.uniform1f(unifs.outlineDepthBias.location, this.renderer.outlineDepthBias)
+    gl2.uniform4f(unifs.outlineColor.location, oc[0], oc[1], oc[2], oc[3])
+    gl2.uniform1f(unifs.outlineSensitivity.location, this.renderer.outlineSensitivity)
+    gl2.uniform1f(unifs.outlineDepthBias.location, this.renderer.outlineDepthBias)
 
-    gl.uniform2f(unifs.depthRange.location, this.depthRange[0], this.depthRange[1])
+    gl2.uniform2f(unifs.depthRange.location, this.depthRange[0], this.depthRange[1])
 
     this.quad.bindAndDraw(renderstate)
 
-    gl.enable(gl.DEPTH_TEST)
-    gl.depthMask(true)
+    gl2.enable(gl2.DEPTH_TEST)
+    gl2.depthMask(true)
   }
 
   /**
    * Draws the highlights around geometries.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
+   * @param renderstate - The object tracking the current state of the renderer
    * @private
    */
   drawHighlights(renderstate: RenderState): void {
@@ -477,7 +449,7 @@ class GLBaseViewport extends ParameterOwner {
 
   /**
    * The getManipulator method.
-   * @return {BaseTool} - The return value.
+   * @return - The return value.
    */
   getManipulator(): BaseTool {
     return this.manipulator
@@ -485,7 +457,7 @@ class GLBaseViewport extends ParameterOwner {
 
   /**
    * Sets the tool that will receive mouse, touch and keyboard events from the viewport.
-   * @param {BaseTool} tool - The manipulator value.
+   * @param tool - The manipulator value.
    */
   setManipulator(tool: BaseTool): void {
     if (this.manipulator != tool) {
@@ -504,74 +476,65 @@ class GLBaseViewport extends ParameterOwner {
   /**
    * Handler of the `pointerdown` event fired when the pointer device is initially pressed.
    *
-   * @param {MouseEvent|TouchEvent} event - The DOM event produced by a pointer
+   * @param event - The DOM event produced by a pointer
    */
-  onPointerDown(event: Record<string, any>): void {
+  onPointerDown(event: ZeaPointerEvent): void {
     console.warn('@GLBaseViewport#onPointerDown - Implement me!')
   }
 
   /**
    * Handler of the `pointerup` event fired when the pointer device is finally released.
    *
-   * @param {MouseEvent|TouchEvent} event - The DOM event produced by a pointer
+   * @param event - The DOM event produced by a pointer
    */
-  onPointerUp(event: Record<string, any>): void {
+  onPointerUp(event: ZeaPointerEvent): void {
     console.warn('@GLBaseViewport#onPointerUp - Implement me!')
   }
 
   /**
    * Handler of the `pointermove` event fired when the pointer device changes coordinates, and the pointer has not been cancelled
    *
-   * @param {MouseEvent|TouchEvent} event - The DOM event produced by a pointer
+   * @param event - The DOM event produced by a pointer
    */
-  onPointerMove(event: Record<string, any>): void {
+  onPointerMove(event: ZeaPointerEvent): void {
     console.warn('@GLBaseViewport#onPointerMove - Implement me!')
   }
 
   /**
    * Invoked when the mouse pointer is moved into this viewport.
    *
-   * @param {MouseEvent|TouchEvent} event - The DOM event produced by a pointer
+   * @param event - The DOM event produced by a pointer
    */
-  onPointerEnter(event: Record<string, any>): void {
+  onPointerEnter(event: ZeaPointerEvent): void {
     console.warn('@GLBaseViewport#onPointerEnter - Implement me!')
   }
 
   /**
    * Invoked when the mouse pointer is moved out of this viewport.
    *
-   * @param {MouseEvent|TouchEvent} event - The DOM event produced by a pointer
+   * @param event - The DOM event produced by a pointer
    */
-  onPointerLeave(event: Record<string, any>): void {
+  onPointerLeave(event: ZeaPointerEvent): void {
     console.warn('@GLBaseViewport#onPointerLeave - Implement me!')
   }
 
   /**
    * Invoked when the mouse pointer is moved out of an element.
-   * @param {MouseEvent} event - The event that occurs.
+   * @param event - The event that occurs.
    */
-  onMouseLeave(event: Record<string, any>): void {}
+  onMouseLeave(event: ZeaPointerEvent): void {}
 
   /**
    * Invoked when the user is pressing a key on the keyboard.
-   * @param {KeyboardEvent} event - The event that occurs.
+   * @param event - The event that occurs.
    */
-  onKeyDown(event: Record<string, any>): void {}
+  onKeyDown(event: KeyboardEvent): void {}
 
   /**
    * Causes an event to occur  when the user releases a key on the keyboard.
-   * @param {KeyboardEvent} event - The event that occurs.
+   * @param event - The event that occurs.
    */
-  onKeyUp(event: Record<string, any>): void {}
-
-  /**
-   *
-   * @param {id} pointerId
-   * @return {number} - index result of the find.
-   */
-  _getOngoingPointerIndexById(pointerId: number): number {
-    return this.__ongoingPointers.findIndex(pointer => pointer.pointerId === pointerId)
-  }
+  onKeyUp(event: KeyboardEvent): void {}
 }
 
 export { GLBaseViewport, FRAMEBUFFER }

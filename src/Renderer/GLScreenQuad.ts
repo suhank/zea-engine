@@ -2,6 +2,8 @@ import { Vec2 } from '../Math/index'
 import { ScreenQuadShader } from './Shaders/ScreenQuadShader'
 import { generateShaderGeomBinding } from './Drawing/GeomShaderBinding'
 import { GLTexture2D } from './GLTexture2D'
+import { RenderState } from './types/renderer'
+import { WebGL12RenderingContext } from './types/webgl'
 
 /** Class representing a GL screen quad.
  * @private
@@ -16,7 +18,8 @@ class GLScreenQuad {
   protected ready: boolean
   /**
    * Create a GL screen quad.
-   * @param {WebGL12RenderingContext} gl - The webgl rendering context.
+   * @param gl - The webgl rendering context.
+   * @param shaderopts - shader options
    */
   constructor(gl: WebGL12RenderingContext, shaderopts: Record<string, any>) {
     this.__gl = gl
@@ -40,10 +43,10 @@ class GLScreenQuad {
 
   /**
    * The bind method.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
-   * @param {GLTexture2D} texture - The texture param.
-   * @param {Vec2} pos - The pos value.
-   * @param {Vec2} size - The size value.
+   * @param renderstate - The object tracking the current state of the renderer
+   * @param texture - The texture param.
+   * @param pos - The pos value.
+   * @param size - The size value.
    */
   bind(renderstate: RenderState, texture?: GLTexture2D, pos?: Vec2, size?: Vec2) {
     const unifs = renderstate.unifs
@@ -77,8 +80,8 @@ class GLScreenQuad {
 
   /**
    * The bindShader method.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
-   * @return {any} - The return value.
+   * @param renderstate - The object tracking the current state of the renderer
+   * @return - The return value.
    */
   bindShader(renderstate: RenderState) {
     return this.__glshader.bind(renderstate, 'GLScreenQuad')
@@ -86,10 +89,10 @@ class GLScreenQuad {
 
   /**
    * The draw method.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
-   * @param {GLTexture2D} texture - The texture value.
-   * @param {Vec2} pos - The pos value.
-   * @param {Vec2} size - The size value.
+   * @param renderstate - The object tracking the current state of the renderer
+   * @param texture - The texture value.
+   * @param pos - The pos value.
+   * @param size - The size value.
    */
   draw(renderstate: RenderState, texture?: GLTexture2D, pos?: Vec2, size?: Vec2) {
     this.bind(renderstate, texture, pos, size)

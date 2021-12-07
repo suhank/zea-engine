@@ -10,20 +10,18 @@
 
     <link rel="stylesheet" href="styles/tailwind.min.css" />
 
-    <script src="../dist/index.umd.development.js"></script>
+    <script src="../dist/index.umd.js"></script>
 
     <script type="module">
-      const { GLRenderer, Scene, Vec3, Color, Xfo, Disc, Plane, Material, GeomItem, Label, LDRImage } = window.zeaEngine
+      const { GLRenderer, Scene, Vec3, Color, Xfo, Disc, Plane, FlatSurfaceMaterial, GeomItem, Label, LDRImage } =
+        window.zeaEngine
 
-      const canvas = document.querySelector('#renderer')
+      const canvas = document.getElementById('viewport')
 
       const scene = new Scene()
-      const renderer = new GLRenderer(canvas, { hideSplash: true, antialias: false })
+      const renderer = new GLRenderer(canvas, { antialias: false })
       renderer.setScene(scene)
-      renderer
-        .getViewport()
-        .getCamera()
-        .setPositionAndTarget(new Vec3(-2, -2, 1.7), new Vec3(0, 0, 0.2))
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-2, -2, 1.7), new Vec3(0, 0, 0.2))
 
       scene.setupGrid(10.0, 10)
 
@@ -32,18 +30,18 @@
 
       /** HIGHLIGHT START */
       let highlightedItem
-      renderer.getViewport().on('pointerOverGeom', event => {
+      renderer.getViewport().on('pointerOverGeom', (event) => {
         const item = event.intersectionData.geomItem
         if (item) {
           highlightedItem = item
           highlightedItem.addHighlight('pointerOverGeom', new Color(1.0, 1.0, 0, 0.3), true)
         }
       })
-      renderer.getViewport().on('pointerLeaveGeom', event => {
+      renderer.getViewport().on('pointerLeaveGeom', (event) => {
         highlightedItem.removeHighlight('pointerOverGeom', true)
         highlightedItem = null
       })
-      renderer.getViewport().on('pointerUp', event => {
+      renderer.getViewport().on('pointerUp', (event) => {
         if (event.intersectionData) {
           const geomItem = event.intersectionData.geomItem
           console.log('', geomItem.getPath())
@@ -57,42 +55,42 @@
       const promises = []
 
       {
-        const material = new Material('Material', 'FlatSurfaceShader')
+        const material = new FlatSurfaceMaterial('Material')
 
-        material.getParameter('BaseColor').setValue(new Color(0.6, 0, 1))
+        material.baseColorParam.value = new Color(0.6, 0, 1)
         const image = new LDRImage('LDRImage')
         image.setImageURL('data/avatar1.jpg')
-        promises.push(new Promise(resolve => image.on('loaded', resolve)))
-        material.getParameter('BaseColor').setImage(image)
+        promises.push(new Promise((resolve) => image.on('loaded', resolve)))
+        material.baseColorParam.setImage(image)
         const geomItem = new GeomItem('geomItem1', disc, material, new Xfo(new Vec3(-1, 0, 0.1)))
         scene.getRoot().addChild(geomItem)
       }
       {
-        const material = new Material('Material', 'FlatSurfaceShader')
+        const material = new FlatSurfaceMaterial('Material')
 
-        material.getParameter('BaseColor').setValue(new Color(0.6, 0, 1))
+        material.baseColorParam.value = new Color(0.6, 0, 1)
         const image = new LDRImage('LDRImage')
         image.setImageURL('data/zea-logo.png', 'RGBA')
-        promises.push(new Promise(resolve => image.on('loaded', resolve)))
-        material.getParameter('BaseColor').setImage(image)
+        promises.push(new Promise((resolve) => image.on('loaded', resolve)))
+        material.baseColorParam.setImage(image)
         const geomItem = new GeomItem('geomItem2', plane, material, new Xfo(new Vec3(0, 0, 0.1)))
         scene.getRoot().addChild(geomItem)
       }
 
       {
-        const material = new Material('Material', 'FlatSurfaceShader')
+        const material = new FlatSurfaceMaterial('Material')
         const label = new Label('Name')
-        label.getParameter('FontColor').setValue(new Color(0.6, 0, 0))
-        label.getParameter('BackgroundColor').setValue(new Color(1, 1, 1))
-        label.getParameter('FontSize').setValue(42)
-        label.getParameter('BorderRadius').setValue(0)
-        label.getParameter('BorderWidth').setValue(0)
-        label.getParameter('Margin').setValue(12)
-        label.getParameter('StrokeBackgroundOutline').setValue(false)
-        label.getParameter('Text').setValue(`Hello World`)
-        promises.push(new Promise(resolve => label.on('labelRendered', resolve)))
+        label.fontColorParam.value = new Color(0.6, 0, 0)
+        label.backgroundColorParam.value = new Color(1, 1, 1)
+        label.fontSizeParam.value = 42
+        label.borderRadiusParam.value = 0
+        label.borderWidthParam.value = 0
+        label.marginParam.value = 12
+        label.strokeBackgroundOutlineParam.value = false
+        label.textParam.value = `Hello World`
+        promises.push(new Promise((resolve) => label.on('labelRendered', resolve)))
 
-        material.getParameter('BaseColor').setImage(label)
+        material.baseColorParam.setImage(label)
         const geomItem = new GeomItem('geomItem3', plane, material, new Xfo(new Vec3(1, 0, 0.1)))
 
         scene.getRoot().addChild(geomItem)
@@ -105,7 +103,7 @@
   </head>
   <body class="bg-blue-100 h-full">
     <div class="h-full">
-      <canvas class="absolute" id="renderer"></canvas>
+      <canvas id="viewport"></canvas>
     </div>
   </body>
 </html>

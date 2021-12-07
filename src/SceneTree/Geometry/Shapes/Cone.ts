@@ -22,34 +22,50 @@ import { Vec2Attribute } from '../Vec2Attribute'
  * @extends {ProceduralMesh}
  */
 class Cone extends ProceduralMesh {
-  protected __cap!: boolean
-  protected __capParam: BooleanParameter
-  protected __detailParam: NumberParameter
-  protected __heightParam: NumberParameter
-  protected __radiusParam: NumberParameter
+  /**
+   * @member capParam - Specifies whether the base of the cone is capped or open.
+   */
+  capParam: BooleanParameter
+
+  /**
+   * @member detailParam - Specifies the number of subdivisions around the `Z` axis.
+   */
+  detailParam: NumberParameter
+
+  /**
+   * @member heightParam - Specifies the height of the cone.
+   */
+  heightParam: NumberParameter
+
+  /**
+   * @member radiusParam - Specifies the radius of the base of the cone.
+   */
+  radiusParam: NumberParameter
   // topologyParams: string[]
 
   /**
    * Create a cone.
-   * @param {number} radius - The radius of the base of the cone.
-   * @param {number} height - The height of the cone.
-   * @param {number} detail - The detail of the cone.
-   * @param {boolean} cap -  A boolean indicating whether the base of the cone is capped or open.
+   * @param radius - The radius of the base of the cone.
+   * @param height - The height of the cone.
+   * @param detail - The detail of the cone.
+   * @param cap -  A boolean indicating whether the base of the cone is capped or open.
+   * @param addNormals - Compute vertex normals for the geometry
+   * @param addTextureCoords - Compute texture coordinates for the geometry
    */
-  constructor(radius = 0.5, height = 1.0, detail = 32, cap = true) {
+  constructor(radius = 0.5, height = 1.0, detail = 32, cap = true, addNormals = true, addTextureCoords = true) {
     super()
     this.topologyParams = []
     if (isNaN(radius) || isNaN(height) || isNaN(detail)) throw new Error('Invalid geom args')
 
-    this.__radiusParam = this.addParameter(new NumberParameter('Radius', radius)) as NumberParameter
-    this.__heightParam = this.addParameter(new NumberParameter('Height', height)) as NumberParameter
-    this.__detailParam = this.addParameter(
+    this.radiusParam = this.addParameter(new NumberParameter('Radius', radius)) as NumberParameter
+    this.heightParam = this.addParameter(new NumberParameter('Height', height)) as NumberParameter
+    this.detailParam = this.addParameter(
       new NumberParameter('Detail', detail >= 3 ? detail : 3, [3, 200], 1)
     ) as NumberParameter
-    this.__capParam = this.addParameter(new BooleanParameter('Cap', cap)) as BooleanParameter
+    this.capParam = this.addParameter(new BooleanParameter('Cap', cap)) as BooleanParameter
 
-    this.addVertexAttribute('texCoords', new Vec2Attribute())
-    this.addVertexAttribute('normals', new Vec3Attribute())
+    if (addNormals) this.addVertexAttribute('normals', new Vec3Attribute())
+    if (addTextureCoords) this.addVertexAttribute('texCoords', new Vec2Attribute())
 
     this.topologyParams.push('Detail')
     this.topologyParams.push('Cap')
@@ -60,10 +76,10 @@ class Cone extends ProceduralMesh {
    * @private
    */
   rebuild(): void {
-    const nbSides = this.__detailParam.getValue() || 32
-    const radius = this.__radiusParam.getValue() || 0.5
-    const height = this.__heightParam.getValue() || 1.0
-    const cap = this.__capParam.getValue()
+    const nbSides = this.detailParam.value
+    const radius = this.radiusParam.value
+    const height = this.heightParam.value
+    const cap = this.capParam.value
     let numVertices = nbSides + 1
     if (cap) {
       numVertices += 1
@@ -132,9 +148,9 @@ class Cone extends ProceduralMesh {
    * @private
    */
   resize(): void {
-    const nbSides = this.__detailParam.getValue() || 32
-    const radius = this.__radiusParam.getValue() || 0.5
-    const height = this.__heightParam.getValue() || 1.0
+    const nbSides = this.detailParam.value
+    const radius = this.radiusParam.value
+    const height = this.heightParam.value
 
     const tipPoint = nbSides
     const basePoint = nbSides + 1
@@ -146,7 +162,7 @@ class Cone extends ProceduralMesh {
         const theta = -((i / nbSides) * 2.0 * Math.PI)
         positions.getValueRef(i).set(radius * Math.cos(theta), radius * Math.sin(theta), 0.0)
       }
-      if (this.__cap) {
+      if (this.capParam.value) {
         positions.getValueRef(basePoint).set(0.0, 0.0, 0.0)
       }
     }
@@ -154,7 +170,10 @@ class Cone extends ProceduralMesh {
     // Note: this breaks an infinite loop where computeVertexNormals calls update which calls rebuild.
     this.dirtyTopology = false
     this.dirtyVertices = false
-    this.computeVertexNormals()
+    const normals = <Vec3Attribute>this.getVertexAttribute('normals')
+    if (normals) {
+      this.computeVertexNormals()
+    }
   }
 }
 

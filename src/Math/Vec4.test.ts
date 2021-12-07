@@ -19,8 +19,8 @@ describe('Vec4', () => {
   // it('set a value.', () => {
   //   const numberParameter = new NumberParameter()
   //   const value = 1356
-  //   numberParameter.setValue(value)
-  //   expect(numberParameter.getValue()).toEqual(value)
+  //   numberParameter.value =(value)
+  //   expect(numberParameter.value).toEqual(value)
   // })
 
   it('save to JSON (serialization).', () => {
@@ -37,21 +37,19 @@ describe('Vec4', () => {
   //   const input = { value: 1356 }
   //   numberParameter.fromJSON(input)
 
-  //   expect(numberParameter.getValue()).toEqual(input.value)
+  //   expect(numberParameter.value).toEqual(input.value)
   // })
 
   // it('check ranges -> set & get.', () => {})
 
-  it('check the lenght of the vector.', () => {
+  it('check the length of the vector.', () => {
     const vec4 = new Vec4(1, 2, 3, 4)
-
     expect(vec4.length()).toBeCloseTo(4.795)
   })
 
-  it('creates Vec4 from buffer', () => {
-    const float32Array = Float32Array.of(8, 5, 9, 1)
-    const vec4 = new Vec4(float32Array.buffer, 0)
-
+  it('creates Vec4 from Float32Array', () => {
+    const float32Array = Float32Array.from([8, 5, 9, 1])
+    const vec4 = new Vec4(float32Array)
     expect(vec4).toEqual(new Vec4(8, 5, 9, 1))
   })
 })

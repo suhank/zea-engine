@@ -1,3 +1,4 @@
+import { BaseClass } from '../Utilities/BaseClass'
 import { EventEmitter } from '../Utilities/index'
 
 let counter = 0
@@ -10,8 +11,7 @@ let counter = 0
  * @private
  */
 class RefCounted extends EventEmitter {
-  // __id: any
-  protected __refs: any[]
+  protected __refs: BaseClass[]
   protected __destroyed: boolean
   /**
    * Create a ref counted object.
@@ -29,7 +29,7 @@ class RefCounted extends EventEmitter {
   /**
    * Returns the unique id of the object. Every Object has a unique
    * identifier which is based on a counter that is incremented.
-   * @return {any} - The return value.
+   * @return - The return value.
    */
   getId() {
     return this.__id
@@ -37,7 +37,7 @@ class RefCounted extends EventEmitter {
 
   /**
    * The numRefs method.
-   * @return {number} - The return value.
+   * @return - The return value.
    */
   numRefs() {
     return this.__refs.length
@@ -45,10 +45,10 @@ class RefCounted extends EventEmitter {
 
   /**
    * The addRef method.
-   * @param {any} referer - The referer value.
-   * @return {boolean} - The return value.
+   * @param referer - The referer value.
+   * @return - The return value.
    */
-  addRef(referer: any) {
+  addRef(referer: BaseClass) {
     if (!referer) throw new Error('Error in RefCounted.addRef: Must provide a referer')
 
     // Note: an object can be reffeed multiple times.
@@ -59,9 +59,9 @@ class RefCounted extends EventEmitter {
 
   /**
    * The removeRef method.
-   * @param {any} referer - The referer value.
+   * @param referer - The referer value.
    */
-  removeRef(referer: any) {
+  removeRef(referer: BaseClass) {
     if (!referer) throw new Error('Error in RefCounted.removeRef: Must provide a referer')
     const index = this.__refs.indexOf(referer)
     if (index == -1) throw new Error('Error in RefCounted.removeRef: referer not found in refs list.')
@@ -74,8 +74,8 @@ class RefCounted extends EventEmitter {
 
   /**
    * The getRefer method.
-   * @param {number} index - The index value.
-   * @return {any} - The return value.
+   * @param index - The index value.
+   * @return - The return value.
    */
   getRefer(index: number) {
     return this.__refs[index]
@@ -83,16 +83,16 @@ class RefCounted extends EventEmitter {
 
   /**
    * The getRefIndex method.
-   * @param {any} referer - The referer value.
-   * @return {any} - The return value.
+   * @param referer - The referer value.
+   * @return - The return value.
    */
-  getRefIndex(referer: any) {
+  getRefIndex(referer: BaseClass) {
     return this.__refs.indexOf(referer)
   }
 
   /**
    * Returns true if this object has already been destroyed.
-   * @return {boolean} - Returns true or false.
+   * @return - Returns true or false.
    */
   isDestroyed() {
     return this.__destroyed

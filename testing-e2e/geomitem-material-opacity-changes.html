@@ -10,49 +10,46 @@
 
     <link rel="stylesheet" href="styles/tailwind.min.css" />
 
-    <script src="../dist/index.umd.development.js"></script>
+    <script src="../dist/index.umd.js"></script>
 
     <script type="module">
-      const { GLRenderer, Scene, Vec3, Color, Sphere, Material, GeomItem } = zeaEngine
+      const { GLRenderer, Scene, Vec3, Color, Sphere, SimpleSurfaceMaterial, GeomItem } = zeaEngine
 
-      const canvas = document.querySelector('#renderer')
+      const canvas = document.getElementById('viewport')
 
       const scene = new Scene()
-      const renderer = new GLRenderer(canvas, { hideSplash: true, antialias: false })
+      const renderer = new GLRenderer(canvas, { antialias: false })
       renderer.setScene(scene)
 
       scene.setupGrid(10.0, 10)
 
-      const material = new Material('surfaces', 'SimpleSurfaceShader')
-      material.getParameter('BaseColor').setValue(new Color(1, 0, 1, 1))
+      const material = new SimpleSurfaceMaterial('surfaces')
+      material.baseColorParam.value = new Color(1, 0, 1, 1)
 
       const geomItem = new GeomItem('Sphere', new Sphere(1.5, 46), material)
       scene.getRoot().addChild(geomItem)
 
-      renderer
-        .getViewport()
-        .getCamera()
-        .setPositionAndTarget(new Vec3(5, 5, 2.7), new Vec3(0, 0, 0.4))
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(5, 5, 2.7), new Vec3(0, 0, 0.4))
 
       window.postMessage('done-loading')
 
       // {{{ Messages handler.
-      const handleMessage = event => {
+      const handleMessage = (event) => {
         const { data } = event
 
         if (data === 'variant-01') {
-          const material = geomItem.getParameter('Material').getValue()
-          material.getParameter('BaseColor').setValue(new Color(1, 0, 1, 0.2))
+          const material = geomItem.materialParam.getValue()
+          material.baseColorParam.value = new Color(1, 0, 1, 0.2)
           window.postMessage(`done-${data}`)
         } else if (data === 'variant-02') {
-          const material = new Material('surfaces', 'SimpleSurfaceShader')
-          material.getParameter('BaseColor').setValue(new Color(1, 1, 0, 1))
-          geomItem.getParameter('Material').setValue(material)
+          const material = new SimpleSurfaceMaterial('surfaces')
+          material.baseColorParam.value = new Color(1, 1, 0, 1)
+          geomItem.materialParam.value = material
 
           window.postMessage(`done-${data}`)
         } else if (data === 'variant-03') {
-          const material = geomItem.getParameter('Material').getValue()
-          material.getParameter('Opacity').setValue(0.3)
+          const material = geomItem.materialParam.getValue()
+          material.opacityParam.value = 0.3
           window.postMessage(`done-${data}`)
         }
       }
@@ -63,7 +60,7 @@
   </head>
   <body class="bg-blue-100 h-full">
     <div class="h-full">
-      <canvas class="absolute" id="renderer"></canvas>
+      <canvas id="viewport"></canvas>
     </div>
   </body>
 </html>

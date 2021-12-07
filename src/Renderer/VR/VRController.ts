@@ -1,45 +1,47 @@
 import { SystemDesc } from '../../SystemDesc'
 import { Vec3, Xfo, Mat4 } from '../../Math/index'
 import { TreeItem } from '../../SceneTree/index'
+import { IntersectionData } from '../../Utilities/IntersectionData'
+import { VRViewport } from '.'
+import { XRPoseEvent } from '../../Utilities/Events/XRPoseEvent'
 
 /** Class representing a VR controller. */
 class VRController {
-  protected xrvp: any
-  protected __inputSource: any
-  protected id: number
-  protected __mat4: Mat4
-  protected __xfo: Xfo
-  protected __treeItem: TreeItem
-  protected __tip: any
-  protected __activeVolumeSize: any
-  protected tick: any
-  protected buttonPressed: any
-  protected __touchpadValue: any
-  protected __geomAtTip: any
-  protected __hitTested: any
+  id: number
+  buttonPressed: boolean
+  protected xrvp: VRViewport
+  protected inputSource: any
+  protected mat4: Mat4
+  protected xfo: Xfo
+  protected treeItem: TreeItem
+  protected tipItem: TreeItem
+  protected activeVolumeSize: number = 0.04
+  protected tick: number
+  protected touchpadValue: any
+  protected hitTested: boolean
   protected pointerOverItem: any
-  protected __intersectionData: any
+  protected intersectionData: IntersectionData
   /**
    * Create a VR controller.
-   * @param {any} xrvp - The Vr viewport.
-   * @param {any} inputSource - The input source.
-   * @param {any} id - The id value.
+   * @param xrvp - The Vr viewport.
+   * @param inputSource - The input source.
+   * @param id - The id value.
    */
-  constructor(xrvp: any, inputSource: any, id: any) {
+  constructor(xrvp: any, inputSource: any, id: number) {
     this.xrvp = xrvp
-    this.__inputSource = inputSource
+    this.inputSource = inputSource
     this.id = id
     this.buttonPressed = false
 
     // /////////////////////////////////
     // Xfo
 
-    this.__mat4 = new Mat4()
-    this.__xfo = new Xfo()
+    this.mat4 = new Mat4()
+    this.xfo = new Xfo()
 
     // this.setVisible(true);
 
-    this.__treeItem = new TreeItem('VRController:' + inputSource.handedness + id)
+    this.treeItem = new TreeItem('VRController:' + inputSource.handedness + id)
     // Controller coordinate system
     // X = Horizontal.
     // Y = Up.
@@ -47,7 +49,7 @@ class VRController {
 
     if (!SystemDesc.isMobileDevice) {
       // A Vive or Oculus Controller
-      this.__tip = new TreeItem('Tip')
+      this.tipItem = new TreeItem('Tip')
       // Note: the tip of the controller need to be off
       // the end of the controller. getGeomItemAtTip
       // now searches a grid in that area and so we need to
@@ -58,11 +60,9 @@ class VRController {
       tipXfo.tr.set(0.0, -0.05, -0.13)
       // Flip the tip around so +z is forwards.
       // tipXfo.ori.setFromAxisAndAngle(new Vec3(0, 1, 0), Math.PI)
-      this.__tip.getParameter('LocalXfo').setValue(tipXfo)
-      this.__treeItem.addChild(this.__tip, false)
-      xrvp.getTreeItem().addChild(this.__treeItem)
-
-      this.__activeVolumeSize = 0.04
+      this.tipItem.localXfoParam.value = tipXfo
+      this.treeItem.addChild(this.tipItem, false)
+      xrvp.getTreeItem().addChild(this.treeItem)
 
       if (inputSource.targetRayMode == 'tracked-pointer') {
         // Once we have an input profile, we can determine the XR Device in use.
@@ -121,8 +121,8 @@ class VRController {
           }
           if (srcControllerTree) {
             const controllerTree = srcControllerTree.clone({ assetItem })
-            controllerTree.getParameter('LocalXfo').setValue(localXfo)
-            this.__treeItem.addChild(controllerTree, false)
+            controllerTree.localXfoParam.value = localXfo
+            this.treeItem.addChild(controllerTree, false)
           }
         })
       }
@@ -133,15 +133,15 @@ class VRController {
 
   /**
    * The getHandedness method.
-   * @return {any} - The return value.
+   * @return - The return value.
    */
   getHandedness() {
-    return this.__inputSource.handedness
+    return this.inputSource.handedness
   }
 
   /**
    * The getId method.
-   * @return {any} - The return value.
+   * @return - The return value.
    */
   getId() {
     return this.id
@@ -149,39 +149,39 @@ class VRController {
 
   /**
    * The getTreeItem method.
-   * @return {any} - The return value.
+   * @return - The return value.
    */
   getTreeItem() {
-    return this.__treeItem
+    return this.treeItem
   }
 
   /**
    * The getTipItem method.
-   * @return {any} - The return value.
+   * @return - The return value.
    */
   getTipItem() {
-    return this.__tip
+    return this.tipItem
   }
 
   /**
    * The getTipXfo method.
-   * @return {any} - The return value.
+   * @return - The return value.
    */
   getTipXfo() {
-    return this.__tip.getParameter('GlobalXfo')!.getValue()
+    return this.tipItem.globalXfoParam.value
   }
 
   /**
    * The getTouchPadValue method.
-   * @return {any} - The return value.
+   * @return - The return value.
    */
   getTouchPadValue() {
-    return this.__touchpadValue
+    return this.touchpadValue
   }
 
   /**
    * The isButtonPressed method.
-   * @return {boolean} - The return value.
+   * @return - The return value.
    */
   isButtonPressed() {
     return this.buttonPressed
@@ -189,30 +189,30 @@ class VRController {
 
   /**
    * The getControllerStageLocalXfo method.
-   * @return {any} - The return value.
+   * @return - The return value.
    */
   getControllerStageLocalXfo() {
-    return this.__xfo
+    return this.xfo
   }
 
   /**
    * The getControllerTipStageLocalXfo method.
-   * @return {any} - The return value.
+   * @return - The return value.
    */
   getControllerTipStageLocalXfo() {
-    return this.__xfo.multiply(this.__tip.getParameter('LocalXfo')!.getValue())
+    return this.xfo.multiply(this.tipItem.localXfoParam.value)
   }
 
   // ////////////////////////////////
 
   /**
    * The updatePose method.
-   * @param {any} refSpace - The refSpace value.
-   * @param {any} xrFrame - The xrFrame value.
-   * @param {any} inputSource - The inputSource value.
-   * @param {any} event - The event object.
+   * @param refSpace - The refSpace value.
+   * @param xrFrame - The xrFrame value.
+   * @param inputSource - The inputSource value.
+   * @param event - The event object.
    */
-  updatePose(refSpace: any, xrFrame: any, inputSource: any, event: any) {
+  updatePose(refSpace: any, xrFrame: any, inputSource: any, event: XRPoseEvent) {
     const inputPose = xrFrame.getPose(inputSource.gripSpace, refSpace)
 
     // We may not get a inputPose back in cases where the input source has lost
@@ -222,20 +222,19 @@ class VRController {
       return
     }
 
-    this.__mat4.setDataArray(inputPose.transform.matrix)
-    this.__xfo.fromMat4(this.__mat4)
+    this.mat4.setDataArray(inputPose.transform.matrix)
+    this.xfo.setFromMat4(this.mat4)
 
     // const pos = inputPose.transform.position;
-    // this.__xfo.tr.set(pos.x, pos.y,pos.z);
+    // this.xfo.tr.set(pos.x, pos.y,pos.z);
     // const ori = inputPose.transform.orientation;
-    // this.__xfo.ori.set(ori.x, ori.y, ori.z, ori.x);
+    // this.xfo.ori.set(ori.x, ori.y, ori.z, ori.x);
     // //////////////////////////////
 
-    this.__treeItem.getParameter('LocalXfo')!.setValue(this.__xfo)
+    this.treeItem.localXfoParam.value = this.xfo
 
-    // Reset the geom at tip so it will be recomuted if necessary
-    this.__geomAtTip = undefined
-    this.__hitTested = false
+    // Reset the geom at tip so it will be recomputed if necessary
+    this.hitTested = false
 
     // /////////////////////////////////
     // Simulate Pointer Enter/Leave Events.
@@ -249,7 +248,7 @@ class VRController {
             this.pointerOverItem.onPointerLeave(event)
           }
           this.pointerOverItem = intersectionData.geomItem
-          event.geomItem = intersectionData.geomItem
+          event.intersectionData = intersectionData
           this.pointerOverItem.onPointerEnter(event)
         }
 
@@ -268,17 +267,17 @@ class VRController {
 
   /**
    * The getGeomItemAtTip method.
-   * @return {any} - The return value.
+   * @return - The return value.
    */
   getGeomItemAtTip() {
-    if (this.__hitTested) return this.__intersectionData
-    this.__hitTested = true
+    if (this.hitTested) return this.intersectionData
+    this.hitTested = true
 
     const renderer = this.xrvp.getRenderer()
-    const xfo = this.__tip.getParameter('GlobalXfo')!.getValue()
-    const vol = this.__activeVolumeSize
-    this.__intersectionData = renderer.raycastWithXfo(xfo, vol, vol)
-    return this.__intersectionData
+    const xfo = this.tipItem.globalXfoParam.value
+    const vol = this.activeVolumeSize
+    this.intersectionData = renderer.raycastWithXfo(xfo, vol, vol)
+    return this.intersectionData
   }
 }
 

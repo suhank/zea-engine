@@ -23,8 +23,8 @@ import { BinReader } from '../../SceneTree/BinReader'
 class QuatParameter extends Parameter<Quat> implements IBinaryReader {
   /**
    * Create a Quat parameter.
-   * @param {string} name - The name of the Quat parameter.
-   * @param {Quat} value - The value of the parameter.
+   * @param name - The name of the Quat parameter.
+   * @param value - The value of the parameter.
    */
   constructor(name: string = '', value?: Quat) {
     super(name, value ? value : new Quat(), 'Quat')
@@ -36,23 +36,23 @@ class QuatParameter extends Parameter<Quat> implements IBinaryReader {
   /**
    * Extracts a number value from a buffer, updating current parameter state.
    *
-   * @param {BinReader} reader - The reader value.
-   * @param {Record<string, unknown>} context - The context value.
+   * @param reader - The reader value.
+   * @param context - The context value.
    */
   readBinary(reader: BinReader, context?: Record<string, unknown>): void {
-    this.value?.readBinary(reader)
+    this.__value?.readBinary(reader)
   }
 
   toJSON(context?: Record<string, unknown>): Record<string, unknown> {
     return {
-      value: this.value?.toJSON(),
+      value: this.__value?.toJSON(),
     }
   }
 
   fromJSON(j: Record<string, unknown>, context?: Record<string, unknown>): void {
     const quat = new Quat()
     quat.fromJSON(j.value as any)
-    this.value = quat
+    this.__value = quat
   }
 
   // ////////////////////////////////////////
@@ -62,14 +62,15 @@ class QuatParameter extends Parameter<Quat> implements IBinaryReader {
    * The clone method constructs a new Quat parameter, copies its values
    * from this parameter and returns it.
    *
-   * @return {QuatParameter} - Returns a new Quat parameter.
+   * @return - Returns a new Quat parameter.
    */
   clone() {
-    const clonedParam = new QuatParameter(this.name, this.value?.clone())
+    const clonedParam = new QuatParameter(this.name, this.__value?.clone())
     return clonedParam
   }
 }
 
 Registry.register('QuatParameter', QuatParameter)
+Registry.register('Property_Quat_32f', QuatParameter)
 
 export { QuatParameter }

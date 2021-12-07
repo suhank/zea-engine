@@ -7,6 +7,7 @@ import { TreeItem } from '../TreeItem'
 import { Material } from '../../SceneTree/Material'
 import { Color } from '../../Math/Color'
 import { BaseItem } from '../BaseItem'
+import { BaseGeomItem } from '../BaseGeomItem'
 
 /**
  *
@@ -16,20 +17,24 @@ import { BaseItem } from '../BaseItem'
  * @extends BaseGroup
  */
 class MaterialGroup extends BaseGroup {
-  protected __materialParam: MaterialParameter
+  // TODO: should BaseGroup have the materialParam?
+  /**
+   * @member materialParam - The Material to use when rendering this GeomItem
+   */
+  materialParam: MaterialParameter = new MaterialParameter('Material')
+
   private __backupMaterials: { [key: number]: Material } = {}
 
   /**
    * Creates an instance of a group.
    *
-   * @param {string} name - The name of the group.
+   * @param name - The name of the group.
    */
-
   constructor(name?: string) {
     super(name)
 
-    this.__materialParam = <MaterialParameter>this.addParameter(new MaterialParameter('Material'))
-    this.__materialParam.on('valueChanged', () => {
+    this.addParameter(this.materialParam)
+    this.materialParam.on('valueChanged', () => {
       this.__updateMaterial()
     })
   }
@@ -37,10 +42,10 @@ class MaterialGroup extends BaseGroup {
   // /////////////////////////////
 
   /**
-   * The __updateHighlight method.
+   * The updateHighlight method.
    * @private
    */
-  __updateHighlight(): void {
+  updateHighlight(): void {
     // Make this function async so that we don't pull on the
     // graph immediately when we receive a notification.
     // Note: propagating using an operator would be much better.
@@ -50,7 +55,7 @@ class MaterialGroup extends BaseGroup {
     this.__updateHighlightHelper()
   }
   /**
-   * The __updateHighlight method.
+   * The updateHighlight method.
    * @private
    */
   __updateHighlightHelper(): void {
@@ -63,7 +68,7 @@ class MaterialGroup extends BaseGroup {
     }
 
     const key = 'kinematicGroupItemHighlight' + this.getId()
-    Array.from(this.__itemsParam.getValue()).forEach(item => {
+    Array.from(this.itemsParam.value).forEach((item) => {
       if (item instanceof TreeItem) {
         if (highlighted) item.addHighlight(key, color, true)
         else item.removeHighlight(key, true)
@@ -73,11 +78,11 @@ class MaterialGroup extends BaseGroup {
   /**
    * Changes selection's state of the group with all items it owns.
    *
-   * @param {boolean} sel - Boolean indicating the new selection state.
+   * @param sel - Boolean indicating the new selection state.
    */
   setSelected(sel: boolean) {
     super.setSelected(sel)
-    this.__updateHighlight()
+    this.updateHighlight()
   }
 
   // ////////////////////////////////////////
@@ -102,23 +107,24 @@ class MaterialGroup extends BaseGroup {
    * @private
    */
   __updateMaterialHelper() {
-    const material = this.getParameter('Material')!.getValue()
+    const material = this.materialParam.value
 
     // TODO: Bind an operator
-    Array.from(this.__itemsParam.getValue()).forEach(item => {
-      ;(<TreeItem>item).traverse(treeItem => {
-        if (treeItem instanceof TreeItem && treeItem.hasParameter('Material')) {
-          const p = treeItem.getParameter('Material')!
+    Array.from(this.itemsParam.value).forEach((item) => {
+      ;(<TreeItem>item).traverse((treeItem) => {
+        if (treeItem instanceof BaseGeomItem) {
+          const baseGeomItem = treeItem
+          const p = baseGeomItem.materialParam
           if (material) {
-            const m = p.getValue()
+            const m = p.value
             // TODO: How do we filter material assignments? this is a nasty hack.
             // but else we end up assigning surface materials to our edges.
             if (m != material && (!m || m.getShaderName() != 'LinesShader')) {
               this.__backupMaterials[p.getId()] = m
-              p.setValue(material)
+              p.value = material
             }
           } else if (this.__backupMaterials[p.getId()]) {
-            p.setValue(this.__backupMaterials[p.getId()])
+            p.value = this.__backupMaterials[p.getId()]
           }
         }
       })
@@ -129,8 +135,8 @@ class MaterialGroup extends BaseGroup {
 
   /**
    * The __bindItem method.
-   * @param {BaseItem} item - The item value.
-   * @param {number} index - The index value.
+   * @param item - The item value.
+   * @param index - The index value.
    * @private
    */
   bindItem(item: BaseItem, index: number) {
@@ -149,19 +155,20 @@ class MaterialGroup extends BaseGroup {
 
     // ///////////////////////////////
     // Update the Material
-    const material = this.getParameter('Material')!.getValue()
+    const material = this.materialParam.value
     if (material) {
       // TODO: Bind an operator instead
-      item.traverse(treeItem => {
-        if (treeItem instanceof TreeItem && treeItem.hasParameter('Material')) {
-          const p = treeItem.getParameter('Material')!
+      item.traverse((treeItem) => {
+        if (treeItem instanceof BaseGeomItem) {
+          const baseGeomItem = treeItem
+          const p = baseGeomItem.materialParam
           if (material) {
-            const m = p.getValue()
+            const m = p.value
             // TODO: How do we filter material assignments? this is a nasty hack.
             // but else we end up assigning surface materials to our edges.
             if (m != material && (!m || m.getShaderName() != 'LinesShader')) {
               this.__backupMaterials[p.getId()] = m
-              p.setValue(material)
+              p.value = material
             }
           }
         }
@@ -171,8 +178,8 @@ class MaterialGroup extends BaseGroup {
 
   /**
    * The __unbindItem method.
-   * @param {BaseItem} item - The item value.
-   * @param {number} index - The index value.
+   * @param item - The item value.
+   * @param index - The index value.
    * @private
    */
   __unbindItem(item: BaseItem, index: number) {
@@ -192,8 +199,8 @@ class MaterialGroup extends BaseGroup {
    * The clone method constructs a new group,
    * copies its values and returns it.
    *
-   * @param {Record<string, unknown>} context - The context value.
-   * @return {MaterialGroup} - Returns a new cloned group.
+   * @param context - The context value.
+   * @return - Returns a new cloned group.
    */
   clone(context: Record<string, unknown>) {
     const cloned = new MaterialGroup(this.__name + 'clone')

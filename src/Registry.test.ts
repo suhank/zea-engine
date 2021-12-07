@@ -1,4 +1,4 @@
-import { Registry, TypeDefinition } from './Registry'
+import { Registry } from './Registry'
 import { BaseItem } from './SceneTree/BaseItem'
 
 class Foo extends BaseItem {}
@@ -24,24 +24,23 @@ describe('Registry', () => {
     expect(bar instanceof Bar).toBe(true)
   })
 
-  test('throws on duplicated class/type name registration', () => {
-    Registry.register('Foo', Foo)
-    expect(() => Registry.register('Foo', Bar)).toThrow()
-  })
+  // test('throws on duplicated class/type name registration', () => {
+  //   Registry.register('Foo', Foo)
+  //   expect(() => Registry.register('Foo', Bar)).toThrow()
+  // })
 
-  it('returns blueprint name for class/type', () => {
+  it('Class Instance returns class name for class/type', () => {
     Registry.register('Foo', Foo)
 
     const foo = new Foo()
     expect(foo.getClassName()).toEqual('Foo')
   })
 
-  it('instantiates the class if registered', () => {
-    const typeDef = new TypeDefinition(12, 4)
-    Registry.registerMathType('MyMathType', typeDef)
+  it('Registry returns class name for class/type', () => {
+    Registry.register('Foo', Foo)
 
-    const result = Registry.getMathTypeDefinition('MyMathType')
-    expect(result).toEqual(typeDef)
+    const foo = new Foo()
+    expect(Registry.getClassName(Object.getPrototypeOf(foo).constructor)).toEqual('Foo')
   })
 
   it('throws on unregistered class construction', () => {

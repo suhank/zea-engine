@@ -10,7 +10,8 @@ Resources/Cache/
 
 *.log
 *.zip
-.tmuxp.json
-package-lock.json
 .envrc*
 tsc-output/
+
+buildcache
+tsconfig.tsbuildinfo

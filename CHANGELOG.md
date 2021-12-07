@@ -2,7 +2,390 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-## [3.11.0](https://github.com/ZeaInc/zea-engine/compare/v3.10.7-orthographic-framing.2...v3.11.0) (2021-09-15)
+### [4.0.1](https://github.com/ZeaInc/zea-engine/compare/v0.0.4...v4.0.1) (2021-11-25)
+
+
+### Bug Fixes
+
+* Cleaned up auto near/far plane auto adjust code so that the near plane gets moved away when zooming out. ([17f037e](https://github.com/ZeaInc/zea-engine/commit/17f037e95515c10778f8db5d703b4871a2bd6000))
+* Cleaned up regression when loading ZCAD files containing points materials. ([92ebb71](https://github.com/ZeaInc/zea-engine/commit/92ebb71807fa8435d235c87dcc063a089bb409c4))
+* ES modules support ([1d49056](https://github.com/ZeaInc/zea-engine/commit/1d4905648c8253aa66b749afef81e6ebd55b39ae))
+* KinematicGroup was not calling super.bindItem(), which meant pointer events were not propagating from members to the group. ([0e454dd](https://github.com/ZeaInc/zea-engine/commit/0e454dd60437036152e26db7c7792f5545f14b56))
+* Near and Far planes are now automatically adapted by 4 orders of magnitude. ([7000916](https://github.com/ZeaInc/zea-engine/commit/70009162e6e1fb662c9a373d9df90600ce0e76e0))
+* Parameter becomes dirty by setting 'clean' just prior to calling 'setDirty' to ensure a change in state. ([21b1440](https://github.com/ZeaInc/zea-engine/commit/21b1440f678a949000ae1f2811cf58b9a9faa571))
+* When an OperatorOutput with mode OP_READ_WRITE is connected to a parameter, the parameter should be dirtied back to the first OP_WRITE index. ([145c45a](https://github.com/ZeaInc/zea-engine/commit/145c45a77397e1f663a720eb3fb6ce3e3cabf58d))
+* When deleting the VAO, ensure to detach the indexBuffer first. ([991c2b1](https://github.com/ZeaInc/zea-engine/commit/991c2b1f9f26cc7400fbcf7df1e724196d4b7c69))
+
+## [4.0.0](https://github.com/ZeaInc/zea-engine/compare/v3.12.3...v4.0.0) (2021-11-10)
+
+Version 4.0.0 is a major release for Zea Engine, as the entire codebase was ported and updated to work with TypeScript. This change caused a few breaking changes as TypeScript did not allow methods with any ambiguity in the signatures. 
+Porting to TypeScript addressed a wide range or minor issues, picked up by the strict typing of TypeScript. 
+
+A second and very important benefit of the port to TypeScript, is to provide TypeScript support within client developed applications.
+We highly recommend you install the engine and its libraries as dependencies using npm, yarn or your favorite package manager, and import the engine into your code using the bundler tools that come with React or Svelte. 
+
+### Old code
+Previously, our engine did not support module bundlers for a few technical reasons that have now been addressed. Instead, we recommended users load our engine using script tags, and then access the classes using a global variable. This approach had a few concerns and limitations. 
+
+* The engine code was not installed in a clients application, creating a dependency on servers such as jsdeliver.
+* using incomplete version numbers, like the one shown below, caused automatic and silent updates to the engine on already deployed applications. These updates sometimes had unintended negative consequences.
+* Any other resources in the module bundle were not available, such as TypeScript definitions.
+
+```html
+<script  src="https://cdn.jsdelivr.net/npm/@zeainc/zea-engine@3.11/dist/index.umd.js"></script>
+```
+
+```javascript
+// Load the classes out of the global variable.
+const { Scene, GLRenderer } = zeaEngine
+```
+
+### New code
+```bash
+npm install '@zeainc/zea-engine'
+```
+
+```javascript
+// Import the classes from the installed module
+import { Scene, GLRenderer } from '@zeainc/zea-engine'
+```
+
+We will continue to implement improvements in the typings and inline documentation. 
+Our commitment to our users from this version forward is to maintain a stable, backwards compatible and developer friendly API. 
+
+
+### ⚠ BREAKING CHANGES
+
+* Canvas must now be nested under a another DOM element that it is resized to fit 100%
+This addresses a circular relationship where the canvas width and height must be calculated
+based on its parent, not on itself.
+
+```css
+#rendererHolder {
+  width: 500;
+  height: 300;
+}
+#renderer {
+  width: 100%;
+  height: 100%;
+}
+```
+
+```html
+<div id="canvasHolder">
+  <canvas id="canvas"></canvas>
+</div>
+```
+
+* The Scene Tree now contains only TreeItems. This means items such as Kinematic Solvers can no longer be added as children in the tree.
+
+* Scene Settings has been removed, and its values migrated to either the Scene or the Viewport.
+
+
+Old code
+```javascript
+const color = new Color('#E5E5E5')
+scene.getSettings().getParameter('BackgroundColor').setValue(color)
+```
+
+New code
+```javascript
+const color = new Color('#E5E5E5')
+renderer.getViewport().backgroundColorParam.value = color
+```
+
+* VertexAttributes are now typed. Adding Vertex Attributes to geometries now requires that the user constructs the appropriate typed attribute, then adds it to the geometry.
+
+Old code
+```javascript
+const attr = geom.addVertexAttribute('foo', Vec3)
+```
+
+New code
+```javascript
+const attr = new Vec3Attribute()
+points.addVertexAttribute('foo', attr)
+```
+
+* VertexAttribute values are no longer initialized to zero and must be explicitly initialized.
+
+New code
+```javascript
+const line = new Lines()
+line.setNumVertices(2)
+line.setNumSegments(1)
+line.setSegmentVertexIndices(0, 0, 1)
+line.getVertexAttribute('positions').setValue(0, new Vec3(0, 0, 0))
+line.getVertexAttribute('positions').setValue(1, new Vec3(0, 0, 1))
+```
+
+
+* VertexAttributes.length was removed and replaced with getCount
+
+Old code
+```javascript
+const attr = geom.addVertexAttribute('foo', Vec3)
+attr.length
+```
+
+New code
+```javascript
+const attr = new Vec3Attribute()
+attr.getCount()
+```
+
+* Assets are now loaded using the 'load' method instead of using the 'FilePath' parameters.
+
+Old code
+```javascript
+const objAsset = new ObjAsset('cow')
+objAsset.getParameter('FilePath').setValue('data/cow.obj')
+objAsset.on('loaded').then(() => {
+  renderer.frameAll()
+})
+```
+
+New code
+```javascript
+const objAsset = new ObjAsset('cow')
+objAsset.load('data/cow.obj').then(() => {
+  renderer.frameAll()
+})
+```
+
+* EnvMap are now loaded using the 'load' method instead of using the 'FilePath' parameters.
+
+Old code
+```javascript
+const envMap = new EnvMap()
+envMap.getParameter('FilePath').setValue('data/pisa-webp.zenv')
+envMap.on('loaded').then(() => {
+  ...
+})
+```
+
+New code
+```javascript
+const envMap = new EnvMap('cow')
+envMap.load('data/pisa-webp.zenv').then(() => {
+  ...
+})
+```
+
+* EnvMap are now loaded using the 'load' method instead of using the 'FilePath' parameters.
+
+Old code
+```javascript
+const image = new FileImage('albedo')
+image.getParameter('FilePath').setValue('data/steelplate1-unity/steelplate1_albedo.webp')
+image.on('loaded').then(() => {
+  ...
+})
+```
+
+New code
+```javascript
+const image = new FileImage('albedo')
+image.load('data/steelplate1-unity/steelplate1_albedo.webp').then(() => {
+  ...
+})
+```
+
+* getSelectable was renamed to isSelectable 
+
+Old code
+```javascript
+const geomItem = new GeomItem('foo')
+geomItem.getSelectable()
+```
+
+New code
+```javascript
+const geomItem = new GeomItem('foo')
+geomItem.isSelectable()
+```
+
+* GLShader.getParamDeclarations was replaced with getMaterialTemplate 
+getParamDeclarations would return an array of parameter descriptors, but now we return an instance of a Material from getMaterialTemplate instead.
+
+Old code
+```javascript
+  static getParamDeclarations() {
+    const paramDescs = super.getParamDeclarations()
+    paramDescs.push({
+      name: 'BaseColor',
+      defaultValue: new Color(1.0, 1.0, 0.5),
+    })
+    return paramDescs
+  }
+```
+
+New code
+```javascript
+  static getMaterialTemplate(): Material {
+    const material = new Material()
+    return material
+  }
+```
+
+
+
+* Registry.getBlueprintName was Registry.getClassName 
+The registry, which stores all class definitions, and a mapping to the names they were registered under, can be used to retrieve the registered name of a class instance.
+Due to the strict typing of TypeScript, the interface needed to change. Instead of passing a class, you must pass the definition of the class to getClassName
+
+Old code
+```javascript
+  const myClassInst = ...
+  const className = Registry.getBlueprintName(myClassInst)
+  console.log("className:", className)
+```
+
+New code
+```javascript
+  const myClassInst = ...
+  const className = Registry.getClassName(Object.getPrototypeOf(myClassInst).constructor)
+  console.log("className:", className)
+```
+
+* The deprecated Group class was removed from the build. You must now use one of the specialized classes based on BaseGroup. e.g. SelectionSet, or KinematicGroup.
+
+### Features
+
+* The engine and each library now logs it version to the console to let the user know the exact version of the engine or library that is installed.  ([8e35d43](https://github.com/ZeaInc/zea-engine/commit/8e35d43b9fbd18c2a73efaed86b9446122a51508))
+```bash
+Zea Engine v4.0.0
+main.js:16 Registered lib '@zeainc/zea-ux' v4.0.0
+main.js:16 Registered lib '@zeainc/zea-kinematics' v4.0.1
+main.js:16 Registered lib '@zeainc/zea-potree' v4.0.0
+```
+
+* The entire engine was ported to TypeScript with TypeDefinitions now being bundled in the package. ([e949662](https://github.com/ZeaInc/zea-engine/commit/e949662cab88f2b8e799c51e4995229a73bfd10f))
+* auto-position the canvas and its parent ([18b8a90](https://github.com/ZeaInc/zea-engine/commit/18b8a90d4b9da50e232dccc5d10cb1f8e773d5db))
+* The engine now provides various statically defined Materials. This simplifies the process of assigning materials to Geometries, as the parameters are exposed as public properties. ([ae92d20](https://github.com/ZeaInc/zea-engine/commit/ae92d20fae158c4f4fbb746227bc4ce8f04ef494))
+* zcad files when loading now construct statically defined materials when possible. ([4acad4e](https://github.com/ZeaInc/zea-engine/commit/4acad4e7aafd938aab58fa310a4e45be166f2cbd))
+
+* Vec2, Vec3, Vec4, Quat, Color, Xfo, Mat3 and Mat4 parameters can now be encoded in zcad files. ([1b17f76](https://github.com/ZeaInc/zea-engine/commit/1b17f76c9cf390433d84232cbaaa1dc4c7235729))
+* Parameters are now accessible directly on the class as public members.
+* Parameter values are now accessible as a property via getter and setter.
+
+```javascript
+geomItem.getParameter('LocalXfo').setValue(xfo)
+```
+
+The new, more convenient access looks like the following.
+```javascript
+geomItem.localXfoParam.value = xfo
+```
+
+* SceneTree classes now all provide a .getClassName() method that returns the name of the class.  ([e949662](https://github.com/ZeaInc/zea-engine/commit/e949662cab88f2b8e799c51e4995229a73bfd10f
+
+New code
+```javascript
+  const treeItem = new TreeItem()
+  const className = treeItem.getClassName()
+  console.log("className:", className)
+```
+
+### Bug Fixes
+
+* Cutaways are now applied to GeomData and Highlight rendering so surfaces that are both highlighted and cutaway, the highlight is also cutaway.
+* The GEOMITEM_INVISIBLE_IN_GEOMDATA is now being honored in the SimpleSurfaceShader and FlatSurfaceShader.
+* A bug in our resize throttling caused incorrect canvas size. ([8d23702](https://github.com/ZeaInc/zea-engine/commit/8d23702b8b3834a0af81ef1fb4b070242dec062e))
+* black flickering when resizing ([10005fa](https://github.com/ZeaInc/zea-engine/commit/10005fa0b36561821925606ef21e848a2297c6bb))
+* FlatSurfaceShader now supports cutaways ([9a46e49](https://github.com/ZeaInc/zea-engine/commit/9a46e497b0172a3db63fb293432e3f5dbc016531))
+* A bug in our resize throttling caused incorrect canvas size. ([8d23702](https://github.com/ZeaInc/zea-engine/commit/8d23702b8b3834a0af81ef1fb4b070242dec062e))
+* Cleaned up silly bug in renderer. Geometries were continuously being uploaded to the GPU. ([c131a96](https://github.com/ZeaInc/zea-engine/commit/c131a96e9db624dfac2dc9ca8f066bbf202eae07))
+* Fixed loading Obj files that contain a reference to a mtl file. Fixed parsing mtl files. ([b0ec4fe](https://github.com/ZeaInc/zea-engine/commit/b0ec4fe953989fa193bddaa2a043b9012c0b14d9))
+* Fixed regression causing canvas size on to fix parent ([9522192](https://github.com/ZeaInc/zea-engine/commit/9522192f543885a217e0419374fb2666dfb74ad8))
+* Fixed warning in React and error in Svelte by forcing the webWorkerLoader to assume a browser environment. ([3308c13](https://github.com/ZeaInc/zea-engine/commit/3308c13f3ebf9fc2cba19c9e3417b341bd891096))
+* Implemented InstanceItem.clone so that as a tree is cloned, the instances are kept. ([8981248](https://github.com/ZeaInc/zea-engine/commit/89812483a37da89783a5217cb8d1706dd4cb0de3))
+* Optimized memory used by the typescript build. Mostly by avoiding use of closures. ([c84ef65](https://github.com/ZeaInc/zea-engine/commit/c84ef65d1e48da96a7e5f46b0d183e04b8458360))
+* Picking lines was broken after version 3.12.0. This is now addressed. ([952dadb](https://github.com/ZeaInc/zea-engine/commit/952dadb9e4402080869d8e909638be20a6e65073))
+* Removed dependency on 'semver' as it was not abe to build a browser bundle friendly version ([1ce5a0d](https://github.com/ZeaInc/zea-engine/commit/1ce5a0deebf64ae7a47e67891d467b5707a2f9dd))
+* MaterialGroup updateMaterials is no longer async ([0722336](https://github.com/ZeaInc/zea-engine/commit/072233662bbad8bc9c6acd53e4dae2374ae6b330))
+* The Plane primitive faces were facing backwards which is now fixed. ([d85a3d7](https://github.com/ZeaInc/zea-engine/commit/d85a3d715ad8bc77e6d6180286fbaf6746fd75ac))
+* Vec2,3 & 4 classes now more robustly check that constructor parameters are numeric ([26a07fb](https://github.com/ZeaInc/zea-engine/commit/26a07fbb9ec709ee7f240ad47f60792ac5e4a3c4))
+
+
+## [3.12.5](https://github.com/ZeaInc/zea-engine/compare/v3.12.3...v3.12.5) (2021-11-03)
+
+### Bug Fixes
+
+* Vec2, Vec3, Vec4, Quat, Color, Xfo, Mat3 and Mat4 parameters can now be encoded in zcad files. ([1b17f76](https://github.com/ZeaInc/zea-engine/commit/1b17f76c9cf390433d84232cbaaa1dc4c7235729))
+* A bug in our resize throttling caused incorrect canvas size. ([8d23702](https://github.com/ZeaInc/zea-engine/commit/8d23702b8b3834a0af81ef1fb4b070242dec062e))
+* Fixed loading Obj files that contain a reference to a mtl file. Fixed parsing mtl files. ([b0ec4fe](https://github.com/ZeaInc/zea-engine/commit/b0ec4fe953989fa193bddaa2a043b9012c0b14d9))
+* fixed regression causing canvas size on to fix parent ([9522192](https://github.com/ZeaInc/zea-engine/commit/9522192f543885a217e0419374fb2666dfb74ad8))
+* Fixed warning in React and error in Svelte by forcing the webWorkerLoader to assume a browser environment. ([3308c13](https://github.com/ZeaInc/zea-engine/commit/3308c13f3ebf9fc2cba19c9e3417b341bd891096))
+* Picking lines was broken after version 3.12.0. This is now addressed. ([952dadb](https://github.com/ZeaInc/zea-engine/commit/952dadb9e4402080869d8e909638be20a6e65073))
+* Removed dependency on 'semver' ([1ce5a0d](https://github.com/ZeaInc/zea-engine/commit/1ce5a0deebf64ae7a47e67891d467b5707a2f9dd))
+
+### [3.12.4](https://github.com/ZeaInc/zea-engine/compare/v3.12.3...v3.12.4) (2021-10-28)
+
+
+### Bug Fixes
+
+* Fixed warning in React and error in Svelte by forcing the webWorkerLoader to assume a browser environment. ([3308c13](https://github.com/ZeaInc/zea-engine/commit/3308c13f3ebf9fc2cba19c9e3417b341bd891096))
+* Removed dependency on 'semver' ([1ce5a0d](https://github.com/ZeaInc/zea-engine/commit/1ce5a0deebf64ae7a47e67891d467b5707a2f9dd))
+
+## [3.12.2](https://github.com/ZeaInc/zea-engine/compare/v3.11.1...v3.12.2) (2021-10-27)
+
+### Features
+
+### Bug Fixes
+
+* Prevent GLBaseRenderer from resizing buffers to zero width or height. ([33983aa](https://github.com/ZeaInc/zea-engine/commit/33983aaf3c828437dbaca8532d8b4446a9b0c0c1))
+
+## [3.12.1](https://github.com/ZeaInc/zea-engine/compare/v3.12.0...v3.12.1) (2021-10-27)
+
+
+### Features
+
+* Added support for parsing 'Property_SInt32', 'Property_UInt32', 'Property_Float32', values from zcad files. ([88b751e](https://github.com/ZeaInc/zea-engine/commit/88b751e435088ae32af24c2050d1d1487b957015))
+* zcad files can now contain String Lists, used to store PMI Linked Entitiy paths. ([39f43c6](https://github.com/ZeaInc/zea-engine/commit/39f43c64a7414e034eb3d2710411923d91833064))
+* zcad files can now contain BooleanParameters ([f4f0761](https://github.com/ZeaInc/zea-engine/commit/f4f0761795b6cfca446106331c0c031259c9a05d))
+
+
+### Bug Fixes
+
+* InstanceItem no longer tries to resolve an empty path. ([7fc1274](https://github.com/ZeaInc/zea-engine/commit/7fc127466f704c5d352cdade7b963ffe67315556))
+* Prevent Safari iOS 14 from generating a float geom buffer. ([9d48867](https://github.com/ZeaInc/zea-engine/commit/9d48867bd5d1f550a1da657ce1fd33da803aace8))
+* Removed explicit 'position: relative' style value applied to the Canvas as it broke layout of sibling elements. ([170c487](https://github.com/ZeaInc/zea-engine/commit/170c48753a29c1f6787c6fa9c12781cdeb615958))
+* revert change to calculating canvas width to not use devicePixelRatio ([7df6bed](https://github.com/ZeaInc/zea-engine/commit/7df6bed817ab3622eea9ee07676a0bd678517d80))
+
+## [3.12.0](https://github.com/ZeaInc/zea-engine/compare/v3.11.1...v3.12.0) (2021-10-19)
+
+### Features
+
+* 'FlatSurfaceShader' is now always rendering double-sided. ([f295714](https://github.com/ZeaInc/zea-engine/commit/f2957149f63b4ec3144fe0230a8e27d93e53b269))
+* The engine now supports loading zcad files that contain non-orthogonal and uniform scaling within the tree. ([aaafa71](https://github.com/ZeaInc/zea-engine/commit/aaafa71a9a2e1dfa60b73d99d2d6de2ee1fe0b15))
+
+
+### Bug Fixes
+
+* Always re-render the geomdata fbe after a pass updates. ([b26f905](https://github.com/ZeaInc/zea-engine/commit/b26f905fcae47f90049b2565da3994b9d6a43b35))
+* as billboard atlas is being re-generated. Skip images that have not loaded. ([684c712](https://github.com/ZeaInc/zea-engine/commit/684c7126c87ae6fdabce5b1ffcc262930b06b394))
+* BillboardItems now correctly generate pointer events allowing mouse interactions on labels and billboards. ([26c854f](https://github.com/ZeaInc/zea-engine/commit/26c854f8739e420208c7a538c559b54d295a564c))
+* During rapid resizing, the canvas element would be drawn black. This is now fixed by throttling the frequency we can resize the WebGL buffers. ([#501](https://github.com/ZeaInc/zea-engine/issues/501)) ([49d8aba](https://github.com/ZeaInc/zea-engine/commit/49d8aba7035b4c3547a508c57cf2ec5d463e5b12))
+* FlatSurfaceShader now correctly masks the rasterized area when rendering geomdata and highlight buffer. ([f8e76ae](https://github.com/ZeaInc/zea-engine/commit/f8e76aeb563d25e18d6ab978f4acc6407d1a7b8b))
+* Highlighting of transparent textured items now works reliably. ([7378f60](https://github.com/ZeaInc/zea-engine/commit/7378f60076ce6b7f482a3218125e2e916a775565))
+* Mouse interactions work correctly again on Safari. ([df8d38e](https://github.com/ZeaInc/zea-engine/commit/df8d38e2dd6dad0ea2567c2ed621b2fcc08e98e1))
+* removing an item from the renderer when it was highlighted could cause corruption. ([368c57f](https://github.com/ZeaInc/zea-engine/commit/368c57f8ac764e4a329c8cc08094c7073165d6cf))
+* Safari now supports up to 8 passes. ([bc1bd81](https://github.com/ZeaInc/zea-engine/commit/bc1bd818955ff961a76a3a7d0e29346a4d449da3))
+* textured geoms would continuously upload their data to the GPU as a 'clean' flag was not correctly being set. ([7814aa7](https://github.com/ZeaInc/zea-engine/commit/7814aa7093eb5621564c40e63c8b1c6d25435ed7))
+* transparent geometries now correctly generate pointer events when the mouse or vr controller interacts with them. ([3068acb](https://github.com/ZeaInc/zea-engine/commit/3068acb0831ec80d9d26769b1dc19747600a7b09))
+* when removing transparent items from the renderer, an exception was thrown as event listeners were unregistered. ([#517](https://github.com/ZeaInc/zea-engine/issues/517)) ([ce15e4a](https://github.com/ZeaInc/zea-engine/commit/ce15e4a394c87e6d063c0468513d75a1bf1c9c86))
+* zcad files can not contain BooleanParameters ([f4f0761](https://github.com/ZeaInc/zea-engine/commit/f4f0761795b6cfca446106331c0c031259c9a05d))
+
+## [3.11.1](https://github.com/ZeaInc/zea-engine/compare/v3.11.0...v3.11.1) (2021-09-22)
+
+### Bug Fixes
+
+* InstanceItem no longer clones the children of the source tree item. This means that CADPart or CADAssembly should always be found under an InstanceItem, where before you might find a CADBody or a GeomItem. 
+* To keep compatibility with version < 3.11.0, the plugins.umd.js script has been re-added to the build with a deprecation warning. This allows code to load the plugins file and generate a warning instead of an error.
+
+
+## [3.11.0](https://github.com/ZeaInc/zea-engine/compare/v3.10.6...v3.11.0) (2021-09-15)
 
 ### Notes:
 

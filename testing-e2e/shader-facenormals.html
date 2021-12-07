@@ -6,10 +6,10 @@
   </head>
   <body class="bg-blue-100 h-full">
     <div class="h-full">
-      <canvas class="absolute" id="app"></canvas>
+      <canvas id="viewport"></canvas>
     </div>
 
-    <script src="../dist/index.umd.development.js"></script>
+    <script src="../dist/index.umd.js"></script>
 
     <script type="module">
       const {
@@ -20,30 +20,28 @@
         Color,
         Sphere,
         Cone,
-        Material,
+        SimpleSurfaceMaterial,
+        StandardSurfaceMaterial,
         GeomItem,
         GLBoundingBoxPass,
-        EnvMap
+        EnvMap,
       } = zeaEngine
 
       const scene = new Scene()
-      const domElement = document.getElementById('app')
-      const renderer = new GLRenderer(domElement, { hideSplash: true, antialias: false })
+      const domElement = document.getElementById('viewport')
+      const renderer = new GLRenderer(domElement, { antialias: false })
       renderer.setScene(scene)
 
       const promises = []
 
       const envMap = new EnvMap()
-      envMap.getParameter('FilePath').setValue('data/pisa-webp.zenv')
-      promises.push(new Promise(resolve => envMap.on('loaded', resolve)))
+      envMap.load('data/pisa-webp.zenv')
+      promises.push(new Promise((resolve) => envMap.on('loaded', resolve)))
       scene.setEnvMap(envMap)
-      scene
-        .getSettings()
-        .getParameter('Display EnvMap')
-        .setValue(true)
+      scene.displayEnvMapParam.value = true
 
-      const simpleMaterial = new Material('surfaces', 'SimpleSurfaceShader')
-      const standardMaterial = new Material('surfaces', 'StandardSurfaceShader')
+      const simpleMaterial = new SimpleSurfaceMaterial('surfaces')
+      const standardMaterial = new StandardSurfaceMaterial('surfaces')
 
       const sphere = new Sphere(1.5, 8, 5, false, false)
       const cone = new Cone(1.5, 3, 8, false, false)
@@ -60,26 +58,23 @@
       const geomItem3 = new GeomItem('Cone1', cone, standardMaterial, new Xfo(new Vec3(4.5, 0, 0)))
       scene.getRoot().addChild(geomItem3)
 
-      renderer
-        .getViewport()
-        .getCamera()
-        .setPositionAndTarget(new Vec3(2, 2, 2.7), new Vec3(0, 0, 0.4))
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, 2.7), new Vec3(0, 0, 0.4))
       renderer.frameAll()
 
-      Promise.all(promises).then(results => {
+      Promise.all(promises).then((results) => {
         window.postMessage('done-loading')
       })
 
       // {{{ Messages handler.
-      const handleMessage = event => {
+      const handleMessage = (event) => {
         const { data } = event
 
         if (data === 'variant-01') {
-          sphere.getParameter('Radius').setValue(2.5)
+          sphere.radiusParam.value = 2.5
           window.postMessage(`done-${data}`)
         } else if (data === 'variant-02') {
-          sphere.getParameter('Loops').setValue(25)
-          sphere.getParameter('Sides').setValue(15)
+          sphere.loopsParam.value = 25
+          sphere.sidesParam.value = 15
           window.postMessage(`done-${data}`)
         }
       }

@@ -3,17 +3,19 @@ import { EventEmitter } from '../../Utilities/index'
 import '../../SceneTree/GeomItem'
 import { GeomItem } from '../../SceneTree/GeomItem'
 import { VisibilityChangedEvent } from '../../Utilities/Events/VisibilityChangedEvent'
+import { RenderState } from '../types/renderer'
+import { WebGL12RenderingContext } from '../types/webgl'
 
 const GLGeomItemChangeType = {
   GEOMITEM_CHANGED: 0,
   GEOM_CHANGED: 1,
   VISIBILITY_CHANGED: 2,
-  HIGHLIGHT_CHANGED: 3
+  HIGHLIGHT_CHANGED: 3,
 }
 
 const GLGeomItemFlags = {
   GEOMITEM_FLAG_CUTAWAY: 1, // 1<<0;
-  GEOMITEM_INVISIBLE_IN_GEOMDATA: 2 // 1<<0;
+  GEOMITEM_INVISIBLE_IN_GEOMDATA: 2, // 1<<0;
 }
 
 /** This class is responsible for managing a GeomItem within the renderer.
@@ -26,6 +28,8 @@ class GLGeomItem extends EventEmitter {
   material: any
   GLGeomItemSet: any
   geomItemParamChanged: any
+
+  GLShaderGeomSets?: any = null
 
   protected gl: WebGL12RenderingContext
   geomItem: GeomItem
@@ -47,12 +51,12 @@ class GLGeomItem extends EventEmitter {
   protected highlightChanged: any
   /**
    * Create a GL geom item.
-   * @param {WebGL12RenderingContext} gl - The gl value.
-   * @param {GeomItem} geomItem - The geomItem value.
-   * @param {number} drawItemId - The drawItemId value.
-   * @param {number} geomId - The geomId value.
-   * @param {number} materialId - The materialId value.
-   * @param {boolean} supportInstancing - a boolean to disable instancing support on some mobile platforms
+   * @param gl - The gl value.
+   * @param geomItem - The geomItem value.
+   * @param drawItemId - The drawItemId value.
+   * @param geomId - The geomId value.
+   * @param materialId - The materialId value.
+   * @param supportInstancing - a boolean to disable instancing support on some mobile platforms
    */
   constructor(
     gl: WebGL12RenderingContext,
@@ -87,14 +91,14 @@ class GLGeomItem extends EventEmitter {
       if (this.geomItem.isCutawayEnabled()) {
         flags |= GLGeomItemFlags.GEOMITEM_FLAG_CUTAWAY
       }
-      if (geomItem.getSelectable() == false) {
+      if (geomItem.isSelectable() == false) {
         flags |= GLGeomItemFlags.GEOMITEM_INVISIBLE_IN_GEOMDATA
       }
 
       this.geomData = [flags, materialId, 0, 0]
 
       this.geomMatrixDirty = true
-      this.listenerIDs['GeomMat.valueChanged'] = this.geomItem.getParameter('GeomMat')!.on('valueChanged', () => {
+      this.listenerIDs['GeomMat.valueChanged'] = this.geomItem.geomMatParam.on('valueChanged', () => {
         this.geomMatrixDirty = true
         this.emit('updated')
       })
@@ -107,7 +111,7 @@ class GLGeomItem extends EventEmitter {
 
   /**
    * The getGeomItem method.
-   * @return {any} - The return value.
+   * @return - The return value.
    */
   getGeomItem() {
     return this.geomItem
@@ -115,7 +119,7 @@ class GLGeomItem extends EventEmitter {
 
   /**
    * The isVisible method.
-   * @return {any} - The return value.
+   * @return - The return value.
    */
   isVisible() {
     return this.visible
@@ -123,7 +127,7 @@ class GLGeomItem extends EventEmitter {
 
   /**
    * The getId method.
-   * @return {any} - The return value.
+   * @return - The return value.
    */
   getDrawItemId() {
     return this.drawItemId
@@ -145,7 +149,7 @@ class GLGeomItem extends EventEmitter {
 
   /**
    * Sets the additional culled value which controls visiblity
-   * @param {boolean} culled - True if culled, else false.
+   * @param culled - True if culled, else false.
    */
   setCulled(culled: boolean) {
     this.culled = culled
@@ -159,8 +163,8 @@ class GLGeomItem extends EventEmitter {
 
   /**
    * The bind method.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
-   * @return {any} - The return value.
+   * @param renderstate - The object tracking the current state of the renderer
+   * @return - The return value.
    */
   bind(renderstate: RenderState) {
     const gl = this.gl
@@ -170,7 +174,7 @@ class GLGeomItem extends EventEmitter {
       const modelMatrixunif = unifs.modelMatrix
       if (modelMatrixunif) {
         if (this.geomMatrixDirty) {
-          this.modelMatrixArray = this.geomItem.getGeomMat4().asArray()
+          this.modelMatrixArray = this.geomItem.geomMatParam.value.asArray()
         }
         gl.uniformMatrix4fv(modelMatrixunif.location, false, this.modelMatrixArray)
       }
@@ -205,7 +209,7 @@ class GLGeomItem extends EventEmitter {
   destroy() {
     this.geomItem.removeListenerById('visibilityChanged', this.listenerIDs['visibilityChanged'])
     if (!this.supportInstancing) {
-      this.geomItem.getParameter('GeomMat')!.removeListenerById('valueChanged', this.listenerIDs['GeomMat.valueChanged'])
+      this.geomItem.geomMatParam.removeListenerById('valueChanged', this.listenerIDs['GeomMat.valueChanged'])
       this.geomItem.removeListenerById('cutAwayChanged', this.listenerIDs['cutAwayChanged'])
     }
   }

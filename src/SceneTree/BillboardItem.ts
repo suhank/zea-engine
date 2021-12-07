@@ -7,8 +7,6 @@ import { BaseImage } from './BaseImage'
 /**
  * A special type of TreeItem(Item with hierarchical abilities) class that represents a banner in a 2D dimension.
  * Can own any type of `BaseImage`.
- * <br>
- * <br>
  * **Parameters**
  * * **Image(`ImageParameter`):** Is the BaseImage you want to display on the board.
  * * **PixelsPerMeter(`NumberParameter`):** Quality and Size of the board. The bigger the number, the smaller the board.
@@ -23,20 +21,61 @@ class BillboardItem extends TreeItem {
   /**
    * Creates a billboard item.
    *
-   * @param {string} name - The name of the billboard item.
-   * @param {BaseImage} image - The image value.
+   * @param name - The name of the billboard item.
+   * @param image - The image value.
    */
+
+  /**
+   * @member imageParam - Is the BaseImage you want to display on the board.
+   */
+  imageParam: ImageParameter = new ImageParameter('Image')
+
+  /**
+   * @member pixelsPerMeterParam - Quality and Size of the board. The bigger the number, the smaller the board.
+   */
+  pixelsPerMeterParam: NumberParameter = new NumberParameter('PixelsPerMeter', 1000.0)
+
+  /**
+   * @member alphaParam - Transparency of the board, from 0 to 1.
+   */
+  alphaParam: NumberParameter = new NumberParameter('Alpha', 1.0)
+
+  /**
+   * @member colorParam - The color of the billboard
+   */
+  colorParam: ColorParameter = new ColorParameter('Color', new Color(1.0, 1.0, 1.0))
+
+  /**
+   * @member alignedToCameraParam - Faces or not the board to the camera at all time(Moves with camera movement).
+   */
+  alignedToCameraParam: BooleanParameter = new BooleanParameter('AlignedToCamera', false)
+
+  /**
+   * @member drawOnTopParam - The billboards are rendered overlaid on the scene.
+   */
+  drawOnTopParam: BooleanParameter = new BooleanParameter('DrawOnTop', false)
+
+  /**
+   * @member fixedSizeOnscreenParam - The billboards are rendered at a fixed size on screen, regardless of the distance to the billboard.
+   */
+  fixedSizeOnscreenParam: BooleanParameter = new BooleanParameter('FixedSizeOnscreen', false)
+
+  /**
+   * @member pivotParam - Where the pivot of the billboard is.
+   */
+  pivotParam: Vec2Parameter = new Vec2Parameter('Pivot', new Vec2(0.5, 0.0))
+
   constructor(name?: string, image?: BaseImage) {
     super(name)
-    const imageParam = this.addParameter(new ImageParameter('Image'))
-    if (image) imageParam.setValue(image) // Note: this dirties the param and will ensure it is saved to JSON
-    this.addParameter(new NumberParameter('PixelsPerMeter', 1000.0))
-    this.addParameter(new NumberParameter('Alpha', 1.0))
-    this.addParameter(new ColorParameter('Color', new Color(1.0, 1.0, 1.0)))
-    this.addParameter(new BooleanParameter('AlignedToCamera', false))
-    this.addParameter(new BooleanParameter('DrawOnTop', false))
-    this.addParameter(new BooleanParameter('FixedSizeOnscreen', false))
-    this.addParameter(new Vec2Parameter('Pivot', new Vec2(0.5, 0.0)))
+    const imageParamResult = this.addParameter(this.imageParam)
+    if (image) imageParamResult.value = image // Note: this dirties the param and will ensure it is saved to JSON
+    this.addParameter(this.pixelsPerMeterParam)
+    this.addParameter(this.alphaParam)
+    this.addParameter(this.colorParam)
+    this.addParameter(this.alignedToCameraParam)
+    this.addParameter(this.drawOnTopParam)
+    this.addParameter(this.fixedSizeOnscreenParam)
+    this.addParameter(this.pivotParam)
   }
 }
 

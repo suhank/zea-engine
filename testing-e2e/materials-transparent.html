@@ -49,7 +49,7 @@
       }
     </style>
 
-    <script src="../dist/index.umd.development.js"></script>
+    <script src="../dist/index.umd.js"></script>
 
     <script type="module">
       const {
@@ -60,17 +60,17 @@
         Xfo,
         Sphere,
         GeomItem,
-        Material,
+        StandardSurfaceMaterial,
         EnvMap,
         Label,
         BillboardItem,
-        EulerAngles
+        EulerAngles,
       } = window.zeaEngine
 
-      const canvas = document.querySelector('#renderer')
+      const canvas = document.getElementById('viewport')
 
       const scene = new Scene()
-      const renderer = new GLRenderer(canvas, { hideSplash: true, antialias: false })
+      const renderer = new GLRenderer(canvas, { antialias: false })
       renderer.setScene(scene)
 
       scene.setupGrid(10.0, 10)
@@ -78,12 +78,9 @@
       //////////////////////////////
 
       const envMap = new EnvMap()
-      envMap.getParameter('FilePath').setValue('data/pisa-webp.zenv')
+      envMap.load('data/pisa-webp.zenv')
       scene.setEnvMap(envMap)
-      scene
-        .getSettings()
-        .getParameter('Display EnvMap')
-        .setValue(true)
+      scene.displayEnvMapParam.value = true
 
       const addMeshShape = (name, shape, pos, mat) => {
         const geomItem = new GeomItem(name, shape, mat, new Xfo(pos))
@@ -95,13 +92,13 @@
       const addRow = (name, baseColor, metallic, reflectance, lerpOpacity = false) => {
         for (let i = 0; i < 10; i++) {
           for (let j = 0; j < 10; j++) {
-            const material = new Material('surfaces', 'StandardSurfaceShader')
-            material.getParameter('BaseColor').setValue(baseColor)
-            material.getParameter('Metallic').setValue(metallic)
-            material.getParameter('Reflectance').setValue(reflectance)
+            const material = new StandardSurfaceMaterial('surfaces')
+            material.baseColorParam.value = baseColor
+            material.metallicParam.value = metallic
+            material.reflectanceParam.value = reflectance
 
-            material.getParameter('Roughness').setValue(j / 9)
-            material.getParameter('Opacity').setValue(i / 10)
+            material.roughnessParam.value = j / 9
+            material.opacityParam.value = i / 10
 
             addMeshShape(name + i, sphere, new Vec3((i / 9 - 0.5) * 30, (j / 9 - 0.5) * 30, 1.4 + zoffset), material)
           }
@@ -119,34 +116,25 @@
 
       renderer.exposure = 1.6
       document.getElementById('exposureControl').value = renderer.exposure * 100
-      document.getElementById('exposureControl').addEventListener('input', event => {
+      document.getElementById('exposureControl').addEventListener('input', (event) => {
         renderer.exposure = event.target.value / 100
       })
 
-      renderer
-        .getViewport()
-        .getCamera()
-        .setPositionAndTarget(new Vec3(35, -35, 25), new Vec3(0, 0, 0))
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(35, -35, 25), new Vec3(0, 0, 0))
 
-      Promise.all([new Promise(resolve => envMap.once('loaded', resolve))]).then(() => {
+      Promise.all([new Promise((resolve) => envMap.once('loaded', resolve))]).then(() => {
         window.postMessage('done-loading')
       })
 
       // {{{ Messages handler.
-      const handleMessage = event => {
+      const handleMessage = (event) => {
         const { data } = event
 
         if (data === 'variant-01') {
-          renderer
-            .getViewport()
-            .getCamera()
-            .setPositionAndTarget(new Vec3(-35, 35, 25), new Vec3(0, 0, 0))
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-35, 35, 25), new Vec3(0, 0, 0))
           window.postMessage(`done-${data}`)
         } else if (data === 'variant-02') {
-          renderer
-            .getViewport()
-            .getCamera()
-            .setPositionAndTarget(new Vec3(-35, -35, 25), new Vec3(0, 0, 0))
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-35, -35, 25), new Vec3(0, 0, 0))
           window.postMessage(`done-${data}`)
         }
       }
@@ -157,7 +145,7 @@
   </head>
   <body class="bg-blue-100 h-full">
     <div class="h-full">
-      <canvas class="absolute" id="renderer"></canvas>
+      <canvas id="viewport"></canvas>
     </div>
 
     <input type="range" min="0" max="400" value="100" class="slider" id="exposureControl" />

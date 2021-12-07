@@ -6,6 +6,8 @@ import { VLHImage } from '../SceneTree/Images/VLHImage'
 import { Color } from '../Math/Color'
 import { BaseImage } from '../SceneTree/BaseImage'
 import { GLShader } from './GLShader'
+import { RenderState, Uniform } from './types/renderer'
+import { WebGL12RenderingContext } from './types/webgl'
 
 /** Class representing a GL high dynamic range (HDR) image.
  * @extends GLTexture2D
@@ -13,46 +15,47 @@ import { GLShader } from './GLShader'
  */
 class GLHDRImage extends GLTexture2D {
   //  protected __gl: WebGL12RenderingContext
-  protected __hdrImage: VLHImage
-  protected __fbo: GLFbo | null = null
-  protected __srcLDRTex: GLTexture2D | null = null
-  protected __srcCDMTex: GLTexture2D | null = null
-  protected __unpackHDRShader: GLShader | null = null
-  protected __shaderBinding: IGeomShaderBinding | null = null
+  protected listenerIDs: Record<string, number> = {}
+  protected hdrImage: VLHImage
+  protected fbo: GLFbo | null = null
+  protected srcLDRTex: GLTexture2D | null = null
+  protected srcCDMTex: GLTexture2D | null = null
+  protected unpackHDRShader: GLShader | null = null
+  protected shaderBinding: IGeomShaderBinding | null = null
 
   /**
    * Create a GL HDR image.
-   * @param {WebGL12RenderingContext} gl - The webgl rendering context.
-   * @param {VLHImage} hdrImage - The HDR image.
+   * @param gl - The webgl rendering context.
+   * @param hdrImage - The HDR image.
    */
   constructor(gl: WebGL12RenderingContext, hdrImage: VLHImage) {
     super(gl)
 
-    this.__hdrImage = hdrImage
-    this.__hdrImage.setMetadata('gltexture', this)
+    this.hdrImage = hdrImage
+    this.hdrImage.setMetadata('gltexture', this)
     const loadImage = () => {
-      this.__unpackHDRImage(this.__hdrImage.getParams())
+      this.__unpackHDRImage(this.hdrImage.getParams())
     }
-    this.__hdrImage.on('updated', loadImage)
-    if (this.__hdrImage.isLoaded()) {
+    this.listenerIDs['updated'] = this.hdrImage.on('updated', loadImage)
+    if (this.hdrImage.isLoaded()) {
       loadImage()
     } else {
-      this.__hdrImage.on('loaded', loadImage)
+      this.listenerIDs['loaded'] = this.hdrImage.on('loaded', loadImage)
     }
   }
 
   /**
    * Returns the `BaseImage` of the GL Texture
    *
-   * @return {BaseImage} - The return value.
+   * @return - The return value.
    */
   getImage(): BaseImage {
-    return this.__hdrImage
+    return this.hdrImage
   }
 
   /**
    * The __unpackHDRImage method.
-   * @param {Record<any,any>} hdrImageParams - The HDR image parameters.
+   * @param hdrImageParams - The HDR image parameters.
    * @private
    */
   __unpackHDRImage(hdrImageParams: Record<string, any>): void {
@@ -61,7 +64,7 @@ class GLHDRImage extends GLTexture2D {
     const ldr = hdrImageParams.data.ldr
     const cdm = hdrImageParams.data.cdm
 
-    if (!this.__fbo) {
+    if (!this.fbo) {
       // Note: iOS devices create FLOAT Fbox.
       // If we want better quality, we could unpack the texture in JavaScript.
       this.configure({
@@ -70,12 +73,12 @@ class GLHDRImage extends GLTexture2D {
         width: ldr.width,
         height: ldr.height,
         filter: 'LINEAR',
-        wrap: 'CLAMP_TO_EDGE'
+        wrap: 'CLAMP_TO_EDGE',
       })
-      this.__fbo = new GLFbo(this.__gl, this)
-      this.__fbo.setClearColor(new Color(0, 0, 0, 0))
+      this.fbo = new GLFbo(this.__gl, this)
+      this.fbo.setClearColor(new Color(0, 0, 0, 0))
 
-      this.__srcLDRTex = new GLTexture2D(this.__gl, {
+      this.srcLDRTex = new GLTexture2D(this.__gl, {
         format: 'RGB',
         type: 'UNSIGNED_BYTE',
         width: ldr.width,
@@ -83,9 +86,9 @@ class GLHDRImage extends GLTexture2D {
         filter: 'NEAREST',
         mipMapped: false,
         wrap: 'CLAMP_TO_EDGE',
-        data: ldr
+        data: ldr,
       })
-      this.__srcCDMTex = new GLTexture2D(this.__gl, {
+      this.srcCDMTex = new GLTexture2D(this.__gl, {
         format: gl.name == 'webgl2' ? 'RED' : 'ALPHA',
         type: 'UNSIGNED_BYTE',
         width: ldr.width /* 8*/,
@@ -93,37 +96,37 @@ class GLHDRImage extends GLTexture2D {
         filter: 'NEAREST',
         mipMapped: false,
         wrap: 'CLAMP_TO_EDGE',
-        data: cdm
+        data: cdm,
       })
 
-      this.__unpackHDRShader = new UnpackHDRShader(this.__gl)
-      const shaderComp = this.__unpackHDRShader.compileForTarget('GLHDRImage', { directives: ['#define ENABLE_ES3'] })
-      this.__shaderBinding = generateShaderGeomBinding(
+      this.unpackHDRShader = new UnpackHDRShader(this.__gl)
+      const shaderComp = this.unpackHDRShader.compileForTarget('GLHDRImage', { directives: ['#define ENABLE_ES3'] })
+      this.shaderBinding = generateShaderGeomBinding(
         this.__gl,
         shaderComp.attrs,
         gl.__quadattrbuffers,
         gl.__quadIndexBuffer
       )
     } else {
-      this.__srcLDRTex!.bufferData(ldr)
-      this.__srcCDMTex!.bufferData(cdm)
+      this.srcLDRTex!.bufferData(ldr)
+      this.srcCDMTex!.bufferData(cdm)
     }
 
-    this.__fbo.bindAndClear()
+    this.fbo.bindAndClear()
 
     const renderstate: RenderState = <RenderState>{}
-    this.__unpackHDRShader!.bind(renderstate, 'GLHDRImage')
-    this.__shaderBinding!.bind(renderstate)
+    this.unpackHDRShader!.bind(renderstate, 'GLHDRImage')
+    this.shaderBinding!.bind(renderstate)
 
     const unifs = renderstate.unifs
-    this.__srcLDRTex!.bindToUniform(renderstate, unifs.ldrSampler)
-    this.__srcCDMTex!.bindToUniform(renderstate, unifs.cdmSampler)
+    this.srcLDRTex!.bindToUniform(renderstate, unifs.ldrSampler)
+    this.srcCDMTex!.bindToUniform(renderstate, unifs.cdmSampler)
 
     gl.uniform4fv(unifs.srcRegion.location, [0, 0, 1, 1])
     gl.drawQuad()
 
     // // Debug a block of pixels.
-    // console.log(this.__hdrImage.getName());
+    // console.log(this.hdrImage.getName());
     // gl.finish();
     // let numPixels = 4;
     // let pixels = new Float32Array(4 * numPixels);
@@ -131,15 +134,15 @@ class GLHDRImage extends GLTexture2D {
     // console.log(pixels);
     // gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
-    this.__fbo.unbind()
+    this.fbo.unbind()
 
-    // if (!this.__hdrImage.isStream()) {
-    //     this.__fbo.destroy();
-    //     this.__srcLDRTex.destroy();
-    //     this.__srcCDMTex.destroy();
-    //     this.__fbo = null;
-    //     this.__srcLDRTex = null;
-    //     this.__srcCDMTex = null;
+    // if (!this.hdrImage.isStream()) {
+    //     this.fbo.destroy();
+    //     this.srcLDRTex.destroy();
+    //     this.srcCDMTex.destroy();
+    //     this.fbo = null;
+    //     this.srcLDRTex = null;
+    //     this.srcCDMTex = null;
     // }
 
     this.emit('updated')
@@ -147,10 +150,10 @@ class GLHDRImage extends GLTexture2D {
 
   /**
    * The bindToUniform method.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
-   * @param {Uniform} unif - The WebGL uniform
-   * @param {Record<any,any>} bindings - The bindings value.
-   * @return {boolean} - The return value.
+   * @param renderstate - The object tracking the current state of the renderer
+   * @param unif - The WebGL uniform
+   * @param bindings - The bindings value.
+   * @return - The return value.
    */
   bindToUniform(renderstate: RenderState, unif: Uniform, bindings?: Record<string, any>): boolean {
     return super.bindToUniform(renderstate, unif, bindings)
@@ -162,16 +165,16 @@ class GLHDRImage extends GLTexture2D {
    */
   destroy(): void {
     super.destroy()
-    if (this.__fbo) {
-      this.__fbo.destroy()
-      this.__srcLDRTex!.destroy()
-      this.__srcCDMTex!.destroy()
+    if (this.fbo) {
+      this.fbo.destroy()
+      this.srcLDRTex!.destroy()
+      this.srcCDMTex!.destroy()
     }
-    if (this.__unpackHDRShader) this.__unpackHDRShader.destroy()
-    if (this.__shaderBinding) this.__shaderBinding.destroy()
+    if (this.unpackHDRShader) this.unpackHDRShader.destroy()
+    if (this.shaderBinding) this.shaderBinding.destroy()
 
-    this.__hdrImage.loaded.disconnectScope(this) // TODO: these are just 'any' variables on hdrImage
-    this.__hdrImage.updated.disconnectScope(this)
+    if ('loaded' in this.listenerIDs) this.hdrImage.removeListenerById('loaded', this.listenerIDs['loaded'])
+    this.hdrImage.removeListenerById('updated', this.listenerIDs['updated'])
   }
 }
 

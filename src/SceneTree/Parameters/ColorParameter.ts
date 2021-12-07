@@ -21,8 +21,8 @@ import { IBinaryReader } from '../../Utilities/IBinaryReader'
 class ColorParameter extends Parameter<Color> implements IBinaryReader {
   /**
    * Create a color parameter.
-   * @param {string} name - The name of the color parameter.
-   * @param {Color} value - The value of the parameter.
+   * @param name - The name of the color parameter.
+   * @param value - The value of the parameter.
    */
   constructor(name: string = '', value?: Color) {
     super(name, value ? value : new Color(), 'Color')
@@ -31,8 +31,8 @@ class ColorParameter extends Parameter<Color> implements IBinaryReader {
   /**
    * Extracts `Color` values from a buffer, updating current parameter state.
    *
-   * @param {BinReader} reader - The reader value.
-   * @param {Record<string, unknown>} context - The context value.
+   * @param reader - The reader value.
+   * @param context - The context value.
    */
   readBinary(reader: BinReader, context?: Record<string, unknown>): void {
     const value = reader.loadRGBAFloat32Color()
@@ -40,32 +40,33 @@ class ColorParameter extends Parameter<Color> implements IBinaryReader {
     // Note: !! this should always be done in preprocessing...
     value.applyGamma(2.2)
 
-    this.value = value
+    this.__value = value
   }
 
   toJSON(context?: Record<string, unknown>): Record<string, any> {
     return {
-      value: this.value?.toJSON(),
+      value: this.__value?.toJSON(),
     }
   }
 
   fromJSON(j: Record<string, any>, context?: Record<string, unknown>): void {
-    // if (j.value.type) this.value = Registry.constructClass('Color') as Color // TODO: commented out Registry.constructClass
-    this.value?.fromJSON(j.value)
+    // if (j.value.type) this.__value = Registry.constructClass('Color') as Color // TODO: commented out Registry.constructClass
+    this.__value?.fromJSON(j.value)
   }
 
   /**
    * The clone method constructs a new color parameter,
    * copies its values from this parameter and returns it.
    *
-   * @return {ColorParameter} - Returns a new cloned color parameter.
+   * @return - Returns a new cloned color parameter.
    */
   clone(): ColorParameter {
-    const clonedParam = new ColorParameter(this.name, this.value?.clone())
+    const clonedParam = new ColorParameter(this.name, this.__value?.clone())
     return clonedParam
   }
 }
 
 Registry.register('ColorParameter', ColorParameter)
+Registry.register('Property_Color_32f', ColorParameter)
 
 export { ColorParameter }

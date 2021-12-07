@@ -17,42 +17,52 @@ import { BaseItem } from '../BaseItem'
  * @extends BaseGroup
  */
 class SelectionSet extends BaseGroup {
-  protected listenerIDs: Record<string, number> = {}
-  protected __highlightedParam: BooleanParameter
+  /**
+   * @member highlightedParam - Whether or not the TreeItem should be highlighted.
+   */
+  highlightedParam: BooleanParameter = new BooleanParameter('Highlighted', false)
+
+  /**
+   * @member highlightColorParam - The color of the highlight.
+   */
+  highlightColorParam: ColorParameter = new ColorParameter('HighlightColor', new Color(0.5, 0.5, 1))
+
+  /**
+   * @member highlightFillParam - TODO
+   */
+  highlightFillParam: NumberParameter = new NumberParameter('HighlightFill', 0.0, [0, 1])
 
   /**
    * Creates an instance of a group.
    *
-   * @param {string} name - The name of the group.
+   * @param name - The name of the group.
    */
   constructor(name?: string) {
     super(name)
 
-    this.__highlightedParam = <BooleanParameter>this.addParameter(new BooleanParameter('Highlighted', false))
-    this.__highlightedParam.on('valueChanged', () => {
-      this.__updateHighlight()
+    this.addParameter(this.highlightedParam)
+    this.highlightedParam.on('valueChanged', () => {
+      this.updateHighlight()
     })
-
-    const highlightColorParam = this.addParameter(new ColorParameter('HighlightColor', new Color(0.5, 0.5, 1)))
-    this.listenerIDs['valueChanged'] = highlightColorParam.on('valueChanged', (event) => {
-      this.__updateHighlight()
+    this.addParameter(this.highlightColorParam)
+    this.highlightColorParam.on('valueChanged', () => {
+      this.updateHighlight()
     })
-
-    const highlightFillParam = this.addParameter(new NumberParameter('HighlightFill', 0.0, [0, 1]))
-    highlightFillParam.on('valueChanged', () => {
-      this.__updateHighlight()
+    this.addParameter(this.highlightFillParam)
+    this.highlightFillParam.on('valueChanged', () => {
+      this.updateHighlight()
     })
   }
 
   /**
-   * The __updateVisibility method.
-   * @return {boolean} - The return value.
+   * The updateVisibility method.
+   * @return - The return value.
    * @private
    */
-  __updateVisibility(): boolean {
+  updateVisibility(): boolean {
     if (super.updateVisibility()) {
       const value = this.isVisible()
-      Array.from(this.__itemsParam.getValue()).forEach(item => {
+      Array.from(this.itemsParam.value).forEach((item) => {
         if (item instanceof TreeItem) item.propagateVisibility(value ? 1 : -1)
       })
       return true
@@ -63,10 +73,10 @@ class SelectionSet extends BaseGroup {
   // /////////////////////////////
 
   /**
-   * The __updateHighlight method.
+   * The updateHighlight method.
    * @private
    */
-  __updateHighlight() {
+  updateHighlight() {
     // Make this function async so that we don't pull on the
     // graph immediately when we receive a notification.
     // Note: propagating using an operator would be much better.
@@ -77,20 +87,20 @@ class SelectionSet extends BaseGroup {
   }
 
   /**
-   * The __updateHighlight method.
+   * The updateHighlight method.
    * @private
    */
   __updateHighlightHelper() {
     let highlighted = false
     let color: Color
-    if (this.getParameter('Highlighted')!.getValue() || this.isSelected()) {
+    if (this.highlightedParam.value || this.isSelected()) {
       highlighted = true
-      color = this.getParameter('HighlightColor')!.getValue()
-      color.a = this.getParameter('HighlightFill')!.getValue()
+      color = this.highlightColorParam.value
+      color.a = this.highlightFillParam.value
     }
 
     const key = 'groupItemHighlight' + this.getId()
-    Array.from(this.__itemsParam.getValue()).forEach(item => {
+    Array.from(this.itemsParam.value).forEach((item) => {
       if (item instanceof TreeItem) {
         if (highlighted) item.addHighlight(key, color, true)
         else item.removeHighlight(key, true)
@@ -100,11 +110,11 @@ class SelectionSet extends BaseGroup {
   /**
    * Changes selection's state of the group with all items it owns.
    *
-   * @param {boolean} sel - Boolean indicating the new selection state.
+   * @param sel - Boolean indicating the new selection state.
    */
   setSelected(sel: boolean) {
     super.setSelected(sel)
-    this.__updateHighlight()
+    this.updateHighlight()
   }
 
   // ////////////////////////////////////////
@@ -112,8 +122,8 @@ class SelectionSet extends BaseGroup {
 
   /**
    * The __bindItem method.
-   * @param {BaseItem} item - The item value.
-   * @param {number} index - The index value.
+   * @param item - The item value.
+   * @param index - The index value.
    * @private
    */
   bindItem(item: BaseItem, index: number) {
@@ -123,9 +133,9 @@ class SelectionSet extends BaseGroup {
 
     // ///////////////////////////////
     // Update the highlight
-    if (item instanceof TreeItem && this.getParameter('Highlighted')!.getValue()) {
-      const color = this.getParameter('HighlightColor')!.getValue()
-      color.a = this.getParameter('HighlightFill')!.getValue()
+    if (item instanceof TreeItem && this.highlightedParam.value) {
+      const color = this.highlightColorParam.value
+      color.a = this.highlightFillParam.value
       item.addHighlight('groupItemHighlight' + this.getId(), color, true)
     }
 
@@ -135,24 +145,22 @@ class SelectionSet extends BaseGroup {
       item.propagateVisibility(-1)
     }
 
-    if (item instanceof TreeItem) {
-      listenerIDs['BoundingBox.valueChanged'] = item.getParameter('BoundingBox')!.on('valueChanged', (event) => {
-        this.setBoundingBoxDirty()
-      })
-    }
+    listenerIDs['BoundingBox.valueChanged'] = item.boundingBoxParam.on('valueChanged', (event) => {
+      this.setBoundingBoxDirty()
+    })
   }
 
   /**
    * The unbindItem method.
-   * @param {BaseItem} item - The item value.
-   * @param {number} index - The index value.
+   * @param item - The item value.
+   * @param index - The index value.
    * @private
    */
   unbindItem(item: BaseItem, index: number) {
     super.unbindItem(<TreeItem>item, index)
     if (!(item instanceof TreeItem)) return
 
-    if (this.getParameter('Highlighted')!.getValue()) {
+    if (this.highlightedParam.value) {
       item.removeHighlight('groupItemHighlight' + this.getId(), true)
     }
 
@@ -166,15 +174,11 @@ class SelectionSet extends BaseGroup {
 
     // ///////////////////////////////
     // Update the item cutaway
-    item.traverse(treeItem => {
+    item.traverse((treeItem) => {
       if (treeItem instanceof BaseGeomItem) {
         treeItem.setCutawayEnabled(false)
       }
     }, true)
-
-    if (item instanceof TreeItem) {
-      item.getParameter('BoundingBox')!.off('valueChanged', this.setBoundingBoxDirty)
-    }
   }
 
   // ////////////////////////////////////////
@@ -184,8 +188,8 @@ class SelectionSet extends BaseGroup {
    * The clone method constructs a new group,
    * copies its values and returns it.
    *
-   * @param {Record<any,any>} context - The context value.
-   * @return {SelectionSet} - Returns a new cloned group.
+   * @param context - The context value.
+   * @return - Returns a new cloned group.
    */
   clone(context: Record<string, any>) {
     const cloned = new SelectionSet(this.__name + ' clone')

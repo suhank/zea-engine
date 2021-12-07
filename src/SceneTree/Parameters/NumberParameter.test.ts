@@ -5,7 +5,7 @@ describe('NumberParameter', () => {
   it('has an initial value.', () => {
     const numberParameter = new NumberParameter()
 
-    expect(numberParameter.getValue()).toEqual(0)
+    expect(numberParameter.value).toEqual(0)
   })
 
   it('checks value type.', () => {
@@ -17,14 +17,14 @@ describe('NumberParameter', () => {
   it('sets a value.', () => {
     const numberParameter = new NumberParameter()
     const value = 1356
-    numberParameter.setValue(value)
-    expect(numberParameter.getValue()).toEqual(value)
+    numberParameter.value = value
+    expect(numberParameter.value).toEqual(value)
   })
 
   it('saves to JSON (serialization).', () => {
     const numberParameter = new NumberParameter()
     const value = 1356
-    numberParameter.setValue(value)
+    numberParameter.value = value
 
     const expOutput = '{"value":1356}'
 
@@ -36,7 +36,7 @@ describe('NumberParameter', () => {
     const input = { value: 1356 }
     numberParameter.fromJSON(input)
 
-    expect(numberParameter.getValue()).toEqual(input.value)
+    expect(numberParameter.value).toEqual(input.value)
   })
 
   it('loads from binary (serialization).', () => {
@@ -48,7 +48,7 @@ describe('NumberParameter', () => {
     const reader = new BinReader(<Buffer>data.buffer)
     numberParameter.readBinary(reader)
 
-    expect(numberParameter.getValue()).toEqual(value)
+    expect(numberParameter.value).toEqual(value)
   })
 
   it('clones parameter object', () => {

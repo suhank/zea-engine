@@ -1,12 +1,15 @@
 /* eslint-disable guard-for-in */
 
+import { RenderState } from "../types/renderer"
+import { WebGL12RenderingContext } from "../types/webgl"
+
 /**
  * Returns a descriptor for the provided geom attribute.
  * @private
- * @param {WebGL12RenderingContext} gl - The webgl context
- * @param {any} attrDataType - The geometry attribute value.
+ * @param gl - The webgl context
+ * @param attrDataType - The geometry attribute value.
  *
- * @return {Record<any,any>}
+ * @return
  */
 const genDataTypeDesc = (gl: WebGL12RenderingContext, attrDataType: any) => {
   let dimension
@@ -76,7 +79,7 @@ const genDataTypeDesc = (gl: WebGL12RenderingContext, attrDataType: any) => {
   return {
     dimension,
     elementSize,
-    dataType
+    dataType,
   }
 }
 abstract class IGeomShaderBinding {
@@ -89,45 +92,50 @@ abstract class IGeomShaderBinding {
  * @private
  */
 class GeomShaderBinding extends IGeomShaderBinding {
-  protected __gl: WebGL12RenderingContext
-  protected __shaderAttrs: any
-  protected __glattrbuffers: any
-  protected __indexBuffer: WebGLBuffer | null
+  protected gl: WebGL12RenderingContext
+  protected shaderAttrs: Record<string, any>
+  protected glattrbuffers: Record<string, any>
+  protected indexBuffer: WebGLBuffer | null
   /**
    * Create a geom shader binding.
-   * @param {WebGL12RenderingContext} gl - The webgl rendering context.
-   * @param {any} shaderAttrs - The shader attributes.
-   * @param {any} geomAttrBuffers - The geomAttrBuffers value.
-   * @param {any} indexBuffer - The index buffer.
+   * @param gl - The webgl rendering context.
+   * @param shaderAttrs - The shader attributes.
+   * @param geomAttrBuffers - The geomAttrBuffers value.
+   * @param indexBuffer - The index buffer.
    */
-  constructor(gl: WebGL12RenderingContext, shaderAttrs: any, geomAttrBuffers: any, indexBuffer: WebGLBuffer | null) {
+  constructor(
+    gl: WebGL12RenderingContext,
+    shaderAttrs: Record<string, any>,
+    geomAttrBuffers: Record<string, any>,
+    indexBuffer: WebGLBuffer | null
+  ) {
     super()
-    this.__gl = gl
-    this.__shaderAttrs = shaderAttrs
-    this.__glattrbuffers = geomAttrBuffers
-    this.__indexBuffer = indexBuffer
+    this.gl = gl
+    this.shaderAttrs = shaderAttrs
+    this.glattrbuffers = geomAttrBuffers
+    this.indexBuffer = indexBuffer
   }
 
   /**
    * The bind method.
-   * @param {RenderState} renderstate - The render state.
-   * @return {boolean} - The return value.
+   * @param renderstate - The render state.
+   * @return - The return value.
    */
   bind(renderstate?: RenderState): boolean {
-    const gl = this.__gl
+    const gl = this.gl
 
-    for (const attrName in this.__shaderAttrs) {
+    for (const attrName in this.shaderAttrs) {
       if (attrName == 'instancedIds') continue
-      const shaderAttrDesc = this.__shaderAttrs[attrName]
+      const shaderAttrDesc = this.shaderAttrs[attrName]
       const location = shaderAttrDesc.location
       if (location == -1) continue
-      const geomAttrBuffer = this.__glattrbuffers[attrName]
+      const geomAttrBuffer = this.glattrbuffers[attrName]
       if (!geomAttrBuffer) {
         gl.disableVertexAttribArray(location)
         continue
       }
 
-      const geomAttrDesc = genDataTypeDesc(this.__gl, geomAttrBuffer.dataType)
+      const geomAttrDesc = genDataTypeDesc(this.gl, geomAttrBuffer.dataType)
 
       const stride = geomAttrDesc.dimension * geomAttrDesc.elementSize
       const offset =
@@ -152,7 +160,7 @@ class GeomShaderBinding extends IGeomShaderBinding {
       // console.log("Binding :" + attrName + " to attr:" + location + " count:" + geomAttrBuffer.count + " dimension:" + dimension  + " stride:" + stride  + " offset:" + offset + " normalized:" + normalized + " instanced:" + instanced);
     }
 
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.__indexBuffer)
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer)
 
     return true
   }
@@ -161,9 +169,9 @@ class GeomShaderBinding extends IGeomShaderBinding {
    * The unbind method.
    */
   unbind() {
-    const gl = this.__gl
-    for (const attrName in this.__shaderAttrs) {
-      const shaderAttrDesc = this.__shaderAttrs[attrName]
+    const gl = this.gl
+    for (const attrName in this.shaderAttrs) {
+      const shaderAttrDesc = this.shaderAttrs[attrName]
       const location = shaderAttrDesc.location
       if (location == -1) {
         gl.enableVertexAttribArray(location)
@@ -188,15 +196,15 @@ class GeomShaderBinding extends IGeomShaderBinding {
  * @private
  */
 class VAOGeomShaderBinding extends IGeomShaderBinding {
-  protected __vao: WebGLVertexArrayObject | null
-  protected __gl: WebGL12RenderingContext
-  protected __indexBuffer: WebGLBuffer | null
+  protected vao: WebGLVertexArrayObject | null
+  protected gl: WebGL12RenderingContext
+  protected indexBuffer: WebGLBuffer | null
   /**
    * Create VAO geom shader binding.
-   * @param {WebGL12RenderingContext} gl - The webgl rendering context.
-   * @param {Record<string,any>} shaderAttrs - The shaderAttrs value.
-   * @param {Record<string,any>} geomAttrBuffers - The geomAttrBuffers value.
-   * @param {WebGLBuffer} indexBuffer - The indexBuffer value.
+   * @param gl - The webgl rendering context.
+   * @param shaderAttrs - The shaderAttrs value.
+   * @param geomAttrBuffers - The geomAttrBuffers value.
+   * @param indexBuffer - The indexBuffer value.
    */
   constructor(
     gl: WebGL12RenderingContext,
@@ -205,9 +213,9 @@ class VAOGeomShaderBinding extends IGeomShaderBinding {
     indexBuffer: WebGLBuffer | null
   ) {
     super()
-    this.__gl = gl
-    this.__vao = gl.createVertexArray()
-    gl.bindVertexArray(this.__vao)
+    this.gl = gl
+    this.vao = gl.createVertexArray()
+    gl.bindVertexArray(this.vao)
 
     for (const attrName in shaderAttrs) {
       if (attrName == 'instancedIds') continue
@@ -255,19 +263,19 @@ class VAOGeomShaderBinding extends IGeomShaderBinding {
 
     // gl.bindVertexArray(null)
 
-    this.__indexBuffer = indexBuffer
-    if (this.__indexBuffer) this.__gl.bindBuffer(this.__gl.ELEMENT_ARRAY_BUFFER, this.__indexBuffer)
+    this.indexBuffer = indexBuffer
+    if (this.indexBuffer) gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer)
   }
 
   /**
    * The bind method.
-   * @param {RenderState} renderstate - The render state.
-   * @return {boolean} - The return value.
+   * @param renderstate - The render state.
+   * @return - The return value.
    */
   bind(renderstate?: RenderState): boolean {
-    const gl = this.__gl
-    gl.bindVertexArray(this.__vao)
-    if (this.__indexBuffer) this.__gl.bindBuffer(this.__gl.ELEMENT_ARRAY_BUFFER, this.__indexBuffer)
+    const gl = this.gl
+    gl.bindVertexArray(this.vao)
+    if (this.indexBuffer) gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer)
     return true
   }
 
@@ -275,9 +283,9 @@ class VAOGeomShaderBinding extends IGeomShaderBinding {
    * The unbind method.
    */
   unbind(): void {
-    const gl = this.__gl
+    const gl = this.gl
     gl.bindVertexArray(null)
-    if (this.__indexBuffer) gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null)
+    if (this.indexBuffer) gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null)
   }
 
   /**
@@ -285,9 +293,13 @@ class VAOGeomShaderBinding extends IGeomShaderBinding {
    * Users should never need to call this method directly.
    */
   destroy(): void {
-    const gl = this.__gl
-    gl.deleteVertexArray(this.__vao)
-    if (this.__indexBuffer) this.__gl.deleteBuffer(this.__indexBuffer)
+    const gl = this.gl
+    // Ensure we detach the index buffer before deleting the VAO.
+    if (this.indexBuffer) {
+      gl.bindVertexArray(this.vao)
+      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null)
+    }
+    gl.deleteVertexArray(this.vao)
   }
 }
 

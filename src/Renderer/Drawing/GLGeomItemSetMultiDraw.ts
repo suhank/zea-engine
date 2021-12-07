@@ -4,6 +4,8 @@ import '../../SceneTree/GeomItem'
 import { EventEmitter, MathFunctions } from '../../Utilities/index'
 import { GLBaseRenderer } from '../GLBaseRenderer'
 import { GLTexture2D } from '../GLTexture2D'
+import { RenderState } from '../types/renderer'
+import { WebGL12RenderingContext } from '../types/webgl'
 import { GLGeomItem } from './GLGeomItem'
 
 /** This class abstracts the rendering of a collection of geometries to screen.
@@ -34,7 +36,7 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
 
   /**
    * Create a GL geom item set.
-   * @param {GLBaseRenderer} renderer - The renderer object.
+   * @param renderer - The renderer object.
    */
   constructor(renderer: GLBaseRenderer) {
     super()
@@ -65,7 +67,7 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
 
   /**
    * The addGLGeomItem method.
-   * @param {GLGeomItem} glGeomItem - The glGeomItem value.
+   * @param glGeomItem - The glGeomItem value.
    */
   addGLGeomItem(glGeomItem: GLGeomItem) {
     const index: number = this.freeIndices.length > 0 ? this.freeIndices.pop()! : this.glGeomItems.length
@@ -131,7 +133,7 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
 
   /**
    * The removeGLGeomItem method.
-   * @param {GLGeomItem} glGeomItem - The glGeomItem value.
+   * @param glGeomItem - The glGeomItem value.
    */
   removeGLGeomItem(glGeomItem: GLGeomItem) {
     const index = this.glGeomItems.indexOf(glGeomItem)
@@ -173,7 +175,7 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
 
   /**
    * The updateDrawIDsBuffer method.
-   * @param {RenderState} renderstate - The object used to track state changes during rendering.
+   * @param renderstate - The object used to track state changes during rendering.
    */
   updateDrawIDsBuffer(renderstate: RenderState) {
     {
@@ -208,7 +210,7 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
         height: drawIdsTextureSize,
         filter: 'NEAREST',
         wrap: 'CLAMP_TO_EDGE',
-        mipMapped: false
+        mipMapped: false,
       })
     } else if (this.drawIdsTexture.width < drawIdsTextureSize || this.drawIdsTexture.height < drawIdsTextureSize) {
       this.drawIdsTexture.resize(drawIdsTextureSize, drawIdsTextureSize)
@@ -255,7 +257,7 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
 
   /**
    * The updateHighlightedIDsBuffer method.
-   * @param {RenderState} renderstate - The object used to track state changes during rendering.
+   * @param renderstate - The object used to track state changes during rendering.
    */
   updateHighlightedIDsBuffer(renderstate: RenderState) {
     if (this.highlightedIdsBufferDirty) {
@@ -299,7 +301,7 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
         height: highlightIdsTextureSize,
         filter: 'NEAREST',
         wrap: 'CLAMP_TO_EDGE',
-        mipMapped: false
+        mipMapped: false,
       })
     } else if (
       this.highlightedIdsTexture.width < highlightIdsTextureSize ||
@@ -347,14 +349,16 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
 
   /**
    * The draw method.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
+   * @param renderstate - The object tracking the current state of the renderer
    */
   draw(renderstate: RenderState) {
-    if (this.visibleItems.length == 0) {
-      return
-    }
     if (this.drawIdsBufferDirty) {
       this.updateDrawIDsBuffer(renderstate)
+    }
+    // Note: updateDrawIDsBuffer first, as this avoids a case where the buffers stay dirty
+    // because the last item was removed.
+    if (this.visibleItems.length == 0) {
+      return
     }
     if (this.drawIdsTexture) {
       const { drawIdsTexture } = renderstate.unifs
@@ -372,7 +376,7 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
 
   /**
    * The drawHighlighted method.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
+   * @param renderstate - The object tracking the current state of the renderer
    */
   drawHighlighted(renderstate: RenderState) {
     if (this.highlightedItems.length == 0) {
@@ -397,9 +401,9 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
 
   /**
    * The bindAndRender method.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
-   * @param {Array} counts - the counts for each element drawn in by this draw call.
-   * @param {Array} offsets - the offsets for each element drawn in by this draw call.
+   * @param renderstate - The object tracking the current state of the renderer
+   * @param counts - the counts for each element drawn in by this draw call.
+   * @param offsets - the offsets for each element drawn in by this draw call.
    * @private
    */
   bindAndRender(
@@ -425,11 +429,11 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
 
   /**
    * Draw an item to screen.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
-   * @param {Float32Array} drawIds - the draw id for each element drawn in by this draw call.
-   * @param {Int32Array} counts - the geom element count for each element drawn in by this draw call.
-   * @param {Int32Array} offsets - the geom element offset for each element drawn in by this draw call.
-   * @param {number} drawCount - the number of active draw calls for this invocation
+   * @param renderstate - The object tracking the current state of the renderer
+   * @param drawIds - the draw id for each element drawn in by this draw call.
+   * @param counts - the geom element count for each element drawn in by this draw call.
+   * @param offsets - the geom element offset for each element drawn in by this draw call.
+   * @param drawCount - the number of active draw calls for this invocation
    */
   abstract multiDraw(
     renderstate: RenderState,
@@ -441,14 +445,14 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
 
   /**
    * Sorts the drawn items in order furthest to nearest when rendering transparent objects.
-   * @param {Vec3} viewPos - The position of the camera that we are sorting relative to.
+   * @param viewPos - The position of the camera that we are sorting relative to.
    */
   sortItems(viewPos: Vec3) {
     const distances: any[] = []
     const indices: any[] = []
     this.visibleItems.forEach((glGeomItem, index) => {
       if (glGeomItem) {
-        const mat4 = glGeomItem.geomItem.getGeomMat4()
+        const mat4 = glGeomItem.geomItem.geomMatParam.value
         const dist = mat4.translation.distanceTo(viewPos)
         distances.push(dist)
         indices.push(index)

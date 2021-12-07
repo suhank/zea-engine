@@ -6,6 +6,7 @@ import './GLSL/index'
 import vert from './ConvolveSpecular.vert'
 // @ts-ignore
 import frag from './ConvolveSpecular.frag'
+import { WebGL12RenderingContext } from '../types/webgl'
 
 /** Shader for convolving Environment maps.
  * @extends GLShader
@@ -14,7 +15,7 @@ import frag from './ConvolveSpecular.frag'
 class ConvolveSpecularShader extends GLShader {
   /**
    * Create a GL renderer.
-   * @param {WebGL12RenderingContext} gl - The options value.
+   * @param gl - The options value.
    */
   constructor(gl: WebGL12RenderingContext) {
     super(gl, 'ConvolveSpecularShader')

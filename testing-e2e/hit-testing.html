@@ -10,7 +10,7 @@
 
     <link rel="stylesheet" href="styles/tailwind.min.css" />
 
-    <script src="../dist/index.umd.development.js"></script>
+    <script src="../dist/index.umd.js"></script>
 
     <style>
       .main-wrapper {
@@ -39,22 +39,22 @@
         Color,
         ObjAsset,
         Sphere,
-        Material,
+        SimpleSurfaceMaterial,
         GeomItem,
         TreeItem,
-        BaseTool
+        BaseTool,
       } = window.zeaEngine
 
-      const canvas = document.querySelector('#renderer')
+      const canvas = document.getElementById('viewport')
 
       const scene = new Scene()
-      const renderer = new GLRenderer(canvas, { hideSplash: true, webglOptions: { antialias: false } })
+      const renderer = new GLRenderer(canvas, { antialias: false })
       renderer.setScene(scene)
 
       scene.setupGrid(10.0, 10)
 
       const objAsset = new ObjAsset('cow')
-      objAsset.getParameter('splitGroupsIntoObjects').setValue(true)
+      objAsset.splitGroupsIntoObjectsParam.value = true
       objAsset.load('data/cow.obj').then(() => {
         postMessage('done-loading')
       })
@@ -63,20 +63,17 @@
       const xfo = new Xfo()
       xfo.tr.set(0, 0, 3.55)
       xfo.ori.setFromAxisAndAngle(new Vec3(1, 0, 0), Math.PI * 0.5)
-      objAsset.getParameter('GlobalXfo').setValue(xfo)
-      renderer
-        .getViewport()
-        .getCamera()
-        .setPositionAndTarget(new Vec3(8, 8, 6), new Vec3(2, 0, 3))
+      objAsset.globalXfoParam.value = xfo
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(8, 8, 6), new Vec3(2, 0, 3))
 
-      const postMessage = msg => {
+      const postMessage = (msg) => {
         console.log(msg)
         window.postMessage(msg)
       }
 
       const sphere = new Sphere(0.1)
-      const material = new Material('foo', 'SimpleSurfaceShader')
-      material.getParameter('BaseColor').setValue(new Color(1, 0, 0))
+      const material = new SimpleSurfaceMaterial('foo')
+      material.baseColorParam.value = new Color(1, 0, 0)
 
       class MovePointTool extends BaseTool {
         constructor(viewport) {
@@ -96,14 +93,14 @@
           const intersectionData = this.viewport.getGeomDataAtPos(event.pointerPos, event.pointerRay)
           if (intersectionData) {
             const pos = event.pointerRay.start.add(event.pointerRay.dir.scale(intersectionData.dist))
-            this.point.getParameter('GlobalXfo').setValue(new Xfo(pos))
+            this.point.globalXfoParam.value = new Xfo(pos)
           }
         }
         onPointerUp(event) {
           // Now put the moved point back to selectable so that we can click on it again
           // or move a another point over the surface of this one.
           this.point.setSelectable(true)
-          this.viewport.releaseCapture(this)
+          event.releaseCapture(this)
         }
       }
       const movePointTool = new MovePointTool(renderer.getViewport())
@@ -133,17 +130,17 @@
           }
         }
         onPointerUp(event) {
-          this.stroke.traverse(item => {
+          this.stroke.traverse((item) => {
             item.setSelectable(true)
           })
-          this.viewport.releaseCapture(this)
+          event.releaseCapture(this)
         }
       }
       const makeStrokeTool = new MakeStrokeTool(renderer.getViewport())
 
-      renderer.getViewport().on('pointerDown', event => {
+      renderer.getViewport().on('pointerDown', (event) => {
         if (event.intersectionData) {
-          if (event.intersectionData.geomItem.getParameter('Geometry').getValue() == sphere) {
+          if (event.intersectionData.geomItem.geomParam.getValue() == sphere) {
             movePointTool.startMove(event)
           } else {
             makeStrokeTool.startStroke(event)
@@ -158,7 +155,7 @@
       <header class="border border-blue-400 flex justify-center items-center">header</header>
       <nav class="border border-blue-400 flex justify-center items-center">nav</nav>
       <main>
-        <canvas class="absolute" id="renderer"></canvas>
+        <canvas id="viewport"></canvas>
       </main>
       <aside class="border border-blue-400 flex justify-center items-center">aside</aside>
       <footer class="border border-blue-400 flex justify-center items-center">footer</footer>

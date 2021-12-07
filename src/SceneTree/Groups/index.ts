@@ -1,5 +1,4 @@
 export * from './BaseGroup'
-export * from './Group'
 export * from './SelectionSet'
 export * from './KinematicGroup'
 export * from './MaterialGroup'

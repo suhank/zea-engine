@@ -10,30 +10,27 @@
 
     <link rel="stylesheet" href="styles/tailwind.min.css" />
 
-    <script src="../dist/index.umd.development.js"></script>
+    <script src="../dist/index.umd.js"></script>
 
     <script type="module">
       const { Vec3, EulerAngles, Xfo, ObjAsset, Scene, GLRenderer, GLBoundingBoxPass } = zeaEngine
 
-      const canvas = document.querySelector('#renderer')
+      const canvas = document.getElementById('viewport')
 
       const scene = new Scene()
       scene.setupGrid(10.0, 10)
 
-      const renderer = new GLRenderer(canvas, { hideSplash: true, antialias: false })
+      const renderer = new GLRenderer(canvas, { antialias: false })
       const boundingBoxPass = new GLBoundingBoxPass()
       renderer.addPass(boundingBoxPass)
       renderer.setScene(scene)
 
       const objAsset = new ObjAsset('cow')
 
-      // objAsset.getParameter('splitObjects').setValue(true)
-      objAsset.getParameter('splitGroupsIntoObjects').setValue(true)
+      // objAsset.getParameter('splitObjects').value = true
+      objAsset.splitGroupsIntoObjectsParam.value = true
       objAsset.load('data/cow.obj').then(() => {
-        renderer
-          .getViewport()
-          .getCamera()
-          .setPositionAndTarget(new Vec3(2, 2, 2.7), new Vec3(0, 0, 0.4))
+        renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, 2.7), new Vec3(0, 0, 0.4))
         renderer.frameAll()
       })
       scene.getRoot().addChild(objAsset)
@@ -42,7 +39,7 @@
       // xfo.ori.setFromAxisAndAngle(new Vec3(0, 0, 1), 1)
       // // xfo.tr.set(0, 0, 3.55)
       // // xfo.ori.setFromEulerAngles(new EulerAngles(90 * (Math.PI / 180), 0, 0))
-      // objAsset.getParameter('GlobalXfo').setValue(xfo)
+      // objAsset.globalXfoParam.value = xfo
 
       // let angle = -1
       // setInterval(() => {
@@ -50,35 +47,35 @@
       //   const xfo = new Xfo()
       //   xfo.tr.set(6, Math.cos(angle) * 2, 0)
       //   xfo.ori.setFromAxisAndAngle(new Vec3(0, 0, 1), angle)
-      //   objAsset.getParameter('LocalXfo').setValue(xfo)
+      //   objAsset.localXfoParam.value = xfo
       // }, 50)
 
       boundingBoxPass.addTreeItem(objAsset, true)
 
-      Promise.all([new Promise(resolve => objAsset.once('loaded', resolve))]).then(() => {
+      Promise.all([new Promise((resolve) => objAsset.once('loaded', resolve))]).then(() => {
         window.postMessage('done-loading')
       })
 
-      renderer.getViewport().on('keyDown', event => {
+      renderer.getViewport().on('keyDown', (event) => {
         if (event.key == 'f') renderer.frameAll()
       })
 
       // {{{ Messages handler.
-      const handleMessage = event => {
+      const handleMessage = (event) => {
         const { data } = event
 
         if (data === 'variant-01') {
           const angle = -1
           const xfo = new Xfo()
           xfo.ori.setFromAxisAndAngle(new Vec3(0, 0, 1), angle)
-          objAsset.getParameter('LocalXfo').setValue(xfo)
+          objAsset.localXfoParam.value = xfo
           window.postMessage(`done-${data}`)
         } else if (data === 'variant-02') {
           const angle = 2
           const xfo = new Xfo()
           xfo.tr.set(-1, Math.cos(angle) * 2, 0)
           xfo.ori.setFromAxisAndAngle(new Vec3(0, 0, 1), angle)
-          objAsset.getParameter('LocalXfo').setValue(xfo)
+          objAsset.localXfoParam.value = xfo
           window.postMessage(`done-${data}`)
         }
       }
@@ -89,7 +86,7 @@
   </head>
   <body class="bg-blue-100 h-full">
     <div class="h-full">
-      <canvas class="absolute" id="renderer"></canvas>
+      <canvas id="viewport"></canvas>
     </div>
   </body>
 </html>

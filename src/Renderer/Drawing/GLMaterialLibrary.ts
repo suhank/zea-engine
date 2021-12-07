@@ -3,6 +3,7 @@ import { EventEmitter, MathFunctions, Allocator1D, Allocation1D } from '../../Ut
 import { GLMaterial } from './GLMaterial'
 import { GLBaseRenderer } from '../GLBaseRenderer'
 import { Material } from '../../SceneTree'
+import { RenderState } from '../types/renderer'
 
 /** Class representing a GL CAD material library.
  * @ignore
@@ -22,7 +23,7 @@ class GLMaterialLibrary extends EventEmitter {
   protected glGeomItemsTexture: any
   /**
    * Create a GL CAD material library.
-   * @param {GLBaseRenderer} renderer - The renderer object
+   * @param renderer - The renderer object
    */
   constructor(renderer: GLBaseRenderer) {
     super()
@@ -45,8 +46,8 @@ class GLMaterialLibrary extends EventEmitter {
 
   /**
    * The addMaterial method.
-   * @param {Material} material - The material object.
-   * @return {number} - The index of GLMaterial
+   * @param material - The material object.
+   * @return - The index of GLMaterial
    */
   addMaterial(material: Material) {
     let index = this.materialIndices[material.getId()]
@@ -89,8 +90,8 @@ class GLMaterialLibrary extends EventEmitter {
 
   /**
    * Given a material, generates a GLMaterial that manages the GPU state for the material.
-   * @param {Material} material - The material value.
-   * @return {GLMaterial} - The constructed GLMaterial.
+   * @param material - The material value.
+   * @return - The constructed GLMaterial.
    */
   getGLMaterial(material: Material) {
     if (this.glMaterials[material.getId()]) {
@@ -120,7 +121,7 @@ class GLMaterialLibrary extends EventEmitter {
 
   /**
    * The removeMaterial method.
-   * @param {Material} material - The material object.
+   * @param material - The material object.
    */
   removeMaterial(material: Material) {
     const index = this.materialIndices[material.getId()]
@@ -144,7 +145,7 @@ class GLMaterialLibrary extends EventEmitter {
 
   /**
    * The uploadMaterials method.
-   * @param {RenderState} renderstate - The render state for the current draw traversal
+   * @param renderstate - The render state for the current draw traversal
    */
   uploadMaterials(renderstate: RenderState) {
     const gl = this.renderer.__gl
@@ -161,7 +162,7 @@ class GLMaterialLibrary extends EventEmitter {
         height: materialsTextureSize,
         filter: 'NEAREST',
         wrap: 'CLAMP_TO_EDGE',
-        mipMapped: false
+        mipMapped: false,
       })
       this.materialsTexture.clear()
     } else if (this.materialsTexture.width < materialsTextureSize) {
@@ -213,7 +214,7 @@ class GLMaterialLibrary extends EventEmitter {
 
   /**
    * Updates the GPU state if any update is needed.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
+   * @param renderstate - The object tracking the current state of the renderer
    */
   update(renderstate: RenderState) {
     if (this.dirtyItemIndices.length > 0) this.uploadMaterials(renderstate)
@@ -222,13 +223,13 @@ class GLMaterialLibrary extends EventEmitter {
 
   /**
    * The bind method.
-   * @param {any} renderstate - The renderstate param.
-   * @return {any} - The return value.
+   * @param renderstate - The renderstate param.
+   * @return - The return value.
    */
-  bind(renderstate: any) {
+  bind(renderstate: any): boolean {
     if (this.dirtyIndices.size > 0) this.uploadMaterials(renderstate)
 
-    if (!this.materialsTexture) return
+    if (!this.materialsTexture) return false
 
     const { materialsTexture, materialsTextureSize } = renderstate.unifs
     if (materialsTexture) {

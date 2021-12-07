@@ -7,7 +7,7 @@ import { FileImage } from './FileImage'
  *
  * ```
  * const image = new LDRImage()
- * image.getParameter('FilePath').setUrl("https://storage.googleapis.com/zea-playground-assets/zea-engine/texture.png")
+ * image.load("https://storage.googleapis.com/zea-playground-assets/zea-engine/texture.png")
  * ```
  *
  * **Parameters**
@@ -23,9 +23,9 @@ import { FileImage } from './FileImage'
 class LDRImage extends FileImage {
   /**
    * Create a LDR image.
-   * @param {string} name - The name value.
-   * @param {string} filePath - The filePath value.
-   * @param {Record<string, any>} params - The params value.
+   * @param name - The name value.
+   * @param filePath - The filePath value.
+   * @param params - The params value.
    */
   constructor(name?: string, filePath?: string, params?: Record<string, any>) {
     super(name, filePath, params)

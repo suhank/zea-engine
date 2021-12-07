@@ -10,11 +10,11 @@ import { OperatorOutput } from './OperatorOutput'
  * @extends BaseItem
  */
 class Operator extends BaseItem {
-  __inputs: Map<string, OperatorInput>
-  __outputs: Map<string, OperatorOutput>
+  __inputs: Map<string, OperatorInput<any>>
+  __outputs: Map<string, OperatorOutput<any>>
   /**
    * Create an operator.
-   * @param {string} name - The name value.
+   * @param name - The name value.
    */
   constructor(name: string = '') {
     super(name)
@@ -30,14 +30,14 @@ class Operator extends BaseItem {
    * @private
    */
   setDirty(): void {
-    this.__outputs.forEach((output: OperatorOutput) => output.setDirty())
+    this.__outputs.forEach((output: OperatorOutput<any>) => output.setDirty())
   }
 
   /**
    * This method can be overridden in derived classes
    * to perform general updates (see GLPass or BaseItem).
    *
-   * @param {Record<string, any>} event
+   * @param event
    * @private
    */
   protected parameterValueChanged(event: Record<string, unknown>): void {
@@ -47,14 +47,10 @@ class Operator extends BaseItem {
 
   /**
    * The addInput method.
-   * @param {string|OperatorInput} input - The name of the input, or the input object
-   * @return {array} - The return value.
+   * @param input - The name of the input, or the input object
+   * @return - The return value.
    */
-  addInput(input: OperatorInput): OperatorInput {
-    if (typeof input == 'string') input = new OperatorInput(input)
-    else if (!(input instanceof OperatorInput)) {
-      throw new Error(`addInput only accepts string or OperatorInput`)
-    }
+  addInput(input: OperatorInput<any>): OperatorInput<any> {
     input.setOperator(this)
     this.__inputs.set(input.getName(), input)
     this.setDirty()
@@ -63,20 +59,17 @@ class Operator extends BaseItem {
 
   /**
    * The removeInput method.
-   * @param {string|OperatorInput} input - The name of the input, or the input object
+   * @param input - The name of the input, or the input object
    */
-  removeInput(input: OperatorInput): void {
+  removeInput(input: OperatorInput<any>): void {
     if (typeof input == 'string') input = this.getInput(input)
-    if (!(input instanceof OperatorInput)) {
-      throw new Error(`removeInput only accepts string or OperatorInput`)
-    }
     if (input.getParam()) input.setParam(undefined)
     this.__inputs.delete(input.getName())
   }
 
   /**
    * Getter for the number of inputs in this operator.
-   * @return {number} - Returns the number of inputs.
+   * @return - Returns the number of inputs.
    */
   getNumInputs(): number {
     return this.__inputs.size
@@ -84,8 +77,8 @@ class Operator extends BaseItem {
 
   /**
    * The getInputByIndex method.
-   * @param {number} index - The index value.
-   * @return {Record<string, any>} - The return value.
+   * @param index - The index value.
+   * @return - The return value.
    */
   getInputByIndex(index: number): Record<string, any> {
     return Array.from(this.__inputs.values())[index]
@@ -93,10 +86,10 @@ class Operator extends BaseItem {
 
   /**
    * The getInput method.
-   * @param {string} name - The name value.
-   * @return {OperatorInput} - The return value.
+   * @param name - The name value.
+   * @return - The return value.
    */
-  getInput(name: string): OperatorInput {
+  getInput(name: string): OperatorInput<any> {
     const input = this.__inputs.get(name)
     if (!input) throw `Couldn't find an Input with the name of '${name}'`
     return input
@@ -104,14 +97,10 @@ class Operator extends BaseItem {
 
   /**
    * The addOutput method.
-   * @param {string|OperatorOutput} output - The name of the output, or the output object
-   * @return {array} - The return value.
+   * @param output - The name of the output, or the output object
+   * @return - The return value.
    */
-  addOutput(output: OperatorOutput | string): OperatorOutput {
-    if (typeof output == 'string') output = new OperatorOutput(output)
-    else if (!(output instanceof OperatorOutput)) {
-      throw new Error(`addOutput only accepts string or OperatorOutput`)
-    }
+  addOutput(output: OperatorOutput<any>): OperatorOutput<any> {
     output.setOperator(this)
     // if (this.getOutput(output.getName())) throw new Error(`Operator output already exists ${output.getName()}`)
     this.__outputs.set(output.getName(), output)
@@ -121,9 +110,9 @@ class Operator extends BaseItem {
 
   /**
    * The removeOutput method.
-   * @param {string|OperatorOutput} output - The name of the output, or the output object
+   * @param output - The name of the output, or the output object
    */
-  removeOutput(output: OperatorOutput | string): void {
+  removeOutput(output: OperatorOutput<any> | string): void {
     if (typeof output == 'string') output = this.getOutput(output)
     if (!(output instanceof OperatorOutput)) {
       throw new Error(`removeOutput only accepts string or OperatorInput`)
@@ -134,7 +123,7 @@ class Operator extends BaseItem {
 
   /**
    * Getter for the number of outputs in this operator.
-   * @return {number} - Returns the number of outputs.
+   * @return - Returns the number of outputs.
    */
   getNumOutputs(): number {
     return this.__outputs.size
@@ -142,19 +131,19 @@ class Operator extends BaseItem {
 
   /**
    * The getOutputByIndex method.
-   * @param {number} index - The index value.
-   * @return {OperatorOutput} - The return value.
+   * @param index - The index value.
+   * @return - The return value.
    */
-  getOutputByIndex(index: number): OperatorOutput {
+  getOutputByIndex(index: number): OperatorOutput<any> {
     return Array.from(this.__outputs.values())[index]
   }
 
   /**
    * The getOutput method.
-   * @param {string} name - The name value.
-   * @return {OperatorOutput} - The return value.
+   * @param name - The name value.
+   * @return - The return value.
    */
-  getOutput(name: string): OperatorOutput {
+  getOutput(name: string): OperatorOutput<any> {
     const output = this.__outputs.get(name)
     if (!output) throw new Error(`Couldn't find an Output with the name of '${name}'`)
     return output
@@ -177,8 +166,8 @@ class Operator extends BaseItem {
    * 'backPropagateValue' on the Operator to cause the Operator to handle propagating
    * the value to one or more of its inputs.
    * to its inputs.
-   * @param {unknown} value - The value param.
-   * @return {unknown} - The modified value.
+   * @param value - The value param.
+   * @return - The modified value.
    */
   backPropagateValue(value: unknown): unknown {
     // TODO: Implement me for custom manipulations.
@@ -191,18 +180,18 @@ class Operator extends BaseItem {
   /**
    * The toJSON method encodes this type as a json object for persistence.
    *
-   * @param {Record<string, any>} [context] - The context value.
-   * @return {Record<string, any>} - Returns the json object.
+   * @param context - The context value.
+   * @return - Returns the json object.
    */
   toJSON(context?: Record<string, any>): Record<string, any> {
     const j = super.toJSON(context)
     ;(j as any).type = this.getClassName()
-    const inputs: any = []
+    const inputs: Record<string, any>[] = []
     this.__inputs.forEach((input: any) => {
       inputs.push(input.toJSON(context))
     })
     ;(j as any).inputs = inputs
-    const outputs: any = []
+    const outputs: Record<string, any>[] = []
     this.__outputs.forEach((output: any) => {
       outputs.push(output.toJSON(context))
     })
@@ -213,8 +202,8 @@ class Operator extends BaseItem {
   /**
    * The fromJSON method decodes a json object for this type.
    *
-   * @param {Record<string, any>} j - The json object this item must decode.
-   * @param {Record<string, any>} context - The context value.
+   * @param j - The json object this item must decode.
+   * @param context - The context value.
    */
   fromJSON(j: Record<string, any>, context?: Record<string, any>): void {
     super.fromJSON(j, context)
@@ -229,7 +218,7 @@ class Operator extends BaseItem {
         } else {
           input = this.getInputByIndex(index)
         }
-        ;(input as OperatorInput).fromJSON(inputJson, context)
+        ;(input as OperatorInput<any>).fromJSON(inputJson, context)
       })
     }
     if (j.outputs) {
@@ -243,7 +232,7 @@ class Operator extends BaseItem {
         } else {
           output = this.getOutputByIndex(index)
         }
-        ;(output as OperatorOutput).fromJSON(outputJson, context)
+        ;(output as OperatorOutput<any>).fromJSON(outputJson, context)
       })
     }
   }
@@ -252,23 +241,23 @@ class Operator extends BaseItem {
    * The detach method.
    */
   detach(): void {
-    this.__inputs.forEach((input: OperatorInput) => input.detach())
-    this.__outputs.forEach((output: OperatorOutput) => output.detach())
+    this.__inputs.forEach((input: OperatorInput<any>) => input.detach())
+    this.__outputs.forEach((output: OperatorOutput<any>) => output.detach())
   }
 
   /**
    * The reattach method.
    */
   reattach(): void {
-    this.__inputs.forEach((input: OperatorInput) => input.reattach())
-    this.__outputs.forEach((output: OperatorOutput) => output.reattach())
+    this.__inputs.forEach((input: OperatorInput<any>) => input.reattach())
+    this.__outputs.forEach((output: OperatorOutput<any>) => output.reattach())
   }
 
   /**
    * The rebind method.
    */
   rebind(): void {
-    this.__outputs.forEach((output: OperatorOutput) => output.rebind())
+    this.__outputs.forEach((output: OperatorOutput<any>) => output.rebind())
   }
 }
 

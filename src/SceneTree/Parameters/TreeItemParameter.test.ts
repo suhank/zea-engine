@@ -5,7 +5,7 @@ describe('TreeItemParameter', () => {
   it('has an initial value.', () => {
     const treeItemParameter = new TreeItemParameter('')
 
-    expect(treeItemParameter.getValue()).toBeUndefined()
+    expect(treeItemParameter.value).toBeUndefined()
   })
 
   it('checks value type.', () => {
@@ -18,8 +18,8 @@ describe('TreeItemParameter', () => {
     const treeItemParameter = new TreeItemParameter('')
     const value = new TreeItem('fooItem')
     //value.setVisible(false)
-    treeItemParameter.setValue(value)
-    expect(treeItemParameter.getValue()).toEqual(value)
+    treeItemParameter.value = value
+    expect(treeItemParameter.value).toEqual(value)
   })
 
   /*
@@ -29,7 +29,7 @@ describe('TreeItemParameter', () => {
     const scene = new Scene()
     const value = new TreeItem('fooItem')
 
-    treeItemParameter.setValue(value)
+    treeItemParameter.value =(value)
 
     const expOutput = '{"value":{"x":1,"y":2}}'
 
@@ -41,7 +41,7 @@ describe('TreeItemParameter', () => {
     const input = { value: { x: 1, y: 2 } }
     treeItemParameter.fromJSON(input)
 
-    expect(treeItemParameter.getValue().toJSON()).toEqual(input.value)
+    expect(treeItemParameter.value.toJSON()).toEqual(input.value)
   })
 
   it('loads from binary (serialization).', () => {
@@ -51,13 +51,13 @@ describe('TreeItemParameter', () => {
     const reader = new BinReader(data.buffer)
     treeItemParameter.readBinary(reader)
 
-    expect(treeItemParameter.getValue().toJSON()).toEqual({ x: 1, y: 2})
+    expect(treeItemParameter.value.toJSON()).toEqual({ x: 1, y: 2})
   })
 
   it('clones parameter object', () => {
     const parameter = new TreeItemParameter('TestParameter')
     const value = new TreeItem('fooItem')
-    parameter.setValue(value)
+    parameter.value =(value)
 
     const parameter2 = parameter.clone()
 

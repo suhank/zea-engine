@@ -27,9 +27,9 @@ class Vec2Parameter extends Parameter<Vec2> implements IBinaryReader {
   /**
    * Create a Vec2 parameter.
    *
-   * @param {string} name - The name of the Vec2 parameter.
-   * @param {Vec2} value - The value of the parameter.
-   * @param {array} range - The range value is an array of two `Vec2` objects.
+   * @param name - The name of the Vec2 parameter.
+   * @param value - The value of the parameter.
+   * @param range - The range value is an array of two `Vec2` objects.
    */
   constructor(name: string = '', value?: Vec2, range?: Vec2[]) {
     super(name, value ? value : new Vec2(), 'Vec2')
@@ -39,7 +39,7 @@ class Vec2Parameter extends Parameter<Vec2> implements IBinaryReader {
   /**
    * Returns the range of values in which current parameter can be.
    *
-   * @return {Vec2[]} - The return value.
+   * @return - The return value.
    */
   getRange(): Vec2[] | undefined {
     // Range should be an array of 2 vec2s. [min(x,y), max(x,y)]
@@ -48,7 +48,7 @@ class Vec2Parameter extends Parameter<Vec2> implements IBinaryReader {
 
   /**
    * The __setRange method.
-   * @param {Vec2[]} range - The range value.
+   * @param range - The range value.
    * @private
    */
   protected setRange(range: Vec2[]): void {
@@ -60,24 +60,24 @@ class Vec2Parameter extends Parameter<Vec2> implements IBinaryReader {
   /**
    * Extracts a number value from a buffer, updating current parameter state.
    *
-   * @param {BinReader} reader - The reader value.
-   * @param {Record<string, unknown>} context - The context value.
+   * @param reader - The reader value.
+   * @param context - The context value.
    */
   readBinary(reader: BinReader, context?: Record<string, unknown>): void {
-    this.value?.readBinary(reader)
+    this.__value?.readBinary(reader)
   }
 
   toJSON(context?: Record<string, unknown>): Record<string, unknown> {
     return {
       name: this.name,
-      value: this.value?.toJSON()
+      value: this.__value?.toJSON(),
     }
   }
 
   fromJSON(j: Record<string, unknown>, context?: Record<string, unknown>): void {
     const vec2 = new Vec2()
     vec2.fromJSON(j.value as any)
-    this.value = vec2
+    this.__value = vec2
 
     if (j.name) this.name = j.name as string
   }
@@ -86,15 +86,16 @@ class Vec2Parameter extends Parameter<Vec2> implements IBinaryReader {
    * The clone method constructs a new Vec2 parameter, copies its values
    * from this parameter and returns it.
    *
-   * @return {Vec2Parameter} - Returns a new Vec2 parameter.
+   * @return - Returns a new Vec2 parameter.
    */
   clone(): Vec2Parameter {
-    const clonedParam = new Vec2Parameter(this.name, this.value?.clone())
+    const clonedParam = new Vec2Parameter(this.name, this.__value?.clone())
     if (this.range) clonedParam.setRange(this.range)
     return clonedParam
   }
 }
 
 Registry.register('Vec2Parameter', Vec2Parameter)
+Registry.register('Property_Vec2_32f', Vec2Parameter)
 
 export { Vec2Parameter }

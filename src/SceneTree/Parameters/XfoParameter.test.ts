@@ -7,7 +7,7 @@ describe('XfoParameter', () => {
     const xfoParameter = new XfoParameter()
     const xfo = new Xfo()
 
-    expect(xfoParameter.getValue()).toEqual(xfo)
+    expect(xfoParameter.value).toEqual(xfo)
   })
 
   it('checks value type.', () => {
@@ -19,9 +19,9 @@ describe('XfoParameter', () => {
   it('sets value.', () => {
     const xfoParameter = new XfoParameter()
     const value = new Xfo()
-    xfoParameter.setValue(value)
+    xfoParameter.value = value
 
-    expect(xfoParameter.getValue()).toEqual(value)
+    expect(xfoParameter.value).toEqual(value)
   })
 
   it('saves to JSON (serialization).', () => {
@@ -30,7 +30,7 @@ describe('XfoParameter', () => {
     xfo.tr.set(2, 5, 7)
     xfo.sc.set(2, 2, 2)
 
-    xfoParameter.setValue(xfo)
+    xfoParameter.value = xfo
 
     const expOutput =
       '{"name":"","value":{"tr":{"x":2,"y":5,"z":7},"ori":{"x":0,"y":0,"z":0,"w":1},"sc":{"x":2,"y":2,"z":2}}}'
@@ -42,7 +42,7 @@ describe('XfoParameter', () => {
     const input = { value: { tr: { x: 2, y: 5, z: 7 }, ori: { x: 0, y: 0, z: 0, w: 1 }, sc: { x: 2, y: 2, z: 2 } } }
     xfoParameter.fromJSON(input)
 
-    expect(xfoParameter.getValue().toJSON()).toEqual(input.value)
+    expect(xfoParameter.value.toJSON()).toEqual(input.value)
   })
 
   it('loads from binary (serialization).', () => {
@@ -62,17 +62,17 @@ describe('XfoParameter', () => {
     const reader = new BinReader(<Buffer>data.buffer)
     xfoParameter.readBinary(reader)
 
-    expect(xfoParameter.getValue().toJSON()).toEqual({
+    expect(xfoParameter.value.toJSON()).toEqual({
       tr: { x: 2, y: 5, z: 7 },
       ori: { x: 0, y: 0, z: 0, w: 1 },
-      sc: { x: 2, y: 2, z: 2 },
+      sc: { x: 2, y: 2, z: 2 }
     })
   })
 
   it('clones parameter object', () => {
     const parameter = new XfoParameter('TestParameter')
     const value = new Xfo(new Float32Array([1, 2, 3, 4, 1, 1, 1])) //   const value = new Xfo(1, 2, 3, 4)
-    parameter.setValue(value)
+    parameter.value = value
 
     const parameter2 = parameter.clone()
 

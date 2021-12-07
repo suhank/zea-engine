@@ -3,9 +3,12 @@ import { Registry } from '../Registry'
 /* eslint-disable @typescript-eslint/no-explicit-any */
 let counter = 0
 
-/** Class representing a BaseClass. */
+/**
+ * Class representing a BaseClass.
+ * The BaseClass is the foundation class of the SceneTree, as almost all classes derive from it.
+ */
 class BaseClass {
-  __id: number
+  protected __id: number
   /**
    * Create an BaseClass.
    */
@@ -14,9 +17,10 @@ class BaseClass {
   }
 
   /**
+   * Every instance of each class based on BaseClass is assigned a unique number.
+   * This number is not persistent in between different loads of a scene.
    * Returns the unique id of the object.
-   * @private
-   * @return {number} - The Id of the object.
+   * @return - The Id of the object.
    */
   getId(): number {
     return this.__id
@@ -24,36 +28,11 @@ class BaseClass {
 
   /**
    * Returns the unmangled name of the class.
-   * @private
-   * @return {string} - The name of the class definition.
+   * @return - The name of the class definition.
    */
   getClassName(): string {
     return Registry.getClassName(Object.getPrototypeOf(this).constructor)
   }
-
-  // ////////////////////////////////////////
-  // Persistence
-
-  /**
-   * The toJSON method encodes this type as a json object for persistence.
-   *
-   * @param {Record<string, unknown>} context - The context value.
-   * @return {Record<string, unknown>} - Returns the json object.
-   */
-  toJSON(context?: Record<string, unknown>): Record<string, unknown> {
-    const json = {
-      type: this.getClassName(),
-    }
-    return json
-  }
-
-  /**
-   * The fromJSON method decodes a json object for this type.
-   *
-   * @param {Record<string, any>} j - The json object this item must decode.
-   * @param {Record<string, any>} context - The context value.
-   */
-  fromJSON(j: Record<string, any>, context?: Record<string, any>): void {}
 }
 
 export { BaseClass }

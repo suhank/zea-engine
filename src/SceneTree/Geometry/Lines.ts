@@ -44,7 +44,7 @@ class Lines extends BaseGeom {
   /**
    * Returns the specified indices(Vertex connectors)
    *
-   * @return {Float32Array | Int32Array | Int16Array | Int8Array | Uint8Array | Uint16Array | Uint32Array} - The indices index array.
+   * @return - The indices index array.
    */
   getIndices(): Float32Array | Int32Array | Int16Array | Int8Array | Uint8Array | Uint16Array | Uint32Array {
     return this.__indices
@@ -53,17 +53,17 @@ class Lines extends BaseGeom {
   /**
    * Returns the number of line segments.
    *
-   * @return {number} - Returns the number of segments.
+   * @return - Returns the number of segments.
    */
   getNumSegments(): number {
     return this.__indices.length / 2
   }
 
   /**
-   * Sets the number of line segments in the lines geometry.<br>
+   * Sets the number of line segments in the lines geometry.
    * **Important:** It resets indices values.
    *
-   * @param {number} numOfSegments - The count value.
+   * @param numOfSegments - The count value.
    */
   setNumSegments(numOfSegments: number): void {
     if (numOfSegments > this.getNumSegments()) {
@@ -78,9 +78,9 @@ class Lines extends BaseGeom {
   /**
    * Sets segment values in the specified index.
    *
-   * @param {number} index - The index value.
-   * @param {number} p0 - The p0 value.
-   * @param {number} p1 - The p1 value.
+   * @param index - The index value.
+   * @param p0 - The p0 value.
+   * @param p1 - The p1 value.
    */
   setSegmentVertexIndices(index: number, p0: number, p1: number): void {
     if (index >= this.__indices.length / 2)
@@ -90,23 +90,11 @@ class Lines extends BaseGeom {
   }
 
   /**
-   * Sets segment values in the specified index.
-   *
-   * @param {number} index - The index value.
-   * @param {number} p0 - The p0 value.
-   * @param {number} p1 - The p1 value.
-   */
-  setSegment(index: number, p0: number, p1: number): void {
-    console.warn(`deprecated use #setSegmentVertexIndices`)
-    this.setSegmentVertexIndices(index, p0, p1)
-  }
-
-  /**
    * The getSegmentVertexIndex method.
    *
-   * @param {number} line - The line value.
-   * @param {number} lineVertex - The lineVertex value.
-   * @return {number} - The return value.
+   * @param line - The line value.
+   * @param lineVertex - The lineVertex value.
+   * @return - The return value.
    * @private
    */
   getSegmentVertexIndex(line: number, lineVertex: number): number {
@@ -121,7 +109,7 @@ class Lines extends BaseGeom {
   /**
    * Returns vertex attributes buffers and its count.
    *
-   * @return {Record<string, any>} - The return value.
+   * @return - The return value.
    */
   genBuffers(opts?: Record<string, any>): Record<string, any> {
     const buffers = super.genBuffers()
@@ -144,8 +132,8 @@ class Lines extends BaseGeom {
   /**
    * Sets state of current geometry(Including line segments) using a binary reader object.
    *
-   * @param {BinReader} reader - The reader value.
-   * @param {Record<string, any>} context - The context value.
+   * @param reader - The reader value.
+   * @param context - The context value.
    */
   readBinary(reader: BinReader, context?: Record<string, any>): void {
     super.loadBaseGeomBinary(reader)
@@ -157,13 +145,13 @@ class Lines extends BaseGeom {
     else if (bytes == 2) this.__indices = reader.loadUInt16Array()
     else if (bytes == 4) this.__indices = reader.loadUInt32Array()
 
-    this.emit('geomDataChanged', {})
+    this.emit('geomDataChanged')
   }
   /**
    * The toJSON method encodes this type as a json object for persistence.
    *
-   * @param {Record<string, any>} context - The context value.
-   * @return {Record<string, any>} - Returns the json object.
+   * @param context - The context value.
+   * @return - Returns the json object.
    */
   toJSON(context?: Record<string, any>): Record<string, any> {
     const j = super.toJSON(context)
@@ -174,8 +162,8 @@ class Lines extends BaseGeom {
   /**
    * The fromJSON method decodes a json object for this type.
    *
-   * @param {Record<string, any>} j - The json object this item must decode.
-   * @param {Record<string, any>} context - The context value.
+   * @param j - The json object this item must decode.
+   * @param context - The context value.
    */
   fromJSON(j: Record<string, any>, context?: Record<string, any>): void {
     super.fromJSON(j, context)

@@ -1,8 +1,8 @@
 import { Xfo } from '../../Math/Xfo'
 import { XfoParameter } from '../Parameters/XfoParameter'
 import { Operator } from './Operator'
-import { OperatorInput } from './OperatorInput'
-import { OperatorOutput } from './OperatorOutput'
+import { XfoOperatorInput } from './OperatorInput'
+import { XfoOperatorOutput } from './OperatorOutput'
 import { OperatorOutputMode } from '../Parameters/OperatorOutputMode'
 
 /** An operator that calculates the delta transform of the group since items were bound to it.
@@ -12,21 +12,25 @@ import { OperatorOutputMode } from '../Parameters/OperatorOutputMode'
 class GroupTransformXfoOperator extends Operator {
   bindXfo: Xfo = new Xfo()
   invBindXfo: Xfo = new Xfo()
+  groupGlobalXfo: XfoOperatorInput = new XfoOperatorInput('GroupGlobalXfo')
+  groupTransformXfo: XfoOperatorOutput = new XfoOperatorOutput('GroupTransformXfo')
 
   /**
    * Create a GroupMemberXfoOperator operator.
-   * @param {XfoParameter} groupGlobalXfoParam - The GlobalXfo param found on the Group.
-   * @param {XfoParameter} groupTransformXfoParam - The parameter on the Group which defines the displacement to apply to the members.
+   * @param groupGlobalXfoParam - The GlobalXfo param found on the Group.
+   * @param groupTransformXfoParam - The parameter on the Group which defines the displacement to apply to the members.
    */
   constructor(groupGlobalXfoParam: XfoParameter, groupTransformXfoParam: XfoParameter) {
     super()
-    this.addInput(new OperatorInput('GroupGlobalXfo')).setParam(groupGlobalXfoParam)
-    this.addOutput(new OperatorOutput('GroupTransformXfo')).setParam(groupTransformXfoParam)
+    this.groupGlobalXfo.setParam(groupGlobalXfoParam)
+    this.groupTransformXfo.setParam(groupTransformXfoParam)
+    this.addInput(this.groupGlobalXfo)
+    this.addOutput(this.groupTransformXfo)
   }
 
   /**
    * Create a GroupMemberXfoOperator operator.
-   * @param {Xfo} bindXfo - The Bind Xfo calculated from the initial Transforms of the Group Members.
+   * @param bindXfo - The Bind Xfo calculated from the initial Transforms of the Group Members.
    */
   setBindXfo(bindXfo: Xfo): void {
     this.bindXfo = bindXfo
@@ -38,12 +42,11 @@ class GroupTransformXfoOperator extends Operator {
    * The evaluate method.
    */
   evaluate(): void {
-    const groupTransformOutput = this.getOutput('GroupTransformXfo')
     if (this.invBindXfo) {
-      const groupGlobalXfo = this.getInput('GroupGlobalXfo').getValue() as Xfo
-      groupTransformOutput.setClean(groupGlobalXfo.multiply(this.invBindXfo))
+      const groupGlobalXfo = this.groupGlobalXfo.getValue()
+      this.groupTransformXfo.setClean(groupGlobalXfo.multiply(this.invBindXfo))
     } else {
-      groupTransformOutput.setClean(new Xfo())
+      this.groupTransformXfo.setClean(new Xfo())
     }
   }
 }
@@ -55,18 +58,20 @@ class GroupTransformXfoOperator extends Operator {
  */
 class GroupMemberXfoOperator extends Operator {
   _enabled: boolean
+  groupTransformXfo: XfoOperatorInput = new XfoOperatorInput('GroupTransformXfo')
+  memberGlobalXfo: XfoOperatorOutput = new XfoOperatorOutput('MemberGlobalXfo', OperatorOutputMode.OP_READ_WRITE)
 
   /**
    * Create a GroupMemberXfoOperator operator.
-   * @param {XfoParameter} groupTransformXfoParam - The parameter on the Group which defines the displacement to apply to the members.
-   * @param {XfoParameter} memberXfoGlobalParam - The GlobalXfo param found on the Member.
+   * @param groupTransformXfoParam - The parameter on the Group which defines the displacement to apply to the members.
+   * @param memberXfoGlobalParam - The GlobalXfo param found on the Member.
    */
   constructor(groupTransformXfoParam: XfoParameter, memberXfoGlobalParam: XfoParameter) {
     super()
-    this.addInput(new OperatorInput('GroupTransformXfo')).setParam(groupTransformXfoParam)
-    this.addOutput(new OperatorOutput('MemberGlobalXfo', OperatorOutputMode.OP_READ_WRITE)).setParam(
-      memberXfoGlobalParam
-    )
+    this.groupTransformXfo.setParam(groupTransformXfoParam)
+    this.memberGlobalXfo.setParam(memberXfoGlobalParam)
+    this.addInput(this.groupTransformXfo)
+    this.addOutput(this.memberGlobalXfo)
     this._enabled = true
   }
 
@@ -90,15 +95,12 @@ class GroupMemberXfoOperator extends Operator {
    * The evaluate method.
    */
   evaluate(): void {
-    const memberGlobalXfoOutput = this.getOutput('MemberGlobalXfo')
-    const memberGlobalXfo = memberGlobalXfoOutput.getValue() as Xfo
+    const memberGlobalXfo = this.memberGlobalXfo.getValue()
     if (this._enabled) {
-      const groupTransformXfo = this.getInput('GroupTransformXfo')
-        .getParam()
-        ?.getValue() as Xfo
-      memberGlobalXfoOutput.setClean(groupTransformXfo.multiply(memberGlobalXfo))
+      const groupTransformXfo = this.groupTransformXfo.getValue()
+      this.memberGlobalXfo.setClean(groupTransformXfo.multiply(memberGlobalXfo))
     } else {
-      memberGlobalXfoOutput.setClean(memberGlobalXfo)
+      this.memberGlobalXfo.setClean(memberGlobalXfo)
     }
   }
 }

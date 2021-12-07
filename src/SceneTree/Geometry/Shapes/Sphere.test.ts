@@ -4,20 +4,20 @@ describe('Sphere', () => {
   test('test default parameters.', () => {
     const sphere = new Sphere()
 
-    expect(sphere.getParameter('Radius').getValue()).toBe(1.0)
-    expect(sphere.getParameter('Sides').getValue()).toBe(12)
-    expect(sphere.getParameter('Loops').getValue()).toBe(12)
+    expect(sphere.radiusParam.value).toBe(1.0)
+    expect(sphere.sidesParam.value).toBe(12)
+    expect(sphere.loopsParam.value).toBe(12)
   })
 
   test('test update parameters.', () => {
     const sphere = new Sphere()
-    sphere.getParameter('Radius').setValue(2.6)
-    sphere.getParameter('Sides').setValue(24)
-    sphere.getParameter('Loops').setValue(30)
+    sphere.radiusParam.value = 2.6
+    sphere.sidesParam.value = 24
+    sphere.loopsParam.value = 30
 
-    expect(sphere.getParameter('Radius').getValue()).toBe(2.6)
-    expect(sphere.getParameter('Sides').getValue()).toBe(24)
-    expect(sphere.getParameter('Loops').getValue()).toBe(30)
+    expect(sphere.radiusParam.value).toBe(2.6)
+    expect(sphere.sidesParam.value).toBe(24)
+    expect(sphere.loopsParam.value).toBe(30)
   })
 
   it('saves to JSON (serialization).', () => {
@@ -34,19 +34,19 @@ describe('Sphere', () => {
         Loops: {
           range: [3, 200],
           step: 1,
-          value: 5,
+          value: 5
         },
         Radius: {
-          value: 2.6,
+          value: 2.6
         },
         Sides: {
           range: [3, 200],
           step: 1,
-          value: 5,
-        },
+          value: 5
+        }
       },
       type: 'Sphere',
-      vertexAttributes: {},
+      vertexAttributes: {}
     }
     sphere.fromJSON(inputJSON)
 

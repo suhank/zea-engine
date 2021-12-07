@@ -20,9 +20,11 @@ describe('Points', () => {
     const points = new Points()
     const numVertices = 10
     points.setNumVertices(numVertices)
-    points.addVertexAttribute('foo', new Vec2Attribute(1))
-    expect(points.getVertexAttribute('foo').getCount()).toBe(numVertices)
-    expect((<Vec3Attribute>points.getVertexAttribute('foo')).getValueRef(0).toJSON()).toStrictEqual({ x: 1, y: 1 })
+    const atr = new Vec2Attribute()
+    points.addVertexAttribute('foo', atr)
+    atr.setValue(0, new Vec2(1, 1))
+    expect(atr.getCount()).toBe(numVertices)
+    expect(atr.getValueRef(0).toJSON()).toStrictEqual({ x: 1, y: 1 })
   })
 
   test('Check for calculation of bounding box.', () => {
@@ -74,7 +76,6 @@ describe('Points', () => {
     points.setNumVertices(numVertices)
     const positions = <Vec3Attribute>points.getVertexAttribute('positions')
     positions.getValueRef(0).set(1, 2, 3)
-    console.log()
     positions.getValueRef(1).set(-1, -2, -3)
     positions.getValueRef(2).set(2, 1, -3)
 

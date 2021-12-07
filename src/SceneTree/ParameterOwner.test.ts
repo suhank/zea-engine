@@ -41,8 +41,8 @@ describe('ParameterOwner', () => {
   //   expect(parameterAdded).toHaveBeenCalledTimes(2)
   //   expect(parameterRemoved).toHaveBeenCalledTimes(2)
 
-  //   foo1.setValue(4)
-  //   foo2.setValue(5)
+  //   foo1.value =(4)
+  //   foo2.value =(5)
   //   parameterOwner.on('parameterValueChanged', parameterValueChanged)
   //   expect(parameterRemoved).toHaveBeenCalledTimes(2)
   // })

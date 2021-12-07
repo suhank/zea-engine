@@ -2,7 +2,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable guard-for-in */
 import { EventEmitter } from '../Utilities/index'
-import { zeaDebug } from '../helpers/zeaDebug'
 import { TreeItem } from './TreeItem'
 
 /**
@@ -53,8 +52,8 @@ class ResourceLoader extends EventEmitter {
   protected __doneWork: number
   protected baseUrl: string = ''
   protected plugins: Record<string, any>
-  protected systemUrls: Record<string, string>
-  protected __commonResources: Record<string, TreeItem>
+  public systemUrls: Record<string, string>
+  public commonResources: Record<string, TreeItem>
   /**
    * Create a resource loader.
    */
@@ -75,7 +74,7 @@ class ResourceLoader extends EventEmitter {
     // Common resources are used by systems such at the renderer and VR controllers.
     // Any asset that will probably be used my multiple different independent objects
     // should be loaded here. (For now, it is being used to load VR Controller assets.)
-    this.__commonResources = {}
+    this.commonResources = {}
   }
 
   // /////////////////////////////////////////////////
@@ -85,107 +84,13 @@ class ResourceLoader extends EventEmitter {
     this.plugins[plugin.getType()] = plugin
   }
 
-  // /////////////////////////////////////////////////
-  // URLS
-
   /**
-   * Given some value, which could be an IR or a path, return the unique identifier.
-   * @param {string} value - The file value.
-   * @return {string} - The resolved fileId if an adapter is installed, else the original value.
-   */
-  resolveFileId(value: string): string {
-    return value
-  }
-
-  /**
-   * The resolveFilename method.
-   * @deprecated
-   * @param {string} value - The file value.
-   * @return {string} - The resolved URL if an adapter is installed, else the original value.
-   */
-  resolveFilename(value: string): string {
-    if (!value.includes('/')) return value
-    return value.split('/')[1]
-  }
-
-  /**
-   * Given a file ID, returns a URL. The adaptor that is assigned is responsible for resolving the URL within the file system.
-   * @param {string} value - The file value.
-   * @return {string} - The resolved URL if an adapter is installed, else the original value.
-   */
-  resolveURL(value: string): string {
-    if (this.systemUrls[value]) return this.systemUrls[value]
-    return value
-  }
-
-  resourceAvailable(resource: string): boolean {
-    console.warn('ResourceAvailable not implemented on resourceLoader')
-    return false
-  }
-
-  /**
-   * The loadURL method.
-   * @param {string} resourceId - The resourceId value.
-   * @param {string} url - The url value.
-   * @param {function} callback - The callback value.
-   * @param {boolean} addLoadWork - The addLoadWork value.
-   * @return {any} - The return value.
-   * @deprecated
-   * @private
-   */
-  loadURL(resourceId: string, url: string, callback: any, addLoadWork = true): any {
-    console.warn('Deprecated. Use "#loadUrl".')
-    return this.loadUrl(resourceId, url, callback, addLoadWork) // this returns void
-  }
-
-  /**
-   * The loadUrl method.
-   * @param {string} resourceId - The resourceId value.
-   * @param {string} url - The url value.
-   * @param {function} callback - The callback value.
-   * @param {boolean} addLoadWork - The addLoadWork value.
-   */
-  loadUrl(resourceId: string, url: string, callback: any, addLoadWork = true) {
-    console.warn(`deprecated use #loadArchive`)
-    this.loadArchive(url).then((entries: any) => {
-      callback(entries)
-    })
-  }
-
-  /**
-   * Load an archive file, returning a promise that resolves to the JSON data value.
+   * Loads a  file, returning a promise that resolves to the JSON data value.
    * Note: using the resource loader to centralize data loading enables progress to be tracked and displayed
-   * @param {string} url - The url of the data to load.
-   * @return {Promise} - The promise value.
+   * @param url - The url of the data to load.
+   * @return - The promise value.
    */
-  loadArchive(url: string): Promise<any> {
-    console.warn(`Deprecated. Use "#loadFile('archive', url)".`)
-    return this.loadFile('archive', url)
-  }
-
-  /**
-   * Load a JSON file, returning a promise that resolves to the JSON data value.
-   * Note: using the resource loader to centralize data loading enables progress to be tracked and displayed
-   * @param {string} url - The url of the data to load.
-   * @return {Promise} - The promise value.
-   */
-  loadJSON(url: string): Promise<any> {
-    console.warn(`Deprecated. Use "#loadFile('json', url)".`)
-    return this.loadFile('json', url)
-  }
-
-  /**
-   * Load a text file, returning a promise that resolves to the JSON data value.
-   * Note: using the resource loader to centralize data loading enables progress to be tracked and displayed
-   * @param {string} url - The url of the data to load.
-   * @return {Promise} - The promise value.
-   */
-  loadText(url: string): Promise<any> {
-    console.warn(`Deprecated. Use "#loadFile('text', url)".`)
-    return this.loadFile('text', url)
-  }
-
-  loadFile(type: any, url: string): Promise<any> {
+  loadFile(type: string, url: string): Promise<any> {
     const plugin = this.plugins[type]
 
     if (!plugin) {
@@ -215,56 +120,25 @@ class ResourceLoader extends EventEmitter {
   /**
    * Returns a previously stored common resource. Typically this would be a VR asset.
    *
-   * @param {string} resourceId - The resourceId value.
-   * @return {TreeItem|null} - The common resource if it exists
+   * @param resourceId - The resourceId value.
+   * @return - The common resource if it exists
    */
   getCommonResource(resourceId: string): TreeItem | null {
-    return this.__commonResources[resourceId]
+    return this.commonResources[resourceId]
   }
 
   /**
    * Saves a common resource for reuse by other tools. Typically this would be a VR asset.
    *
-   * @param {string} resourceId - The resourceId value.
-   * @param {TreeItem} resource - The common resource to store
+   * @param resourceId - The resourceId value.
+   * @param resource - The common resource to store
    */
   setCommonResource(resourceId: string, resource: TreeItem) {
-    this.__commonResources[resourceId] = resource
-  }
-
-  /**
-   * Load and return a file resource using the specified path.
-   * @deprecated
-   * @param {string} resourceId - The resourceId value.
-   * @return {VLAAsset} - The return value.
-   */
-  loadCommonAssetResource(resourceId: string) {
-    return this.getCommonResource(resourceId)
+    this.commonResources[resourceId] = resource
   }
 
   // /////////////////////////////////////////////////
   // Work
-
-  /**
-   * Add work to the total work pile.. We never know how big the pile will get.
-   *
-   * @deprecated
-   * @param {string} resourceId - The resourceId value.
-   * @param {number} amount - The amount value.
-   */
-  addWork(resourceId: string, amount: number) {
-    this.incrementWorkload(amount)
-  }
-
-  /**
-   * Add work to the 'done' pile. The done pile should eventually match the total pile.
-   * @deprecated
-   * @param {string} resourceId - The resourceId value.
-   * @param {number} amount - The amount value.
-   */
-  addWorkDone(resourceId: string, amount: number) {
-    this.incrementWorkDone(amount)
-  }
 
   /**
    * Increments the amount of work to be done causing a 'progressIncremented' event to be emitted
@@ -272,7 +146,7 @@ class ResourceLoader extends EventEmitter {
    * is then considered done. Only once this work is completed, and the 'incrementWorkDone', the
    * progress will increment.
    *
-   * @param {number} amount - The amount value.
+   * @param amount - The amount value.
    */
   incrementWorkload(amount = 1) {
     this.__totalWork += amount
@@ -285,7 +159,7 @@ class ResourceLoader extends EventEmitter {
    * If 5 items of work have been added using #incrementWorkload, and subsequently 3 items have
    * been completed and #incrementWorkDone called. The progress will be at 3/5, or 60%
    *
-   * @param {number} amount - The amount value.
+   * @param amount - The amount value.
    */
   incrementWorkDone(amount = 1) {
     this.__doneWork += amount

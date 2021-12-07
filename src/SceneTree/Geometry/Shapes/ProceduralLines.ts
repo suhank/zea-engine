@@ -32,7 +32,7 @@ abstract class ProceduralLines extends Lines {
   /**
    * This method can be overridden in derived classes
    * to perform general updates (see GLPass or BaseItem).
-   * @param {Record<string, any>} event - The event object emitted by the parameter.
+   * @param event - The event object emitted by the parameter.
    * @private
    */
   protected parameterValueChanged(event: Record<string, any>): void {
@@ -69,7 +69,7 @@ abstract class ProceduralLines extends Lines {
 
   /**
    * Returns the bounding box for geometry.
-   * @return {Box3} - The return value.
+   * @return - The return value.
    */
   getBoundingBox(): Box3 {
     this.update()
@@ -79,7 +79,7 @@ abstract class ProceduralLines extends Lines {
   /**
    * Returns the number of vertex attributes.
    *
-   * @return {number} - The return value.
+   * @return - The return value.
    */
   getNumVertices(): number {
     this.update()
@@ -91,8 +91,8 @@ abstract class ProceduralLines extends Lines {
 
   /**
    * The genBuffers method.
-   * @param {Record<string, any>} opts - The opts value.
-   * @return {Record<string, any>} - The return value.
+   * @param opts - The opts value.
+   * @return - The return value.
    */
   genBuffers(opts?: Record<string, any>): Record<string, any> {
     this.update()
@@ -104,8 +104,8 @@ abstract class ProceduralLines extends Lines {
   /**
    * The toJSON method encodes this type as a json object for persistence.
    *
-   * @param {Record<string, any>} context - The context value.
-   * @return {Record<string, any>} - Returns the json object.
+   * @param context - The context value.
+   * @return - Returns the json object.
    */
   toJSON(context?: Record<string, any>): Record<string, any> {
     if (!context) context = {}
@@ -122,8 +122,8 @@ abstract class ProceduralLines extends Lines {
   /**
    * The fromJSON method decodes a json object for this type.
    *
-   * @param {Record<string, any>} j - The json object this item must decode.
-   * @param {Record<string, any>} context - The context value.
+   * @param j - The json object this item must decode.
+   * @param context - The context value.
    */
   fromJSON(j: Record<string, any>, context?: Record<string, any>): void {
     super.fromJSON(j, context)

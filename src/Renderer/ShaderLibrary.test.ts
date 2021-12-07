@@ -7,8 +7,8 @@ import { SInt32, UInt32, Float32 } from '../Utilities/MathFunctions'
 
 /**
  * The miniParser function - removes newlines and whitespaces from a string for testing.
- * @param {string} str - a string
- * @return {string} - The unparsed shader GLSL.
+ * @param str - a string
+ * @return - The unparsed shader GLSL.
  */
 function miniParser(str: string) {
   const lines = str.split('\n')

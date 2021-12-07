@@ -7,15 +7,15 @@ import { EventEmitter } from '../../Utilities/EventEmitter'
 /** Class representing an operator input.
  * @extends EventEmitter
  */
-class OperatorInput extends EventEmitter {
+abstract class OperatorInput<T> extends EventEmitter {
   name: string
-  _op?: Operator = undefined
-  param?: Parameter<any> = undefined
+  _op?: Operator
+  param?: Parameter<T>
   detached: boolean = false
 
   /**
    * Create an operator input.
-   * @param {string} name - The name value.
+   * @param name - The name value.
    */
   constructor(name: string) {
     super()
@@ -24,7 +24,7 @@ class OperatorInput extends EventEmitter {
 
   /**
    * The getName method.
-   * @return {string} - The return value.
+   * @return - The return value.
    */
   getName(): string {
     return this.name
@@ -32,7 +32,7 @@ class OperatorInput extends EventEmitter {
 
   /**
    * Sets operator that owns this input. Called by the operator when adding inputs
-   * @param {Operator} op - The operator object.
+   * @param op - The operator object.
    */
   setOperator(op: Operator): void {
     this._op = op
@@ -40,7 +40,7 @@ class OperatorInput extends EventEmitter {
 
   /**
    * Returns operator that owns this input.
-   * @return {Operator} - The operator object.
+   * @return - The operator object.
    */
   getOperator(): Operator {
     return this._op!
@@ -48,7 +48,7 @@ class OperatorInput extends EventEmitter {
 
   /**
    * Returns true if this input is connected to a parameter.
-   * @return {boolean} - The return value.
+   * @return - The return value.
    */
   isConnected(): boolean {
     return this.param != null
@@ -56,16 +56,16 @@ class OperatorInput extends EventEmitter {
 
   /**
    * The getParam method.
-   * @return {Parameter} - The return value.
+   * @return - The return value.
    */
-  getParam(): Parameter<unknown> | undefined {
+  getParam(): Parameter<T> | undefined {
     return this.param
   }
 
   /**
    * @private
    * The handler function for when the input paramter changes.
-   * @param {Record<string, any>} event - The event object.
+   * @param event - The event object.
    */
   paramValueChanged(): void {
     if (this._op) this._op.setDirty()
@@ -73,9 +73,9 @@ class OperatorInput extends EventEmitter {
 
   /**
    * Assigns the Paramter to be used to provide the input value.
-   * @param {Parameter} param - The param value.
+   * @param param - The param value.
    */
-  setParam(param?: Parameter<unknown>): void {
+  setParam(param?: Parameter<T>): void {
     if (this.param) {
       this.param.unbindOperatorInput(this)
     }
@@ -88,20 +88,29 @@ class OperatorInput extends EventEmitter {
 
   /**
    * The getValue method.
-   * @return {unknown} - The return value.
+   * @return - The return value.
    */
-  getValue(): unknown {
-    if (this.param) return this.param.getValue()
+  getValue(): T {
+    if (this.param) return this.param.value
     throw new Error('Unable to getValue')
   }
 
   /**
    * The setValue method.
-   * @param {unknown} value - The value param.
+   * @param value - The value param.
    */
-  setValue(value: unknown): void {
+  setValue(value: T): void {
     if (this.param) {
       this.param.setValue(value)
+    }
+  }
+
+  /**
+   * Propagates from the upstream parameter to the connected operator.
+   */
+  setDirty(): void {
+    if (this._op) {
+      this._op.setDirty()
     }
   }
 
@@ -111,21 +120,22 @@ class OperatorInput extends EventEmitter {
   /**
    * The toJSON method encodes this type as a json object for persistence.
    *
-   * @param {Record<string, any>} context - The context value.
-   * @return {{ name: string; paramPath: any }} - Returns the json object.
+   * @param context - The context value.
+   * @return - Returns the json object.
    */
-  toJSON(context?: Record<string, any>): { name: string; paramPath: any } {
-    const paramPath = this.param ? this.param.getPath() : ''
+  toJSON(context?: Record<string, any>): { name: string; paramPath: string[] } {
+    const absPath = this.param ? this.param.getPath() : []
+    const paramPath = <string[]>(context && context.makeRelative ? context.makeRelative(absPath) : absPath)
     return {
       name: this.name,
-      paramPath: context && context.makeRelative ? context.makeRelative(paramPath) : paramPath
+      paramPath: paramPath,
     }
   }
 
   /**
    * The fromJSON method decodes a json object for this type.
-   * @param {Record<string, any>} j - The json object this item must decode.
-   * @param {Record<string, any>} context - The context value.
+   * @param j - The json object this item must decode.
+   * @param context - The context value.
    */
   fromJSON(j: Record<string, any>, context?: Record<string, any>): void {
     if (j.paramPath) {
@@ -134,10 +144,10 @@ class OperatorInput extends EventEmitter {
       // are loaded last.
       context?.resolvePath(
         j.paramPath,
-        (param: any) => {
+        (param: Parameter<any>) => {
           this.setParam(param)
         },
-        (reason: any) => {
+        () => {
           console.warn("OperatorInput: '" + this.getName() + "'. Unable to connect to:" + j.paramPath)
         }
       )
@@ -169,4 +179,28 @@ class OperatorInput extends EventEmitter {
   }
 }
 
-export { OperatorInput }
+import { Vec2, Vec3, Vec4, Color, Quat, Xfo, Mat3, Mat4 } from '../../Math'
+class BooleanOperatorInput extends OperatorInput<boolean> {}
+class NumberOperatorInput extends OperatorInput<number> {}
+class Vec2OperatorInput extends OperatorInput<Vec2> {}
+class Vec3OperatorInput extends OperatorInput<Vec3> {}
+class Vec4OperatorInput extends OperatorInput<Vec4> {}
+class ColorOperatorInput extends OperatorInput<Color> {}
+class QuatOperatorInput extends OperatorInput<Quat> {}
+class XfoOperatorInput extends OperatorInput<Xfo> {}
+class Mat3OperatorInput extends OperatorInput<Mat3> {}
+class Mat4OperatorInput extends OperatorInput<Mat4> {}
+
+export {
+  OperatorInput,
+  BooleanOperatorInput,
+  NumberOperatorInput,
+  Vec2OperatorInput,
+  Vec3OperatorInput,
+  Vec4OperatorInput,
+  ColorOperatorInput,
+  QuatOperatorInput,
+  XfoOperatorInput,
+  Mat3OperatorInput,
+  Mat4OperatorInput,
+}

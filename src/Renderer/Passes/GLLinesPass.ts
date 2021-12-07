@@ -7,6 +7,7 @@ import { FattenLinesShader } from '../Shaders/FattenLinesShader'
 import { Plane } from '../../SceneTree/index'
 import { GLMesh } from '../Drawing/GLMesh'
 import { GLBaseRenderer } from '../GLBaseRenderer'
+import { RenderState, GeomDataRenderState } from '../types/renderer'
 
 /** Class representing a GL opaque geoms pass.
  * @extends GLOpaqueGeomsPass
@@ -26,19 +27,19 @@ class GLLinesPass extends GLOpaqueGeomsPass {
 
   /**
    * The init method.
-   * @param {GLBaseRenderer} renderer - The renderer value.
-   * @param {number} passIndex - The index of the pass in the GLBAseRenderer
+   * @param renderer - The renderer value.
+   * @param passIndex - The index of the pass in the GLBAseRenderer
    */
   init(renderer: GLBaseRenderer, passIndex: number) {
     super.init(renderer, passIndex)
   }
   /**
    * The filterGeomItem method.
-   * @param {GeomItem} geomItem - The geomItem value.
-   * @return {boolean} - The return value.
+   * @param geomItem - The geomItem value.
+   * @return - The return value.
    */
   filterGeomItem(geomItem: GeomItem): boolean {
-    const geom = geomItem.getParameter('Geometry')!.getValue()
+    const geom = geomItem.geomParam.value
     if (geom instanceof Lines || geom instanceof LinesProxy || geom instanceof Points || geom instanceof PointsProxy) {
       return true
     }
@@ -83,7 +84,7 @@ class GLLinesPass extends GLOpaqueGeomsPass {
 
   /**
    * The draw method.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
+   * @param renderstate - The object tracking the current state of the renderer
    */
   draw(renderstate: RenderState) {
     const gl = this.__gl!
@@ -101,7 +102,7 @@ class GLLinesPass extends GLOpaqueGeomsPass {
   }
   /**
    * The drawGeomData method.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
+   * @param renderstate - The object tracking the current state of the renderer
    */
   drawGeomData(renderstate: GeomDataRenderState) {
     const gl = this.__gl!
@@ -109,11 +110,11 @@ class GLLinesPass extends GLOpaqueGeomsPass {
     if (renderstate.geomDataFbo) {
       if (!this.linesGeomDataBuffer) {
         this.linesGeomDataBuffer = new GLTexture2D(gl, {
-          type: gl.floatGeomBuffer ? 'FLOAT' : 'UNSIGNED_BYTE',
+          type: this.__renderer.floatGeomBuffer ? 'FLOAT' : 'UNSIGNED_BYTE',
           format: 'RGBA',
           filter: 'NEAREST',
           width: 1,
-          height: 2
+          height: 2,
         })
         this.fattenLinesShader = new FattenLinesShader(gl)
         this.quad = new GLMesh(gl, new Plane(1, 1))

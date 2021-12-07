@@ -1,6 +1,8 @@
 /* eslint-disable guard-for-in */
 import { EventEmitter } from '../../Utilities/index'
 import { GLOpaqueGeomsPass } from '../Passes'
+import { RenderState, GeomDataRenderState } from '../types/renderer'
+import { WebGL12RenderingContext } from '../types/webgl'
 import { GLGeom } from './GLGeom'
 import { GLGeomItem } from './GLGeomItem'
 import { GLGeomItemSet } from './GLGeomItemSet'
@@ -17,8 +19,8 @@ class GLMaterialGeomItemSets extends EventEmitter {
   protected drawCount: number
   /**
    * Create a GL material geom item set.
-   * @param {GLPass} pass - The pass that owns the GLMaterialGeomItemSets.
-   * @param {GLMaterial} glMaterial - The glMaterial value.
+   * @param pass - The pass that owns the GLMaterialGeomItemSets.
+   * @param glMaterial - The glMaterial value.
    */
   constructor(pass: GLOpaqueGeomsPass, glMaterial: GLMaterial) {
     super()
@@ -45,7 +47,7 @@ class GLMaterialGeomItemSets extends EventEmitter {
 
   /**
    * The getGLMaterial method.
-   * @return {any} - The return value.
+   * @return - The return value.
    */
   getGLMaterial() {
     return this.glMaterial
@@ -53,8 +55,8 @@ class GLMaterialGeomItemSets extends EventEmitter {
 
   /**
    * The addGLGeomItem method.
-   * @param {GLGeomItem} glGeomItem - The glGeomItem value.
-   * @param {GLGeom} glGeom - The glGeomItem value.
+   * @param glGeomItem - The glGeomItem value.
+   * @param glGeom - The glGeomItem value.
    * @private
    */
   addGLGeomItem(glGeomItem: GLGeomItem, glGeom: GLGeom) {
@@ -69,7 +71,7 @@ class GLMaterialGeomItemSets extends EventEmitter {
 
   /**
    * The drawCountChanged method.
-   * @param {Record<any,any>} event - The change value.
+   * @param event - The change value.
    * @private
    */
   drawCountChanged(event: Record<string, any>) {
@@ -97,15 +99,12 @@ class GLMaterialGeomItemSets extends EventEmitter {
 
   /**
    * The addGeomItemSet method.
-   * @param {any} glGeomItemSet - The glGeomItemSet value.
+   * @param glGeomItemSet - The glGeomItemSet value.
    */
   addGeomItemSet(glGeomItemSet: any) {
-    const id = glGeomItemSet
-      .getGLGeom()
-      .getGeom()
-      .getId()
+    const id = glGeomItemSet.getGLGeom().getGeom().getId()
     this.glGeomItemSets[id] = glGeomItemSet
-    const listenerID = glGeomItemSet.on('drawCountChanged', (event) => {
+    const listenerID = glGeomItemSet.on('drawCountChanged', (event: any) => {
       this.drawCountChanged(event)
     })
     glGeomItemSet.once('destructing', () => {
@@ -130,7 +129,7 @@ class GLMaterialGeomItemSets extends EventEmitter {
 
   /**
    * Draws all elements, binding the shader and continuing into the GLGeomItemSet
-   * @param {RenderState} renderstate - The render state for the current draw traversal
+   * @param renderstate - The render state for the current draw traversal
    */
   draw(renderstate: RenderState) {
     if (this.drawCount == 0) return
@@ -144,7 +143,7 @@ class GLMaterialGeomItemSets extends EventEmitter {
 
   /**
    * The drawHighlighted method.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
+   * @param renderstate - The object tracking the current state of the renderer
    */
   drawHighlighted(renderstate: RenderState) {
     this.glMaterial.bind(renderstate, false)
@@ -156,9 +155,9 @@ class GLMaterialGeomItemSets extends EventEmitter {
 
   /**
    * The drawHighlightedGeoms method.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
+   * @param renderstate - The object tracking the current state of the renderer
    */
-  drawGeomData(renderstate: RenderState) {
+  drawGeomData(renderstate: GeomDataRenderState) {
     this.glMaterial.bind(renderstate, false)
     for (const key in this.glGeomItemSets) {
       const glGeomItemSet = this.glGeomItemSets[key]

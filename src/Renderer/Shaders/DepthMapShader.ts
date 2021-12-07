@@ -6,11 +6,12 @@ import './GLSL/index'
 import frag from './DepthMapShader.frag'
 // @ts-ignore
 import vert from './DepthMapShader.vert'
+import { WebGL12RenderingContext } from '../types/webgl'
 
 class DepthMapShader extends GLShader {
   /**
    * Create a GL shader.
-   * @param {WebGL12RenderingContext} gl - The webgl rendering context.
+   * @param gl - The webgl rendering context.
    */
   constructor(gl: WebGL12RenderingContext) {
     super(gl, 'DepthMapShader')

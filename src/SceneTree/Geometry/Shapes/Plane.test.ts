@@ -4,23 +4,23 @@ describe('Plane', () => {
   it('tests default parameters', () => {
     const plane = new Plane()
 
-    expect(plane.getParameter('SizeX').getValue()).toBe(1)
-    expect(plane.getParameter('SizeY').getValue()).toBe(1)
-    expect(plane.getParameter('DetailX').getValue()).toBe(1)
-    expect(plane.getParameter('DetailY').getValue()).toBe(1)
+    expect(plane.sizeXParam.value).toBe(1)
+    expect(plane.sizeYParam.value).toBe(1)
+    expect(plane.detailXParam.value).toBe(1)
+    expect(plane.detailYParam.value).toBe(1)
   })
 
   it('updates parameters', () => {
     const plane = new Plane()
-    plane.getParameter('SizeX').setValue(3)
-    plane.getParameter('SizeY').setValue(3)
-    plane.getParameter('DetailX').setValue(3)
-    plane.getParameter('DetailY').setValue(4)
+    plane.sizeXParam.value = 3
+    plane.sizeYParam.value = 3
+    plane.detailXParam.value = 3
+    plane.detailYParam.value = 4
 
-    expect(plane.getParameter('SizeX').getValue()).toBe(3)
-    expect(plane.getParameter('SizeY').getValue()).toBe(3)
-    expect(plane.getParameter('DetailX').getValue()).toBe(3)
-    expect(plane.getParameter('DetailY').getValue()).toBe(4)
+    expect(plane.sizeXParam.value).toBe(3)
+    expect(plane.sizeYParam.value).toBe(3)
+    expect(plane.detailXParam.value).toBe(3)
+    expect(plane.detailYParam.value).toBe(4)
   })
 
   // There's an issue with flags, that are preventing parameters to be exported.
@@ -37,7 +37,7 @@ describe('Plane', () => {
       params: { SizeX: { value: 2 }, SizeY: { value: 2 }, DetailX: { value: 2 }, DetailY: { value: 2 } },
       type: 'Plane',
       numVertices: 9,
-      vertexAttributes: {},
+      vertexAttributes: {}
     }
     plane.fromJSON(inputJSON)
 

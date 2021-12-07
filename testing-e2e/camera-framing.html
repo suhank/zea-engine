@@ -10,56 +10,42 @@
 
     <link rel="stylesheet" href="styles/tailwind.min.css" />
 
-    <script src="../dist/index.umd.development.js"></script>
+    <script src="../dist/index.umd.js"></script>
 
     <script type="module">
-      const { GLRenderer, Scene, Vec3, Xfo, Color, Cuboid, Material, GeomItem, GLBoundingBoxPass } = zeaEngine
+      const { GLRenderer, Scene, Vec3, Xfo, Color, Cuboid, SimpleSurfaceMaterial, GeomItem, GLBoundingBoxPass } =
+        zeaEngine
 
-      const canvas = document.querySelector('#renderer')
+      const canvas = document.getElementById('viewport')
 
       const scene = new Scene()
-      const renderer = new GLRenderer(canvas, { hideSplash: true, webglOptions: { antialias: false } })
+      const renderer = new GLRenderer(canvas, { antialias: false })
       renderer.setScene(scene)
 
       scene.setupGrid(10.0, 10)
 
-      const standardMaterial = new Material('surfaces', 'SimpleSurfaceShader')
-      standardMaterial.getParameter('BaseColor').setValue(new Color(200 / 255, 50 / 255, 50 / 255))
+      const standardMaterial = new SimpleSurfaceMaterial('surfaces')
+      standardMaterial.baseColorParam.value = new Color(200 / 255, 50 / 255, 50 / 255)
 
       const cuboid = new Cuboid(1.5, 5.0, 1.1)
       const geomItem = new GeomItem('Cuboid', cuboid, standardMaterial)
 
       const xfo = new Xfo()
       xfo.ori.setFromAxisAndAngle(new Vec3(0, 0, 1), 1)
-      geomItem.getParameter('GlobalXfo').setValue(xfo)
+      geomItem.globalXfoParam.value = xfo
 
       scene.getRoot().addChild(geomItem)
 
-      renderer
-        .getViewport()
-        .getCamera()
-        .setPositionAndTarget(new Vec3(3, 3, 1.7), new Vec3(0, 0, 0.1))
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(3, 3, 1.7), new Vec3(0, 0, 0.1))
       renderer.frameAll()
 
-      renderer.getViewport().on('keyDown', event => {
+      renderer.getViewport().on('keyDown', (event) => {
         if (event.key == 'f') {
           renderer.frameAll()
         } else if (event.key == 'o') {
-          if (
-            renderer
-              .getViewport()
-              .getCamera()
-              .isOrthographic()
-          )
-            renderer
-              .getViewport()
-              .getCamera()
-              .setIsOrthographic(0, 400)
-          else
-            renderer
-              .getViewport()
-              .getCamera()
-              .setIsOrthographic(1, 400)
+          if (renderer.getViewport().getCamera().isOrthographic())
+            renderer.getViewport().getCamera().setIsOrthographic(0, 400)
+          else renderer.getViewport().getCamera().setIsOrthographic(1, 400)
         }
       })
 
@@ -67,7 +53,7 @@
       renderer.addPass(boundingBoxPass)
       boundingBoxPass.addTreeItem(geomItem, true)
 
-      const postMessage = msg => {
+      const postMessage = (msg) => {
         console.log(msg)
         window.postMessage(msg)
       }
@@ -76,7 +62,7 @@
       const camera = renderer.getViewport().getCamera()
 
       // {{{ Messages handler.
-      const handleMessage = event => {
+      const handleMessage = (event) => {
         const { data } = event
 
         if (data === 'variant-01') {
@@ -106,7 +92,7 @@
   </head>
   <body class="bg-blue-100">
     <div class="h-screen">
-      <canvas class="absolute" id="renderer"></canvas>
+      <canvas id="viewport"></canvas>
     </div>
   </body>
 </html>

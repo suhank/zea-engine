@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>XfoTrack and TrackDisplay</title>
+
+    <style>
+      html,
+      body,
+      .container {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+
+      .container {
+        display: flex;
+        flex-direction: column;
+        gap: 0.2em;
+      }
+
+      #canvasHolder {
+        height: 100%;
+      }
+
+      #footer {
+        display: flex;
+        height: 2.5em;
+        margin: auto 0.2em 0.2em 0.1em;
+      }
+
+      #footer #controls {
+        display: flex;
+        flex-direction: row;
+        margin-left: auto;
+        gap: 0.1em;
+        margin-left: 0.1em;
+      }
+
+      #footer #timeline {
+        flex: auto;
+        padding: 0 2px;
+        border: #545454 1px solid;
+      }
+
+      #footer #controls button {
+        width: 1.5em;
+        background-color: burlywood;
+        border: #545454 1px solid;
+        cursor: pointer;
+      }
+
+      #footer #timebar {
+        margin-top: 0.1em;
+        height: 2.2em;
+        width: 10px;
+        background-color: red;
+      }
+
+      .disable-select {
+        user-select: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+      }
+
+      #controllers {
+        display: flex;
+        align-items: center;
+        padding: 0.5em;
+        gap: 1em;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div id="controllers">
+        <div>
+          <label for="xfoTool">Xfo Manipulator</label>
+          <input type="checkbox" id="xfoTool" value="XfoManipulator" class="tool" />
+        </div>
+      </div>
+      <div id="canvasHolder">
+        <canvas id="renderer"></canvas>
+      </div>
+      <div id="footer">
+        <div id="timeline">
+          <div id="timebar"></div>
+        </div>
+        <div id="controls">
+          <button id="prevkey" class="disable-select">&lt;</button>
+          <button id="nextkey" class="disable-select">&gt;</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="../dist/index.umd.js"></script>
+
+    <script>
+      const { Scene, GLRenderer } = window.zeaEngine
+      const scene = new Scene()
+      const renderer = new GLRenderer(document.getElementById('renderer'), { antialias: false })
+      scene.setupGrid(10, 10)
+      renderer.setScene(scene)
+    </script>
+  </body>
+</html>

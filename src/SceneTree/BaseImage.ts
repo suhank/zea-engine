@@ -3,30 +3,26 @@ import { BaseItem } from './BaseItem'
 /**
  * Represents a 2D image item, containing width and height.
  *
- * **Parameters**
- * * **AlphaFromLuminance(`BooleanParameter`):** Sets alpha chanel to the luminance of the image and all color channels to `0`.
- * * **Invert(`BooleanParameter`):** Horizontally flips the image(Basically inverting X pixels).
- * * **FlipY(`BooleanParameter`):** Vertically flips the image, meaning that it would be upside down if enabled.
- *
  * **Events**
  * * **updated:** Triggered when the value of any of the parameters listed above changes.
  *
  * @extends BaseItem
  */
 class BaseImage extends BaseItem {
-  width: number
-  height: number
-  format: string
-  type: string
-  protected wrapS: string
-  protected wrapT: string
-  protected minFilter: string
-  protected magFilter: string
-  loaded: any // TODO: acts as a boolean and a class with method disconnect scope
-  // updated: any
+  width: number = 0
+  height: number = 0
+  format: string = 'RGB'
+  type: string = 'UNSIGNED_BYTE'
+  mipMapped: boolean = true
+
+  protected wrapS: string = 'REPEAT'
+  protected wrapT: string = 'REPEAT'
+  protected minFilter: string = 'LINEAR'
+  protected magFilter: string = 'LINEAR'
+  loaded: boolean = false
   /**
    * Creates an instance of BaseImage.
-   * @param {string} name - name of the item
+   * @param name - name of the item
    */
   constructor(name?: string) {
     super(name)
@@ -39,29 +35,24 @@ class BaseImage extends BaseItem {
     this.minFilter = 'LINEAR'
     this.magFilter = 'LINEAR'
 
-    this.on('parameterValueChanged', (event: Record<string, any>) => {
+    this.on('parameterValueChanged', () => {
       this.emit('updated')
     })
-
-    // Note: Many parts of the code assume a 'loaded' signal.
-    // We should probably deprecate and use only 'updated'.
-    // Instead we should start using a loaded Promise.
-    this.loaded = false
   }
 
   /**
    * Returns true if loaded.
    * @private
-   * @return {boolean} - Returns a boolean.
+   * @return - Returns a boolean.
    */
   isLoaded(): boolean {
-    return true
+    return this.loaded
   }
 
   /**
    * Returns all parameters and class state values.
    *
-   * @return {Record<string, any>} - The return value.
+   * @return - The return value.
    */
   getParams(): Record<string, any> {
     return {
@@ -72,7 +63,8 @@ class BaseImage extends BaseItem {
       wrapS: this.wrapS,
       wrapT: this.wrapT,
       minFilter: this.minFilter,
-      magFilter: this.magFilter
+      magFilter: this.magFilter,
+      mipMapped: this.mipMapped,
     }
   }
 }

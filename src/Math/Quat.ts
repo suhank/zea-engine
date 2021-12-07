@@ -4,6 +4,8 @@ import { Mat3 } from './Mat3'
 import { Mat4 } from './Mat4'
 import { EulerAngles } from './EulerAngles'
 import { BinReader } from '../SceneTree/BinReader'
+import { StringFunctions } from '../Utilities/StringFunctions'
+
 /**
  * Class representing a quaternion. Quaternions are used to represent 3 dimensional rotations.
  *
@@ -15,16 +17,15 @@ import { BinReader } from '../SceneTree/BinReader'
 
  */
 class Quat {
+  __data: Float32Array
   /**
    * Creates a quaternion.
    *
-   * @param {number | ArrayBuffer | object} x - The angle of the x axis. Default is 0.
-   * @param {number} y - The angle of the y axis. Default is 0.
-   * @param {number} z - The angle of the z axis. Default is 0.
-   * @param {number} w - The w value. Default is 1.
+   * @param x - The angle of the x axis. Default is 0.
+   * @param y - The angle of the y axis. Default is 0.
+   * @param z - The angle of the z axis. Default is 0.
+   * @param w - The w value. Default is 1.
    */
-
-  __data: Float32Array
   constructor(x: number | ArrayBuffer = 0, y = 0, z = 0, w = 1) {
     if (x instanceof Float32Array) {
       this.__data = x
@@ -57,7 +58,7 @@ class Quat {
   /**
    * Getter for `x` axis rotation.
    *
-   * @return {number} - Returns the x axis rotation.
+   * @return - Returns the x axis rotation.
    */
   get x(): number {
     return this.__data[0]
@@ -66,7 +67,7 @@ class Quat {
   /**
    * Setter for `x` axis rotation.
    *
-   * @param {number} val - The val param.
+   * @param val - The val param.
    */
   set x(val: number) {
     this.__data[0] = val
@@ -75,7 +76,7 @@ class Quat {
   /**
    * Getter for `y` axis rotation.
    *
-   * @return {number} - Returns the y axis rotation.
+   * @return - Returns the y axis rotation.
    */
   get y(): number {
     return this.__data[1]
@@ -84,7 +85,7 @@ class Quat {
   /**
    * Setter for `y` axis rotation.
    *
-   * @param {number} val - The val param.
+   * @param val - The val param.
    */
   set y(val: number) {
     this.__data[1] = val
@@ -93,7 +94,7 @@ class Quat {
   /**
    * Getter for `z` axis rotation.
    *
-   * @return {number} - Returns the z axis rotation.
+   * @return - Returns the z axis rotation.
    */
   get z(): number {
     return this.__data[2]
@@ -102,7 +103,7 @@ class Quat {
   /**
    * Setter for `z` axis rotation.
    *
-   * @param {number} val - The val param.
+   * @param val - The val param.
    */
   set z(val: number) {
     this.__data[2] = val
@@ -111,7 +112,7 @@ class Quat {
   /**
    * Getter for `w` value.
    *
-   * @return {number} - Returns the w value.
+   * @return - Returns the w value.
    */
   get w(): number {
     return this.__data[3]
@@ -119,7 +120,7 @@ class Quat {
 
   /**
    * Setter for `w`.
-   * @param {number} val - The val param.
+   * @param val - The val param.
    */
   set w(val: number) {
     this.__data[3] = val
@@ -128,10 +129,10 @@ class Quat {
   /**
    * Setter from scalar components.
    *
-   * @param {number} x - The x axis rotation.
-   * @param {number} y  - The y axis rotation.
-   * @param {number} z  - The z axis rotation.
-   * @param {number} w  - The w value.
+   * @param x - The x axis rotation.
+   * @param y  - The y axis rotation.
+   * @param z  - The z axis rotation.
+   * @param w  - The w value.
    */
   set(x: number, y: number, z: number, w: number): void {
     this.__data[0] = x
@@ -143,7 +144,7 @@ class Quat {
   /**
    * Sets the state of the Quat class using a Float32Array.
    *
-   * @param {Float32Array} float32Array - The float32Array value.
+   * @param float32Array - The float32Array value.
    */
   setDataArray(float32Array: Float32Array): void {
     this.__data = <Float32Array>float32Array // TODO: added cast
@@ -152,7 +153,7 @@ class Quat {
   /**
    * Setter from another vector.
    *
-   * @param {Quat} other - The other vector to set from.
+   * @param other - The other vector to set from.
    */
   setFromOther(other: Quat): void {
     this.__data[0] = other.x
@@ -164,7 +165,7 @@ class Quat {
   /**
    * Set this Quat from a euler rotation.
    *
-   * @param {EulerAngles} eulerAngles - The euler angles rotation.
+   * @param eulerAngles - The euler angles rotation.
    */
   setFromEulerAngles(eulerAngles: EulerAngles) {
     const ordered = new Vec3()
@@ -262,8 +263,8 @@ class Quat {
   /**
    * Converts Quat to an EulerAngles
    *
-   * @param {number | string} rotationOrder - The order in which the rotations are applied.
-   * @return {EulerAngles} - The return value.
+   * @param rotationOrder - The order in which the rotations are applied.
+   * @return - The return value.
    */
   toEulerAngles(rotationOrder: number | string): EulerAngles {
     const ordered = new Vec3()
@@ -342,8 +343,8 @@ class Quat {
   /**
    * Set this Quat to a rotation defined by an axis and an angle (in radians).
    *
-   * @param {Vec3} axis - The axis around which to rotate.
-   * @param {number} angle - The angle to rotate
+   * @param axis - The axis around which to rotate.
+   * @param angle - The angle to rotate
    */
   setFromAxisAndAngle(axis: Vec3, angle: number): void {
     const halfAngle = angle / 2.0
@@ -356,8 +357,8 @@ class Quat {
    * > The camera looks down the negative z axis, so to set a rotation value
    * > for the camera, remember to negate the direction vector.
    *
-   * @param {Vec3} dir - The direction value.
-   * @param {Vec3} up - The up vector.
+   * @param dir - The direction value.
+   * @param up - The up vector.
    */
   setFromDirectionAndUpvector(dir: Vec3, up: Vec3): void {
     const mat3 = new Mat3()
@@ -368,8 +369,8 @@ class Quat {
   /**
    * Sets the state of the `Quat` from two `Vec3`. The quaternion would then represent the rotation from v0 to v1 in 3d space.
    *
-   * @param {Vec3} v0 - The v0 unit vector.
-   * @param {Vec3} v1 - The v1 unit vector.
+   * @param v0 - The v0 unit vector.
+   * @param v1 - The v1 unit vector.
    */
   setFrom2Vectors(v0: Vec3, v1: Vec3): void {
     const c = v0.cross(v1)
@@ -383,7 +384,7 @@ class Quat {
   /**
    * Set the Quat from a Mat3.
    *
-   * @param {Mat3} mat3 - The mat3 value.
+   * @param mat3 - The mat3 value.
    */
   setFromMat3(mat3: Mat3): void {
     // Algorithm in Ken Shoemake's article in 1987 SIGGRAPH course notes
@@ -421,7 +422,7 @@ class Quat {
   /**
    * Set the Quat from a Mat4.
    *
-   * @param {Mat4} mat4 - The mat4 value.
+   * @param mat4 - The mat4 value.
    */
   setFromMat4(mat4: Mat4): void {
     // Algorithm in Ken Shoemake's article in 1987 SIGGRAPH course notes
@@ -459,7 +460,7 @@ class Quat {
   /**
    * Checks if the angle of the Quat is less that ` Number.EPSILON`
    *
-   * @return {boolean} - Returns true or false.
+   * @return - Returns true or false.
    */
   isIdentity(): boolean {
     return this.getAngle() < Number.EPSILON
@@ -468,30 +469,17 @@ class Quat {
   /**
    * Return the angle of the Quat.
    *
-   * @return {number} - The return value.
+   * @return - The return value.
    */
   getAngle(): number {
     return Math.acos(this.w) * 2.0
   }
 
   /**
-   * @deprecated
-   * Returns true if this Quat contains the same values as the other.
-   * Deprecated. Use #isEqual instead.
-   *
-   * @param {Quat} other - The other Quat to compare with.
-   * @return {boolean} - Returns true or false.
-   */
-  equal(other: Quat): boolean {
-    console.warn('Deprecated. Use #isEqual instead.')
-    return this.isEqual(other)
-  }
-
-  /**
    * Checks if this Quat contains the same values as the other Quat.
    *
-   * @param {Quat} other - The other Quat to compare with.
-   * @return {boolean} - Returns `true` if are the same Vector, otherwise, `false`.
+   * @param other - The other Quat to compare with.
+   * @return - Returns `true` if are the same Vector, otherwise, `false`.
    */
   isEqual(other: Quat): boolean {
     return this.x == other.x && this.y == other.y && this.z == other.z && this.w == other.w
@@ -500,8 +488,8 @@ class Quat {
   /**
    * Returns true if this Quat is NOT exactly the same other.
    *
-   * @param {Quat} other - The other Quat to compare with.
-   * @return {boolean} - Returns true or false.
+   * @param other - The other Quat to compare with.
+   * @return - Returns true or false.
    */
   notEquals(other: Quat): boolean {
     return this.x != other.x && this.y != other.y && this.z != other.z && this.w != other.w
@@ -510,9 +498,9 @@ class Quat {
   /**
    * Returns true if this Quat is approximately the same as other
    *
-   * @param {Quat} other - The other Quat to compare with.
-   * @param {number} precision - The precision to which the values must match.
-   * @return {boolean} - Returns true or false.
+   * @param other - The other Quat to compare with.
+   * @param precision - The precision to which the values must match.
+   * @return - Returns true or false.
    */
   approxEqual(other: Quat, precision: number = Number.EPSILON): boolean {
     return (
@@ -526,8 +514,8 @@ class Quat {
   /**
    * Adds other to this Quat and return the result as a new Quat.
    *
-   * @param {Quat} other - The other Quat to add.
-   * @return {Quat} - Returns a new Quat.
+   * @param other - The other Quat to add.
+   * @return - Returns a new Quat.
    */
   add(other: Quat): Quat {
     return new Quat(this.x + other.x, this.y + other.y, this.z + other.z, this.w + other.w)
@@ -536,7 +524,7 @@ class Quat {
   /**
    * Adds other to this Quat.
    *
-   * @param {Quat} other - The other Quat to add.
+   * @param other - The other Quat to add.
    */
   addInPlace(other: Quat): void {
     this.x += other.x
@@ -548,8 +536,8 @@ class Quat {
   /**
    * Subtracts other from this Quat and returns the result as a new Quat.
    *
-   * @param {Quat} other - The other Quat to subtract.
-   * @return {Quat} - Returns a new Quat.
+   * @param other - The other Quat to subtract.
+   * @return - Returns a new Quat.
    */
   subtract(other: Quat): Quat {
     return new Quat(this.x - other.x, this.y - other.y, this.z - other.z, this.w - other.w)
@@ -558,8 +546,8 @@ class Quat {
   /**
    * Scales this Quat by scalar and returns the result as a new Quat.
    *
-   * @param {number} scalar - The scalar value.
-   * @return {Quat} - Returns a new Vec3.
+   * @param scalar - The scalar value.
+   * @return - Returns a new Vec3.
    */
   scale(scalar: number): Quat {
     return new Quat(this.x * scalar, this.y * scalar, this.z * scalar, this.w * scalar)
@@ -568,7 +556,7 @@ class Quat {
   /**
    * Scales this Quat by scalar.
    *
-   * @param {number} scalar - The scalar value.
+   * @param scalar - The scalar value.
    */
   scaleInPlace(scalar: number): void {
     this.x *= scalar
@@ -580,7 +568,7 @@ class Quat {
   /**
    * Calculates the length of this Quat.
    *
-   * @return {number} - Returns the length.
+   * @return - Returns the length.
    */
   length(): number {
     const x = this.__data[0]
@@ -593,7 +581,7 @@ class Quat {
   /**
    * Calculates the squared length of this Quat.
    *
-   * @return {number} - Returns the length.
+   * @return - Returns the length.
    */
   lengthSquared(): number {
     const x = this.__data[0]
@@ -606,7 +594,7 @@ class Quat {
   /**
    * Normalizes the Quat and returns it as a new Quat.
    *
-   * @return {Quat} - Returns the Quat normalized.
+   * @return - Returns the Quat normalized.
    */
   normalize(): Quat {
     const x = this.__data[0]
@@ -642,8 +630,8 @@ class Quat {
   /**
    * Calculates the dot product of this quat against another.
    *
-   * @param {Quat} other - The other Quat to compare with.
-   * @return {number} - Returns the dot product.
+   * @param other - The other Quat to compare with.
+   * @return - Returns the dot product.
    */
   dot(other: Quat): number {
     return this.x * other.x + this.y * other.y + this.z * other.z + this.w * other.w
@@ -652,8 +640,8 @@ class Quat {
   /**
    * Calculates the cross product of two Quats and returns the result as a new Quat.
    *
-   * @param {Quat} other - The other Quat to calculate with.
-   * @return {Quat} - Returns the cross product as a new Quat.
+   * @param other - The other Quat to calculate with.
+   * @return - Returns the cross product as a new Quat.
    */
   cross(other: Quat): Quat {
     const ax = this.x
@@ -673,7 +661,7 @@ class Quat {
    * Conjugation represents the same rotation of the Quat but
    * in the opposite direction around the rotational axis.
    *
-   * @return {Quat} - the return value.
+   * @return - the return value.
    */
   conjugate(): Quat {
     return new Quat(-this.x, -this.y, -this.z, this.w)
@@ -682,7 +670,7 @@ class Quat {
   /**
    * Return the inverse of the `Quat`
    *
-   * @return {Quat} - Returns a new Quat.
+   * @return - Returns a new Quat.
    */
   inverse(): Quat {
     return this.conjugate()
@@ -692,7 +680,7 @@ class Quat {
    * Aligns this quaternion with another one ensuring that the delta between
    * the Quat values is the shortest path over the hyper-sphere.
    *
-   *  @param {Quat} other - The other Quat to divide by.
+   *  @param other - The other Quat to divide by.
    */
   alignWith(other: Quat): void {
     if (this.dot(other) < 0.0) {
@@ -703,8 +691,8 @@ class Quat {
   /**
    * Multiplies two this quat by another returning the result as a new Quat.
    *
-   * @param {Quat} other - The other Quat to multiply.
-   * @return {Quat} - Returns a new Quat.
+   * @param other - The other Quat to multiply.
+   * @return - Returns a new Quat.
    */
   multiply(other: Quat): Quat {
     const ax = this.__data[0]
@@ -727,7 +715,7 @@ class Quat {
   /**
    * Multiplies this quat by another, modifying its values in place.
    *
-   * @param {Quat} other - The other Quat to multiply.
+   * @param other - The other Quat to multiply.
    */
   multiplyInPlace(other: Quat): void {
     const ax = this.__data[0]
@@ -752,8 +740,8 @@ class Quat {
    * Don't forget to normalize the quaternion unless
    * you want axial translation as well as rotation.
    *
-   * @param {Vec3} vec3 - The vec3 value.
-   * @return {Vec3} - Returns a new Vec3.
+   * @param vec3 - The vec3 value.
+   * @return - Returns a new Vec3.
    */
   rotateVec3(vec3: Vec3): Vec3 {
     const vq = new Quat(vec3.x, vec3.y, vec3.z, 0.0)
@@ -764,7 +752,7 @@ class Quat {
   /**
    * Sets this quaternion to a rotation by the given angle about the X axis.
    *
-   * @param {number} rad - Angle (in radians) to rotate.
+   * @param rad - Angle (in radians) to rotate.
    */
   rotateX(rad: number): void {
     rad *= 0.5
@@ -785,7 +773,7 @@ class Quat {
   /**
    * Sets this quaternion to a rotation by the given angle about the Y axis.
    *
-   * @param {number} rad - Angle (in radians) to rotate.
+   * @param rad - Angle (in radians) to rotate.
    */
   rotateY(rad: number): void {
     rad *= 0.5
@@ -806,7 +794,7 @@ class Quat {
   /**
    * Sets this quaternion to a rotation by the given angle about the Z axis.
    *
-   * @param {number} rad - Angle (in radians) to rotate.
+   * @param rad - Angle (in radians) to rotate.
    */
   rotateZ(rad: number): void {
     rad *= 0.5
@@ -827,7 +815,7 @@ class Quat {
   /**
    * Converts this Quat to a Mat3 (a 3x3 matrix).
    *
-   * @return {Mat3} - TReturns a new Mat3.
+   * @return - TReturns a new Mat3.
    */
   toMat3(): Mat3 {
     const x = this.x
@@ -866,7 +854,7 @@ class Quat {
   /**
    * Calculates a Vec3 value aligned with the X axis of this quaternion.
    *
-   * @return {Vec3} - The resulting Vec3 value
+   * @return - The resulting Vec3 value
    */
   getXaxis(): Vec3 {
     const xy = this.x * this.y
@@ -882,7 +870,7 @@ class Quat {
   /**
    * Calculates a Vec3 value aligned with the Y axis of this quaternion.
    *
-   * @return {Vec3} - The resulting Vec3 value
+   * @return - The resulting Vec3 value
    */
   getYaxis(): Vec3 {
     const xx = this.x * this.x
@@ -898,7 +886,7 @@ class Quat {
   /**
    * Calculates a Vec3 value aligned with the Z axis of this quaternion.
    *
-   * @return {Vec3} - The resulting Vec3 value
+   * @return - The resulting Vec3 value
    */
   getZaxis(): Vec3 {
     const xx = this.x * this.x
@@ -916,8 +904,8 @@ class Quat {
   /**
    * Reflects this quaternion according to the axis provided.
    *
-   * @param {number} axisIndex - An integer with value of 0 for the X axis, 1 for the Y axis, and 2 for the Z axis.
-   * @return {Quat} - Returns a new Quat.
+   * @param axisIndex - An integer with value of 0 for the X axis, 1 for the Y axis, and 2 for the Z axis.
+   * @return - Returns a new Quat.
    */
   mirror(axisIndex: number): Quat {
     switch (axisIndex) {
@@ -936,7 +924,7 @@ class Quat {
   /**
    * Converts this Quat to a Mat4 (a 4x4 matrix).
    *
-   * @return {Mat4} - Returns a new Mat4.
+   * @return - Returns a new Mat4.
    */
   toMat4(): Mat4 {
     const x = this.x
@@ -976,9 +964,9 @@ class Quat {
   /**
    * Performs a linear interpolation of this Quat towards another Quat, returning the result as a new Quat.
    *
-   * @param {Quat} other  - The other Quat to interpolate towards.
-   * @param {number} t - Interpolation amount between the two inputs.
-   * @return {Quat} - Returns a new Quat.
+   * @param other  - The other Quat to interpolate towards.
+   * @param t - Interpolation amount between the two inputs.
+   * @return - Returns a new Quat.
    */
   lerp(other: Quat, t: number): Quat {
     const result = new Quat(
@@ -994,9 +982,9 @@ class Quat {
   /**
    * Performs a spherical linear interpolation of this Quat towards another Quat, returning the result as a new Quat.
    *
-   * @param {Quat} other - The other Quat to interpolate towards.
-   * @param {number} t - Interpolation amount between the two inputs.
-   * @return {Quat} - Returns a new Quat.
+   * @param other - The other Quat to interpolate towards.
+   * @param t - Interpolation amount between the two inputs.
+   * @return - Returns a new Quat.
    */
   slerp(other: Quat, t: number): Quat {
     /// https://www.lix.polytechnique.fr/~nielsen/WEBvisualcomputing/programs/slerp.cpp
@@ -1028,7 +1016,7 @@ class Quat {
   /**
    * Clones this Quat and returns a new Quat.
    *
-   * @return {Quat} - Returns a new Quat.
+   * @return - Returns a new Quat.
    */
   clone(): Quat {
     return new Quat(this.__data[0], this.__data[1], this.__data[2], this.__data[3])
@@ -1037,7 +1025,7 @@ class Quat {
   /**
    * Returns the type as an array. Often used to pass types to the GPU.
    *
-   * @return {Float32Array} - Returns as an array.
+   * @return - Returns as an array.
    */
   asArray(): Float32Array {
     return this.__data
@@ -1047,23 +1035,33 @@ class Quat {
   // Persistence
 
   /**
+   * Converts this Vec3 to a string in JSON format.
+   *
+   * @return - The return value.
+   */
+  toString() {
+    // eslint-disable-next-line new-cap
+    return StringFunctions.stringifyJSONWithFixedPrecision(this.toJSON())
+  }
+
+  /**
    * The toJSON method encodes this type as a json object for persistence.
    *
-   * @return {Record<string, number>} - The json object.
+   * @return - The json object.
    */
   toJSON(): Record<string, number> {
     return {
       x: this.x,
       y: this.y,
       z: this.z,
-      w: this.w
+      w: this.w,
     }
   }
 
   /**
    * The fromJSON method decodes a json object for this type.
    *
-   * @param {Record<string, number>} j - The json object.
+   * @param j - The json object.
    */
   fromJSON(j: Record<string, number>): void {
     this.__data[0] = j.x
@@ -1076,7 +1074,7 @@ class Quat {
   /**
    * Loads the state of the value from a binary reader.
    *
-   * @param {BinReader} reader - The reader value.
+   * @param reader - The reader value.
    */
   readBinary(reader: BinReader): void {
     this.x = reader.loadFloat32()

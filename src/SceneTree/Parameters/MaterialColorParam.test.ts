@@ -7,7 +7,7 @@ describe('MaterialColorParam', () => {
   it('has an initial value.', () => {
     const materialParameter = new MaterialColorParam()
 
-    expect(materialParameter.getValue()).toEqual(new Color())
+    expect(materialParameter.value).toEqual(new Color())
   })
 
   it('checks value type.', () => {
@@ -21,7 +21,7 @@ describe('MaterialColorParam', () => {
     const baseImage = new BaseImage('Foo')
     materialParameter.setImage(baseImage)
 
-    expect(materialParameter.getValue()).toEqual(new Color(1.0, 0.0, 0.0))
+    expect(materialParameter.value).toEqual(new Color(1.0, 0.0, 0.0))
     expect(materialParameter.getImage()).toEqual(baseImage)
   })
 
@@ -40,7 +40,7 @@ describe('MaterialColorParam', () => {
     const input = { value: { a: 1, b: 0, g: 0, r: 1 } }
     materialParameter.fromJSON(input)
 
-    expect(materialParameter.getValue()).toEqual(new Color(1.0, 0.0, 0.0))
+    expect(materialParameter.value).toEqual(new Color(1.0, 0.0, 0.0))
   })
 
   /* 
@@ -51,7 +51,7 @@ describe('MaterialColorParam', () => {
     const reader = new BinReader(data.buffer)
     materialParameter.readBinary(reader)
 
-    expect(materialParameter.getValue()).toEqual(15)
+    expect(materialParameter.value).toEqual(15)
   })
 
   it('clones parameter object', () => {

@@ -1,6 +1,8 @@
 import { GLGeom } from './GLGeom'
 import '../../SceneTree/Geometry/Mesh'
 import { Mesh } from '../../SceneTree/Geometry/Mesh'
+import { RenderState } from '../types/renderer'
+import { WebGL12RenderingContext } from '../types/webgl'
 
 /** Class representing a GL mesh.
  * @extends GLGeom
@@ -15,8 +17,8 @@ class GLMesh extends GLGeom {
 
   /**
    * Create a GL mesh.
-   * @param {WebGL12RenderingContext} gl - The webgl rendering context.
-   * @param {Mesh} mesh - The mesh value.
+   * @param gl - The webgl rendering context.
+   * @param mesh - The mesh value.
    */
   constructor(gl: WebGL12RenderingContext, mesh: Mesh) {
     super(gl, mesh)
@@ -73,7 +75,7 @@ class GLMesh extends GLGeom {
       this.__glattrbuffers[attrName] = {
         buffer: attrBuffer,
         dataType: attrData.dataType,
-        normalized: attrData.normalized
+        normalized: attrData.normalized,
       }
 
       if (attrName == 'textureCoords') this.__glattrbuffers['texCoords'] = this.__glattrbuffers['textureCoords']
@@ -82,7 +84,7 @@ class GLMesh extends GLGeom {
 
   /**
    * The updateBuffers method.
-   * @param {Record<any,any>} opts - The options object.
+   * @param opts - The options object.
    */
   updateBuffers(renderstate?: RenderState) {
     const gl = this.__gl
@@ -100,6 +102,7 @@ class GLMesh extends GLGeom {
       gl.bindBuffer(gl.ARRAY_BUFFER, glattr.buffer)
       gl.bufferData(gl.ARRAY_BUFFER, attrData.values, gl.STATIC_DRAW)
     }
+    this.buffersDirty = false
   }
 
   /**
@@ -118,7 +121,7 @@ class GLMesh extends GLGeom {
 
   /**
    * Draw an item to screen.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
+   * @param renderstate - The object tracking the current state of the renderer
    */
   draw(renderstate: RenderState) {
     this.__gl.drawElements(this.__gl.TRIANGLES, this.__numTriIndices, this.__indexDataType, 0)
@@ -126,8 +129,8 @@ class GLMesh extends GLGeom {
 
   /**
    * The drawInstanced method.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
-   * @param {number} instanceCount - The instanceCount value.
+   * @param renderstate - The object tracking the current state of the renderer
+   * @param instanceCount - The instanceCount value.
    */
   drawInstanced(renderstate: RenderState, instanceCount: number) {
     const gl = this.__gl

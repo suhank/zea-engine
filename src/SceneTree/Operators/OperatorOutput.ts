@@ -9,18 +9,18 @@ import { Operator } from './Operator'
 /** Class representing an operator output.
  * @extends EventEmitter
  */
-class OperatorOutput extends EventEmitter {
+abstract class OperatorOutput<T> extends EventEmitter {
   __name: string
   _mode: OperatorOutputMode
   _op: Operator | null = null
-  private _param?: Parameter<unknown> // TODO: (design) I added <unknown> as a type argument here and elsewhere
+  private _param?: Parameter<T>
   _paramBindIndex: number
   detached: boolean
 
   /**
    * Create an operator output.
-   * @param {string} name - The name value.
-   * @param {OperatorOutputMode} operatorOutputMode - The mode which the OperatorOutput uses to bind to its target parameter.
+   * @param name - The name value.
+   * @param operatorOutputMode - The mode which the OperatorOutput uses to bind to its target parameter.
    */
   constructor(name: string, operatorOutputMode = OperatorOutputMode.OP_WRITE) {
     super()
@@ -33,7 +33,7 @@ class OperatorOutput extends EventEmitter {
 
   /**
    * Returns name of the output.
-   * @return {string} - The name string.
+   * @return - The name string.
    */
   getName(): string {
     return this.__name
@@ -41,7 +41,7 @@ class OperatorOutput extends EventEmitter {
 
   /**
    * Sets operator that owns this output. Called by the operator when adding outputs
-   * @param {Operator} op - The operator object.
+   * @param op - The operator object.
    */
   setOperator(op: Operator): void {
     this._op = op
@@ -49,7 +49,7 @@ class OperatorOutput extends EventEmitter {
 
   /**
    * Returns operator that owns this output.
-   * @return {Operator} - The operator object.
+   * @return - The operator object.
    */
   getOperator(): Operator {
     return this._op!
@@ -57,7 +57,7 @@ class OperatorOutput extends EventEmitter {
 
   /**
    * Returns mode that the output writes to be parameter. Must be a number from OperatorOutputMode
-   * @return {OperatorOutputMode} - The mode value.
+   * @return - The mode value.
    */
   getMode(): OperatorOutputMode {
     return this._mode
@@ -65,7 +65,7 @@ class OperatorOutput extends EventEmitter {
 
   /**
    * Returns true if this output is connected to a parameter.
-   * @return {boolean} - The return value.
+   * @return - The return value.
    */
   isConnected(): boolean {
     return this._param != undefined
@@ -73,20 +73,20 @@ class OperatorOutput extends EventEmitter {
 
   /**
    * The getParam method.
-   * @return {Parameter} - The return value.
+   * @return - The return value.
    */
-  getParam(): Parameter<unknown> | undefined {
+  getParam(): Parameter<T> | undefined {
     return this._param
   }
 
   /**
    * Sets the Parameter for this output to write to.
-   * @param {Parameter} param - The param value.
-   * @param {number} index - The index to bind at in the Parameter.
+   * @param param - The param value.
+   * @param index - The index to bind at in the Parameter.
    */
-  setParam(param?: Parameter<unknown>, index = -1): void {
+  setParam(param?: Parameter<T>, index = -1): void {
     if (this._param) {
-      this._param.unbindOperator(this)
+      this._param.unbindOperatorOutput(this)
     }
     this._param = param
     if (this._param) {
@@ -98,7 +98,7 @@ class OperatorOutput extends EventEmitter {
   /**
    * Returns the index of the binding on the parameter of this OperatorOutput
    * up to date.
-   * @return {number} index - The index of the binding on the parameter.
+   * @return index - The index of the binding on the parameter.
    */
   getParamBindIndex(): number {
     return this._paramBindIndex
@@ -107,7 +107,7 @@ class OperatorOutput extends EventEmitter {
   /**
    * If bindings change on a Parameter, it will call this method to ensure the output index is
    * up to date.
-   * @param {number} index - The index of the binding on the parameter.
+   * @param index - The index of the binding on the parameter.
    */
   setParamBindIndex(index: number): void {
     this._paramBindIndex = index
@@ -124,9 +124,9 @@ class OperatorOutput extends EventEmitter {
 
   /**
    * The getValue method.
-   * @return {unknown} - The return value.
+   * @return - The return value.
    */
-  getValue(): unknown {
+  getValue(): T {
     if (this._param) {
       return this._param.getValueFromOp(this._paramBindIndex)
     } else {
@@ -142,21 +142,21 @@ class OperatorOutput extends EventEmitter {
    * 'backPropagateValue' on the Operator to cause the Operator to handle propagating
    * the value to one or more of its inputs.
    * to its inputs.
-   * @param {any} value - The value param.
-   * @return {any} - The modified value.
+   * @param value - The value param.
+   * @return - The modified value.
    */
   backPropagateValue(value: any): any {
-    if (this._param) {
-      value = this._op!.backPropagateValue(value)
+    if (this._op) {
+      value = this._op.backPropagateValue(value)
     }
     return value
   }
 
   /**
    * The setClean method.
-   * @param {unknown} value - The value param.
+   * @param value - The value param.
    */
-  setClean(value: unknown): void {
+  setClean(value: T): void {
     if (this._param) {
       this._param.setCleanFromOp(value, this._paramBindIndex)
     }
@@ -167,22 +167,22 @@ class OperatorOutput extends EventEmitter {
 
   /**
    * The toJSON method encodes this type as a json object for persistence.
-   * @param {Record<string, any>} context - The context value.
-   * @return {{ name: string; paramPath: any; paramBindIndex: number }} - Returns the json object.
+   * @param context - The context value.
+   * @return - Returns the json object.
    */
-  toJSON(context?: Record<string, any>): { name: string; paramPath: any; paramBindIndex: number } {
+  toJSON(context?: Record<string, any>): { name: string; paramPath: string[]; paramBindIndex: number } {
     const paramPath = this._param ? this._param.getPath() : ''
     return {
       name: this.__name,
       paramPath: context && context.makeRelative ? context.makeRelative(paramPath) : paramPath,
-      paramBindIndex: this._paramBindIndex
+      paramBindIndex: this._paramBindIndex,
     }
   }
 
   /**
    * The fromJSON method decodes a json object for this type.
-   * @param {Record<string, any>} j - The json object this item must decode.
-   * @param {Record<string, any>} context - The context value.
+   * @param j - The json object this item must decode.
+   * @param context - The context value.
    */
   fromJSON(j: Record<string, any>, context?: Record<string, any>): void {
     if (j.paramPath) {
@@ -211,7 +211,7 @@ class OperatorOutput extends EventEmitter {
     // Once operators have persistent connections,
     // we will simply uninstall the output from the parameter.
     this.detached = true
-    this._paramBindIndex = this._param ? this._param.unbindOperator(this) : -1
+    this._paramBindIndex = this._param ? this._param.unbindOperatorOutput(this) : -1
   }
 
   /**
@@ -229,10 +229,34 @@ class OperatorOutput extends EventEmitter {
    */
   rebind(): void {
     if (this._param) {
-      this._param.unbindOperator(this)
+      this._param.unbindOperatorOutput(this)
       this._paramBindIndex = this._param.bindOperatorOutput(this)
     }
   }
 }
 
-export { OperatorOutput }
+import { Vec2, Vec3, Vec4, Color, Quat, Xfo, Mat3, Mat4 } from '../../Math'
+class BooleanOperatorOutput extends OperatorOutput<boolean> {}
+class NumberOperatorOutput extends OperatorOutput<number> {}
+class Vec2OperatorOutput extends OperatorOutput<Vec2> {}
+class Vec3OperatorOutput extends OperatorOutput<Vec3> {}
+class Vec4OperatorOutput extends OperatorOutput<Vec4> {}
+class ColorOperatorOutput extends OperatorOutput<Color> {}
+class QuatOperatorOutput extends OperatorOutput<Quat> {}
+class XfoOperatorOutput extends OperatorOutput<Xfo> {}
+class Mat3OperatorOutput extends OperatorOutput<Mat3> {}
+class Mat4OperatorOutput extends OperatorOutput<Mat4> {}
+
+export {
+  OperatorOutput,
+  BooleanOperatorOutput,
+  NumberOperatorOutput,
+  Vec2OperatorOutput,
+  Vec3OperatorOutput,
+  Vec4OperatorOutput,
+  ColorOperatorOutput,
+  QuatOperatorOutput,
+  XfoOperatorOutput,
+  Mat3OperatorOutput,
+  Mat4OperatorOutput,
+}

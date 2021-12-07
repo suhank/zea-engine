@@ -17,7 +17,7 @@ class JsonLoaderPlugin {
 
   /**
    * The type of file this plugin handles.
-   * @return {string} The type of file.
+   * @return The type of file.
    */
   getType() {
     return 'json'
@@ -28,7 +28,7 @@ class JsonLoaderPlugin {
 
     const promise = new Promise(
       (resolve, reject) => {
-        fetch(url).then(response => {
+        fetch(url).then((response) => {
           this.resourceLoader.incrementWorkDone(1)
           if (checkStatus(response)) resolve(response.json())
           else reject(`loadJSON: ${response.status} - ${response.statusText} : ${url}`)

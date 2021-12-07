@@ -1,21 +1,15 @@
-import { MaterialColorParam, MaterialFloatParam, NumberParameter } from '..'
+import { Registry } from '../../Registry'
+import { MaterialColorParam } from '../Parameters/MaterialColorParam'
 import { Color } from '../../Math/Color'
 import { Material } from '../Material'
 
 export class FlatSurfaceMaterial extends Material {
-  constructor() {
-    super('FlatSurfaceShader')
+  baseColorParam: MaterialColorParam = new MaterialColorParam('BaseColor', new Color(1.0, 1, 0.5))
+  constructor(name?: string) {
+    super(name)
     this.__shaderName = 'FlatSurfaceShader'
-    this.addParameter(new MaterialColorParam('BaseColor', new Color(1.0, 1, 0.5)))
-
-    this.__checkTransparency({})
-  }
-
-  get BaseColor(): MaterialColorParam {
-    return <MaterialColorParam>this.getParameter('BaseColor')
-  }
-
-  setShaderName(shaderName: string) {
-    throw ' Cannot change shader name'
+    this.addParameter(this.baseColorParam)
   }
 }
+
+Registry.register('FlatSurfaceMaterial', FlatSurfaceMaterial)

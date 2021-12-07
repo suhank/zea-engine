@@ -12,11 +12,11 @@ import { BaseImage } from '../BaseImage'
  * @extends BaseImage
  */
 class DataImage extends BaseImage {
-  protected __loaded: any
-  protected __data: any
+  protected __loaded: boolean
+  protected __data: Uint8Array | ImageData = new Uint8Array(4)
   /**
    * Create a data image.
-   * @param {string} name - The name value.
+   * @param name - The name value.
    */
   constructor(name?: string) {
     super(name)
@@ -34,36 +34,28 @@ class DataImage extends BaseImage {
 
   /**
    * Returns an indicator of current item's loaded state.
-   * @return {boolean} - `true` if bytes data is fully loaded, `false` otherwise.
+   * @return - `true` if bytes data is fully loaded, `false` otherwise.
    */
-  isLoaded() {
+  isLoaded(): boolean {
     return this.__loaded
   }
 
-  /**
-   * Returns the item's name.
-   *
-   * @return {string} - The return value.
-   */
-  getName() {
-    return this.__name
-  }
-
+  // TODO: video / webcam will return true.
   /**
    * Images are static content, so the value for this method is always going to be `false`
    *
-   * @return {boolean} - The return value.
+   * @return - The return value.
    */
-  isStream() {
+  isStream(): boolean {
     return false
   }
 
   /**
    * Sets Image's data by recieving an bytes array.
    *
-   * @param {number} width - The width value.
-   * @param {number} height - The height value.
-   * @param {Uint8Array} data - The data value.
+   * @param width - The width value.
+   * @param height - The height value.
+   * @param data - The data value.
    */
   setData(width: number, height: number, data: Uint8Array) {
     if (this.__data == data) return
@@ -72,14 +64,14 @@ class DataImage extends BaseImage {
     this.__data = data
     if (!this.__loaded) {
       this.__loaded = true
-      this.emit('loaded', {})
-    } else this.emit('updated', {})
+      this.emit('loaded')
+    } else this.emit('updated')
   }
 
   /**
    * Returns all parameters and class state values(Including data).
    *
-   * @return {Record<string, any>} - The return value.
+   * @return - The return value.
    */
   getParams(): Record<string, any> {
     const params = super.getParams()

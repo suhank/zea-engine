@@ -6,6 +6,7 @@ import './GLSL/index'
 import frag from './ConvolveIrradiance.frag'
 // @ts-ignore
 import vert from './ConvolveIrradiance.vert'
+import { WebGL12RenderingContext } from '../types/webgl'
 
 /** Shader for convolving Environment maps.
  * @extends GLShader
@@ -14,7 +15,7 @@ import vert from './ConvolveIrradiance.vert'
 class ConvolveIrradianceShader extends GLShader {
   /**
    * Create a GL renderer.
-   * @param {WebGL12RenderingContext} gl - The options value.
+   * @param gl - The options value.
    */
   constructor(gl: WebGL12RenderingContext) {
     super(gl, 'ConvolveIrradianceShader')

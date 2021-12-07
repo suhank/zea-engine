@@ -10,12 +10,23 @@
 
     <link rel="stylesheet" href="styles/tailwind.min.css" />
 
-    <script src="../dist/index.umd.development.js"></script>
+    <script src="../dist/index.umd.js"></script>
 
     <script type="module">
-      const { GLRenderer, Scene, Vec3, Xfo, Color, Sphere, Cuboid, Material, GeomItem, GLBoundingBoxPass } = zeaEngine
+      const {
+        GLRenderer,
+        Scene,
+        Vec3,
+        Xfo,
+        Color,
+        Sphere,
+        Cuboid,
+        SimpleSurfaceMaterial,
+        GeomItem,
+        GLBoundingBoxPass,
+      } = zeaEngine
 
-      const canvas = document.querySelector('#renderer')
+      const canvas = document.getElementById('viewport')
 
       const scene = new Scene()
       const renderer = new GLRenderer(canvas, { enableFrustumCulling: true, antialias: false })
@@ -24,7 +35,7 @@
       scene.setupGrid(10.0, 10)
       const beam = new Cuboid(25, 0.5, 0.5)
 
-      const material = new Material('surfaces', 'SimpleSurfaceShader')
+      const material = new SimpleSurfaceMaterial('surfaces')
       let count = 10
       for (let i = 0; i < count; i++) {
         const longGeom = new GeomItem(
@@ -39,17 +50,17 @@
       const camera = renderer.getViewport().getCamera()
       camera.setPositionAndTarget(new Vec3(15.8556, 13.39021, 0.92746), new Vec3(5.19458, -3.34824, -0.09665))
       // renderer.getViewport().on('viewChanged', (event) => {
-      //   console.log(camera.getParameter('GlobalXfo').getValue().toString(), camera.getTargetPosition().toString())
+      //   console.log(camera.globalXfoParam.getValue().toString(), camera.getTargetPosition().toString())
       // })
 
-      const postMessage = msg => {
+      const postMessage = (msg) => {
         console.log(msg)
         window.postMessage(msg)
       }
       postMessage('done-loading')
 
       // {{{ Messages handler.
-      const handleMessage = event => {
+      const handleMessage = (event) => {
         const { data } = event
         if (data === 'variant-01') {
           camera.setPositionAndTarget(new Vec3(14.15735, 14.55242, -0.38921), new Vec3(3.49633, -2.18602, -1.41332))
@@ -65,7 +76,7 @@
   </head>
   <body class="bg-blue-100">
     <div class="h-screen">
-      <canvas class="absolute" id="renderer"></canvas>
+      <canvas id="viewport"></canvas>
     </div>
   </body>
 </html>

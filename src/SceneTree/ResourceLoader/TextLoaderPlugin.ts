@@ -17,7 +17,7 @@ class TextLoaderPlugin {
 
   /**
    * The type of file this plugin handles.
-   * @return {string} The type of file.
+   * @return The type of file.
    */
   getType() {
     return 'text'
@@ -26,15 +26,13 @@ class TextLoaderPlugin {
   loadFile(url: string) {
     this.resourceLoader.incrementWorkload(1)
 
-    const promise = new Promise(
-      (resolve, reject) => {
-        fetch(url).then((response) => {
-          this.resourceLoader.incrementWorkDone(1)
-          if (checkStatus(response)) resolve(response.text())
-          else reject(`loadText: ${response.status} - ${response.statusText} : ${url}`)
-        })
-      },
-    )
+    const promise = new Promise((resolve, reject) => {
+      fetch(url).then((response) => {
+        this.resourceLoader.incrementWorkDone(1)
+        if (checkStatus(response)) resolve(response.text())
+        else reject(`loadText: ${response.status} - ${response.statusText} : ${url}`)
+      })
+    })
 
     return promise
   }

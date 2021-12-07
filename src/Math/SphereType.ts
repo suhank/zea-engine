@@ -13,8 +13,8 @@ class SphereType {
 
   /**
    * Create a sphere.
-   * @param {Vec3} pos - The position of the sphere.
-   * @param {number} radius - The radius of the sphere.
+   * @param pos - The position of the sphere.
+   * @param radius - The radius of the sphere.
    */
   constructor(pos = new Vec3(), radius = 0) {
     if (pos instanceof Vec3) {
@@ -28,7 +28,7 @@ class SphereType {
   /**
    * Clones this sphere and returns a new sphere.
    *
-   * @return {SphereType } - Returns a new sphere.
+   * @return - Returns a new sphere.
    */
   clone(): SphereType {
     return new SphereType(this.pos.clone(), this.radius)
@@ -37,8 +37,8 @@ class SphereType {
   /**
    * Checks if this sphere intersects a box.
    *
-   * @param {Box3} box - The box value.
-   * @return {boolean} - The return value.
+   * @param box - The box value.
+   * @return - The return value.
    */
   intersectsBox(box: Box3): boolean {
     return box.intersectsSphere(this)
@@ -50,7 +50,7 @@ class SphereType {
   /**
    * The toJSON method encodes this type as a json object for persistence.
    *
-   * @return {Record<string, number | Record<string, number>>} - The json object.
+   * @return - The json object.
    */
   toJSON(): Record<string, number | Record<string, number>> {
     return {
@@ -62,7 +62,7 @@ class SphereType {
   /**
    * Calls `toJSON` method and stringifies it.
    *
-   * @return {string} - The return value.
+   * @return - The return value.
    */
   toString(): string {
     return StringFunctions.stringifyJSONWithFixedPrecision(this.toJSON())

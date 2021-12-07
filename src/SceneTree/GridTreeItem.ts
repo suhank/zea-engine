@@ -15,13 +15,12 @@ import { Vec3Attribute } from './Geometry/Vec3Attribute'
  * @extends {TreeItem}
  */
 class GridTreeItem extends TreeItem {
-  disableBoundingBox: boolean
   /**
    * Creates an instance of GridTree.
    *
-   * @param {number} [gridSize=5]
-   * @param {number} [resolution=50]
-   * @param {Color} [gridColor=new Color('#DCDCDC')]
+   * @param gridSize
+   * @param resolution
+   * @param gridColor
    */
   constructor(gridSize = 5, resolution = 50, gridColor = new Color('#DCDCDC')) {
     super('GridTree')
@@ -30,10 +29,10 @@ class GridTreeItem extends TreeItem {
     this.setSelectable(false)
 
     const gridMaterial = new Material('gridMaterial', 'LinesShader')
-    gridMaterial.getParameter('BaseColor')!.setValue(gridColor)
-    gridMaterial.getParameter('Overlay')!.setValue(0.0)
-    gridMaterial.getParameter('StippleValue')!.setValue(0)
-    gridMaterial.getParameter('OccludedStippleValue')!.setValue(1)
+    gridMaterial.getParameter('BaseColor')!.value = gridColor
+    gridMaterial.getParameter('Overlay')!.value = 0.0
+    gridMaterial.getParameter('StippleValue')!.value = 0
+    gridMaterial.getParameter('OccludedStippleValue')!.value = 1
 
     const grid = new Grid(gridSize, gridSize, resolution, resolution, true)
     const gridItem = new GeomItem('GridItem', grid, gridMaterial)
@@ -48,19 +47,19 @@ class GridTreeItem extends TreeItem {
     positions.getValueRef(1).set(gridSize * 0.5, 0.0, 0.0)
 
     const gridXAxisMaterial = new Material('gridXAxisMaterial', 'LinesShader')
-    gridXAxisMaterial.getParameter('BaseColor')!.setValue(new Color(gridColor.luminance(), 0, 0))
-    gridXAxisMaterial.getParameter('Overlay')!.setValue(0.0)
-    gridXAxisMaterial.getParameter('StippleValue')!.setValue(0)
-    gridXAxisMaterial.getParameter('OccludedStippleValue')!.setValue(1)
+    gridXAxisMaterial.getParameter('BaseColor')!.value = new Color(gridColor.luminance(), 0, 0)
+    gridXAxisMaterial.getParameter('Overlay')!.value = 0.0
+    gridXAxisMaterial.getParameter('StippleValue')!.value = 0
+    gridXAxisMaterial.getParameter('OccludedStippleValue')!.value = 1
     const gridXAxis = new GeomItem('xAxisLine', axisLine, gridXAxisMaterial)
     gridXAxis.setSelectable(false)
     this.addChild(gridXAxis, false)
 
     const gridYAxisMaterial = new Material('gridYAxisMaterial', 'LinesShader')
-    gridYAxisMaterial.getParameter('BaseColor')!.setValue(new Color(0, gridColor.luminance(), 0))
-    gridYAxisMaterial.getParameter('Overlay')!.setValue(0.0)
-    gridYAxisMaterial.getParameter('StippleValue')!.setValue(0)
-    gridYAxisMaterial.getParameter('OccludedStippleValue')!.setValue(1)
+    gridYAxisMaterial.getParameter('BaseColor')!.value = new Color(0, gridColor.luminance(), 0)
+    gridYAxisMaterial.getParameter('Overlay')!.value = 0.0
+    gridYAxisMaterial.getParameter('StippleValue')!.value = 0
+    gridYAxisMaterial.getParameter('OccludedStippleValue')!.value = 1
     gridYAxisMaterial.setSelectable(false)
 
     const zAxisLineItem = new GeomItem('yAxisLine', axisLine, gridYAxisMaterial)
@@ -68,18 +67,18 @@ class GridTreeItem extends TreeItem {
 
     const geomOffset = new Xfo()
     geomOffset.ori.setFromAxisAndAngle(new Vec3(0, 0, 1), Math.PI * 0.5)
-    zAxisLineItem.setGeomOffsetXfo(geomOffset)
+    zAxisLineItem.geomOffsetXfoParam.value = geomOffset
     this.addChild(zAxisLineItem, false)
 
-    const bBox = this._cleanBoundingBox(this.__boundingBoxParam.getValue())
-    this.__boundingBoxParam.setValue(bBox)
+    const bBox = this._cleanBoundingBox(this.boundingBoxParam.value)
+    this.boundingBoxParam.value = bBox
   }
 
   /**
    *
    * @private
-   * @param {Box3} bBox
-   * @return {Box3} - Reset Bounding Box
+   * @param bBox
+   * @return - Reset Bounding Box
    */
   _cleanBoundingBox(bBox: Box3) {
     bBox.reset()

@@ -3,9 +3,15 @@ import { Vec2, Vec3, Quat, Xfo, Ray } from '../../Math/index'
 import { BaseTool } from './BaseTool'
 import { NumberParameter, BooleanParameter, Parameter } from '../Parameters/index'
 import { SystemDesc } from '../../SystemDesc'
-import { POINTER_TYPES } from '../../Utilities/EnumUtils'
 import { PassType } from '../../Renderer/Passes/GLPass'
 import { Camera } from '../Camera'
+import { GLViewport } from '../..'
+import { ZeaPointerEvent, POINTER_TYPES } from '../../Utilities/Events/ZeaPointerEvent'
+import { ZeaMouseEvent } from '../../Utilities/Events/ZeaMouseEvent'
+import { ZeaWheelEvent } from '../../Utilities/Events/ZeaWheelEvent'
+import { Touch, ZeaTouchEvent } from '../../Utilities/Events/ZeaTouchEvent'
+import { KeyboardEvent } from '../../Utilities/Events/KeyboardEvent'
+import { BaseEvent } from '../../Utilities/BaseEvent'
 
 const MANIPULATION_MODES: { [key: string]: number } = {
   pan: 0,
@@ -14,7 +20,12 @@ const MANIPULATION_MODES: { [key: string]: number } = {
   look: 3,
   turntable: 4,
   tumbler: 5,
-  trackball: 6
+  trackball: 6,
+}
+
+interface OngoingTouch {
+  identifier: number
+  pos: Vec2
 }
 
 /**
@@ -95,10 +106,7 @@ class CameraManipulator extends BaseTool {
   protected __keysPressed: any[]
   protected __velocity: Vec3
   protected __prevVelocityIntegrationTime: number
-  protected __ongoingTouches: Record<string, any>
-  protected __orbitRateParam: Parameter<number>
-  protected __dollySpeedParam: Parameter<number>
-  protected __mouseWheelDollySpeedParam: Parameter<number>
+  protected __ongoingTouches: Record<string, OngoingTouch>
 
   protected __orbitTarget: any
   protected prevCursor: any
@@ -109,9 +117,40 @@ class CameraManipulator extends BaseTool {
 
   protected __mouseWheelZoomCount: number = 0
   protected __mouseWheelZoomId: number = -1
+
+  /**
+   * @member orbitRateParam - The rate at which mouse or touch interactions are translated camera orientation changes.
+   */
+  orbitRateParam: NumberParameter = new NumberParameter('OrbitRate', SystemDesc.isMobileDevice ? 0.5 : 1)
+
+  /**
+   * @member dollySpeedParam - The rate at which the mouse button or touch interactions are translated camera dolly movement.
+   */
+  dollySpeedParam: NumberParameter = new NumberParameter('DollySpeed', 0.02)
+
+  /**
+   * @member mouseWheelDollySpeedParam - The rate at which the mouse wheel interactions are translated camera dolly movement.
+   */
+  mouseWheelDollySpeedParam: NumberParameter = new NumberParameter('MouseWheelDollySpeed', 0.1)
+
+  /**
+   * @member orbitAroundCursor - TODO
+   */
+  orbitAroundCursor: BooleanParameter = new BooleanParameter('OrbitAroundCursor', true)
+
+  /**
+   * @member walkSpeedParam - TODO
+   */
+  walkSpeedParam: NumberParameter = new NumberParameter('WalkSpeed', 5) // Value is in meters/second
+
+  /**
+   * @member walkModeCollisionDetection - TODO
+   */
+  walkModeCollisionDetection: BooleanParameter = new BooleanParameter('WalkModeCollisionDetection', false)
+
   /**
    * Create a camera, mouse and keyboard
-   * @param {Record<any,any>} appData - The object containing the scene and the renderer.
+   * @param appData - The object containing the scene and the renderer.
    */
   constructor(appData: Record<string, any>) {
     super()
@@ -132,16 +171,12 @@ class CameraManipulator extends BaseTool {
     this.__prevVelocityIntegrationTime = -1
     this.__ongoingTouches = {}
 
-    this.__orbitRateParam = this.addParameter(new NumberParameter('OrbitRate', SystemDesc.isMobileDevice ? 0.5 : 1))
-    this.__dollySpeedParam = this.addParameter(new NumberParameter('DollySpeed', 0.02))
-    this.addParameter(new BooleanParameter('OrbitAroundCursor', true))
-    this.__mouseWheelDollySpeedParam = this.addParameter(new NumberParameter('MouseWheelDollySpeed', 0.1))
-    this.addParameter(new NumberParameter('WalkSpeed', 5)) // Value is in meters/second
-    this.addParameter(new BooleanParameter('WalkModeCollisionDetection', false))
-
-    this.addParameterDeprecationMapping('orbitRate', 'OrbitRate')
-    this.addParameterDeprecationMapping('dollySpeed', 'DollySpeed')
-    this.addParameterDeprecationMapping('mouseWheelDollySpeed', 'MouseWheelDollySpeed')
+    this.addParameter(this.orbitRateParam)
+    this.addParameter(this.dollySpeedParam)
+    this.addParameter(this.mouseWheelDollySpeedParam)
+    this.addParameter(this.orbitAroundCursor)
+    this.addParameter(this.walkSpeedParam)
+    this.addParameter(this.walkModeCollisionDetection)
   }
 
   /**
@@ -169,9 +204,9 @@ class CameraManipulator extends BaseTool {
    * Sets default manipulation mode.
    * The value can be on of the keys in #CameraManipulator.MANIPULATION_MODES
    *
-   * @param {string} manipulationMode - The manipulation mode value.
+   * @param manipulationMode - The manipulation mode value.
    */
-  setDefaultManipulationMode(manipulationMode: string) {
+  setDefaultManipulationMode(manipulationMode: string | number) {
     if (typeof manipulationMode == 'string') {
       this.__defaultManipulationState = MANIPULATION_MODES[manipulationMode]
     } else this.__defaultManipulationState = manipulationMode
@@ -183,16 +218,16 @@ class CameraManipulator extends BaseTool {
 
   /**
    * The look method.
-   * @param {MouseEvent} event - The event value.
-   * @param {Vec2} dragVec - The drag vector value.
+   * @param event - The event value.
+   * @param dragVec - The drag vector value.
    */
   look(event: Record<string, any>, dragVec: Vec2) {
     const { viewport } = event
     const camera = viewport.getCamera()
 
-    const orbitRate = this.__orbitRateParam.getValue()
+    const orbitRate = this.orbitRateParam.value
 
-    const globalXfo = camera.getParameter('GlobalXfo')!.getValue()
+    const globalXfo = camera.globalXfoParam.value
 
     // Orbit
     const orbit = new Quat()
@@ -204,22 +239,22 @@ class CameraManipulator extends BaseTool {
     pitch.rotateX((dragVec.y / viewport.getHeight()) * Math.PI * orbitRate)
     globalXfo.ori.multiplyInPlace(pitch)
 
-    camera.getParameter('GlobalXfo').setValue(globalXfo)
+    camera.globalXfoParam.value = globalXfo
   }
 
   /**
    * Rotates viewport camera about the target.
    *
-   * @param {MouseEvent} event - The event value.
-   * @param {Vec2} dragVec - The drag vector value.
+   * @param event - The event value.
+   * @param dragVec - The drag vector value.
    */
   turntable(event: Record<string, any>, dragVec: Vec2) {
     const { viewport } = event
     const camera = viewport.getCamera()
 
-    const orbitRate = this.__orbitRateParam.getValue()
+    const orbitRate = this.orbitRateParam.value
 
-    const globalXfo = camera.getParameter('GlobalXfo')!.getValue()
+    const globalXfo = camera.globalXfoParam.value
     const cameraTargetOffset = globalXfo.ori.inverse().rotateVec3(globalXfo.tr.subtract(this.__orbitTarget))
 
     // Orbit
@@ -234,21 +269,21 @@ class CameraManipulator extends BaseTool {
 
     globalXfo.tr = this.__orbitTarget.add(globalXfo.ori.rotateVec3(cameraTargetOffset))
 
-    camera.getParameter('GlobalXfo').setValue(globalXfo)
+    camera.globalXfoParam.value = globalXfo
   }
 
   /**
    * Rotates viewport camera about the target.
    *
-   * @param {MouseEvent} event - The event value.
-   * @param {Vec2} dragVec - The drag vector value.
+   * @param event - The event value.
+   * @param dragVec - The drag vector value.
    */
   tumbler(event: Record<string, any>, dragVec: Vec2) {
     const { viewport } = event
     const camera = viewport.getCamera()
-    const orbitRate = this.__orbitRateParam.getValue()
+    const orbitRate = this.orbitRateParam.value
 
-    const globalXfo = camera.getParameter('GlobalXfo')!.getValue()
+    const globalXfo = camera.globalXfoParam.value
     const xVec = globalXfo.ori.getXaxis()
     const yVec = globalXfo.ori.getYaxis()
     const zVec = globalXfo.ori.getZaxis()
@@ -266,21 +301,21 @@ class CameraManipulator extends BaseTool {
 
     globalXfo.tr = this.__orbitTarget.add(globalXfo.ori.rotateVec3(cameraTargetOffset))
 
-    camera.getParameter('GlobalXfo').setValue(globalXfo)
+    camera.globalXfoParam.value = globalXfo
   }
 
   /**
    * Rotates viewport camera about the target.
    *
-   * @param {MouseEvent} event - The event value.
-   * @param {Vec2} dragVec - The drag vector value.
+   * @param event - The event value.
+   * @param dragVec - The drag vector value.
    */
   trackball(event: Record<string, any>, dragVec: Vec2) {
     const { viewport } = event
     const camera = viewport.getCamera()
-    const orbitRate = this.__orbitRateParam.getValue()
+    const orbitRate = this.orbitRateParam.value
 
-    const globalXfo = camera.getParameter('GlobalXfo')!.getValue()
+    const globalXfo = camera.globalXfoParam.value
     const xVec = globalXfo.ori.getXaxis()
     const yVec = globalXfo.ori.getYaxis()
     const zVec = globalXfo.ori.getZaxis()
@@ -299,14 +334,14 @@ class CameraManipulator extends BaseTool {
 
     globalXfo.tr = this.__orbitTarget.add(globalXfo.ori.rotateVec3(cameraTargetOffset))
 
-    camera.getParameter('GlobalXfo').setValue(globalXfo)
+    camera.globalXfoParam.value = globalXfo
   }
 
   /**
    * Rotates the camera around its own `X`,`Y` axes.
    *
-   * @param {MouseEvent} event - The event value.
-   * @param {Vec2} dragVec - The drag vector value.
+   * @param event - The event value.
+   * @param dragVec - The drag vector value.
    */
   pan(event: Record<string, any>, dragVec: Vec2) {
     const { viewport } = event
@@ -332,14 +367,14 @@ class CameraManipulator extends BaseTool {
       delta.tr.addInPlace(yAxis.scale((dragVec.y / viewport.getHeight()) * cameraPlaneHeight))
     }
 
-    const cameraXfo = camera.getParameter('GlobalXfo')!.getValue()
-    camera.getParameter('GlobalXfo').setValue(cameraXfo.multiply(delta))
+    const cameraXfo = camera.globalXfoParam.value
+    camera.globalXfoParam.value = cameraXfo.multiply(delta)
   }
 
   /**
    * The dolly method.
-   * @param {MouseEvent} event - The event value.
-   * @param {Vec2} dragVec - The drag vector value.
+   * @param event - The event value.
+   * @param dragVec - The drag vector value.
    */
   dolly(event: Record<string, any>, dragVec: Vec2) {
     const { viewport } = event
@@ -347,14 +382,14 @@ class CameraManipulator extends BaseTool {
     const focalDistance = camera.getFocalDistance()
 
     const applyMovement = () => {
-      const dollyDist = dragVec.y * this.__dollySpeedParam.getValue() * focalDistance
+      const dollyDist = dragVec.y * this.dollySpeedParam.value * focalDistance
       const delta = new Xfo()
       delta.tr.set(0, 0, dollyDist)
-      const globalXfo = camera.getParameter('GlobalXfo')!.getValue()
-      camera.getParameter('GlobalXfo').setValue(globalXfo.multiply(delta))
+      const globalXfo = camera.globalXfoParam.value
+      camera.globalXfoParam.value = globalXfo.multiply(delta)
     }
     const applyViewScale = () => {
-      const dollyDist = dragVec.y * this.__dollySpeedParam.getValue()
+      const dollyDist = dragVec.y * this.dollySpeedParam.value
       const viewHeight = camera.getFrustumHeight()
       const zoomDist = viewHeight * dollyDist
       camera.setFrustumHeight(viewHeight + zoomDist)
@@ -371,7 +406,7 @@ class CameraManipulator extends BaseTool {
    * The initDrag method.
    *
    * @private
-   * @param {PointerEvent} event - The event value.
+   * @param event - The event value.
    */
   initDrag(event: Record<string, any>) {
     const { pointerPos } = event
@@ -381,8 +416,8 @@ class CameraManipulator extends BaseTool {
 
     const { viewport } = event
     const camera = viewport.getCamera()
-    const xfo = camera.getParameter('GlobalXfo')!.getValue()
-    const orbitAroundCursor = this.getParameter('OrbitAroundCursor')!.getValue()
+    const xfo = camera.globalXfoParam.value
+    const orbitAroundCursor = this.orbitAroundCursor.value
     if (event.intersectionData != undefined && orbitAroundCursor) {
       this.__orbitTarget = event.intersectionData.intersectionPos
       const vec = xfo.inverse().transformVec3(event.intersectionData.intersectionPos)
@@ -399,7 +434,7 @@ class CameraManipulator extends BaseTool {
    * The initDrag method.
    *
    * @private
-   * @param {MouseEvent} event - The event value.
+   * @param event - The event value.
    */
   endDrag(event: Record<string, any>) {
     if (event.getCapture() == this) event.releaseCapture()
@@ -411,10 +446,10 @@ class CameraManipulator extends BaseTool {
    * The aimFocus method.
    *
    * @private
-   * @param {Camera} camera - The camera that we are aiming
-   * @param {Vec3} target - The target to focus on.
-   * @param {Number} distance - The distance from the target to get to.
-   * @param {Number} duration - The duration in milliseconds to aim the focus.
+   * @param camera - The camera that we are aiming
+   * @param target - The target to focus on.
+   * @param distance - The distance from the target to get to.
+   * @param duration - The duration in milliseconds to aim the focus.
    */
   aimFocus(camera: Camera, target: Vec3, distance: number = -1, duration: number = 400) {
     if (this.__focusIntervalId) clearInterval(this.__focusIntervalId)
@@ -423,7 +458,7 @@ class CameraManipulator extends BaseTool {
     const initalMode = this.__manipulationState
     let i = 0
     const applyMovement = () => {
-      const prevGlobalXfo = camera.getParameter('GlobalXfo')!.getValue()
+      const prevGlobalXfo = camera.globalXfoParam.value
       const initialDist = camera.getFocalDistance()
       const dir = target.subtract(prevGlobalXfo.tr)
       const currDist = <number>dir.normalizeInPlace()
@@ -489,7 +524,7 @@ class CameraManipulator extends BaseTool {
       }
 
       camera.setFocalDistance(initialDist + (currDist - initialDist) * t)
-      camera.getParameter('GlobalXfo')!.setValue(globalXfo)
+      camera.globalXfoParam.value = globalXfo
 
       i++
       if (i <= count) {
@@ -497,8 +532,8 @@ class CameraManipulator extends BaseTool {
       } else {
         this.__focusIntervalId = undefined
 
-        this.emit('movementFinished', {})
-        camera.emit('movementFinished', {})
+        this.emit('movementFinished')
+        camera.emit('movementFinished')
       }
     }
     applyMovement()
@@ -508,11 +543,11 @@ class CameraManipulator extends BaseTool {
    * The orientPointOfView method.
    *
    * @private
-   * @param {Camera} camera - The camera that we are orienting
-   * @param {Vec3} position - The target to focus on.
-   * @param {Vec3} target - The target to focus on.
-   * @param {number} distance - The distance to the specified we want the user to be moved to
-   * @param {number} duration - The duration in milliseconds to aim the focus.
+   * @param camera - The camera that we are orienting
+   * @param position - The target to focus on.
+   * @param target - The target to focus on.
+   * @param distance - The distance to the specified we want the user to be moved to
+   * @param duration - The duration in milliseconds to aim the focus.
    */
   orientPointOfView(camera: Camera, position: Vec3, target: Vec3, distance: number = 0, duration: number = 400) {
     if (this.__focusIntervalId) clearInterval(this.__focusIntervalId)
@@ -520,7 +555,7 @@ class CameraManipulator extends BaseTool {
     const count = Math.round(duration / 20) // each step is 20ms
     let i = 0
     const applyMovement = () => {
-      const initialGlobalXfo = camera.getParameter('GlobalXfo')!.getValue()
+      const initialGlobalXfo = camera.globalXfoParam.value
       const initialTarget = camera.getTargetPosition()
 
       // With each iteration we get closer to our goal
@@ -554,27 +589,34 @@ class CameraManipulator extends BaseTool {
   /**
    * Invoked when a user double presses a pointer over an element.
    *
-   * @param {MouseEvent|TouchEvent} event - The pointer event that occurs
+   * @param event - The pointer event that occurs
    * @memberof CameraManipulator
    */
-  onPointerDoublePress(event: Record<string, any>) {
+  onPointerDoublePress(event: ZeaPointerEvent) {
+    const aimFocus = (pointerRay: Ray) => {
+      const viewport = <GLViewport>event.viewport
+      const camera = viewport.getCamera()
+      const cameraGlobalXfo = camera.globalXfoParam.value
+      const aimTarget = cameraGlobalXfo.tr.add(pointerRay.dir.scale(event.intersectionData.dist))
+      this.aimFocus(camera, aimTarget)
+      // Note: Collab can use these mouseEvents to guide users attention.
+      // @ts-ignore
+      event.aimTarget = aimTarget
+      // @ts-ignore
+      event.aimDistance = event.intersectionData.dist
+      this.emit('aimingFocus', event)
+      camera.emit('aimingFocus', event)
+      event.stopPropagation()
+    }
     if (event.intersectionData && this.aimFocusOnMouseClick) {
-      if (
-        (event.pointerType === POINTER_TYPES.mouse && this.aimFocusOnMouseClick == 2) ||
-        (event.pointerType === POINTER_TYPES.touch && this.aimFocusOnTouchTap == 2)
-      ) {
-        const { viewport } = event
-        const camera = viewport.getCamera()
-        const cameraGlobalXfo = camera.getParameter('GlobalXfo')!.getValue()
-        const aimTarget = cameraGlobalXfo.tr.add(event.pointerRay.dir.scale(event.intersectionData.dist))
-        this.aimFocus(camera, aimTarget)
-        // Note: Collab can use these events to guide users attention.
-        event.aimTarget = aimTarget
-        event.aimDistance = event.intersectionData.dist
-        this.emit('aimingFocus', event)
-        camera.emit('aimingFocus', event)
-        event.stopPropagation()
-        event.preventDefault()
+      if (event.pointerType === POINTER_TYPES.mouse && this.aimFocusOnMouseClick == 2) {
+        const mouseEvent = <ZeaMouseEvent>event
+        aimFocus(mouseEvent.pointerRay)
+        mouseEvent.preventDefault()
+      }
+      if (event.pointerType === POINTER_TYPES.touch && this.aimFocusOnTouchTap == 2) {
+        const pointerEvent = <ZeaTouchEvent>event
+        aimFocus(pointerEvent.pointerRay)
       }
     }
   }
@@ -582,9 +624,9 @@ class CameraManipulator extends BaseTool {
   /**
    * Event fired when either the mouse button is pressed, or a touch start event occurs.
    *
-   * @param {PointerEvent} event - The mouse event that occurs.
+   * @param event - The mouse event that occurs.
    */
-  onPointerDown(event: Record<string, any>) {
+  onPointerDown(event: ZeaPointerEvent) {
     if (event.pointerType === POINTER_TYPES.mouse) {
       if (this.__dragging == 1) {
         this.endDrag(event)
@@ -592,45 +634,45 @@ class CameraManipulator extends BaseTool {
 
       this.initDrag(event)
 
-      if (event.button == 2) {
+      const mouseEvent = <ZeaMouseEvent>event
+      if (mouseEvent.button == 2) {
         this.__manipulationState = MANIPULATION_MODES.pan
-      } else if (event.ctrlKey && event.altKey) {
+      } else if (mouseEvent.ctrlKey && mouseEvent.altKey) {
         this.__manipulationState = MANIPULATION_MODES.dolly
-      } else if (event.ctrlKey || event.button == 2) {
+      } else if (mouseEvent.ctrlKey || mouseEvent.button == 2) {
         this.__manipulationState = MANIPULATION_MODES.look
       } else {
         this.__manipulationState = this.__defaultManipulationState
       }
+      mouseEvent.preventDefault()
     } else if (event.pointerType === POINTER_TYPES.touch) {
-      this._onTouchStart(event)
+      this._onTouchStart(<ZeaTouchEvent>event)
     }
 
     event.stopPropagation()
-    event.preventDefault()
   }
 
   /**
    * Event fired when either the mouse cursor is moved, or a touch point moves.
    *
-   * @param {MouseEvent} event - The mouse event that occurs.
+   * @param event - The mouse event that occurs.
    */
-  onPointerMove(event: Record<string, any>) {
+  onPointerMove(event: ZeaPointerEvent) {
     if (this.__dragging != 0) {
-      if (event.pointerType === POINTER_TYPES.mouse) this._onMouseMove(event)
-      if (event.pointerType === POINTER_TYPES.touch) this._onTouchMove(event)
+      if (event.pointerType === POINTER_TYPES.mouse) this._onMouseMove(<ZeaMouseEvent>event)
+      if (event.pointerType === POINTER_TYPES.touch) this._onTouchMove(<ZeaTouchEvent>event)
 
       this.__dragging = 2
       event.stopPropagation()
-      event.preventDefault()
     }
   }
 
   /**
    * The event that occurs when the user moves the pointer across a screen.
    *
-   * @param {MouseEvent} event -The event value
+   * @param event -The event value
    */
-  _onMouseMove(event: Record<string, any>) {
+  _onMouseMove(event: ZeaMouseEvent) {
     if (!this.__pointerDown) return
 
     const pointerPos = event.pointerPos
@@ -659,15 +701,16 @@ class CameraManipulator extends BaseTool {
     }
     this.__prevPointerPos = pointerPos
     // this.__calculatingDragAction = false
+    event.preventDefault()
   }
 
   /**
    * The event that occurs when the user moves pointer across a touch screen.
    *
-   * @param {TouchEvent} event - The touch event that occurs.
+   * @param event - The touch event that occurs.
    * @private
    */
-  _onTouchMove(event: Record<string, any>) {
+  _onTouchMove(event: ZeaTouchEvent) {
     // this.__calculatingDragAction = true
 
     const touches = event.touches
@@ -718,7 +761,7 @@ class CameraManipulator extends BaseTool {
       // apply the vectors to calculate a pan and zoom
       const dragDist = separationDist * 0.002
       const { viewport } = event
-      const camera = viewport.getCamera()
+      const camera = (<GLViewport>viewport).getCamera()
 
       const focalDistance = camera.getFocalDistance()
       const fovY = camera.getFov()
@@ -753,8 +796,8 @@ class CameraManipulator extends BaseTool {
           break
       }
 
-      const globalXfo = camera.getParameter('GlobalXfo')!.getValue()
-      camera.getParameter('GlobalXfo').setValue(globalXfo.multiply(delta))
+      const globalXfo = camera.globalXfoParam.value
+      camera.globalXfoParam.value = globalXfo.multiply(delta)
 
       touchData0.pos = touch0Pos
       touchData1.pos = touch1Pos
@@ -766,9 +809,9 @@ class CameraManipulator extends BaseTool {
   /**
    * Event fired when either the mouse button is released, or a touch end event occurs.
    *
-   * @param {MouseEvent} event - The mouse event that occurs.
+   * @param event - The mouse event that occurs.
    */
-  onPointerUp(event: Record<string, any>) {
+  onPointerUp(event: ZeaPointerEvent) {
     if (this.__dragging == 1) {
       // No dragging ocurred. Release the capture and let the event propagate like normal.
       this.endDrag(event)
@@ -778,32 +821,39 @@ class CameraManipulator extends BaseTool {
           (event.pointerType === POINTER_TYPES.mouse && this.aimFocusOnMouseClick == 1) ||
           (event.pointerType === POINTER_TYPES.touch && this.aimFocusOnTouchTap == 1)
         ) {
-          const { viewport } = event
+          const viewport = <GLViewport>event.viewport
           const camera = viewport.getCamera()
-          const cameraGlobalXfo = camera.getParameter('GlobalXfo')!.getValue()
-          const aimTarget = cameraGlobalXfo.tr.add(event.pointerRay.dir.scale(event.intersectionData.dist))
+          const cameraGlobalXfo = camera.globalXfoParam.value
+          const pointerRay =
+            event.pointerType === POINTER_TYPES.mouse
+              ? (<ZeaMouseEvent>event).pointerRay
+              : (<ZeaTouchEvent>event).pointerRay
+          const aimTarget = cameraGlobalXfo.tr.add(pointerRay.dir.scale(event.intersectionData.dist))
           this.aimFocus(camera, aimTarget)
 
           // Note: Collab can use these events to guide users attention.
+          // @ts-ignore
           event.aimTarget = aimTarget
+          // @ts-ignore
           event.aimDistance = event.intersectionData.dist
           this.emit('aimingFocus', event)
           camera.emit('aimingFocus', event)
 
           // Note: for a single click (no-drag) we don't want to stop the propagation of the event.
           event.stopPropagation()
-          event.preventDefault()
+          if (event.pointerType === POINTER_TYPES.mouse) (<ZeaMouseEvent>event).preventDefault()
         }
       }
     } else if (this.__dragging == 2) {
       if (event.pointerType === POINTER_TYPES.mouse) {
         this.endDrag(event)
 
-        this.emit('movementFinished', {})
-        event.viewport.getCamera().emit('movementFinished', {})
+        this.emit('movementFinished')
+        const viewport = <GLViewport>event.viewport
+        viewport.getCamera().emit('movementFinished')
       } else if (event.pointerType === POINTER_TYPES.touch) {
-        event.preventDefault()
-        const { changedTouches, touches } = event
+        const touchEvent = <ZeaTouchEvent>event
+        const { changedTouches, touches } = touchEvent
 
         for (let i = 0; i < changedTouches.length; i++) {
           this.__endTouch(changedTouches[i])
@@ -815,24 +865,24 @@ class CameraManipulator extends BaseTool {
           this.endDrag(event)
           this.__ongoingTouches = {}
         }
+        touchEvent.preventDefault()
       }
 
       event.stopPropagation()
-      event.preventDefault()
     }
   }
 
   /**
    * Causes an event to occur when the mouse pointer is moved into this viewport
-   * @param {MouseEvent|TouchEvent} event - The event that occurs.
+   * @param event - The event that occurs.
    */
-  onPointerEnter(event: Record<string, any>) {}
+  onPointerEnter(event: ZeaPointerEvent) {}
 
   /**
    * Causes an event to occur when the mouse pointer is moved out of this viewport
-   * @param {MouseEvent|TouchEvent} event - The event that occurs.
+   * @param event - The event that occurs.
    */
-  onPointerLeave(event: Record<string, any>) {
+  onPointerLeave(event: ZeaPointerEvent) {
     // If the pointer leaves the viewport, then we will no longer receive key up events,
     // so we must immediately disable movement here.
     if (this.__keysPressed.length > 0) {
@@ -845,14 +895,14 @@ class CameraManipulator extends BaseTool {
   /**
    * Invoked when the mouse wheel is rolled up or down over an element.
    *
-   * @param {WheelEvent} event - The wheel event that occurs.
+   * @param event - The wheel event that occurs.
    */
-  onWheel(event: Record<string, any>) {
-    const { viewport } = event
+  onWheel(event: ZeaWheelEvent) {
+    const viewport = <GLViewport>event.viewport
     const camera = viewport.getCamera()
-    const mouseWheelDollySpeed = this.__mouseWheelDollySpeedParam.getValue()
+    const mouseWheelDollySpeed = this.mouseWheelDollySpeedParam.value
     const modulator = event.shiftKey ? 0.1 : 0.5
-    const xfo = camera.getParameter('GlobalXfo')!.getValue()
+    const xfo = camera.globalXfoParam.value
 
     let dir: Vec3
     if (!camera.isOrthographic()) {
@@ -869,22 +919,22 @@ class CameraManipulator extends BaseTool {
     // To normalize mouse wheel speed across vendors and OSs, it is recommended to simply convert scroll value to -1 or 1
     // See here: https://stackoverflow.com/questions/5527601/normalizing-mousewheel-speed-across-browsers
     const steps = 6
-    const direction = event.deltaY < 0 || event.wheelDelta > 0 || event.deltaY < 0 ? -1 : 1
+    const direction = event.deltaY < 0 ? -1 : 1
     const applyMovement = () => {
       const focalDistance = camera.getFocalDistance()
       const zoomDist = focalDistance * this.__mouseWheelMovementDist
       xfo.tr.addInPlace(dir.scale(zoomDist))
 
       camera.setFocalDistance(focalDistance + zoomDist)
-      camera.getParameter('GlobalXfo').setValue(xfo)
+      camera.globalXfoParam.value = xfo
 
       this.__mouseWheelZoomCount++
       if (this.__mouseWheelZoomCount < steps) {
         this.__mouseWheelZoomId = window.setTimeout(applyMovement, 10)
       } else {
         this.__mouseWheelZoomId = -1
-        this.emit('movementFinished', {})
-        camera.emit('movementFinished', { event: 'onWheel' })
+        this.emit('movementFinished')
+        camera.emit('movementFinished')
       }
     }
     const applyViewScale = () => {
@@ -898,7 +948,7 @@ class CameraManipulator extends BaseTool {
         dir.subtractInPlace(zAxis.scale(dir.dot(zAxis)))
 
         xfo.tr.addInPlace(dir.scale(zoomDist / (frustumHeight + zoomDist)))
-        camera.getParameter('GlobalXfo').setValue(xfo)
+        camera.globalXfoParam.value = xfo
       }
 
       this.__mouseWheelZoomCount++
@@ -906,8 +956,8 @@ class CameraManipulator extends BaseTool {
         this.__mouseWheelZoomId = window.setTimeout(applyViewScale, 10)
       } else {
         this.__mouseWheelZoomId = -1
-        this.emit('movementFinished', {})
-        camera.emit('movementFinished', { event: 'onWheel' })
+        this.emit('movementFinished')
+        camera.emit('movementFinished')
       }
     }
 
@@ -932,7 +982,7 @@ class CameraManipulator extends BaseTool {
 
   /**
    * The integrateVelocityChange method.
-   * @param {MouseEvent} event - The event value.
+   * @param event - The event value.
    * @private
    */
   integrateVelocityChange(event: Record<string, any>) {
@@ -942,7 +992,7 @@ class CameraManipulator extends BaseTool {
     const time = performance.now()
     if (this.__prevVelocityIntegrationTime > 0) {
       const timeDelta = (time - this.__prevVelocityIntegrationTime) / 1000
-      const speed = this.getParameter('WalkSpeed')!.getValue()
+      const speed = this.walkSpeedParam.value
       // movement.tr = this.__velocity.normalize().scale(speed * timeDelta)
 
       if (speed > 0.0) {
@@ -952,11 +1002,11 @@ class CameraManipulator extends BaseTool {
         // Calculate where we might be soon
         const movement = new Xfo()
         movement.tr = this.__velocity.normalize().scale(speed * timeDelta)
-        const cameraXfo = camera.getParameter('GlobalXfo')!.getValue()
+        const cameraXfo = camera.globalXfoParam.value
 
         const newXfo = cameraXfo.multiply(movement)
 
-        const collisionDetection = this.getParameter('WalkModeCollisionDetection')!.getValue()
+        const collisionDetection = this.walkModeCollisionDetection.value
         if (collisionDetection) {
           // Raycast from 1.5 meter up
           const headHeight = 1.5
@@ -978,7 +1028,7 @@ class CameraManipulator extends BaseTool {
             newXfo.tr = ray.start.add(ray.dir.scale(avgDist - headHeight))
           }
         }
-        camera.getParameter('GlobalXfo').setValue(newXfo)
+        camera.globalXfoParam.value = newXfo
       }
     }
 
@@ -988,10 +1038,10 @@ class CameraManipulator extends BaseTool {
   /**
    * Invoked when the user is pressing a key on the keyboard.
    *
-   * @param {KeyboardEvent} event - The keyboard event that occurs.
+   * @param event - The keyboard event that occurs.
    * @private
    */
-  onKeyDown(event: Record<string, any>) {
+  onKeyDown(event: KeyboardEvent) {
     if (!this.enabledWASDWalkMode) return
     const key = event.key.toLowerCase()
     // Note: onKeyPressed is called initially only once, and then we
@@ -1031,9 +1081,9 @@ class CameraManipulator extends BaseTool {
   /**
    * Invoked when the user releases a key on the keyboard.
    *
-   * @param {KeyboardEvent} event - The event that occurs.
+   * @param event - The event that occurs.
    */
-  onKeyUp(event: Record<string, any>) {
+  onKeyUp(event: KeyboardEvent) {
     const key = event.key.toLowerCase()
     if (!this.__keysPressed.includes(key)) return
     switch (key) {
@@ -1063,22 +1113,22 @@ class CameraManipulator extends BaseTool {
 
   /**
    * The __startTouch method.
-   * @param {TouchEvent} touch - The touch value.
+   * @param touch - The touch value.
    * @private
    */
-  __startTouch(touch: Record<string, any>) {
+  __startTouch(touch: Touch) {
     this.__ongoingTouches[touch.identifier] = {
       identifier: touch.identifier,
-      pos: new Vec2(touch.clientX, touch.clientY)
+      pos: new Vec2(touch.clientX, touch.clientY),
     }
   }
 
   /**
    * The __endTouch method.
-   * @param {TouchEvent} touch - The touch value.
+   * @param touch - The touch value.
    * @private
    */
-  __endTouch(touch: Record<string, any>) {
+  __endTouch(touch: Touch) {
     // let idx = this.__ongoingTouchIndexById(touch.identifier);
     // this.__ongoingTouches.splice(idx, 1); // remove it; we're done
     delete this.__ongoingTouches[touch.identifier]
@@ -1089,9 +1139,9 @@ class CameraManipulator extends BaseTool {
   /**
    * Invoked when the user touches an element on a touch screen.
    *
-   * @param {TouchEvent} event - The touch event that occurs.
+   * @param event - The touch event that occurs.
    */
-  _onTouchStart(event: Record<string, any>) {
+  _onTouchStart(event: ZeaTouchEvent) {
     const touches = event.changedTouches
     for (let i = 0; i < touches.length; i++) {
       this.__startTouch(touches[i])
@@ -1103,9 +1153,9 @@ class CameraManipulator extends BaseTool {
   /**
    * Invoked when the user removes his/her finger from the touch pad.
    *
-   * @param {TouchEvent} event - The touch event that occurs.
+   * @param event - The touch event that occurs.
    */
-  onTouchEnd(event: Record<string, any>) {
+  onTouchEnd(event: ZeaTouchEvent) {
     event.preventDefault()
     event.stopPropagation()
     const touches = event.changedTouches
@@ -1119,9 +1169,9 @@ class CameraManipulator extends BaseTool {
   /**
    * Invoked when the touch event gets interrupted.
    *
-   * @param {TouchEvent} event - The touch event that occurs.
+   * @param event - The touch event that occurs.
    */
-  onTouchCancel(event: Record<string, any>) {
+  onTouchCancel(event: ZeaTouchEvent) {
     event.preventDefault()
     const touches = event.touches
     for (let i = 0; i < touches.length; i++) {
@@ -1133,7 +1183,7 @@ class CameraManipulator extends BaseTool {
   /**
    * Returns a dictionary of support manipulation modes.
    *
-   * @param {TouchEvent} event - The touch event that occurs.
+   * @param event - The touch event that occurs.
    */
   static get MANIPULATION_MODES() {
     return MANIPULATION_MODES

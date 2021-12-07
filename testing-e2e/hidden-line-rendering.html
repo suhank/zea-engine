@@ -10,16 +10,29 @@
 
     <link rel="stylesheet" href="styles/tailwind.min.css" />
 
-    <script src="../dist/index.umd.development.js"></script>
+    <script src="../dist/index.umd.js"></script>
 
     <script type="module">
-      const { GLRenderer, Scene, Vec3, Xfo, Color, Cylinder, Material, GeomItem, Lines, Cuboid, Cone } = zeaEngine
+      const {
+        GLRenderer,
+        Scene,
+        Vec3,
+        Xfo,
+        Color,
+        Cylinder,
+        FlatSurfaceMaterial,
+        LinesMaterial,
+        GeomItem,
+        Lines,
+        Cuboid,
+        Cone,
+      } = zeaEngine
 
       const urlParams = new URLSearchParams(window.location.search)
       const scene = new Scene()
-      const domElement = document.getElementById('renderer')
+      const domElement = document.getElementById('viewport')
       const renderer = new GLRenderer(domElement, {
-        webglContextType: urlParams.has('webgl') ? urlParams.get('webgl') : undefined
+        webglContextType: urlParams.has('webgl') ? urlParams.get('webgl') : undefined,
       })
       renderer.setScene(scene)
       renderer.getViewport().debugGeomShader = urlParams.has('debugGeomShader')
@@ -29,22 +42,21 @@
 
       scene.setupGrid(10.0, 10)
 
-      // const backgroundColor = new Color(0.5, 0.5, 0.5)
-      // renderer.getScene().settings.getParameter('BackgroundColor').setValue(backgroundColor)
+      renderer.getViewport().backgroundColorParam.value = new Color(0.85, 0.85, 0.85, 1)
 
-      const material = new Material('surfaces', 'FlatSurfaceShader')
-      material.getParameter('BaseColor').setValue(new Color(0.75, 0.75, 0.75))
+      const material = new FlatSurfaceMaterial('surfaces')
+      material.baseColorParam.value = new Color(0.75, 0.75, 0.75)
 
-      const hardEdgesMaterial = new Material('hardEdgesMaterial', 'LinesShader')
-      hardEdgesMaterial.getParameter('BaseColor').setValue(new Color(0.1, 0.1, 0.1))
-      hardEdgesMaterial.getParameter('Opacity').setValue(1)
-      hardEdgesMaterial.getParameter('Overlay').setValue(0.00001)
+      const hardEdgesMaterial = new LinesMaterial('hardEdgesMaterial')
+      hardEdgesMaterial.baseColorParam.value = new Color(0.1, 0.1, 0.1)
+      hardEdgesMaterial.opacityParam.value = 1
+      hardEdgesMaterial.overlayParam.value = 0.00001
 
-      hardEdgesMaterial.getParameter('StippleScale').setValue(0.02)
-      hardEdgesMaterial.getParameter('StippleValue').setValue(0)
-      hardEdgesMaterial.getParameter('OccludedStippleValue').setValue(0.6)
+      hardEdgesMaterial.stippleScaleParam.value = 0.02
+      hardEdgesMaterial.stippleValueParam.value = 0
+      hardEdgesMaterial.occludedStippleValueParam.value = 0.6
 
-      const createHardEdgesGeom = mesh => {
+      const createHardEdgesGeom = (mesh) => {
         // Display all the hard edges as darker lines.
         const hardEdges = new Lines()
         hardEdges.__vertexAttributes.set('positions', mesh.getVertexAttribute('positions'))
@@ -89,30 +101,30 @@
       const pointerOverColor = new Color(1, 1, 1, 0.2)
       let prevMaterial
       let prevColor
-      renderer.getViewport().on('pointerOverGeom', event => {
+      renderer.getViewport().on('pointerOverGeom', (event) => {
         const pointerOverItem = event.intersectionData.geomItem
         pointerOverItem.addHighlight('pointerOverGeom', new Color(1, 0, 0, 0.1), true)
       })
-      renderer.getViewport().on('pointerLeaveGeom', event => {
+      renderer.getViewport().on('pointerLeaveGeom', (event) => {
         event.leftGeometry.removeHighlight('pointerOverGeom', true)
       })
-      renderer.getXRViewport().then(xrvp => {
+      renderer.getXRViewport().then((xrvp) => {
         console.log('XR Device Detected')
-        document.addEventListener('keydown', event => {
+        document.addEventListener('keydown', (event) => {
           if (event.key.toLowerCase() == 'v' && event.shiftKey) {
             xrvp.togglePresenting()
           }
         })
       })
 
-      const postMessage = msg => {
+      const postMessage = (msg) => {
         console.log(msg)
         window.postMessage(msg)
       }
       postMessage('done-loading')
 
       // {{{ Messages handler.
-      const handleMessage = event => {
+      const handleMessage = (event) => {
         const { data } = event
 
         if (data === 'variant-01') {
@@ -129,9 +141,9 @@
       window.addEventListener('message', handleMessage, false)
       // }}}
 
-      renderer.getXRViewport().then(xrvp => {
+      renderer.getXRViewport().then((xrvp) => {
         console.log('XR Device Detected')
-        document.addEventListener('keydown', event => {
+        document.addEventListener('keydown', (event) => {
           if (event.key == ' ') {
             xrvp.togglePresenting()
           }
@@ -141,7 +153,7 @@
   </head>
   <body class="bg-blue-100">
     <div class="h-screen">
-      <canvas class="absolute" id="renderer"></canvas>
+      <canvas id="viewport"></canvas>
     </div>
   </body>
 </html>

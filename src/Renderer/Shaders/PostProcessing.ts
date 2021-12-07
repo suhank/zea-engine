@@ -1,5 +1,6 @@
 /* eslint-disable require-jsdoc */
 import { GLShader } from '../GLShader'
+import { WebGL12RenderingContext } from '../types/webgl'
 
 import './GLSL/index'
 // @ts-ignore
@@ -9,7 +10,7 @@ import vert from './PostProcessing.vert'
 class PostProcessing extends GLShader {
   /**
    * Create a GL shader.
-   * @param {WebGL12RenderingContext} gl - The webgl rendering context.
+   * @param gl - The webgl rendering context.
    */
   constructor(gl: WebGL12RenderingContext) {
     super(gl, 'PostProcessing')

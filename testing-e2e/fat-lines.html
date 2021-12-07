@@ -10,51 +10,49 @@
 
     <link rel="stylesheet" href="styles/tailwind.min.css" />
 
-    <script src="../dist/index.umd.development.js"></script>
+    <script src="../dist/index.umd.js"></script>
 
     <script type="module">
-      const { GLRenderer, Scene, Xfo, Vec3, Color, Material, Circle, GeomItem } = window.zeaEngine
+      const { GLRenderer, Scene, Xfo, Vec3, Color, LinesMaterial, FatLinesMaterial, Circle, GeomItem } =
+        window.zeaEngine
 
-      const canvas = document.querySelector('#renderer')
+      const canvas = document.getElementById('viewport')
 
       const scene = new Scene()
-      const renderer = new GLRenderer(canvas, { hideSplash: true, antialias: false })
+      const renderer = new GLRenderer(canvas, { antialias: false })
       renderer.setScene(scene)
 
       scene.setupGrid(10.0, 10)
 
       const color = new Color(89 / 255, 182 / 255, 92 / 255)
 
-      const material1 = new Material('thinlines', 'LinesShader')
-      material1.getParameter('BaseColor').setValue(color)
+      const material1 = new LinesMaterial('thinlines')
+      material1.baseColorParam.value = color
 
       const circle = new Circle(1.5, 8)
       const geomItem1 = new GeomItem('circle1', circle, material1, new Xfo(new Vec3(-2, 0, 0)))
       scene.getRoot().addChild(geomItem1)
 
-      const material2 = new Material('fatlines', 'FatLinesShader')
-      material2.getParameter('BaseColor').setValue(color)
-      material2.getParameter('LineThickness').setValue(0.1)
+      const material2 = new FatLinesMaterial('fatlines')
+      material2.baseColorParam.value = color
+      material2.lineThicknessParam.value = 0.1
       const geomItem2 = new GeomItem('circle2', circle, material2, new Xfo(new Vec3(2, 0, 0)))
       scene.getRoot().addChild(geomItem2)
 
-      renderer
-        .getViewport()
-        .getCamera()
-        .setPositionAndTarget(new Vec3(2, 2, 2.7), new Vec3(0, 0, 0.4))
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, 2.7), new Vec3(0, 0, 0.4))
       renderer.frameAll()
 
       window.postMessage('done-loading')
 
       // {{{ Messages handler.
-      const handleMessage = event => {
+      const handleMessage = (event) => {
         const { data } = event
 
         if (data === 'variant-01') {
-          circle.getParameter('Sides').setValue(32)
+          circle.sidesParam.value = 32
           window.postMessage(`done-${data}`)
         } else if (data === 'variant-02') {
-          circle.getParameter('Sides').setValue(6)
+          circle.sidesParam.value = 6
           window.postMessage(`done-${data}`)
         }
       }
@@ -63,18 +61,18 @@
 
       /** HIGHLIGHT START */
       let highlightedItem
-      renderer.getViewport().on('pointerOverGeom', event => {
+      renderer.getViewport().on('pointerOverGeom', (event) => {
         const item = event.intersectionData.geomItem
         if (item) {
           highlightedItem = item
           highlightedItem.addHighlight('pointerOverGeom', new Color(1.0, 0.7, 0, 0.3), true)
         }
       })
-      renderer.getViewport().on('pointerLeaveGeom', event => {
+      renderer.getViewport().on('pointerLeaveGeom', (event) => {
         highlightedItem.removeHighlight('pointerOverGeom', true)
         highlightedItem = null
       })
-      renderer.getViewport().on('pointerUp', event => {
+      renderer.getViewport().on('pointerUp', (event) => {
         if (event.intersectionData) {
           const geomItem = event.intersectionData.geomItem
           console.log('', geomItem.getPath())
@@ -96,7 +94,7 @@
   </head>
   <body class="bg-blue-100 h-full">
     <div class="h-full">
-      <canvas class="absolute" id="renderer"></canvas>
+      <canvas id="viewport"></canvas>
     </div>
   </body>
 </html>

@@ -8,7 +8,7 @@ describe('MaterialParameter', () => {
   it('has an initial value.', () => {
     const materialParameter = new MaterialParameter()
 
-    expect(materialParameter.getValue()).toBeUndefined()
+    expect(materialParameter.value).toBeUndefined()
   })
 
   it('checks value type.', () => {
@@ -20,9 +20,9 @@ describe('MaterialParameter', () => {
   it('sets value.', () => {
     const materialParameter = new MaterialParameter('Foo')
     const material = new Material('itemMaterial')
-    materialParameter.setValue(material)
+    materialParameter.value = material
 
-    expect(materialParameter.getValue()).toEqual(material)
+    expect(materialParameter.value).toEqual(material)
   })
 
   // TODO: material arguments are wrong... is this ok?
@@ -30,9 +30,9 @@ describe('MaterialParameter', () => {
     const materialParameter = new MaterialParameter('Foo')
 
     const material2 = new Material('itemMaterial') // TODO: blueprint error.
-    materialParameter.setValue(material2)
+    materialParameter.value = material2
 
-    expect(materialParameter.getValue()).toEqual(material2)
+    expect(materialParameter.value).toEqual(material2)
   })
 
   it('propagate events.', () => {
@@ -40,14 +40,14 @@ describe('MaterialParameter', () => {
 
     const material = new Material('itemMaterial1')
     material.addParameter(new ColorParameter('Color', new Color(1, 0, 0)))
-    materialParameter.setValue(material)
+    materialParameter.value = material
 
     let changedParam
     materialParameter.on('valueParameterValueChanged', (event: any) => {
       changedParam = event.param
     })
 
-    material.getParameter('Color').setValue(new Color(0, 1, 0))
+    material.getParameter('Color').value = new Color(0, 1, 0)
 
     expect(changedParam).toEqual(material.getParameter('Color'))
   })
@@ -55,7 +55,7 @@ describe('MaterialParameter', () => {
   it.skip('saves to JSON (serialization).', () => {
     const materialParameter = new MaterialParameter('Foo')
     const material = new Material('itemMaterial')
-    materialParameter.setValue(material)
+    materialParameter.value =(material)
 
     const expOutput = '{"value":...}'
 
@@ -67,7 +67,7 @@ describe('MaterialParameter', () => {
     const input = { value: 1 }
     materialParameter.fromJSON(input)
 
-    expect(materialParameter.getValue()).toEqual(input.value)
+    expect(materialParameter.value).toEqual(input.value)
   })
 
   it('loads from binary (serialization).', () => {
@@ -77,13 +77,13 @@ describe('MaterialParameter', () => {
     const reader = new BinReader(data.buffer)
     materialParameter.readBinary(reader)
 
-    expect(materialParameter.getValue()).toEqual(1)
+    expect(materialParameter.value).toEqual(1)
   })
 
   it('clones parameter object', () => {
     const parameter = new MaterialParameter('Foo')
     const material = new Material('itemMaterial')
-    parameter.setValue(material)
+    parameter.value =(material)
 
     const parameter2 = parameter.clone()
 

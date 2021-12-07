@@ -1,4 +1,25 @@
-// import { SystemDesc } from '.'
+interface GPUDescription {
+  vendor: string
+  renderer: string
+  gpuVendor: string
+  maxTextureSize: number
+  supportsWebGL: boolean
+  supportsWebGL2: boolean
+}
+
+interface SystemDescription {
+  isMobileDevice: boolean
+  isIOSDevice: boolean
+  browserName: string
+  webGLSupported: boolean
+  deviceCategory: string
+  hardwareConcurrency: number
+  fullVersion?: any
+  majorVersion?: any
+  appName?: any
+  userAgent?: any
+  gpuDesc?: GPUDescription
+}
 
 // eslint-disable-next-line require-jsdoc
 function isIOSDevice() {
@@ -95,17 +116,26 @@ function getBrowserDesc() {
     fullVersion,
     majorVersion,
     appName: navigator.appName,
-    userAgent: navigator.userAgent
+    userAgent: navigator.userAgent,
   }
 }
 
 // eslint-disable-next-line require-jsdoc
-function getGPUDesc() {
+function getGPUDesc(): GPUDescription {
   let webgl
   try {
     webgl = document.createElement('canvas').getContext('webgl')
   } catch (e) {}
-  if (!webgl) return
+  if (!webgl) {
+    return {
+      vendor: 'Unknown',
+      renderer: 'Unknown',
+      gpuVendor: 'Unknown',
+      maxTextureSize: 0,
+      supportsWebGL: false,
+      supportsWebGL2: false,
+    }
+  }
   let webgl2
   try {
     webgl2 = document.createElement('canvas').getContext('webgl2')
@@ -118,14 +148,15 @@ function getGPUDesc() {
       vendor: 'Unknown',
       renderer: 'Unknown',
       gpuVendor: 'Unknown',
-      maxTextureSize: 'Unknown',
-      supportsWebGL2: webgl2 != undefined
+      maxTextureSize: 0,
+      supportsWebGL: webgl != undefined,
+      supportsWebGL2: webgl2 != undefined,
     }
   }
 
-  const vendor = webgl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL)
-  const renderer = webgl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL)
-  const maxTextureSize = webgl.getParameter(webgl.MAX_TEXTURE_SIZE)
+  const vendor = <string>webgl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL)
+  const renderer = <string>webgl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL)
+  const maxTextureSize = <number>webgl.getParameter(webgl.MAX_TEXTURE_SIZE)
   let gpuVendor
   if (renderer.match(/NVIDIA/i)) {
     gpuVendor = 'NVidia'
@@ -139,8 +170,12 @@ function getGPUDesc() {
     gpuVendor = 'Apple'
   } else if (renderer.match(/Adreno/i)) {
     gpuVendor = 'Adreno'
-  } else if (renderer.match(/Google Swiftshader/i)) {
+  } else if (renderer.match(/Swiftshader/i)) {
     gpuVendor = 'Google'
+    console.warn(
+      'Hardware rendering is disabled or not working on your system. Falling back to the Swiftshader. Expect poor performance:',
+      renderer
+    )
   } else {
     console.warn('Unable to determine GPU vendor:', renderer)
   }
@@ -150,11 +185,12 @@ function getGPUDesc() {
     renderer,
     gpuVendor,
     maxTextureSize,
-    supportsWebGL2: webgl2 != undefined
+    supportsWebGL: true,
+    supportsWebGL2: webgl2 != undefined,
   }
 }
 
-const SystemDesc: SystemDescription = (function() {
+const SystemDesc: SystemDescription = (function () {
   if (!globalThis.navigator) {
     // When running in NodeJS
     return {
@@ -163,7 +199,7 @@ const SystemDesc: SystemDescription = (function() {
       browserName: 'Node',
       webGLSupported: false,
       deviceCategory: 'High',
-      hardwareConcurrency: 4
+      hardwareConcurrency: 4,
     }
   }
   const isMobile = isMobileDevice()
@@ -171,7 +207,7 @@ const SystemDesc: SystemDescription = (function() {
   const gpuDesc = getGPUDesc()
 
   let deviceCategory = 'Low'
-  if (gpuDesc) {
+  if (gpuDesc.supportsWebGL) {
     // We divide devices into 3 categories.
     // 0: low end, we dial everything down as much as possible
     // 1: mid-range, Enb maps and Textures go to mid-lods.
@@ -280,10 +316,10 @@ const SystemDesc: SystemDescription = (function() {
     majorVersion: browserDesc.majorVersion,
     appName: browserDesc.appName,
     userAgent: browserDesc.userAgent,
-    webGLSupported: gpuDesc != undefined,
+    webGLSupported: gpuDesc.supportsWebGL,
     gpuDesc,
     deviceCategory,
-    hardwareConcurrency
+    hardwareConcurrency,
   }
 })()
 

@@ -19,8 +19,8 @@ class Allocation1D {
   size: number
   /**
    * Initializes the allocation
-   * @param {number} start - The start of the allocated block of memory.
-   * @param {number} size - The size of the allocated block of memory.
+   * @param start - The start of the allocated block of memory.
+   * @param size - The size of the allocated block of memory.
    */
   constructor(start = 0, size = 0) {
     this.start = start
@@ -80,8 +80,8 @@ class Allocator1D extends EventEmitter {
   /**
    * Returns the Allocates for the given Id.
    *
-   * @param {number} id - The unique numerical identifer for the block.
-   * @return {Allocation1D} - The allocation
+   * @param id - The unique numerical identifer for the block.
+   * @return - The allocation
    */
   getAllocation(id: number): Allocation1D {
     return this.allocations[this.allocationsMap[id]]
@@ -91,9 +91,9 @@ class Allocator1D extends EventEmitter {
    * Allocates space for a new or existing item. The id is a handle that the consuming code uses to
    * track allocations.
    *
-   * @param {number} id - The unique numerical identifer for the block.
-   * @param {number} size - The name of the event.
-   * @return {Allocation1D} - The new allocation
+   * @param id - The unique numerical identifer for the block.
+   * @param size - The name of the event.
+   * @return - The new allocation
    */
   allocate(id: number, size: number): Allocation1D {
     if (this.allocationsMap[id] != undefined) {
@@ -196,8 +196,8 @@ class Allocator1D extends EventEmitter {
    * Adds a new block
    * @private
    *
-   * @param {number} index - The index where the block should be inserted.
-   * @param {Allocation1D} allocation - The allocation to insert
+   * @param index - The index where the block should be inserted.
+   * @param allocation - The allocation to insert
    */
   addBlock(index: number, allocation: Allocation1D) {
     this.allocations.splice(index, 0, allocation)
@@ -217,7 +217,7 @@ class Allocator1D extends EventEmitter {
    * Remove a new block
    * @private
    *
-   * @param {number} index - The index where the block should be removed
+   * @param index - The index where the block should be removed
    */
   removeBlock(index: number) {
     this.allocations.splice(index, 1)
@@ -237,7 +237,7 @@ class Allocator1D extends EventEmitter {
    * Frees a block by either growing neighboring blocks or adding a new free block
    * @private
    *
-   * @param {number} index - The index of the block to free.
+   * @param index - The index of the block to free.
    */
   freeBlock(index: number) {
     const allocation = this.allocations[index]
@@ -269,7 +269,7 @@ class Allocator1D extends EventEmitter {
   /**
    * Deallocate space for an existing item, making it free for other uses.
    *
-   * @param {number} id - The unique numerical identifer for the block.
+   * @param id - The unique numerical identifer for the block.
    */
   deallocate(id: number) {
     const index = this.allocationsMap[id]
@@ -283,7 +283,7 @@ class Allocator1D extends EventEmitter {
   /**
    * Returns the ratio of fragmented memory over reserved memory.
    *
-   * @return {number} The fragmentation ratio. Between 0 and some value less than 1
+   * @return The fragmentation ratio. Between 0 and some value less than 1
    */
   getFragmentation(): number {
     return this.freeSpace / this.allocatedSpace

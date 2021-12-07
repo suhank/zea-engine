@@ -12,6 +12,9 @@ import { Material } from '../../SceneTree/Material'
 import { shaderLibrary } from '../ShaderLibrary'
 import { MaterialColorParam } from '../../SceneTree/Parameters/MaterialColorParam'
 import { MaterialFloatParam } from '../../SceneTree/Parameters/MaterialFloatParam'
+import { StandardSurfaceMaterial } from '../../SceneTree/Materials/StandardSurfaceMaterial'
+import { WebGL12RenderingContext } from '../types/webgl'
+import { ColorRenderState, RenderState } from '../types/renderer'
 
 /** A standard shader handling Opaque and transparent items and PBR rendering.
  * @extends GLShader
@@ -20,7 +23,7 @@ import { MaterialFloatParam } from '../../SceneTree/Parameters/MaterialFloatPara
 class StandardSurfaceShader extends GLShader {
   /**
    * Create a GL shader.
-   * @param {WebGL12RenderingContext} gl - The webgl rendering context.
+   * @param gl - The webgl rendering context.
    */
   constructor(gl?: WebGL12RenderingContext) {
     super(gl, 'StandardSuraceShader')
@@ -30,9 +33,9 @@ class StandardSurfaceShader extends GLShader {
 
   /**
    * The bind method.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
-   * @param {string} key - The key value.
-   * @return {any} - The return value.
+   * @param renderstate - The object tracking the current state of the renderer
+   * @param key - The key value.
+   * @return - The return value.
    */
   bind(renderstate: RenderState, key: string) {
     const colorRenderState = <ColorRenderState>renderstate
@@ -52,42 +55,41 @@ class StandardSurfaceShader extends GLShader {
 
   /**
    * The getPackedMaterialData method.
-   * @param {Material} material - The material param.
-   * @return {Float32Array} - The return value.
+   * @param material - The material param.
+   * @return - The return value.
    */
   static getPackedMaterialData(material: Material): Float32Array {
     const matData = new Float32Array(12) // TODO: no extra space needed right?
 
-    const baseColor = material.getParameter('BaseColor')!.getValue()
+    const baseColor = material.getParameter('BaseColor')!.value
     matData[0] = baseColor.r
     matData[1] = baseColor.g
     matData[2] = baseColor.b
     matData[3] = baseColor.a
 
-    matData[4] = material.getParameter('AmbientOcclusion')!.getValue()
-    matData[5] = material.getParameter('Metallic')!.getValue()
-    matData[6] = material.getParameter('Roughness')!.getValue()
-    matData[7] = material.getParameter('Reflectance')!.getValue()
+    matData[4] = material.getParameter('AmbientOcclusion')!.value
+    matData[5] = material.getParameter('Metallic')!.value
+    matData[6] = material.getParameter('Roughness')!.value
+    matData[7] = material.getParameter('Reflectance')!.value
 
-    matData[8] = material.getParameter('EmissiveStrength')!.getValue()
-    matData[9] = material.getParameter('Opacity')!.getValue()
+    matData[8] = material.getParameter('EmissiveStrength')!.value
+    matData[9] = material.getParameter('Opacity')!.value
 
     return matData
   }
+
+  /**
+   * Each shader provides a template material that each material instance is
+   * based on. The shader specifies the parameters needed by the shader, and
+   * the material provides values to the shader during rendering.
+   * @return - The template material value.
+   */
+  static getMaterialTemplate(): Material {
+    return material
+  }
 }
 
-const material = new Material('StandardSurfaceShader_template')
-material.addParameter(new MaterialColorParam('BaseColor', new Color(1.0, 1, 0.5)))
-material.addParameter(new MaterialColorParam('Normal', new Color(1.0, 1, 0.5)))
-material.addParameter(new MaterialFloatParam('AmbientOcclusion', 1, [0, 1]))
-material.addParameter(new MaterialFloatParam('Metallic', 0.05, [0, 1]))
-material.addParameter(new MaterialFloatParam('Roughness', 0.5, [0, 1])) // added
-material.addParameter(new MaterialFloatParam('Reflectance', 0.5, [0, 1]))
-material.addParameter(new MaterialFloatParam('EmissiveStrength', 0, [0, 1]))
-material.addParameter(new MaterialFloatParam('Opacity', 1, [0, 1]))
-
-shaderLibrary.registerMaterialTemplate('StandardSurfaceShader', material)
-shaderLibrary.registerMaterialTemplate('TransparentSurfaceShader', material)
+const material = new StandardSurfaceMaterial('StandardSurfaceShader_template')
 
 Registry.register('StandardSurfaceShader', StandardSurfaceShader)
 Registry.register('TransparentSurfaceShader', StandardSurfaceShader)

@@ -10,19 +10,19 @@
 
     <link rel="stylesheet" href="styles/tailwind.min.css" />
 
-    <script src="../dist/index.umd.development.js"></script>
+    <script src="../dist/index.umd.js"></script>
 
     <script type="module">
-      const { GLRenderer, Scene, Xfo, Vec3, Points, Color, GeomItem, Material } = zeaEngine
+      const { GLRenderer, Scene, Xfo, Vec3, Points, Color, GeomItem, FatPointsMaterial } = zeaEngine
 
       import { hammersley, sphereSample_uniform } from './Hammersley.js'
 
-      const canvas = document.getElementById('renderer')
+      const canvas = document.getElementById('viewport')
 
       const scene = new Scene()
       scene.setupGrid(10.0, 10)
 
-      const renderer = new GLRenderer(canvas, { hideSplash: true, antialias: false })
+      const renderer = new GLRenderer(canvas, { antialias: false })
       renderer.setScene(scene)
 
       const points = new Points()
@@ -35,36 +35,30 @@
         sphereSample_uniform(coords[0], coords[1], v)
       }
 
-      const material = new Material('points', 'FatPointsShader')
-      // material.getParameter("BaseColor").setValue(new Color(1,0,0));
-      material.getParameter('PointSize').setValue(0.05)
-      material.getParameter('Rounded').setValue(0.2)
-      material.getParameter('BaseColor').setValue(new Color(1, 0, 1))
+      const material = new FatPointsMaterial('points')
+      // material.getParameter("BaseColor").value = new Color(1,0,0))
+      material.pointSizeParam.value = 0.05
+      material.roundedParam.value = 0.2
+      material.baseColorParam.value = new Color(1, 0, 1)
 
       const geomItem = new GeomItem('geomItem', points, material)
       const xfo = new Xfo()
       xfo.tr.set(0, 0, 1)
-      geomItem.getParameter('GlobalXfo').setValue(xfo)
+      geomItem.globalXfoParam.value = xfo
       scene.getRoot().addChild(geomItem)
 
       window.postMessage('done-loading')
 
       // {{{ Messages handler.
-      const handleMessage = event => {
+      const handleMessage = (event) => {
         const { data } = event
 
         if (data === 'variant-01') {
-          renderer
-            .getViewport()
-            .getCamera()
-            .setPositionAndTarget(new Vec3(2, 2, -2.7), new Vec3(0, 0, 0.4))
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, -2.7), new Vec3(0, 0, 0.4))
           renderer.frameAll()
           window.postMessage(`done-${data}`)
         } else if (data === 'variant-02') {
-          renderer
-            .getViewport()
-            .getCamera()
-            .setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 0.4))
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 0.4))
           renderer.frameAll()
           window.postMessage(`done-${data}`)
         }
@@ -75,18 +69,18 @@
 
       /** HIGHLIGHT START */
       let highlightedItem
-      renderer.getViewport().on('pointerOverGeom', event => {
+      renderer.getViewport().on('pointerOverGeom', (event) => {
         const item = event.intersectionData.geomItem
         if (item) {
           highlightedItem = item
           highlightedItem.addHighlight('pointerOverGeom', new Color(1.0, 0.7, 0, 0.3), true)
         }
       })
-      renderer.getViewport().on('pointerLeaveGeom', event => {
+      renderer.getViewport().on('pointerLeaveGeom', (event) => {
         highlightedItem.removeHighlight('pointerOverGeom', true)
         highlightedItem = null
       })
-      renderer.getViewport().on('pointerUp', event => {
+      renderer.getViewport().on('pointerUp', (event) => {
         if (event.intersectionData) {
           const geomItem = event.intersectionData.geomItem
           console.log('', geomItem.getPath())
@@ -108,7 +102,7 @@
   </head>
   <body class="bg-blue-100 h-full">
     <div class="h-full">
-      <canvas class="absolute" id="renderer"></canvas>
+      <canvas id="viewport"></canvas>
     </div>
   </body>
 </html>

@@ -4,17 +4,17 @@ describe('Disc', () => {
   it('tests default parameters', () => {
     const disc = new Disc()
 
-    expect(disc.getParameter('Radius').getValue()).toBe(0.5)
-    expect(disc.getParameter('Sides').getValue()).toBe(32)
+    expect(disc.radiusParam.value).toBe(0.5)
+    expect(disc.sidesParam.value).toBe(32)
   })
 
   it('updates parameters', () => {
     const disc = new Disc()
-    disc.getParameter('Radius').setValue(4)
-    disc.getParameter('Sides').setValue(16)
+    disc.radiusParam.value = 4
+    disc.sidesParam.value = 16
 
-    expect(disc.getParameter('Radius').getValue()).toBe(4)
-    expect(disc.getParameter('Sides').getValue()).toBe(16)
+    expect(disc.radiusParam.value).toBe(4)
+    expect(disc.sidesParam.value).toBe(16)
   })
 
   it('saves to JSON (serialization).', () => {
@@ -29,16 +29,16 @@ describe('Disc', () => {
     const jsonStr = {
       params: {
         Radius: {
-          value: 3,
+          value: 3
         },
         Sides: {
           value: 16,
           range: [3, 200],
-          step: 1,
-        },
+          step: 1
+        }
       },
       type: 'Disc',
-      vertexAttributes: {},
+      vertexAttributes: {}
     }
     disc.fromJSON(jsonStr)
 

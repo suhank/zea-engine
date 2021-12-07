@@ -83,7 +83,7 @@
       document.getElementById('defaultOpen').click()
     </script>
 
-    <script src="../dist/index.umd.development.js"></script>
+    <script src="../dist/index.umd.js"></script>
 
     <script type="module">
       const { Vec3, Scene, GLRenderer, Color } = globalThis.zeaEngine
@@ -92,20 +92,14 @@
         const domelement = document.getElementById('londonapp')
         const scene = new Scene()
         const color = new Color('#e6f9ff')
-        scene
-          .getSettings()
-          .getParameter('BackgroundColor')
-          .setValue(color)
 
         scene.setupGrid(30, 60)
 
         const renderer = new GLRenderer(domelement)
         renderer.setScene(scene)
 
-        renderer
-          .getViewport()
-          .getCamera()
-          .setPositionAndTarget(new Vec3(20, 20, 20), new Vec3(0, 0, 0))
+        renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(20, 20, 20), new Vec3(0, 0, 0))
+        renderer.getViewport().backgroundColorParam.value = color
 
         renderer.resumeDrawing()
       }
@@ -114,10 +108,6 @@
         const domelement = document.getElementById('parisapp')
         const scene = new Scene()
         const color2 = new Color('#e6f9ff')
-        scene
-          .getSettings()
-          .getParameter('BackgroundColor')
-          .setValue(color2)
 
         const colorGrid = new Color('#999999')
         scene.setupGrid(30, 60, colorGrid)
@@ -125,10 +115,8 @@
         const renderer = new GLRenderer(domelement)
         renderer.setScene(scene)
 
-        renderer
-          .getViewport()
-          .getCamera()
-          .setPositionAndTarget(new Vec3(20, 20, 20), new Vec3(0, 0, 0))
+        renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(20, 20, 20), new Vec3(0, 0, 0))
+        renderer.getViewport().backgroundColorParam.value = color2
 
         renderer.resumeDrawing()
       }

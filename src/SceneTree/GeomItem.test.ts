@@ -10,40 +10,30 @@ describe('GeomItem', () => {
   it('tests default parameters', () => {
     const geoItem = new GeomItem()
 
-    expect(geoItem.getParameter('Geometry').getValue()).toBeUndefined()
-    expect(geoItem.getParameter('Material').getValue()).toBeUndefined()
-    expect(geoItem.getParameter('GeomOffsetXfo').getValue()).toEqual(new Xfo())
-    expect(geoItem.getParameter('GeomMat').getValue()).toEqual(new Mat4())
+    expect(geoItem.geomParam.value).toBeUndefined()
+    expect(geoItem.materialParam.value).toBeUndefined()
+    expect(geoItem.geomOffsetXfoParam.value).toEqual(new Xfo())
+    expect(geoItem.geomMatParam.value).toEqual(new Mat4())
   })
 
   it('updates parameters', () => {
     const geoItem = new GeomItem()
-    geoItem.getParameter('Geometry').setValue(new Sphere(1.4, 13))
-    expect(
-      geoItem
-        .getParameter('Geometry')
-        .getValue()
-        .toJSON()
-    ).toEqual(new Sphere(1.4, 13).toJSON())
+    geoItem.geomParam.value = new Sphere(1.4, 13)
+    expect(geoItem.geomParam.value.toJSON()).toEqual(new Sphere(1.4, 13).toJSON())
 
     const standardMaterial = new Material('myMaterial', 'SimpleSurfaceShader')
-    standardMaterial.getParameter('BaseColor').setValue(new Color(89 / 255, 182 / 255, 92 / 255))
-    geoItem.getParameter('Material').setValue(standardMaterial)
-    expect(geoItem.getParameter('Material').getValue()).toEqual(standardMaterial)
+    standardMaterial.getParameter('BaseColor').value = new Color(89 / 255, 182 / 255, 92 / 255)
+    geoItem.materialParam.value = standardMaterial
+    expect(geoItem.materialParam.value).toEqual(standardMaterial)
 
     const xfo = new Xfo(new Vec3(1, 2, 3), new Quat(0, 0, 1, 0), new Vec3(8, 9, 10))
-    geoItem.getParameter('GeomOffsetXfo').setValue(xfo)
-    expect(
-      geoItem
-        .getParameter('GeomOffsetXfo')
-        .getValue()
-        .toJSON()
-    ).toEqual(xfo.toJSON())
+    geoItem.geomOffsetXfoParam.value = xfo
+    expect(geoItem.geomOffsetXfoParam.value.toJSON()).toEqual(xfo.toJSON())
 
     // This is computed, so the returned value is different
     const mat4 = new Mat4(-8, 0, 0, 0, 0, -9, 0, 0, 0, 0, 10, 0, 1, 2, 3, 1)
-    geoItem.getParameter('GeomMat').setValue(mat4)
-    expect(geoItem.getParameter('GeomMat').getValue()).toEqual(mat4)
+    geoItem.geomMatParam.value = mat4
+    expect(geoItem.geomMatParam.value).toEqual(mat4)
   })
 
   test('test GeomOffsetXfo and GeomMat.', () => {
@@ -51,40 +41,30 @@ describe('GeomItem', () => {
     const child = new GeomItem('Child')
     parent.addChild(child)
 
-    parent.getParameter('LocalXfo').setValue(new Xfo(new Vec3(5, 2, 0)))
-    child.getParameter('LocalXfo').setValue(new Xfo(new Vec3(2, 4, 0)))
-    child.getParameter('GeomOffsetXfo').setValue(new Xfo(new Vec3(2, 4, 0)))
+    parent.localXfoParam.value = new Xfo(new Vec3(5, 2, 0))
+    child.localXfoParam.value = new Xfo(new Vec3(2, 4, 0))
+    child.geomOffsetXfoParam.value = new Xfo(new Vec3(2, 4, 0))
 
-    expect(
-      child
-        .getParameter('GlobalXfo')
-        .getValue()
-        .approxEqual(
-          {
-            ori: { w: 1, x: 0, y: 0, z: 0 },
-            tr: { x: 7, y: 6, z: 0 }
-          },
-          0.001
-        )
-    ).toBe(true)
+    let correctXfo = new Xfo(new Vec3(7, 6, 0), new Quat(0, 0, 0, 1))
 
-    expect(
-      child
-        .getParameter('GeomMat')
-        .getValue()
-        .asArray()
-    ).toEqual(Float32Array.of(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 9, 10, 0, 1))
+    // {
+    //   ori: { w: 1, x: 0, y: 0, z: 0 },
+    //   tr: { x: 7, y: 6, z: 0 }
+    // }
+    expect(child.globalXfoParam.value.approxEqual(correctXfo, 0.001)).toBe(true)
+
+    expect(child.geomMatParam.value.asArray()).toEqual(Float32Array.of(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 9, 10, 0, 1))
   })
 
   test('Saving to JSON (serialization).', () => {
     const standardMaterial = new Material('myMaterial', 'SimpleSurfaceShader')
-    standardMaterial.getParameter('BaseColor').setValue(new Color(89 / 255, 182 / 255, 92 / 255))
+    standardMaterial.getParameter('BaseColor').value = new Color(89 / 255, 182 / 255, 92 / 255)
 
     const geomItem = new GeomItem('Item', new Sphere(1.4, 13), standardMaterial)
-    geomItem.getParameter('LocalXfo').setValue(new Xfo(new Vec3(2, 4, 0)))
-    geomItem.getParameter('GeomOffsetXfo').setValue(new Xfo(new Vec3(2, 4, 0)))
+    geomItem.localXfoParam.value = new Xfo(new Vec3(2, 4, 0))
+    geomItem.geomOffsetXfoParam.value = new Xfo(new Vec3(2, 4, 0))
     // To trigger a new calculation of the BBox we need to request its value
-    geomItem.getParameter('BoundingBox').getValue()
+    geomItem.boundingBoxParam.value
     expect(geomItem.toJSON()).toMatchSnapshot()
   })
 
@@ -93,24 +73,24 @@ describe('GeomItem', () => {
     geomItem.fromJSON(Fixtures.fromJSON, { numGeomItems: 0 })
 
     const standardMaterial = new Material('myMaterial', 'SimpleSurfaceShader')
-    standardMaterial.getParameter('BaseColor').setValue(new Color(89 / 255, 182 / 255, 92 / 255))
+    standardMaterial.getParameter('BaseColor').value = new Color(89 / 255, 182 / 255, 92 / 255)
 
     const defaultItem = new GeomItem('Item', new Sphere(1.4, 13), standardMaterial)
-    defaultItem.getParameter('LocalXfo').setValue(new Xfo(new Vec3(2, 4, 0)))
-    defaultItem.getParameter('GeomOffsetXfo').setValue(new Xfo(new Vec3(2, 4, 0)))
+    defaultItem.localXfoParam.value = new Xfo(new Vec3(2, 4, 0))
+    defaultItem.geomOffsetXfoParam.value = new Xfo(new Vec3(2, 4, 0))
     // To trigger a new calculation of the BBox we need to request its value
-    defaultItem.getParameter('BoundingBox').getValue()
+    defaultItem.boundingBoxParam.value
 
     expect(geomItem.toJSON()).toEqual(defaultItem.toJSON())
   })
 
   it('clones GeomItem', () => {
     const standardMaterial = new Material('myMaterial', 'SimpleSurfaceShader')
-    standardMaterial.getParameter('BaseColor').setValue(new Color(89 / 255, 182 / 255, 92 / 255))
+    standardMaterial.getParameter('BaseColor').value = new Color(89 / 255, 182 / 255, 92 / 255)
 
     const item = new GeomItem('Item', new Sphere(1.4, 13), standardMaterial)
-    item.getParameter('LocalXfo').setValue(new Xfo(new Vec3(2, 4, 0)))
-    item.getParameter('GeomOffsetXfo').setValue(new Xfo(new Vec3(2, 4, 0)))
+    item.localXfoParam.value = new Xfo(new Vec3(2, 4, 0))
+    item.geomOffsetXfoParam.value = new Xfo(new Vec3(2, 4, 0))
 
     const clonedItem = item.clone()
     expect(item.toJSON()).toEqual(clonedItem.toJSON())
@@ -118,11 +98,11 @@ describe('GeomItem', () => {
 
   it('copies from another GeomItem', () => {
     const standardMaterial = new Material('myMaterial', 'SimpleSurfaceShader')
-    standardMaterial.getParameter('BaseColor').setValue(new Color(89 / 255, 182 / 255, 92 / 255))
+    standardMaterial.getParameter('BaseColor').value = new Color(89 / 255, 182 / 255, 92 / 255)
 
     const item = new GeomItem('Item', new Sphere(1.4, 13), standardMaterial)
-    item.getParameter('LocalXfo').setValue(new Xfo(new Vec3(2, 4, 0)))
-    item.getParameter('GeomOffsetXfo').setValue(new Xfo(new Vec3(2, 4, 0)))
+    item.localXfoParam.value = new Xfo(new Vec3(2, 4, 0))
+    item.geomOffsetXfoParam.value = new Xfo(new Vec3(2, 4, 0))
 
     const copiedItem = new GeomItem()
     copiedItem.copyFrom(item)

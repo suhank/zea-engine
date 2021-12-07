@@ -6,46 +6,73 @@
   </head>
   <body class="bg-blue-100 h-full">
     <div class="h-full">
-      <canvas class="absolute" id="app"></canvas>
+      <canvas class="h-full w-full" id="viewport"></canvas>
     </div>
 
-    <script src="../dist/index.umd.development.js"></script>
+    <script src="../dist/index.umd.js"></script>
 
     <script type="module">
       const { GLRenderer, Scene, Vec3, Xfo, Color, TreeItem, BillboardItem, Label } = zeaEngine
 
+      const urlParams = new URLSearchParams(window.location.search)
       const scene = new Scene()
-      const domElement = document.getElementById('app')
-      const renderer = new GLRenderer(domElement, { hideSplash: true, antialias: false })
+      const renderer = new GLRenderer(document.getElementById('viewport'), {
+        floatGeomBuffer: urlParams.has('webgl') ? false : true,
+        antialias: false,
+      })
+      // renderer.getViewport().debugGeomShader = true
+      // renderer.getViewport().debugHighlightedGeomsBuffer = true
       renderer.setScene(scene)
 
       // scene.setupGrid(4, 4)
 
       const asset = new TreeItem('labels')
       scene.getRoot().addChild(asset)
+      let loaded = false
 
       let index = 0
       const addLabel = (lineEndPos, pos, color, name) => {
         return new Promise((resolve, reject) => {
           const label = new Label(name)
-          label.getParameter('FontSize').setValue(48)
-          label.getParameter('FontColor').setValue(color)
-          label.getParameter('BackgroundColor').setValue(new Color(0.3, 0.3, 0.3))
+          label.fontSizeParam.value = 48
+          label.fontColorParam.value = color
+          label.backgroundColorParam.value = new Color(0.3, 0.3, 0.3)
 
           const billboard = new BillboardItem('billboard' + index, label)
           const xfo = new Xfo(pos)
-          billboard.getParameter('LocalXfo').setValue(xfo)
-          billboard.getParameter('PixelsPerMeter').setValue(300)
-          billboard.getParameter('AlignedToCamera').setValue(true)
-          billboard.getParameter('DrawOnTop').setValue(true)
-          billboard.getParameter('Alpha').setValue(1)
+          billboard.localXfoParam.value = xfo
+          billboard.pixelsPerMeterParam.value = 300
+          billboard.alignedToCameraParam.value = true
+          billboard.drawOnTopParam.value = true
+          billboard.alphaParam.value = 1
           // billboard.getParameter('lineEnd').addElement(lineEndPos)
-          // billboard.getChildByName('line0').getMaterial().getParameter('Color').setValue(new Color(.7, .7, .7))
+          // billboard.getChildByName('line0').getMaterial().getParameter('Color').value  = new Color(.7, .7, .7)
           asset.addChild(billboard)
 
           index++
 
           label.on('labelRendered', resolve)
+          billboard.on('pointerEnter', (event) => {
+            billboard.addHighlight('pointerOver', new Color(1, 0, 0, 0.2), true)
+            console.log('pointerEnter', event)
+
+            // This should work, but it always fails. The screenshot taken does not contain the highlight.
+            // if (loaded) {
+            //   renderer.once('redrawOccurred', () => {
+            //     window.postMessage(`done-MouseOverLabel`)
+            //   })
+            // }
+          })
+          billboard.on('pointerLeave', (event) => {
+            billboard.removeHighlight('pointerOver', true)
+            console.log('pointerLeave', event)
+          })
+          billboard.on('pointerDown', (event) => {
+            console.log('pointerDown', event)
+          })
+          billboard.on('pointerUp', (event) => {
+            console.log('pointerUp', event)
+          })
         })
       }
 
@@ -57,24 +84,19 @@
 
       Promise.all(promises).then(() => {
         window.postMessage(`done-Loading`)
+        loaded = true
       })
 
       // {{{ Messages handler.
-      const handleMessage = event => {
+      const handleMessage = (event) => {
         const { data } = event
 
         if (data === 'front') {
-          renderer
-            .getViewport()
-            .getCamera()
-            .setPositionAndTarget(new Vec3(2, 2, 2.7), new Vec3(0, 0, 0.4))
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, 2.7), new Vec3(0, 0, 0.4))
           renderer.frameAll()
           window.postMessage(`done-${data}`)
         } else if (data === 'back') {
-          renderer
-            .getViewport()
-            .getCamera()
-            .setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 0.4))
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 0.4))
           renderer.frameAll()
           window.postMessage(`done-${data}`)
         }

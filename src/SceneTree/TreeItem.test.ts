@@ -49,21 +49,12 @@ describe('TreeItem', () => {
     const child = new TreeItem('Child')
     parent.addChild(child)
 
-    parent.getParameter('LocalXfo').setValue(new Xfo(new Vec3(5, 2, 0)))
-    child.getParameter('LocalXfo').setValue(new Xfo(new Vec3(2, 4, 0)))
+    parent.localXfoParam.value = new Xfo(new Vec3(5, 2, 0))
+    child.localXfoParam.value = new Xfo(new Vec3(2, 4, 0))
 
-    expect(
-      child
-        .getParameter('GlobalXfo')
-        .getValue()
-        .approxEqual(
-          {
-            ori: { w: 1, x: 0, y: 0, z: 0 },
-            tr: { x: 7, y: 6, z: 0 },
-          },
-          0.001
-        )
-    ).toBe(true)
+    const correctXfo = new Xfo(new Vec3(7, 6, 0), new Quat(0, 0, 0, 1))
+
+    expect(child.globalXfoParam.value.approxEqual(correctXfo, 0.001)).toBe(true)
   })
 
   test('Hierarchical Transformations - Rotation.', () => {
@@ -71,19 +62,16 @@ describe('TreeItem', () => {
     const child = new TreeItem('Child')
     parent.addChild(child)
 
-    child.getParameter('LocalXfo').setValue(new Xfo(new Vec3(2, 4, 0)))
+    child.localXfoParam.value = new Xfo(new Vec3(2, 4, 0))
 
     const rotation = new Quat()
     rotation.setFromAxisAndAngle(new Vec3(0, 0, 1), Math.PI * 0.5)
 
-    parent.getParameter('LocalXfo').setValue(new Xfo(new Vec3(0, 0, 0), rotation))
+    parent.localXfoParam.value = new Xfo(new Vec3(0, 0, 0), rotation)
 
-    expect(
-      child
-        .getParameter('GlobalXfo')
-        .getValue()
-        .approxEqual({ tr: { x: -4, y: 2, z: 0 }, ori: { x: 0, y: 0, z: 0.70711, w: 0.70711 } }, 0.001)
-    ).toBe(true)
+    const correctXfo = new Xfo(new Vec3(-4, 2, 0), new Quat(0, 0, 0.70711, 0.70711))
+
+    expect(child.globalXfoParam.value.approxEqual(correctXfo, 0.001)).toBe(true)
   })
 
   test('Getting child by name.', () => {

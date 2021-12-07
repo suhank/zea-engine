@@ -1,4 +1,6 @@
 import { BinReader } from '../SceneTree/BinReader'
+import { StringFunctions } from '../Utilities/StringFunctions'
+
 /**
  * Representing a Vec2(two-dimensional floating point vector). A Vec2 is for representing 2 dimensional values, such as screen coordinates or pixel coordinates within an image.
  *
@@ -7,6 +9,7 @@ import { BinReader } from '../SceneTree/BinReader'
  *
  */
 class Vec2 {
+  __data: Float32Array | Uint32Array | Int32Array
   /**
    * Creates a Vec2.
    *
@@ -14,7 +17,7 @@ class Vec2 {
    * {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint32Array|Uint32Array},
    * {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array|Int32Array} and
    * {@link https://developer.mozilla.org/es/docs/Web/JavaScript/Referencia/Objetos_globales/ArrayBuffer|ArrayBuffer}.
-   * <br>
+   *
    *
    * ```javascript
    *  const myVec2 = new Vec2(1.2, 3.4)
@@ -55,34 +58,27 @@ class Vec2 {
    *  const myVec2 = new Vec2({ x:1.2, y:3.4 })
    * ```
    *
-   * @param {Number|Float32Array|Uint32Array|json} x - The x value. Default is 0.
-   * @param {Number} y - The y value. Default is 0.
+   * @param x - The x value. Default is 0.
+   * @param y - The y value. Default is 0.
    */
-  __data: Float32Array | Uint32Array | Int32Array
-
-  constructor(x: any = 0, y = 0) {
-    //x: number | Float32Array | Uint32Array | Record<string, any> = 0
-
+  constructor(x: number | Float32Array | Uint32Array | Int32Array = 0, y = 0) {
     if (x instanceof Float32Array || x instanceof Uint32Array || x instanceof Int32Array) {
       this.__data = x
-    } else if (x instanceof ArrayBuffer) {
-      console.warn(`deprecated, please use new Vec4(new Float32Array(buffer, byteOffset, 4))`)
-      const buffer = x
-      const byteOffset = y
-      this.__data = new Float32Array(buffer, byteOffset, 2)
-    } else if (x != null && typeof x == 'object') {
+    } else if (typeof x == 'number' && typeof y == 'number') {
+      this.__data = new Float32Array(2)
+      this.__data[0] = x
+      this.__data[1] = y
+    } else if (typeof x == 'object') {
       this.__data = new Float32Array(2)
       this.fromJSON(x)
     } else {
       this.__data = new Float32Array(2)
-      this.__data[0] = x
-      this.__data[1] = y
     }
   }
 
   /**
    * Getter for `x` component.
-   * @return {number} - Returns the x component.
+   * @return - Returns the x component.
    */
   get x(): number {
     return this.__data[0]
@@ -90,7 +86,7 @@ class Vec2 {
 
   /**
    * Setter for `x` component.
-   * @param {number} val - The val param.
+   * @param val - The val param.
    */
   set x(val: number) {
     this.__data[0] = val
@@ -98,7 +94,7 @@ class Vec2 {
 
   /**
    * Getter for `y` component.
-   * @return {number} - Returns the y component.
+   * @return - Returns the y component.
    */
   get y(): number {
     return this.__data[1]
@@ -106,7 +102,7 @@ class Vec2 {
 
   /**
    * Setter for `y` component.
-   * @param {number} val - The val param.
+   * @param val - The val param.
    */
   set y(val: number) {
     this.__data[1] = val
@@ -114,8 +110,8 @@ class Vec2 {
 
   /**
    * Setter from scalar components.
-   * @param {number} x - The x component.
-   * @param {number} y  - The y component.
+   * @param x - The x component.
+   * @param y  - The y component.
    */
   set(x: number, y: number): void {
     this.__data[0] = x
@@ -125,7 +121,7 @@ class Vec2 {
   /**
    * Replaces this Vec2 data with the Vec2 data passed as parameter.
    *
-   * @param {Vec2} other - The other Vec2 to set from.
+   * @param other - The other Vec2 to set from.
    */
   setFromOther(other: Vec2): void {
     this.x = other.x
@@ -134,22 +130,9 @@ class Vec2 {
 
   /**
    * Checks if this Vec2 contains the same values as the other Vec2.
-   * Deprecated. Use #isEqual instead.
    *
-   * @deprecated
-   * @param {Vec2} other - The other Vec2 to compare with.
-   * @return {boolean} - Returns `true` if are the same Vector, otherwise, `false`.
-   */
-  equal(other: Vec2): boolean {
-    console.warn('Deprecated. Use #isEqual instead.')
-    return this.isEqual(other)
-  }
-
-  /**
-   * Checks if this Vec2 contains the same values as the other Vec2.
-   *
-   * @param {Vec2} other - The other Vec2 to compare with.
-   * @return {boolean} - Returns `true` if are the same Vector, otherwise, `false`.
+   * @param other - The other Vec2 to compare with.
+   * @return - Returns `true` if are the same Vector, otherwise, `false`.
    */
   isEqual(other: Vec2): boolean {
     return this.x == other.x && this.y == other.y
@@ -158,20 +141,8 @@ class Vec2 {
   /**
    * Checks if this Vec2 is different from another Vec2.
    *
-   * @deprecated
-   * @param {Vec2} other - The other Vec2 to compare with.
-   * @return {boolean} - Returns `true` if the Vec2s are different, otherwise, `false`.
-   */
-  notEquals(other: Vec2): boolean {
-    console.warn('Deprecated. Use #notEqual instead.')
-    return this.notEqual(other)
-  }
-
-  /**
-   * Checks if this Vec2 is different from another Vec2.
-   *
-   * @param {Vec2} other - The other Vec2 to compare with.
-   * @return {boolean} - Returns `true` if the Vec2s are different, otherwise, `false`.
+   * @param other - The other Vec2 to compare with.
+   * @return - Returns `true` if the Vec2s are different, otherwise, `false`.
    */
   notEqual(other: Vec2): boolean {
     return this.x != other.x && this.y != other.y
@@ -180,9 +151,9 @@ class Vec2 {
   /**
    * Returns true if this Vec2 is approximately the same as other.
    *
-   * @param {Vec2} other - The other Vec2 to compare with.
-   * @param {number} precision - The precision to which the values must match.
-   * @return {boolean} - Returns true or false.
+   * @param other - The other Vec2 to compare with.
+   * @param precision - The precision to which the values must match.
+   * @return - Returns true or false.
    */
   approxEqual(other: Vec2, precision: number = Number.EPSILON): boolean {
     return Math.abs(this.x - other.x) < precision && Math.abs(this.y - other.y) < precision
@@ -191,8 +162,8 @@ class Vec2 {
   /**
    * Adds other to this Vec2 and returns the result as a new Vec2.
    *
-   * @param {Vec2} other - The other Vec2 to add.
-   * @return {Vec2} - Returns a new Vec2.
+   * @param other - The other Vec2 to add.
+   * @return - Returns a new Vec2.
    */
   add(other: Vec2): Vec2 {
     return new Vec2(this.x + other.x, this.y + other.y)
@@ -201,7 +172,7 @@ class Vec2 {
   /**
    * Adds a Vec2 to this Vec2.
    *
-   * @param {Vec2} other - The other Vec2 to add.
+   * @param other - The other Vec2 to add.
    */
   addInPlace(other: Vec2): void {
     this.x += other.x
@@ -211,8 +182,8 @@ class Vec2 {
   /**
    * Subtracts a Vec2 from this Vec2 and returns the result as a new Vec2.
    *
-   * @param {Vec2} other - The other Vec2 to subtract.
-   * @return {Vec2} - Returns a new Vec2.
+   * @param other - The other Vec2 to subtract.
+   * @return - Returns a new Vec2.
    */
   subtract(other: Vec2): Vec2 {
     return new Vec2(this.x - other.x, this.y - other.y)
@@ -221,8 +192,8 @@ class Vec2 {
   /**
    * Subtracts a Vec2 from this Vec2.
    *
-   * @param {Vec2} other - The other Vec2 to subtract.
-   * @return {Vec2} - Returns a new Vec2.
+   * @param other - The other Vec2 to subtract.
+   * @return - Returns a new Vec2.
    */
   subtractInPlace(other: Vec2): Vec2 {
     this.x -= other.x
@@ -233,8 +204,8 @@ class Vec2 {
   /**
    * Scales this Vec2 by scalar and returns the result as a new Vec2.
    *
-   * @param {number} scalar - The scalar value.
-   * @return {Vec2} - Returns a new Vec2.
+   * @param scalar - The scalar value.
+   * @return - Returns a new Vec2.
    */
   scale(scalar: number): Vec2 {
     return new Vec2(this.x * scalar, this.y * scalar)
@@ -243,7 +214,7 @@ class Vec2 {
   /**
    * Scales this Vec2 by scalar.
    *
-   * @param {number} scalar - The scalar value.
+   * @param scalar - The scalar value.
    */
   scaleInPlace(scalar: number): void {
     this.x *= scalar
@@ -253,7 +224,7 @@ class Vec2 {
   /**
    * Inverts this Vec2 and returns the result as a new Vec2.
    *
-   * @return {Vec2} - Returns a new Vec2.
+   * @return - Returns a new Vec2.
    */
   invert(): Vec2 {
     return new Vec2(1.0 / this.x, 1.0 / this.y)
@@ -262,7 +233,7 @@ class Vec2 {
   /**
    * Inverts this Vec2.
    *
-   * @return {Vec2} - The return value.
+   * @return - The return value.
    */
   invertInPlace(): Vec2 {
     this.x = 1.0 / this.x
@@ -273,8 +244,8 @@ class Vec2 {
   /**
    * Multiplies a Vec2 with this Vec2 and returns the result as a new Vec2.
    *
-   * @param {Vec2} other - The other Vec2 to multiply with.
-   * @return {Vec2} - Returns a new Vec2.
+   * @param other - The other Vec2 to multiply with.
+   * @return - Returns a new Vec2.
    */
   multiply(other: Vec2): Vec2 {
     return new Vec2(this.x * other.x, this.y * other.y)
@@ -283,7 +254,7 @@ class Vec2 {
   /**
    * Multiplies a Vec2 with this Vec2.
    *
-   * @param {Vec2} other - The other Vec2 to multiply with.
+   * @param other - The other Vec2 to multiply with.
    */
   multiplyInPlace(other: Vec2): void {
     this.x *= other.x
@@ -293,7 +264,7 @@ class Vec2 {
   /**
    * Calculates the squared length of this Vec2.
    *
-   * @return {number} - Returns the length squared.
+   * @return - Returns the length squared.
    */
   lengthSquared(): number {
     const x = this.__data[0]
@@ -304,7 +275,7 @@ class Vec2 {
   /**
    * Calculates the length of this Vec2.
    *
-   * @return {number} - Returns the length.
+   * @return - Returns the length.
    */
   length(): number {
     return Math.sqrt(this.lengthSquared())
@@ -313,8 +284,8 @@ class Vec2 {
   /**
    * Calculates the distance to another vector.
    *
-   * @param {Vec2} other - The other value.
-   * @return {number} - Returns the distance between vectors.
+   * @param other - The other value.
+   * @return - Returns the distance between vectors.
    */
   distanceTo(other: Vec2): number {
     const x = this.__data[0] - other.x
@@ -326,7 +297,7 @@ class Vec2 {
    * Normalizes the Vec2 and returns it as a new Vec2.
    * Multiplies coordinates value by the inverse of the vector length.
    *
-   * @return {Vec2} - Returns the Vec2 normalized.
+   * @return - Returns the Vec2 normalized.
    */
   normalize(): Vec2 {
     const x = this.__data[0]
@@ -358,8 +329,8 @@ class Vec2 {
   /**
    * Calculates the dot product of this Vec2 against another Vec2.
    *
-   * @param {Vec2} other - The other Vec2 to compare with.
-   * @return {number} - Returns the dot product.
+   * @param other - The other Vec2 to compare with.
+   * @return - Returns the dot product.
    */
   dot(other: Vec2): number {
     return this.x * other.x + this.y * other.y
@@ -368,8 +339,8 @@ class Vec2 {
   /**
    * Calculates the cross product of this Vec2 against another Vec2.
    *
-   * @param {Vec2} other - The other Vec2 to compare with.
-   * @return {number} - Returns the cross product.
+   * @param other - The other Vec2 to compare with.
+   * @return - Returns the cross product.
    */
   cross(other: Vec2): number {
     // just calculate the z-component
@@ -379,8 +350,8 @@ class Vec2 {
   /**
    * Gets the angle between this Vec2 and other assuming both are normalized vectors.
    *
-   * @param {Vec2} other - The other Vec2 to compare with.
-   * @return {number} - Returns the angle in radians.
+   * @param other - The other Vec2 to compare with.
+   * @return - Returns the angle in radians.
    */
   angleTo(other: Vec2): number {
     const cosine = this.normalize().dot(other.normalize())
@@ -392,8 +363,8 @@ class Vec2 {
   /**
    * Gets the angle between this Vec2 and other.
    *
-   * @param {Vec2} other - The other Vec2 to compare with.
-   * @return {number} - Returns the angle in radians.
+   * @param other - The other Vec2 to compare with.
+   * @return - Returns the angle in radians.
    */
   signedAngleTo(other: Vec2): number {
     const angle = this.angleTo(other)
@@ -404,8 +375,8 @@ class Vec2 {
   /**
    * Rotates a Vec2 in a clockwise direction and returns a new rotated Vec2.
    *
-   * @param {number} angle - The angle of rotation.
-   * @return {Vec2} - Returns the rotated vector.
+   * @param angle - The angle of rotation.
+   * @return - Returns the rotated vector.
    */
   rotate(angle: number): Vec2 {
     const cosA = Math.cos(angle)
@@ -416,9 +387,9 @@ class Vec2 {
   /**
    * Performs a linear interpolation between this Vec2 and other Vec2.
    *
-   * @param {Vec2} other - The other Vec2 to interpolate between.
-   * @param {number} t - Interpolation amount between the two inputs.
-   * @return {Vec2} - Returns a new Vec2.
+   * @param other - The other Vec2 to interpolate between.
+   * @param t - Interpolation amount between the two inputs.
+   * @return - Returns a new Vec2.
    */
   lerp(other: Vec2, t: number): Vec2 {
     const ax = this.x
@@ -429,8 +400,8 @@ class Vec2 {
   /**
    * Generates a random vector with the given scale.
    *
-   * @param {number} scale - Length of the resulting vector. If omitted, a unit vector will be returned.
-   * @return {Vec2} - The return value.
+   * @param scale - Length of the resulting vector. If omitted, a unit vector will be returned.
+   * @return - The return value.
    */
   setRandomDir(scale = 1.0): Vec2 {
     const r = Math.random() * 2.0 * Math.PI
@@ -442,8 +413,8 @@ class Vec2 {
   /**
    * Randomizes the scale of this Vec2 coordinates.
    *
-   * @param {number} scale - The scale value.
-   * @return {Vec2} - The return value.
+   * @param scale - The scale value.
+   * @return - The return value.
    */
   setRandom(scale = 1.0): Vec2 {
     this.__data[0] = Math.random() * scale
@@ -454,7 +425,7 @@ class Vec2 {
   /**
    * Clones this Vec2 and returns a new Vec2.
    *
-   * @return {Vec2} - Returns a new Vec2.
+   * @return - Returns a new Vec2.
    */
   clone(): Vec2 {
     return new Vec2(this.__data[0], this.__data[1])
@@ -463,7 +434,7 @@ class Vec2 {
   /**
    * Returns current Vec2 data as array. Often used to pass types to the GPU.
    *
-   * @return {Float32Array | Uint32Array | Int32Array} - Returns as an array.
+   * @return - Returns as an array.
    */
   asArray(): Float32Array | Uint32Array | Int32Array {
     return this.__data
@@ -473,21 +444,31 @@ class Vec2 {
   // Persistence
 
   /**
+   * Converts this Vec3 to a string in JSON format.
+   *
+   * @return - The return value.
+   */
+  toString() {
+    // eslint-disable-next-line new-cap
+    return StringFunctions.stringifyJSONWithFixedPrecision(this.toJSON())
+  }
+
+  /**
    * Encodes Vec2 Class as a JSON object for persistence.
    *
-   * @return {Record<string, number>} - The json object.
+   * @return - The json object.
    */
   toJSON(): Record<string, number> {
     return {
       x: this.x,
-      y: this.y
+      y: this.y,
     }
   }
 
   /**
    * Decodes a JSON object to set the state of this class.
    *
-   * @param {Record<string, number>} j - The json object.
+   * @param j - The json object.
    */
   fromJSON(j: Record<string, number>): void {
     this.x = j.x
@@ -497,7 +478,7 @@ class Vec2 {
   /**
    * Loads the state of the value from a binary reader.
    *
-   * @param {BinReader} reader - The reader value.
+   * @param reader - The reader value.
    */
   readBinary(reader: BinReader): void {
     this.x = reader.loadFloat32()
@@ -507,11 +488,11 @@ class Vec2 {
   /**
    * Calculate the intersection point of 2 2d lines, returning the parameters values for each line.
    *
-   * @param {Vec2} p0 - The point of the first line
-   * @param {Vec2} d0 - The direction of the first line
-   * @param {Vec2} p1 - The point of the second line
-   * @param {Vec2} d1 - The direction of the second line
-   * @return {Vec2 | null} - Returns an array containing 2 parameter values for the 2 lines.
+   * @param p0 - The point of the first line
+   * @param d0 - The direction of the first line
+   * @param p1 - The point of the second line
+   * @param d1 - The direction of the second line
+   * @return - Returns an array containing 2 parameter values for the 2 lines.
    */
   static intersectionOfLines(p1: Vec2, p2: Vec2, p3: Vec2, p4: Vec2): Vec2 | null {
     // https://dirask.com/posts/JavaScript-how-to-calculate-intersection-point-of-two-lines-for-given-4-points-VjvnAj

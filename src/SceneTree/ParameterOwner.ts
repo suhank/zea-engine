@@ -19,12 +19,12 @@ import { Parameter } from './Parameters/Parameter'
 class ParameterOwner extends EventEmitter {
   protected paramEventListenerIDs: Record<string, number> = {}
   protected paramMapping: Record<string, number> = {}
-  protected params: Parameter<any>[] = []
+  params: Parameter<any>[] = []
   deprecatedParamMapping: Record<string, any> = {}
 
   /**
    * Creates an instance of ParameterOwner by initializing parameter hosting mappings and events.
-   * <br>
+   *
    * Every Object has a unique identifier which is based on a counter that is incremented.
    */
   constructor() {
@@ -32,20 +32,9 @@ class ParameterOwner extends EventEmitter {
   }
 
   /**
-   * @deprecated
    * Returns the number of parameters current object has.
    *
-   * @return {number} - Amount of parameters in current object.
-   */
-  numParameters(): number {
-    console.warn('Deprecated. Use #getNumParameters instead.')
-    return this.getNumParameters()
-  }
-
-  /**
-   * Returns the number of parameters current object has.
-   *
-   * @return {number} - Amount of parameters in current object.
+   * @return - Amount of parameters in current object.
    */
   getNumParameters(): number {
     return this.params.length
@@ -54,7 +43,7 @@ class ParameterOwner extends EventEmitter {
   /**
    * Returns all the parameters of the object.
    *
-   * @return {array} - Parameter List
+   * @return - Parameter List
    */
   getParameters(): Parameter<any>[] {
     return this.params
@@ -63,8 +52,8 @@ class ParameterOwner extends EventEmitter {
   /**
    * Returns the index of a parameter in parameter list.
    *
-   * @param {string} paramName - Name of the parameter.
-   * @return {number} - Position in the array
+   * @param paramName - Name of the parameter.
+   * @return - Position in the array
    */
   getParameterIndex(paramName: string): number {
     return this.paramMapping[paramName]
@@ -73,8 +62,8 @@ class ParameterOwner extends EventEmitter {
   /**
    * Returns `Parameter` object in a given index
    *
-   * @param {number} index - Position of the parameter in the array
-   * @return {Parameter} - Parameter object value
+   * @param index - Position of the parameter in the array
+   * @return - Parameter object value
    */
   getParameterByIndex(index: number): Parameter<any> {
     return this.params[index]
@@ -83,8 +72,8 @@ class ParameterOwner extends EventEmitter {
   /**
    * Validates if the specified parameter exists in the object.
    *
-   * @param {string} paramName - The parameter name.
-   * @return {boolean} - The return value.
+   * @param paramName - The parameter name.
+   * @return - The return value.
    */
   hasParameter(paramName: string): boolean {
     return paramName in this.paramMapping
@@ -94,9 +83,9 @@ class ParameterOwner extends EventEmitter {
    * Add a mapping from one name to a new parameter.
    * This is used to handle migrating parameters to new names.
    *
-   * @param {string} key - The parameter name.
-   * @param {string} paramName - The parameter name.
-   * @return {boolean} - The return value.
+   * @param key - The parameter name.
+   * @param paramName - The parameter name.
+   * @return - The return value.
    */
   addParameterDeprecationMapping(key: string, paramName: string): void {
     this.deprecatedParamMapping[key] = paramName
@@ -105,8 +94,8 @@ class ParameterOwner extends EventEmitter {
   /**
    * Returns `Parameter` object using the given name
    *
-   * @param {string} paramName - The parameter name.
-   * @return {Parameter} - Parameter object value
+   * @param paramName - The parameter name.
+   * @return - Parameter object value
    */
   getParameter(paramName: string): Parameter<any> | null {
     let index = this.paramMapping[paramName]
@@ -127,7 +116,7 @@ class ParameterOwner extends EventEmitter {
   /**
    * This method can be overridden in derived classes
    * to perform general updates (see GLPass or BaseItem).
-   * @param {Record<string, unknown>} event - The event object emitted by the parameter.
+   * @param event - The event object emitted by the parameter.
    * @private
    */
   protected parameterValueChanged(event: Record<string, unknown>): void {
@@ -138,8 +127,8 @@ class ParameterOwner extends EventEmitter {
    * Adds `Parameter` object to the owner's parameter list.
    *
    * @emits `parameterAdded` with the name of the param.
-   * @param {Parameter} param - The parameter to add.
-   * @return {Parameter} - With `owner` and `valueChanged` event set.
+   * @param param - The parameter to add.
+   * @return - With `owner` and `valueChanged` event set.
    */
   addParameter(param: Parameter<any>): Parameter<any> {
     return this.insertParameter(param, this.params.length)
@@ -151,9 +140,9 @@ class ParameterOwner extends EventEmitter {
    *
    *
    * @emits `parameterAdded` with the name of the param.
-   * @param {Parameter} param - The parameter to insert.
-   * @param {number} index - The index value.
-   * @return {Parameter} - With `owner` and `valueChanged` event set.
+   * @param param - The parameter to insert.
+   * @param index - The index value.
+   * @return - With `owner` and `valueChanged` event set.
    */
   insertParameter(param: Parameter<any>, index: number): Parameter<any> {
     const name = param.getName()
@@ -162,7 +151,7 @@ class ParameterOwner extends EventEmitter {
       this.removeParameter(name)
     }
     param.setOwner(this)
-    this.paramEventListenerIDs[name] = param.on('valueChanged', event => {
+    this.paramEventListenerIDs[name] = param.on('valueChanged', (event) => {
       // Note: spread operators cause errors on iOS 11.
       const newEvent: Record<string, unknown> = { param }
       for (const key in event) newEvent[key] = event[key]
@@ -180,7 +169,7 @@ class ParameterOwner extends EventEmitter {
   /**
    * Removes `Parameter` from owner, by using parameter's name.
    * @emits `parameterRemoved` with the name of the param.
-   * @param {string} name - The parameter name.
+   * @param name - The parameter name.
    */
   removeParameter(name: string): void {
     if (this.paramMapping[name] == undefined) {
@@ -201,8 +190,8 @@ class ParameterOwner extends EventEmitter {
   /**
    * Replaces old `Parameter` by passing a new one with the same name.
    *
-   * @param {Parameter} param - The parameter to replace.
-   * @return {Parameter} - `Parameter` with `valueChanged` event set.
+   * @param param - The parameter to replace.
+   * @return - `Parameter` with `valueChanged` event set.
    */
   replaceParameter(param: Parameter<any>): Parameter<any> {
     const name = param.getName()
@@ -221,11 +210,13 @@ class ParameterOwner extends EventEmitter {
   /**
    * The toJSON method encodes this type as a json object for persistence.
    *
-   * @param {Record<string, unknown>} context - The context value.
-   * @return {Record<string, unknown>} - Returns the json object.
+   * @param context - The context value.
+   * @return - Returns the json object.
    */
   toJSON(context?: Record<string, unknown>): Record<string, unknown> {
-    const json: Record<string, unknown> = super.toJSON(context)
+    const json: Record<string, unknown> = {
+      type: this.getClassName(),
+    }
     const paramsJSON: Record<string, unknown> = {}
     let savedParams = 0
     for (const param of this.params) {
@@ -242,8 +233,8 @@ class ParameterOwner extends EventEmitter {
   /**
    * The fromJSON method decodes a json object for this type.
    *
-   * @param {Record<string, any>} json - The json object this item must decode.
-   * @param {Record<string, any>} context - The context value.
+   * @param json - The json object this item must decode.
+   * @param context - The context value.
    */
   fromJSON(json: Record<string, any>, context?: Record<string, any>): void {
     if (json.params) {
@@ -272,13 +263,13 @@ class ParameterOwner extends EventEmitter {
 
   /**
    * Uses passed in BinReader object(containing an Int32 array with all the parameters) to reconstruct all parameters state.
-   * <br>
+   *
    * In each iteration of the array, propType and propName are extracted and
    * used to build the right `Parameter` class. Then all of them are added to the object.
    *
    * @emits `parameterAdded` with the name of the param.
-   * @param {BinReader} reader - The reader value.
-   * @param {Record<string, any>} context - The context value.
+   * @param reader - The reader value.
+   * @param context - The context value.
    */
   readBinary(reader: BinReader, context: Record<string, any>): void {
     // TODO: make this work
@@ -289,7 +280,7 @@ class ParameterOwner extends EventEmitter {
         const propName = reader.loadStr()
         let param = this.getParameter(propName)
         if (!param) {
-          param = Registry.constructClass(propType) as Parameter<any> // TODO: is proptype correct to use here over propName?
+          param = Registry.constructClass(propType) as Parameter<any>
           if (!param) {
             console.error('Unable to construct prop:' + propName + ' of type:' + propType)
             continue
@@ -304,8 +295,8 @@ class ParameterOwner extends EventEmitter {
 
   /**
    * Converts object's JSON value and converts it to a string.
-   * @param {Record<string, any>} context
-   * @return {string} - String of object's parameter list state.
+   * @param context
+   * @return - String of object's parameter list state.
    */
   toString(context: Record<string, any>): string {
     return JSON.stringify(this.toJSON(), null, 2)
@@ -317,8 +308,8 @@ class ParameterOwner extends EventEmitter {
   /**
    * Copies Parameters from another `ParameterOwner` to current object.
    *
-   * @param {ParameterOwner} src - The ParameterOwner copy from.
-   * @param {Record<string, any>} [context] - The context value
+   * @param src - The ParameterOwner copy from.
+   * @param context - The context value
    */
   copyFrom(src: ParameterOwner, context?: Record<string, any>): void {
     // Note: Loop over the parameters in reverse order,
@@ -332,7 +323,7 @@ class ParameterOwner extends EventEmitter {
       const param = this.getParameter(srcParam.getName())
       if (param) {
         // Note: we are not cloning the values.
-        param.loadValue(srcParam.getValue())
+        param.loadValue(srcParam.value)
       } else {
         this.addParameter(srcParam.clone())
       }

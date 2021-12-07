@@ -10,7 +10,7 @@
 
     <link rel="stylesheet" href="styles/tailwind.min.css" />
 
-    <script src="../dist/index.umd.development.js"></script>
+    <script src="../dist/index.umd.js"></script>
 
     <script type="module">
       /*
@@ -36,21 +36,11 @@
             Intel UHD Graphics 630 1536 MB
       */
 
-      const {
-        Vec3,
-        EulerAngles,
-        Xfo,
-        Color,
-        Cuboid,
-        Material,
-        GeomItem,
-        TreeItem,
-        Scene,
-        GLRenderer
-      } = window.zeaEngine
+      const { Vec3, EulerAngles, Xfo, Color, Cuboid, SimpleSurfaceMaterial, GeomItem, TreeItem, Scene, GLRenderer } =
+        window.zeaEngine
 
-      const canvas = document.getElementById('renderer')
-      const renderer = new GLRenderer(canvas, { hideSplash: true, antialias: false })
+      const canvas = document.getElementById('viewport')
+      const renderer = new GLRenderer(canvas, { antialias: false })
       renderer.solidAngleLimit = 0.0
 
       const scene = new Scene()
@@ -64,7 +54,7 @@
       const dim = Math.round(Math.cbrt(count))
       console.log('Will render GeomItem count:', Math.pow(dim, 3))
 
-      renderer.getViewport().on('keyDown', event => {
+      renderer.getViewport().on('keyDown', (event) => {
         if (event.key == 'f') {
           renderer.frameAll()
         }
@@ -74,13 +64,13 @@
       const TIME_LIMIT = 45_000
 
       document.querySelector('#memoryLimit').textContent = MEMORY_LIMIT
-      // const material = new Material('mat', 'SimpleSurfaceShader')
-      // material.getParameter('BaseColor').setValue(new Color(1, 1, 0))
+      // const material = new SimpleSurfaceMaterial('mat')
+      // material.baseColorParam.value = new Color(1, 1, 0)
 
       const addColumns = (row, treeItem) => {
         for (let j = 0; j < dim; j += 1) {
-          const material = new Material('mat', 'SimpleSurfaceShader')
-          material.getParameter('BaseColor').setValue(new Color(row / dim, j / dim, 1))
+          const material = new SimpleSurfaceMaterial('mat')
+          material.baseColorParam.value = new Color(row / dim, j / dim, 1)
 
           const treeItemJ = new TreeItem('TreeItem' + j)
           treeItem.addChild(treeItemJ)
@@ -91,7 +81,7 @@
 
             const xfo = new Xfo()
             xfo.tr.set(row, j, k)
-            geomItem.getParameter('GlobalXfo').setValue(xfo)
+            geomItem.globalXfoParam.value = xfo
           }
         }
       }
@@ -151,7 +141,7 @@
 
         let t1 = performance.now()
 
-        const addRow = i => {
+        const addRow = (i) => {
           const t2 = performance.now()
 
           const progress = `${Math.round((i / dim) * 100)}%, ${Math.round(t2 - t1)} ms`
@@ -165,8 +155,8 @@
           addColumns(i, treeItem)
         }
 
-        const addRowAsync = i => {
-          return new Promise(resolve => {
+        const addRowAsync = (i) => {
+          return new Promise((resolve) => {
             setTimeout(() => {
               addRow(i)
               resolve()
@@ -238,14 +228,34 @@
       <p>
         Click the
         <button
-          class="bg-yellow-300 rounded px-2 px-2 py-1 border border-yellow-400 shadow mr-1 hover:bg-yellow-200 cursor-default"
+          class="
+            bg-yellow-300
+            rounded
+            px-2 px-2
+            py-1
+            border border-yellow-400
+            shadow
+            mr-1
+            hover:bg-yellow-200
+            cursor-default
+          "
           id="run"
         >
           Run
         </button>
         or the
         <button
-          class="bg-yellow-300 rounded px-2 px-2 py-1 border border-yellow-400 shadow mr-1 hover:bg-yellow-200 cursor-default"
+          class="
+            bg-yellow-300
+            rounded
+            px-2 px-2
+            py-1
+            border border-yellow-400
+            shadow
+            mr-1
+            hover:bg-yellow-200
+            cursor-default
+          "
           id="runAsync"
         >
           Run Async
@@ -275,7 +285,7 @@
         </dl>
 
         <div class="flex-1">
-          <canvas class="absolute" id="renderer" />
+          <canvas id="viewport"></canvas>
         </div>
       </div>
     </div>

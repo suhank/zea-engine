@@ -5,6 +5,8 @@ import { Points, Lines, Mesh, PointsProxy, LinesProxy, MeshProxy, BaseGeom } fro
 import { GLPoints, GLLines, GLMesh, GLGeom } from './index'
 import { GLBaseRenderer } from '../GLBaseRenderer'
 import { IndexEvent } from '../../Utilities/Events/IndexEvent'
+import { RenderState } from '../types/renderer'
+import { WebGL12RenderingContext } from '../types/webgl'
 
 const resizeIntArray = (intArray: Int32Array, newSize: number) => {
   const newArray = new Int32Array(newSize)
@@ -40,7 +42,7 @@ class GLGeomLibrary extends EventEmitter {
   protected __destroyed: boolean = false
   /**
    * Create a GLGeomLibrary.
-   * @param {GLBaseRenderer} renderer - The renderer object
+   * @param renderer - The renderer object
    */
   constructor(renderer: GLBaseRenderer) {
     super()
@@ -100,8 +102,8 @@ class GLGeomLibrary extends EventEmitter {
 
   /**
    * Given a BaseGeom, constructs the GLGeom that manages the state of the geometry in the GPU.
-   * @param {BaseGeom} geom - The geom value.
-   * @return {GLGeom} - The return value.
+   * @param geom - The geom value.
+   * @return - The return value.
    */
   constructGLGeom(geom: BaseGeom) {
     let glgeom = this.glGeomsDict[geom.getId()]
@@ -131,8 +133,8 @@ class GLGeomLibrary extends EventEmitter {
   /**
    * Adds a geom to the GLGeomLibrary.
    *
-   * @param {BaseGeom} geom - The geom to be managed by this GLGeomLibrary.
-   * @return {number} - The index of the geom in the GLGeomLibrary
+   * @param geom - The geom to be managed by this GLGeomLibrary.
+   * @return - The index of the geom in the GLGeomLibrary
    */
   addGeom(geom: BaseGeom) {
     let index = this.geomsDict[geom.getId()]
@@ -180,7 +182,7 @@ class GLGeomLibrary extends EventEmitter {
 
   /**
    * Removes a Geom managed by this GLGeomLibrary.
-   * @param {BaseGeom} geom - The geom to remove
+   * @param geom - The geom to remove
    */
   removeGeom(geom: BaseGeom) {
     const index = this.geomsDict[geom.getId()]
@@ -207,7 +209,6 @@ class GLGeomLibrary extends EventEmitter {
     this.geomVertexCounts[index] = 0
     this.geomVertexOffsets[index] = 0
 
-    // geom.deleteMetadata(this.glgeomset_indexKey)
     this.geoms[index] = null
     this.freeGeomIndices.push(index)
     delete this.geomsDict[geom.getId()]
@@ -219,8 +220,8 @@ class GLGeomLibrary extends EventEmitter {
 
   /**
    * Returns a Geom managed by this GLGeomLibrary.
-   * @param {number} index - The index of the geom to retrieve
-   * @return {BaseGeom} - The return value.
+   * @param index - The index of the geom to retrieve
+   * @return - The return value.
    */
   getGeom(index: number) {
     return this.geoms[index]
@@ -228,8 +229,8 @@ class GLGeomLibrary extends EventEmitter {
 
   /**
    * Returns a Geom managed by this GLGeomLibrary.
-   * @param {number} index - The index of the geom to retrieve
-   * @return {array} - The return value.
+   * @param index - The index of the geom to retrieve
+   * @return - The return value.
    */
   getGeomOffsetAndCount(index: number) {
     return [this.indicesOffsets[index], this.indicesCounts[index]]
@@ -249,7 +250,7 @@ class GLGeomLibrary extends EventEmitter {
 
   /**
    * Allocates space for the geomBuffers for the specified geometry
-   * @param {number} index - The index of the geom to upload
+   * @param index - The index of the geom to upload
    */
   allocateBuffers(index: number) {
     const geom = this.geoms[index]
@@ -280,7 +281,7 @@ class GLGeomLibrary extends EventEmitter {
           dataType: attrData.dataType,
           normalized: attrData.normalized,
           dimension: geomAttrDesc.dimension,
-          elementSize: geomAttrDesc.elementSize
+          elementSize: geomAttrDesc.elementSize,
         }
       }
     }
@@ -341,7 +342,7 @@ class GLGeomLibrary extends EventEmitter {
         dataType: attrSpec.dataType,
         normalized: attrSpec.normalized,
         length: numValues,
-        dimension: attrSpec.dimension
+        dimension: attrSpec.dimension,
       }
 
       if (attrName == 'textureCoords') this.glattrbuffers['texCoords'] = this.glattrbuffers['textureCoords']
@@ -370,7 +371,7 @@ class GLGeomLibrary extends EventEmitter {
 
   /**
    * The uploadBuffers method.
-   * @param {number} index - The index of the geom to upload
+   * @param index - The index of the geom to upload
    */
   uploadBuffers(index: number) {
     const gl = this.__gl
@@ -488,8 +489,8 @@ class GLGeomLibrary extends EventEmitter {
 
   /**
    * The bind method.
-   * @param {RenderState} renderstate - The renderstate value.
-   * @return {boolean} - Returns true if binding was successful
+   * @param renderstate - The renderstate value.
+   * @return - Returns true if binding was successful
    */
   bind(renderstate: RenderState) {
     if (this.dirtyGeomIndices.size > 0) {
@@ -509,7 +510,7 @@ class GLGeomLibrary extends EventEmitter {
 
   /**
    * The unbind method.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
+   * @param renderstate - The object tracking the current state of the renderer
    */
   unbind(renderstate: RenderState) {
     // Unbinding a geom is important as it puts back some important

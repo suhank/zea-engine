@@ -1,6 +1,5 @@
 /* eslint-disable require-jsdoc */
 /* eslint-disable guard-for-in */
-import { Color } from '../Math/index'
 import { BaseItem } from './BaseItem'
 import { Registry } from '../Registry'
 
@@ -29,26 +28,22 @@ import { ColorParameter, NumberParameter } from '..'
  */
 // TODO: make abstract after subclasses checked
 class Material extends BaseItem {
-  protected __isTransparent: boolean
-  protected __isTextured: boolean
-
+  protected __isTransparent: boolean = false
+  protected __isTextured: boolean = false
   protected __shaderName: string = ''
   /**
    * Create a material
-   * @param {string} name - The name of the material.
-   * @param {string} shaderName - Shader's class name.
+   * @param name - The name of the material.
+   * @param shaderName - Shader's class name.
    */
   constructor(name?: string, shaderName?: string) {
     super(name)
-    this.__isTransparent = false
-    this.__isTextured = false
-
     if (shaderName) this.setShaderName(shaderName)
   }
 
   /**
    * Getter for the shader name.
-   * @return {string} - Returns the shader name.
+   * @return - Returns the shader name.
    */
   getShaderName(): string {
     return this.__shaderName
@@ -59,13 +54,14 @@ class Material extends BaseItem {
    * It is important that the shader is registered in `Registry`, otherwise it will error.
    * See all classes that extend from `GLShader`.
    *
-   * @param {string} shaderName - The shader name.
+   * @param shaderName - The shader name.
    */
   setShaderName(shaderName: string) {
     if (this.__shaderName == shaderName) return
     this.__shaderName = shaderName
 
-    const materialTemplate = shaderLibrary.getMaterialTemplate(shaderName)
+    const shaderClass = <typeof GLShader>Registry.getClassDefinition(shaderName)
+    const materialTemplate = shaderClass.getMaterialTemplate()
     if (!materialTemplate) throw new Error('Error setting Shader. Material template not registered found:' + shaderName)
 
     const paramMap: { [key: string]: boolean } = {}
@@ -112,7 +108,7 @@ class Material extends BaseItem {
   /**
    * Returns all texture parameters in current Material.
    *
-   * @return {Record<string, any>} - The return value.
+   * @return - The return value.
    */
   getParamTextures(): Record<string, any> {
     const textures: Record<string, any> = {}
@@ -129,7 +125,7 @@ class Material extends BaseItem {
   /**
    * Checks if the material is transparent by checking the `Opacity` parameter.
    *
-   * @return {boolean} - Returns true if the material is transparent.
+   * @return - Returns true if the material is transparent.
    */
   isTransparent(): boolean {
     return this.__isTransparent
@@ -146,19 +142,19 @@ class Material extends BaseItem {
 
     if (!isTransparent) {
       const opacity = <NumberParameter>this.getParameter('Opacity')
-      if (opacity && (opacity.getValue() < 0.99 || (opacity instanceof MaterialFloatParam && opacity.getImage()))) {
+      if (opacity && (opacity.value < 0.99 || (opacity instanceof MaterialFloatParam && opacity.getImage()))) {
         isTransparent = true
       } else {
         const baseColorParam = <ColorParameter>this.getParameter('BaseColor')
         if (baseColorParam) {
-          if(baseColorParam instanceof MaterialColorParam){
+          if (baseColorParam instanceof MaterialColorParam) {
             const image = baseColorParam.getImage()
             if (image && image.format == 'RGBA') {
               isTransparent = true
-            } 
+            }
           }
-          if (!isTransparent && baseColorParam.getValue()) {
-            const color_val = baseColorParam.getValue()
+          if (!isTransparent && baseColorParam.value) {
+            const color_val = baseColorParam.value
             if (color_val.a < 1) isTransparent = true
           }
         }
@@ -175,7 +171,7 @@ class Material extends BaseItem {
   /**
    * Checks if the material has a texture applied. The renderer can use this to optimize rendering of non-textured objects
    *
-   * @return {boolean} - Returns true if the material is textured.
+   * @return - Returns true if the material is textured.
    */
   isTextured(): boolean {
     return this.__isTextured
@@ -209,7 +205,7 @@ class Material extends BaseItem {
   /**
    * This method can be overridden in derived classes
    * to perform general updates (see GLPass or BaseItem).
-   * @param {Record<string, any>} event - The event object emitted by the parameter.
+   * @param event - The event object emitted by the parameter.
    * @private
    */
   parameterValueChanged(event: Record<string, any>): void {
@@ -221,7 +217,7 @@ class Material extends BaseItem {
   /**
    * Returns shaders class of current material, if set. Otherwise it returns `undefined`
    *
-   * @return {string|undefined} - The return value.
+   * @return - The return value.
    */
   getShaderClass(): typeof GLShader {
     return <typeof GLShader>Registry.getClassDefinition(this.getShaderName())
@@ -233,8 +229,8 @@ class Material extends BaseItem {
   /**
    * The toJSON method encodes the current object as a json object.
    *
-   * @param {Record<string, any>} context - The context value.
-   * @return {Record<string, any>} - Returns the json object.
+   * @param context - The context value.
+   * @return - Returns the json object.
    */
   toJSON(context?: Record<string, any>): Record<string, any> {
     const j = super.toJSON(context)
@@ -246,8 +242,8 @@ class Material extends BaseItem {
   /**
    * The fromJSON method decodes a json object for this type.
    *
-   * @param {Record<string, any>} j - The json object this item must decode.
-   * @param {Record<string, any>} context - The context value.
+   * @param j - The json object this item must decode.
+   * @param context - The context value.
    */
   fromJSON(j: Record<string, any>, context: Record<string, any> = {}) {
     if (!j.shader) {
@@ -272,8 +268,8 @@ class Material extends BaseItem {
   /**
    * Sets state of current Item(Including Shaders and Materials) using a binary reader object.
    *
-   * @param {BinReader} reader - The reader value.
-   * @param {Record<string, any>} context - The context value.
+   * @param reader - The reader value.
+   * @param context - The context value.
    */
   readBinary(reader: BinReader, context: Record<string, any>): void {
     let shaderName = reader.loadStr()
@@ -290,7 +286,7 @@ class Material extends BaseItem {
       throw `Loading zcad files of version ${context.versions['zea-engine']} is not longer support`
       this.setName(reader.loadStr())
 
-      const capitalizeFirstLetter = function(string: string) {
+      const capitalizeFirstLetter = function (string: string) {
         return string.charAt(0).toUpperCase() + string.slice(1)
       }
 
@@ -341,8 +337,8 @@ class Material extends BaseItem {
    * The clone method constructs a new material, copies its values
    * from this material and returns it.
    *
-   * @param {Record<string, any>} context - The context value.
-   * @return {Material} - Returns a new cloned material.
+   * @param context - The context value.
+   * @return - Returns a new cloned material.
    */
   clone(context?: Record<string, any>) {
     const cloned = new Material('clone', '') // TODO: what should the arguemnts be here?
@@ -353,8 +349,8 @@ class Material extends BaseItem {
   /**
    * When a Material is copied, first runs `BaseItem` copyFrom method, then sets shader.
    *
-   * @param {Material} src - The material to copy from.
-   * @param {Record<string, any>} context - The context value.
+   * @param src - The material to copy from.
+   * @param context - The context value.
    */
   copyFrom(src: Material, context?: Record<string, any>) {
     this.setShaderName(src.getShaderName())

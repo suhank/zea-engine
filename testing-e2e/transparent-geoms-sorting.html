@@ -6,37 +6,77 @@
   </head>
   <body class="bg-blue-100 h-full">
     <div class="h-full">
-      <canvas class="absolute" id="app"></canvas>
+      <canvas id="viewport"></canvas>
     </div>
     <div class="fixed flex justify-center p-1 w-full top-0">
       <button
-        class="bg-yellow-300 rounded px-2 px-2 py-1 border border-yellow-400 shadow mr-1 hover:bg-yellow-200 cursor-default"
+        class="
+          bg-yellow-300
+          rounded
+          px-2 px-2
+          py-1
+          border border-yellow-400
+          shadow
+          mr-1
+          hover:bg-yellow-200
+          cursor-default
+        "
         id="variant-01"
       >
         variant-01
       </button>
 
       <button
-        class="bg-yellow-300 rounded px-2 px-2 py-1 border border-yellow-400 shadow mr-1 hover:bg-yellow-200 cursor-default"
+        class="
+          bg-yellow-300
+          rounded
+          px-2 px-2
+          py-1
+          border border-yellow-400
+          shadow
+          mr-1
+          hover:bg-yellow-200
+          cursor-default
+        "
         id="variant-02"
       >
         variant-02
       </button>
       <button
-        class="bg-yellow-300 rounded px-2 px-2 py-1 border border-yellow-400 shadow mr-1 hover:bg-yellow-200 cursor-default"
+        class="
+          bg-yellow-300
+          rounded
+          px-2 px-2
+          py-1
+          border border-yellow-400
+          shadow
+          mr-1
+          hover:bg-yellow-200
+          cursor-default
+        "
         id="variant-03"
       >
         variant-03
       </button>
       <button
-        class="bg-yellow-300 rounded px-2 px-2 py-1 border border-yellow-400 shadow mr-1 hover:bg-yellow-200 cursor-default"
+        class="
+          bg-yellow-300
+          rounded
+          px-2 px-2
+          py-1
+          border border-yellow-400
+          shadow
+          mr-1
+          hover:bg-yellow-200
+          cursor-default
+        "
         id="variant-04"
       >
         variant-04
       </button>
     </div>
 
-    <script src="../dist/index.umd.development.js"></script>
+    <script src="../dist/index.umd.js"></script>
 
     <script type="module">
       const {
@@ -53,14 +93,14 @@
         Torus,
         GeomItem,
         TreeItem,
-        Material,
+        StandardSurfaceMaterial,
         SelectionSet,
-        EnvMap
+        EnvMap,
       } = zeaEngine
 
       const scene = new Scene()
-      const domElement = document.getElementById('app')
-      const renderer = new GLRenderer(domElement, { hideSplash: true, antialias: false })
+      const domElement = document.getElementById('viewport')
+      const renderer = new GLRenderer(domElement, { antialias: false })
       renderer.setScene(scene)
 
       const envMap = new EnvMap()
@@ -68,10 +108,7 @@
         postMessage('done-loading')
       })
       scene.setEnvMap(envMap)
-      scene
-        .getSettings()
-        .getParameter('Display EnvMap')
-        .setValue(false)
+      scene.displayEnvMapParam.value = false
 
       // scene.setupGrid(60.0, 6)
       const tree1 = new TreeItem('tree1')
@@ -86,36 +123,33 @@
 
       const sphere = new Sphere(1.4, 80)
       const baseColor = new Color(0.8, 0, 0)
-      const material = new Material('surfaces', 'StandardSurfaceShader')
-      material.getParameter('BaseColor').setValue(baseColor)
-      material.getParameter('Metallic').setValue(0.0)
-      material.getParameter('Reflectance').setValue(0.6)
+      const material = new StandardSurfaceMaterial('surfaces')
+      material.baseColorParam.value = baseColor
+      material.metallicParam.value = 0.0
+      material.reflectanceParam.value = 0.6
 
-      const transparentMaterial = new Material('surfaces', 'StandardSurfaceShader')
-      transparentMaterial.getParameter('BaseColor').setValue(baseColor)
-      transparentMaterial.getParameter('Metallic').setValue(0.0)
-      transparentMaterial.getParameter('Reflectance').setValue(0.1)
-      transparentMaterial.getParameter('Opacity').setValue(0.01)
-      transparentMaterial.getParameter('EmissiveStrength').setValue(0.5)
+      const transparentMaterial = new StandardSurfaceMaterial('surfaces')
+      transparentMaterial.baseColorParam.value = baseColor
+      transparentMaterial.metallicParam.value = 0.0
+      transparentMaterial.reflectanceParam.value = 0.1
+      transparentMaterial.opacityParam.value = 0.01
+      transparentMaterial.emissiveStrengthParam.value = 0.5
 
-      material.getParameter('Roughness').setValue(0.5)
+      material.roughnessParam.value = 0.5
       for (let i = 0; i < 3; i++) {
         for (let j = 0; j < 3; j++) {
           for (let k = 0; k < 3; k++) {
-            // material.getParameter('Opacity').setValue(i / 10)
+            // material.opacityParam.value = i / 10
 
             addMeshShape('Sphere' + i, sphere, new Vec3((i / 9) * 20, (j / 9) * 20, 1.4 + (k / 9) * 20), material)
           }
         }
       }
 
-      renderer
-        .getViewport()
-        .getCamera()
-        .setPositionAndTarget(new Vec3(25, 25, 13), new Vec3(10, 0, 0))
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(25, 25, 13), new Vec3(10, 0, 0))
       renderer.frameAll()
 
-      const postMessage = msg => {
+      const postMessage = (msg) => {
         console.log(msg)
         window.postMessage(msg)
       }
@@ -127,18 +161,15 @@
             geomItem.removeHighlight('Foo')
           }
           if (index != 3) {
-            geomItem.getParameter('Material').setValue(transparentMaterial)
+            geomItem.materialParam.value = transparentMaterial
           } else {
-            geomItem.getParameter('Material').setValue(material)
+            geomItem.materialParam.value = material
           }
         })
         postMessage(`done-variant-01`)
       })
       document.querySelector('#variant-02').addEventListener('click', () => {
-        renderer
-          .getViewport()
-          .getCamera()
-          .setPositionAndTarget(new Vec3(-25, -25, 13), new Vec3(10, 0, 0))
+        renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-25, -25, 13), new Vec3(10, 0, 0))
         renderer.frameAll()
         postMessage(`done-variant-02`)
       })
@@ -146,19 +177,16 @@
         items.forEach((geomItem, index) => {
           if (index % 2 == 0) {
             geomItem.addHighlight('Foo', new Color(0.8, 0, 0, 0.1))
-            geomItem.getParameter('Material').setValue(transparentMaterial)
+            geomItem.materialParam.value = transparentMaterial
           } else {
             geomItem.removeHighlight('Foo')
-            geomItem.getParameter('Material').setValue(material)
+            geomItem.materialParam.value = material
           }
         })
         postMessage(`done-variant-03`)
       })
       document.querySelector('#variant-04').addEventListener('click', () => {
-        renderer
-          .getViewport()
-          .getCamera()
-          .setPositionAndTarget(new Vec3(25, 25, 13), new Vec3(10, 0, 0))
+        renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(25, 25, 13), new Vec3(10, 0, 0))
         renderer.frameAll()
         postMessage(`done-variant-04`)
       })

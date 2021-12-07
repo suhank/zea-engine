@@ -6,11 +6,15 @@ import { VRHead } from './VRHead'
 import { VRController } from './VRController'
 import { VRViewManipulator } from './VRViewManipulator'
 import { resourceLoader } from '../../SceneTree/resourceLoader'
-import { POINTER_TYPES } from '../../Utilities/EnumUtils'
+
 // import { XRWebGLLayer } from 'webxr'
 import { VRViewChangedEvent } from '../../Utilities/Events/VRViewChangedEvent'
 import { ControllerAddedEvent } from '../../Utilities/Events/ControllerAddedEvent'
 import { StateChangedEvent } from '../../Utilities/Events/StateChangedEvent'
+import { XRControllerEvent } from '../../Utilities/Events/XRControllerEvent'
+import { XRPoseEvent } from '../../Utilities/Events/XRPoseEvent'
+import { ColorRenderState } from '../types/renderer'
+import { GLViewport } from '../GLViewport'
 
 /** This Viewport class is used for rendering stereoscopic views to VR controllers using the WebXR api.
  *  When the GLRenderer class detects a valid WebXF capable device is plugged in, this class is automatically
@@ -31,9 +35,9 @@ class VRViewport extends GLBaseViewport {
   protected __stageTreeItem: TreeItem
   // __renderer: any // GLBaseRenderer
   protected __vrhead: VRHead
-  protected controllersMap: Record<string, any>
-  protected controllers: any[]
-  protected controllerPointerDownTime: any[]
+  protected controllersMap: Record<string, VRController>
+  protected controllers: VRController[]
+  protected controllerPointerDownTime: number[]
   protected spectatorMode: boolean
   protected tick: number
 
@@ -66,11 +70,11 @@ class VRViewport extends GLBaseViewport {
   protected __cameraMatrices: any
   /**
    * Create a VR viewport.
-   * @param {GLBaseRenderer} renderer - The renderer value.
+   * @param renderer - The renderer value.
    */
   constructor(renderer: any) {
     super(renderer)
-    this.getParameter('DoubleClickTimeMS')!.setValue(300)
+    this.doubleClickTimeParam.value = 300
 
     // ////////////////////////////////////////////
     // Viewport params
@@ -106,9 +110,13 @@ class VRViewport extends GLBaseViewport {
     this.setManipulator(new VRViewManipulator(this))
   }
 
+  getRenderer() {
+    return this.renderer
+  }
+
   /**
    * The getAsset method.
-   * @return {any} - The return value.
+   * @return - The return value.
    */
   getAsset() {
     return this.__vrAsset
@@ -116,7 +124,7 @@ class VRViewport extends GLBaseViewport {
 
   /**
    * The getTreeItem method.
-   * @return {any} - The return value.
+   * @return - The return value.
    */
   getTreeItem() {
     return this.__stageTreeItem
@@ -124,7 +132,7 @@ class VRViewport extends GLBaseViewport {
 
   /**
    * The getVRHead method.
-   * @return {any} - The return value.
+   * @return - The return value.
    */
   getVRHead() {
     return this.__vrhead
@@ -132,7 +140,7 @@ class VRViewport extends GLBaseViewport {
 
   /**
    * The getXfo method.
-   * @return {Xfo} - The return value.
+   * @return - The return value.
    */
   getXfo() {
     return this.__stageXfo
@@ -140,11 +148,11 @@ class VRViewport extends GLBaseViewport {
 
   /**
    * The setXfo method.
-   * @param {Xfo} xfo - The xfo value.
+   * @param xfo - The xfo value.
    */
   setXfo(xfo: Xfo) {
     this.__stageXfo = xfo
-    this.__stageTreeItem.getParameter('GlobalXfo')!.setValue(xfo)
+    this.__stageTreeItem.globalXfoParam.value = xfo
     this.__stageMatrix = xfo.inverse().toMat4()
     // this.__stageMatrix.multiplyInPlace(this.__sittingToStandingMatrix);
     this.__stageScale = xfo.sc.x
@@ -152,9 +160,9 @@ class VRViewport extends GLBaseViewport {
 
   /**
    * The getControllers method.
-   * @return {any} - The return value.
+   * @return - The return value.
    */
-  getControllers() {
+  getControllers(): VRController[] {
     return this.controllers
   }
 
@@ -163,7 +171,7 @@ class VRViewport extends GLBaseViewport {
 
   /**
    * The canPresent method.
-   * @return {any} - The return value.
+   * @return - The return value.
    */
   canPresent() {
     return this.__canPresent
@@ -171,7 +179,7 @@ class VRViewport extends GLBaseViewport {
 
   /**
    * The isPresenting method.
-   * @return {boolean} - The return value.
+   * @return - The return value.
    */
   isPresenting() {
     return this.session
@@ -180,7 +188,7 @@ class VRViewport extends GLBaseViewport {
   /**
    * Turns on and off the spectator mode.
    * Note: specator mode renders the scene an extra time to our regular viewport.
-   * @param {boolean} state -  true for enabling spectator mode, else false
+   * @param state -  true for enabling spectator mode, else false
    */
   setSpectatorMode(state: boolean) {
     if (!state) {
@@ -188,7 +196,7 @@ class VRViewport extends GLBaseViewport {
       const gl = this.__renderer.gl
       gl.bindFramebuffer(gl.FRAMEBUFFER, null)
       gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight)
-      let col = this.__backgroundColor.asArray()
+      let col = this.backgroundColorParam.value.asArray()
       gl.clearColor(col[0], col[1], col[2], col[3])
       gl.colorMask(true, true, true, true)
       gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
@@ -212,7 +220,7 @@ class VRViewport extends GLBaseViewport {
 
   /**
    * The loadHMDResources method.
-   * @return {any} - The return value.
+   * @return - The return value.
    */
   loadHMDResources(): Promise<VLAAsset | null> {
     if (SystemDesc.isMobileDevice) {
@@ -245,12 +253,12 @@ class VRViewport extends GLBaseViewport {
             hmdAssetId = 'ZeaEngine/Vive.vla'
             break
         }
-        if (!resourceLoader.getCommonResource(hmdAssetId)) {
+        if (!resourceLoader.commonResources[hmdAssetId]) {
           // Cache the asset so if an avatar needs to display,
           // it can use the same asset.
           const asset = new VLAAsset(hmdAssetId)
-          asset.getParameter('FilePath')!.setValue(hmdAssetId)
-          resourceLoader.setCommonResource(hmdAssetId, asset)
+          asset.load(resourceLoader.systemUrls[hmdAssetId])
+          resourceLoader.commonResources[hmdAssetId] = asset
         }
         this.__vrAsset = <VLAAsset>resourceLoader.getCommonResource(hmdAssetId)
         const bind = () => {
@@ -277,7 +285,7 @@ class VRViewport extends GLBaseViewport {
   /**
    * The startPresenting method.
    */
-  startPresenting() {
+  startPresenting(): Promise<void> {
     return new Promise((resolve, reject) => {
       if (!this.spectatorMode) {
         // clear the main viewport if spectator mode is off.
@@ -290,7 +298,7 @@ class VRViewport extends GLBaseViewport {
         ;(navigator as any)?.xr
           .requestSession('immersive-vr', {
             requiredFeatures: ['local-floor'],
-            optionalFeatures: ['bounded-floor']
+            optionalFeatures: ['bounded-floor'],
           })
           .then((session: any) => {
             this.__renderer.__xrViewportPresenting = true
@@ -298,7 +306,7 @@ class VRViewport extends GLBaseViewport {
             const viewport = this.__renderer.getViewport()
             if (viewport) {
               const camera = viewport.getCamera()
-              const cameraXfo = camera.getParameter('GlobalXfo')!.getValue()
+              const cameraXfo = camera.globalXfoParam.value
 
               // Convert Y-Up to Z-Up.
               const stageXfo = new Xfo()
@@ -314,27 +322,21 @@ class VRViewport extends GLBaseViewport {
             session.addEventListener('end', (event: any) => {
               this.__stageTreeItem.setVisible(false)
               this.session = null
-              this.emit('presentingChanged', { state: false })
+              this.emit('presentingChanged', new StateChangedEvent(false))
             })
 
             const onSelectStart = (ev: any) => {
               const controller = this.controllersMap[ev.inputSource.handedness]
               if (controller) {
                 controller.buttonPressed = true
-                this.onPointerDown({
-                  button: 1,
-                  controller
-                })
+                this.onPointerDown(new XRControllerEvent(1, controller))
               }
             }
             const onSelectEnd = (ev: any) => {
               const controller = this.controllersMap[ev.inputSource.handedness]
               if (controller) {
                 controller.buttonPressed = false
-                this.onPointerUp({
-                  button: 1,
-                  controller
-                })
+                this.onPointerUp(new XRControllerEvent(1, controller))
               }
             }
 
@@ -371,7 +373,7 @@ class VRViewport extends GLBaseViewport {
               baseLayer: glLayer /* 
               // Output canvas not working anymore
               outputContext: mirrorCanvas ? mirrorCanvas.getContext('xrpresent') : null,
-              ,*/
+              ,*/,
             })
 
             this.__width = glLayer.framebufferWidth
@@ -385,12 +387,11 @@ class VRViewport extends GLBaseViewport {
             const onRefSpaceCreated = (refSpace: any) => {
               this.__refSpace = refSpace
               this.__stageTreeItem.setVisible(true)
-              const event = new StateChangedEvent(true)
-              this.emit('presentingChanged', event)
+              this.emit('presentingChanged', new StateChangedEvent(true))
 
               this.loadHMDResources().then(() => {
                 this.__startSession()
-                // TODO: (commented out) resolve()
+                resolve()
               })
             }
 
@@ -448,7 +449,7 @@ class VRViewport extends GLBaseViewport {
 
   /**
    * The getHMDCanvasSize method.
-   * @return {any} - The return value.
+   * @return - The return value.
    */
   getHMDCanvasSize() {
     return this.__hmdCanvasSize
@@ -459,10 +460,10 @@ class VRViewport extends GLBaseViewport {
 
   /**
    * The updateControllers method.
-   * @param {XRFrame} xrFrame - The xrFrame value.
-   * @param {Record<any,any>} event - The pose changed event object that will be emitted for observers such as collab.
+   * @param xrFrame - The xrFrame value.
+   * @param event - The pose changed event object that will be emitted for observers such as collab.
    */
-  updateControllers(xrFrame: any, event: Record<string, any>) {
+  updateControllers(xrFrame: any, event: XRPoseEvent) {
     const inputSources = this.session.inputSources
     for (let i = 0; i < inputSources.length; i++) {
       const inputSource = inputSources[i]
@@ -482,12 +483,12 @@ class VRViewport extends GLBaseViewport {
 
   /**
    * The drawXRFrame method.
-   * @param {XRFrame} xrFrame - The xrFrame value.
+   * @param xrFrame - The xrFrame value.
    */
   drawXRFrame(xrFrame: any) {
     const session = xrFrame.session
 
-    const layer = session.renderstate.baseLayer
+    const layer = session.renderState.baseLayer
 
     const pose = xrFrame.getViewerPose(this.__refSpace)
     if (!pose) {
@@ -497,10 +498,7 @@ class VRViewport extends GLBaseViewport {
     }
 
     this.__vrhead.update(pose)
-    const viewXfo = this.__vrhead
-      .getTreeItem()
-      .getParameter('GlobalXfo')!
-      .getValue()
+    const viewXfo = this.__vrhead.getTreeItem().globalXfoParam.value
 
     const views = pose.views
 
@@ -521,11 +519,11 @@ class VRViewport extends GLBaseViewport {
 
     const gl = this.__renderer.gl
     gl.bindFramebuffer(gl.FRAMEBUFFER, layer.framebuffer)
-    let col = this.__backgroundColor.asArray()
+    let col = this.backgroundColorParam.value.asArray()
     gl.clearColor(col[0], col[1], col[2], col[3])
     gl.colorMask(true, true, true, true)
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
-    this.depthRange = [session.renderstate.depthNear, session.renderstate.depthFar] // TODO: check if this changes during session
+    this.depthRange = [session.renderState.depthNear, session.renderState.depthFar] // TODO: check if this changes during session
 
     const renderstate: ColorRenderState = <ColorRenderState>{}
 
@@ -548,7 +546,7 @@ class VRViewport extends GLBaseViewport {
         viewMatrix: this.__viewMatrices[i],
         projectionMatrix: this.__projectionMatrices[i],
         region: [vp.x, vp.y, vp.width, vp.height],
-        isOrthographic: false
+        isOrthographic: false,
       })
     }
 
@@ -562,8 +560,7 @@ class VRViewport extends GLBaseViewport {
 
     // ///////////////////////
     // Prepare the pointerMove event.
-    const event = { controllers: this.controllers, viewXfo }
-    this.preparePointerEvent(event)
+    const event = new XRPoseEvent(this, viewXfo, this.controllers)
     this.updateControllers(xrFrame, event)
     if (this.capturedElement && event.propagating) {
       this.capturedElement.onPointerMove(event)
@@ -575,7 +572,7 @@ class VRViewport extends GLBaseViewport {
     // ///////////////////////
     // Emit a signal for the shared session.
 
-    const viewChangedEvent = new VRViewChangedEvent('VR', renderstate.viewXfo)
+    const viewChangedEvent = new VRViewChangedEvent(renderstate.viewXfo)
     // TODO: better solution than setting members individually?
     viewChangedEvent.hmd = this.__hmd
     viewChangedEvent.controllers = this.controllers
@@ -600,40 +597,11 @@ class VRViewport extends GLBaseViewport {
   }
 
   /**
-   * Prepares pointer event by adding properties of the engine to it.
-   *
-   * @param {XREvent} event - The event that occurs in the canvas
-   * @private
-   */
-  preparePointerEvent(event: Record<string, any>) {
-    event.viewport = this
-    event.propagating = true
-    event.pointerType = POINTER_TYPES.xr
-
-    event.stopPropagation = () => {
-      event.propagating = false
-    }
-
-    event.setCapture = (item: any) => {
-      this.capturedItem = item
-    }
-
-    event.getCapture = (item: any) => {
-      return this.capturedItem
-    }
-
-    event.releaseCapture = () => {
-      this.capturedItem = null
-    }
-  }
-
-  /**
    * Handler of the `pointerdown` event fired when the pointer device is initially pressed.
    *
-   * @param {MouseEvent|TouchEvent} event - The DOM event produced by a pointer
+   * @param event - The DOM event produced by a pointer
    */
-  onPointerDown(event: Record<string, any>) {
-    this.preparePointerEvent(event)
+  onPointerDown(event: XRControllerEvent) {
     event.intersectionData = event.controller.getGeomItemAtTip()
 
     // //////////////////////////////////////
@@ -642,7 +610,7 @@ class VRViewport extends GLBaseViewport {
     // If the manipulator or the viewport handle that
     // then skip the 'pointerDown' event.
     const downTime = Date.now()
-    if (downTime - this.controllerPointerDownTime[event.controller.id] < this.__doubleClickTimeMSParam.getValue()) {
+    if (downTime - this.controllerPointerDownTime[event.controller.id] < this.doubleClickTimeParam.value) {
       this.emit('pointerDoublePressed', event)
       if (!event.propagating) return
 
@@ -676,10 +644,9 @@ class VRViewport extends GLBaseViewport {
   /**
    * Causes an event to occur when a user releases a mouse button over a element.
    *
-   * @param {MouseEvent|TouchEvent} event - The event that occurs.
+   * @param event - The event that occurs.
    */
-  onPointerUp(event: Record<string, any>) {
-    this.preparePointerEvent(event)
+  onPointerUp(event: XRControllerEvent) {
     this.controllerPointerDownTime[event.controller.id] = 0
 
     if (this.capturedItem) {

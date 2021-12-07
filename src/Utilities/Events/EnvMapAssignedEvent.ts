@@ -1,4 +1,4 @@
-import { BaseEvent } from "../BaseEvent"
+import { BaseEvent } from '../BaseEvent'
 
 class EnvMapAssignedEvent extends BaseEvent {
   envMap: any
@@ -8,4 +8,4 @@ class EnvMapAssignedEvent extends BaseEvent {
   }
 }
 
-export {EnvMapAssignedEvent}
+export { EnvMapAssignedEvent }

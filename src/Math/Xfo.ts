@@ -15,14 +15,14 @@ class Xfo {
 
   /**
    * Initializes the Xfo object.
-   * <br>
+   *
    * **Note:** You can leave it empty and use other methods ti set the state of the class.
    *
-   * @see [`setFromOther`](#setFromOther) [`fromMat4`](#fromMat4) [`setFromFloat32Array`](#setFromFloat32Array) [`fromJSON`](#fromJSON)
+   * @see [`setFromOther`](#setFromOther) [`setFromMat4`](#setFromMat4) [`setFromFloat32Array`](#setFromFloat32Array) [`fromJSON`](#fromJSON)
    *
-   * @param {Float32Array | Vec3} [tr] - The translation value.
-   * @param {Quat} [ori] - The orientation value.
-   * @param {Vec3} [sc] - The scaling value.
+   * @param tr - The translation value.
+   * @param ori - The orientation value.
+   * @param sc - The scaling value.
    */
   constructor(tr?: Float32Array | Vec3 | Quat, ori?: Quat, sc?: Vec3) {
     if (tr instanceof Float32Array) {
@@ -55,9 +55,9 @@ class Xfo {
   /**
    * Sets the state of the Xfo object.
    *
-   * @param {Vec3} tr - The translation value.
-   * @param {Quat} ori - The orientation value.
-   * @param {Vec3} [sc] - The scaling value.
+   * @param tr - The translation value.
+   * @param ori - The orientation value.
+   * @param sc - The scaling value.
    */
   set(tr: Vec3, ori: Quat, sc?: Vec3): void {
     this.tr = tr
@@ -68,7 +68,7 @@ class Xfo {
   /**
    * Sets the state of the Xfo object using another Xfo object.
    *
-   * @param {Xfo} other - The other Xfo to set from.
+   * @param other - The other Xfo to set from.
    */
   setFromOther(other: Xfo): void {
     this.tr = other.tr
@@ -79,7 +79,7 @@ class Xfo {
   /**
    * Verifies that the Xfo object is an `identity`, checking that the translation, orientation and scaling attributes are in their initial state.
    *
-   * @return {boolean} - The return value.
+   * @return - The return value.
    */
   isIdentity(): boolean {
     return this.tr.isNull() && this.ori.isIdentity() && this.sc.is111()
@@ -88,8 +88,8 @@ class Xfo {
   /**
    * Checks if this Vec3 contains the same values as the other Vec3.
    *
-   * @param {Xfo} other - The other Vec3 to compare with.
-   * @return {boolean} - Returns `true` if are the same Vector, otherwise, `false`.
+   * @param other - The other Vec3 to compare with.
+   * @return - Returns `true` if are the same Vector, otherwise, `false`.
    */
   isEqual(other: Xfo): boolean {
     return this.tr.isEqual(other.tr) && this.ori.isEqual(other.ori) && this.sc.isEqual(other.sc)
@@ -98,9 +98,9 @@ class Xfo {
   /**
    * Returns true if this Vec2 is approximately the same as other.
    *
-   * @param {Xfo} other - The other Vec3 to compare with.
-   * @param {number} precision - The precision to which the values must match.
-   * @return {boolean} - Returns true or false.
+   * @param other - The other Vec3 to compare with.
+   * @param precision - The precision to which the values must match.
+   * @return - Returns true or false.
    */
   approxEqual(other: Xfo, precision: number = Number.EPSILON): boolean {
     return (
@@ -112,9 +112,9 @@ class Xfo {
 
   /**
    * The setLookAt method.
-   * @param {Vec3} pos - The position value.
-   * @param {Vec3} target - The target value.
-   * @param {Vec3} up - The up value.
+   * @param pos - The position value.
+   * @param target - The target value.
+   * @param up - The up value.
    */
   setLookAt(pos: Vec3, target: Vec3, up: Vec3): void {
     // Note: We look along the -z axis. Negate the direction.
@@ -131,8 +131,8 @@ class Xfo {
   /**
    * Multiplies two Xfo transforms.
    *
-   * @param {Xfo} xfo - The xfo to multiply with.
-   * @return {Xfo} - Returns an Xfo.
+   * @param xfo - The xfo to multiply with.
+   * @return - Returns an Xfo.
    */
   multiply(xfo: Xfo): Xfo {
     let this_sc = this.sc
@@ -153,7 +153,7 @@ class Xfo {
   /**
    * Returns the inverse of the Xfo object, but returns. the result as a new Xfo.
    *
-   * @return {Xfo} - Returns a new Xfo.
+   * @return - Returns a new Xfo.
    */
   inverse(): Xfo {
     const result = new Xfo()
@@ -180,8 +180,8 @@ class Xfo {
   /**
    * Transforms Xfo object using a `Vec3` object. First scaling it, then rotating and finally adding the result to current translation object.
    *
-   * @param {Vec3} vec3 - The vec3 value.
-   * @return {Vec3} - The return value.
+   * @param vec3 - The vec3 value.
+   * @return - The return value.
    */
   transformVec3(vec3: Vec3): Vec3 {
     return this.tr.add(this.ori.rotateVec3(this.sc.multiply(vec3)))
@@ -190,7 +190,7 @@ class Xfo {
   /**
    * Converts this Xfo to a Mat4 (a 4x4 matrix).
    *
-   * @return {Mat4} - Returns a new Mat4.
+   * @return - Returns a new Mat4.
    */
   toMat4(): Mat4 {
     const scl = new Mat4(this.sc.x, 0, 0, 0, 0, this.sc.y, 0, 0, 0, 0, this.sc.z, 0, 0, 0, 0, 1.0)
@@ -205,17 +205,7 @@ class Xfo {
 
   /**
    * Sets the state of the Xfo object using Mat4.
-   * @deprecated
-   * @param {Mat4} mat4 - The mat4 value.
-   */
-  fromMat4(mat4: Mat4): void {
-    this.setFromMat4(mat4)
-  }
-
-  /**
-   * Sets the state of the Xfo object using Mat4.
-   * @deprecated
-   * @param {Mat4} mat4 - The mat4 value.
+   * @param mat4 - The mat4 value.
    */
   setFromMat4(mat4: Mat4): void {
     this.tr = mat4.translation
@@ -224,10 +214,10 @@ class Xfo {
 
   /**
    * Sets the state of the Xfo object using an `Float32array`.
-   * <br>
+   *
    * **Note:** You can set the byteOffset in your `Float32array` object
    *
-   * @param {Float32Array} float32array - The float32array value.
+   * @param float32array - The float32array value.
    */
   setFromFloat32Array(float32array: Float32Array): void {
     if (float32array.length == 7) {
@@ -254,7 +244,7 @@ class Xfo {
   /**
    * Clones this Xfo and returns a new Xfo.
    *
-   * @return {Xfo} - Returns a new Xfo.
+   * @return - Returns a new Xfo.
    */
   clone(): Xfo {
     return new Xfo(this.tr.clone(), this.ori.clone(), this.sc.clone())
@@ -266,12 +256,12 @@ class Xfo {
   /**
    * The toJSON method encodes this type as a json object for persistence.
    *
-   * @return {Record<string, any>} - The json object.
+   * @return - The json object.
    */
   toJSON(): Record<string, any> {
     const j = {
       tr: this.tr.toJSON(),
-      ori: this.ori.toJSON()
+      ori: this.ori.toJSON(),
     }
     if (!this.sc.is111()) (j as any).sc = this.sc.toJSON()
 
@@ -281,7 +271,7 @@ class Xfo {
   /**
    * The fromJSON method decodes a json object for this type.
    *
-   * @param {Record<string, any>} j - The json object.
+   * @param j - The json object.
    */
   fromJSON(j: Record<string, any>): void {
     this.tr.fromJSON(j.tr)
@@ -294,7 +284,7 @@ class Xfo {
   /**
    * Loads the state of the value from a binary reader.
    *
-   * @param {BinReader} reader - The reader value.
+   * @param reader - The reader value.
    */
   readBinary(reader: BinReader): void {
     this.tr.readBinary(reader)
@@ -305,7 +295,7 @@ class Xfo {
   /**
    * The fromJSON method decodes a json object for this type.
    *
-   * @return {string} - The return value.
+   * @return - The return value.
    */
   toString(): string {
     // eslint-disable-next-line new-cap

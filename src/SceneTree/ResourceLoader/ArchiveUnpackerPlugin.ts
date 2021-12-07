@@ -1,6 +1,6 @@
 import { SystemDesc } from '../../SystemDesc'
 // @ts-ignore
-import ArchiveUnpackerWorker from './ArchiveUnpacker-worker.js'
+import ArchiveUnpackerWorker from 'web-worker:./ArchiveUnpacker-worker.js'
 // import ArchiveUnpackerWorker from './ArchiveUnpackerWorker'
 // For synchronous loading, uncomment these lines.
 // import {
@@ -38,7 +38,7 @@ class ArchiveUnpackerPlugin {
 
   /**
    * The type of file this plugin handles.
-   * @return {string} The type of file.
+   * @return The type of file.
    */
   getType() {
     return 'archive'
@@ -46,14 +46,14 @@ class ArchiveUnpackerPlugin {
 
   /**
    * The __getWorker method.
-   * @return {any} - The return value.
+   * @return - The return value.
    * @private
    */
   __getWorker() {
     const __constructWorker = () => {
       return new Promise((resolve, reject) => {
+        //@ts-ignore
         const worker = new ArchiveUnpackerWorker()
-        // const worker = new Worker(this.__resourceLoaderFile.url);
 
         worker.postMessage({
           type: 'init',
@@ -76,7 +76,6 @@ class ArchiveUnpackerPlugin {
             this.__onFinishedReceiveFileData(event.data)
           } else if (event.data.type === 'ERROR') {
             const data = event.data
-            console.warn(`Unable to load Resource: ${data.resourceId}`, event.data)
             reject(new Error(`Unable to load Resource: ${data.resourceId}`))
           }
         }
@@ -100,8 +99,8 @@ class ArchiveUnpackerPlugin {
   /**
    * Loads an archive file, returning a promise that resolves to the JSON data value.
    * Note: using the resource loader to centralize data loading enables progress to be tracked and displayed
-   * @param {string} url - The url of the data to load.
-   * @return {Promise} - The promise value.
+   * @param url - The url of the data to load.
+   * @return - The promise value.
    */
   loadFile(url: string) {
     this.resourceLoader.incrementWorkload(1) //  start loading.
@@ -141,7 +140,7 @@ class ArchiveUnpackerPlugin {
 
   /**
    * The __onFinishedReceiveFileData method.
-   * @param {Record<string, any>} fileData - The fileData value.
+   * @param fileData - The fileData value.
    * @private
    */
   __onFinishedReceiveFileData(fileData: Record<string, any>) {
@@ -157,7 +156,7 @@ class ArchiveUnpackerPlugin {
 
   shutDownWorkers() {
     this.__workers.forEach((workerPromise) => {
-      workerPromise.then((worker) => {
+      workerPromise.then((worker: Worker) => {
         worker.terminate()
       })
     })

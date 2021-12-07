@@ -18,24 +18,31 @@ import { Vec3Attribute } from '../Vec3Attribute'
  * @extends {ProceduralLines}
  */
 class Rect extends ProceduralLines {
-  __x: NumberParameter
-  __y: NumberParameter
+  /**
+   * @member sizeXParam - Length of the rectangle along the `X` axis.
+   */
+  sizeXParam: NumberParameter
+
+  /**
+   * @member sizeYParam - Length of the rectangle along the `Y` axis.
+   */
+  sizeYParam: NumberParameter
 
   /**
    * Create a rect.
-   * @param {number} x - The length of the rect along the `X` axis.
-   * @param {number} y - The length of the rect along the `Y` axis.
+   * @param x - The length of the rect along the `X` axis.
+   * @param y - The length of the rect along the `Y` axis.
    */
   constructor(x = 1.0, y = 1.0) {
     super()
 
     if (isNaN(x) || isNaN(y)) throw new Error('Invalid geom args')
 
-    this.__x = this.addParameter(new NumberParameter('X', x)) as NumberParameter
-    this.__x.on('valueChanged', this.resize.bind(this))
+    this.sizeXParam = this.addParameter(new NumberParameter('X', x)) as NumberParameter
+    this.sizeXParam.on('valueChanged', this.resize.bind(this))
 
-    this.__y = this.addParameter(new NumberParameter('Y', y)) as NumberParameter
-    this.__y.on('valueChanged', this.resize.bind(this))
+    this.sizeYParam = this.addParameter(new NumberParameter('Y', y)) as NumberParameter
+    this.sizeYParam.on('valueChanged', this.resize.bind(this))
     this.rebuild()
   }
 
@@ -59,8 +66,8 @@ class Rect extends ProceduralLines {
    * @private
    */
   resize(): void {
-    const x = this.__x.getValue() || 1.0
-    const y = this.__y.getValue() || 1.0
+    const x = this.sizeXParam.value
+    const y = this.sizeYParam.value
 
     const positions = <Vec3Attribute>this.getVertexAttribute('positions')
     if (!positions) return

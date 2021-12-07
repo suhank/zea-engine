@@ -20,30 +20,45 @@ import { Vec2Attribute } from '../Vec2Attribute'
  * @extends {ProceduralMesh}
  */
 class Plane extends ProceduralMesh {
-  protected __detailXParam: NumberParameter
-  protected __detailYParam: NumberParameter
-  protected __sizeXParam: NumberParameter
-  protected __sizeYParam: NumberParameter
+  /**
+   * @member detailXParam - Length of the plane along `X` axis.
+   */
+  detailXParam: NumberParameter
+
+  /**
+   * @member detailYParam - Length of the plane along `Y` axis.
+   */
+  detailYParam: NumberParameter
+
+  /**
+   * @member sizeXParam - Number of divisions along `X`axis.
+   */
+  sizeXParam: NumberParameter
+
+  /**
+   * @member sizeYParam - Number of divisions along `Y`axis.
+   */
+  sizeYParam: NumberParameter
   // topologyParams: string[]
 
   /**
    * Create a plane.
-   * @param {number} [SizeX=1.0] - The length of the plane along the X axis.
-   * @param {number} [SizeY=1.0] - The length of the plane along the Y axis.
-   * @param {number} [DetailX=1] - The number of divisions along the X axis.
-   * @param {number} [DetailY=1] - The number of divisions along the Y axis.
-   * @param {boolean} [addNormals=true] - The addNormals value.
-   * @param {boolean} [addTextureCoords=true] - The addTextureCoords value.
+   * @param SizeX - The length of the plane along the X axis.
+   * @param SizeY - The length of the plane along the Y axis.
+   * @param DetailX - The number of divisions along the X axis.
+   * @param DetailY - The number of divisions along the Y axis.
+   * @param addNormals - The addNormals value.
+   * @param addTextureCoords - The addTextureCoords value.
    */
   constructor(SizeX = 1.0, SizeY = 1.0, DetailX = 1, DetailY = 1, addNormals = true, addTextureCoords = true) {
     super()
     this.topologyParams = []
     if (isNaN(SizeX) || isNaN(SizeY) || isNaN(DetailX) || isNaN(DetailY)) throw new Error('Invalid geom args')
 
-    this.__sizeXParam = this.addParameter(new NumberParameter('SizeX', SizeX)) as NumberParameter
-    this.__sizeYParam = this.addParameter(new NumberParameter('SizeY', SizeY)) as NumberParameter
-    this.__detailXParam = this.addParameter(new NumberParameter('DetailX', DetailX)) as NumberParameter
-    this.__detailYParam = this.addParameter(new NumberParameter('DetailY', DetailY)) as NumberParameter
+    this.sizeXParam = this.addParameter(new NumberParameter('SizeX', SizeX)) as NumberParameter
+    this.sizeYParam = this.addParameter(new NumberParameter('SizeY', SizeY)) as NumberParameter
+    this.detailXParam = this.addParameter(new NumberParameter('DetailX', DetailX)) as NumberParameter
+    this.detailYParam = this.addParameter(new NumberParameter('DetailY', DetailY)) as NumberParameter
     if (addNormals) this.addVertexAttribute('normals', new Vec3Attribute())
     if (addTextureCoords) this.addVertexAttribute('texCoords', new Vec2Attribute())
 
@@ -56,8 +71,8 @@ class Plane extends ProceduralMesh {
    * @private
    */
   rebuild(): void {
-    const detailX = this.__detailXParam.getValue() || 1
-    const detailY = this.__detailYParam.getValue() || 1
+    const detailX = this.detailXParam.value
+    const detailY = this.detailYParam.value
     this.setNumVertices((detailX + 1) * (detailY + 1))
     this.setFaceCounts([0, detailX * detailY])
 
@@ -65,9 +80,9 @@ class Plane extends ProceduralMesh {
     for (let i = 0; i < detailY; i++) {
       for (let j = 0; j < detailX; j++) {
         const v0 = (detailX + 1) * (i + 1) + j
-        const v1 = (detailX + 1) * (i + 1) + (j + 1)
+        const v1 = (detailX + 1) * i + j
         const v2 = (detailX + 1) * i + (j + 1)
-        const v3 = (detailX + 1) * i + j
+        const v3 = (detailX + 1) * (i + 1) + (j + 1)
         this.setFaceVertexIndices(quadId, [v0, v1, v2, v3])
         quadId = quadId + 1
       }
@@ -106,10 +121,10 @@ class Plane extends ProceduralMesh {
    * @private
    */
   resize(): void {
-    const sizeX = this.__sizeXParam.getValue() || 1.0
-    const sizeY = this.__sizeYParam.getValue() || 1.0
-    const detailX = this.__detailXParam.getValue() || 1
-    const detailY = this.__detailYParam.getValue() || 1
+    const sizeX = this.sizeXParam.value
+    const sizeY = this.sizeYParam.value
+    const detailX = this.detailXParam.value
+    const detailY = this.detailYParam.value
     const positions = <Vec3Attribute>this.getVertexAttribute('positions')
     if (!positions) return
 

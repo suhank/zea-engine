@@ -7,7 +7,7 @@ describe('QuatParameter', () => {
     const quatParameter = new QuatParameter()
     const quat = new Quat()
 
-    expect(quatParameter.getValue().isEqual(quat)).toBe(true)
+    expect(quatParameter.value.isEqual(quat)).toBe(true)
   })
 
   it('checks value type.', () => {
@@ -19,14 +19,14 @@ describe('QuatParameter', () => {
   it('sets value.', () => {
     const quatParameter = new QuatParameter()
     const value = new Quat()
-    quatParameter.setValue(value)
+    quatParameter.value = value
 
-    expect(quatParameter.getValue()).toEqual(value)
+    expect(quatParameter.value).toEqual(value)
   })
 
   it('saves to JSON (serialization).', () => {
     const quatParameter = new QuatParameter()
-    quatParameter.setValue(new Quat(1, 0, 0, 0))
+    quatParameter.value = new Quat(1, 0, 0, 0)
 
     const expOutput = '{"value":{"x":1,"y":0,"z":0,"w":0}}'
 
@@ -38,7 +38,7 @@ describe('QuatParameter', () => {
     const input = { value: { x: 1, y: 0, z: 0, w: 0 } }
     quatParameter.fromJSON(input)
 
-    expect(quatParameter.getValue().toJSON()).toEqual(input.value)
+    expect(quatParameter.value.toJSON()).toEqual(input.value)
   })
 
   it('loads from binary (serialization).', () => {
@@ -52,13 +52,13 @@ describe('QuatParameter', () => {
     const reader = new BinReader(<Buffer>data.buffer)
     quatParameter.readBinary(reader)
 
-    expect(quatParameter.getValue().toJSON()).toEqual({ x: 1, y: 0, z: 0, w: 0 })
+    expect(quatParameter.value.toJSON()).toEqual({ x: 1, y: 0, z: 0, w: 0 })
   })
 
   it('clones parameter object', () => {
     const parameter = new QuatParameter('TestParameter')
     const value = new Quat(1, 0, 0, 0)
-    parameter.setValue(value)
+    parameter.value = value
 
     const parameter2 = parameter.clone()
 

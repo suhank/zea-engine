@@ -1,6 +1,6 @@
 import { SystemDesc } from '../SystemDesc'
-import { FilePathParameter } from './Parameters/FilePathParameter'
-import { AssetItem, AssetLoadContext } from './AssetItem'
+import { AssetItem } from './AssetItem'
+import { AssetLoadContext } from './AssetLoadContext'
 import { BinReader } from './BinReader'
 import { resourceLoader } from './resourceLoader'
 import { Registry } from '../Registry'
@@ -9,9 +9,6 @@ import { Version } from './Version'
 /**
  * Class designed to load and handle `.vla` files.
  *
- * **Parameters**
- * * **DataFilePath(`FilePathParameter`):** Used to specify the path to the file.
- *
  * **Events**
  * * **loaded:** Triggered once the tree is loaded. Note: the tree bounding box is valid once the tree is loaded.
  * * **geomsLoaded:** Triggered once all geometries are loaded.
@@ -19,11 +16,9 @@ import { Version } from './Version'
  * @extends AssetItem
  */
 class VLAAsset extends AssetItem {
-  protected __fileParam: FilePathParameter
-  protected __datafileLoaded: any
   /**
    * Create a VLA asset.
-   * @param {string} name - The name value.
+   * @param name - The name value.
    */
   constructor(name?: string) {
     super(name)
@@ -31,17 +26,8 @@ class VLAAsset extends AssetItem {
     // A signal that is emitted once all the geometries are loaded.
     // Often the state machine will activate the
     // first state when this signal emits.
-    this.__geomLibrary.on('loaded', () => {
+    this.geomLibrary.on('loaded', () => {
       this.emit('geomsLoaded')
-    })
-
-    this.__fileParam = <FilePathParameter>this.addParameter(new FilePathParameter('FilePath'))
-
-    this.addParameterDeprecationMapping('DataFilePath', 'FilePath') // Note: migrating from 'DataFilePath' to 'FilePath'
-
-    this.__fileParam.on('valueChanged', () => {
-      const url = this.__fileParam.getUrl()
-      this.load(url)
     })
   }
 
@@ -51,9 +37,9 @@ class VLAAsset extends AssetItem {
   /**
    * Sets state of current asset using a binary reader object.
    *
-   * @param {BinReader} reader - The reader value.
-   * @param {AssetLoadContext } context - The context value.
-   * @return {number} - The return value.
+   * @param reader - The reader value.
+   * @param context - The context value.
+   * @return - The return value.
    */
   readBinary(reader: BinReader, context: AssetLoadContext) {
     if (context.versions['zea-engine']) {
@@ -74,16 +60,16 @@ class VLAAsset extends AssetItem {
       // The data was the atlas size of the lightmap that we no longer support.
       reader.loadFloat32Vec2()
     }
-    this.__geomLibrary.setNumGeoms(reader.loadUInt32())
+    this.geomLibrary.setNumGeoms(reader.loadUInt32())
 
     return numGeomsFiles
   }
 
   /**
    * Loads all the geometries and metadata from the asset file.
-   * @param {string} url - The URL of the asset to load
-   * @param {AssetLoadContext} context - The load context object that provides additional data such as the units of the scene we are loading into.
-   * @return {Promise} - Returns a promise that resolves once the initial load is complete
+   * @param url - The URL of the asset to load
+   * @param context - The load context object that provides additional data such as the units of the scene we are loading into.
+   * @return - Returns a promise that resolves once the initial load is complete
    */
   load(url: string, context: AssetLoadContext = new AssetLoadContext()): Promise<void> {
     return new Promise((resolve, reject) => {
@@ -102,7 +88,7 @@ class VLAAsset extends AssetItem {
       // To ensure that the resource loader knows when
       // parsing is done, we listen to the GeomLibrary streamFileLoaded
       // signal. This is fired once the entire stream is parsed.
-      this.__geomLibrary.on('loaded', () => {
+      this.geomLibrary.on('loaded', () => {
         // A chunk of geoms are now parsed, so update the resource loader.
         resourceLoader.incrementWorkDone(1)
       })
@@ -128,14 +114,14 @@ class VLAAsset extends AssetItem {
           this.emit('loaded')
 
           if (numGeomsFiles == 0 && entries.geoms) {
-            this.__geomLibrary.readBinaryBuffer(filename, entries.geoms.buffer, context)
+            this.geomLibrary.readBinaryBuffer(filename, entries.geoms.buffer, context)
           } else {
             const basePath = folder + stem
             const geomLibraryJSON = {
               numGeomsPerFile: numGeomsFiles,
-              numGeoms: this.__geomLibrary.getNumGeoms() // Note: was set during readBinary.Why do we need to provide this again?
+              numGeoms: this.geomLibrary.getNumGeoms(), // Note: was set during readBinary.Why do we need to provide this again?
             }
-            this.__geomLibrary.loadGeomFilesStream(geomLibraryJSON, basePath, context)
+            this.geomLibrary.loadGeomFilesStream(geomLibraryJSON, basePath, context)
           }
           resolve()
         },
@@ -145,33 +131,6 @@ class VLAAsset extends AssetItem {
         }
       )
     })
-  }
-
-  /**
-   * The fromJSON method decodes a json object for this type.
-   *
-   * @param {Record<any,any>} j - The json object this item must decode.
-   * @param {AssetLoadContext} context - The load context object that provides additional data such as the units of the scene we are loading into.
-   * @param {function} onDone - The onDone value.
-   */
-  fromJSON(j: Record<string, any>, context?: Record<string, any>, onDone?: any) {
-    if (!context) context = {}
-    context.assetItem = this
-
-    const loadAssetJSON = () => {
-      super.fromJSON(j, context, onDone)
-      if (onDone) onDone()
-    }
-
-    if (j.params && j.params.DataFilePath) {
-      // Save the callback function for later.
-      this.__datafileLoaded = loadAssetJSON
-      const filePathJSON = j.params.DataFilePath
-      delete j.params.DataFilePath
-      this.__fileParam.fromJSON(filePathJSON, context)
-    } else {
-      loadAssetJSON()
-    }
   }
 }
 

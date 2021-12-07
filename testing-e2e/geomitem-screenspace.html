@@ -10,21 +10,22 @@
 
     <link rel="stylesheet" href="styles/tailwind.min.css" />
 
-    <script src="../dist/index.umd.development.js"></script>
+    <script src="../dist/index.umd.js"></script>
 
     <script type="module">
-      const { GLRenderer, Scene, Vec3, Vec2, Xfo, Color, Circle, Rect, GeomItem, Material } = window.zeaEngine
+      const { GLRenderer, Scene, Vec3, Vec2, Xfo, Color, Circle, Rect, GeomItem, ScreenSpaceMaterial } =
+        window.zeaEngine
 
-      const canvas = document.querySelector('#renderer')
+      const canvas = document.getElementById('viewport')
 
       const scene = new Scene()
-      const renderer = new GLRenderer(canvas, { hideSplash: true, webglOptions: { antialias: false } })
+      const renderer = new GLRenderer(canvas, { antialias: false })
       renderer.setScene(scene)
 
       scene.setupGrid(10.0, 10)
 
-      const material = new Material('surfaces', 'ScreenSpaceShader')
-      material.getParameter('BaseColor').setValue(new Color(89 / 255, 182 / 255, 92 / 255))
+      const material = new ScreenSpaceMaterial('surfaces')
+      material.baseColorParam.value = new Color(89 / 255, 182 / 255, 92 / 255)
 
       const sphere = new Circle(0.5, 30)
       const geomItem1 = new GeomItem('Circle', sphere, material, new Xfo(new Vec3(0.0, 0.0, 0)))
@@ -35,13 +36,13 @@
       renderer.addTreeItem(geomItem2)
 
       const selectionRect = new Rect(1, 1)
-      const selectionRectMat = new Material('marker', 'ScreenSpaceShader')
-      selectionRectMat.getParameter('BaseColor').setValue(new Color(0.2, 0.2, 0.2))
+      const selectionRectMat = new ScreenSpaceMaterial('marker')
+      selectionRectMat.baseColorParam.value = new Color(0.2, 0.2, 0.2)
       const selectionRectXfo = new Xfo()
       selectionRectXfo.tr.set(0, 0, 0)
       // selectionRectXfo.sc.set(0, 0, 0)
       const rectItem = new GeomItem('selectionRect', selectionRect, selectionRectMat)
-      rectItem.getParameter('Visible').setValue(false)
+      rectItem.getParameter('Visible').value = false
       renderer.addTreeItem(rectItem)
       // rectItem.cullable = false
       const __resizeRect = (viewport, delta) => {
@@ -54,12 +55,12 @@
 
         selectionRectXfo.tr.x = tr.x
         selectionRectXfo.tr.y = -tr.y
-        rectItem.getParameter('GlobalXfo').setValue(selectionRectXfo)
+        rectItem.globalXfoParam.value = selectionRectXfo
       }
 
       let dragging = false
       let pointerDownPos
-      const onPointerDown = event => {
+      const onPointerDown = (event) => {
         if (event.pointerType === 'touch' || (event.button == 0 && !event.altKey)) {
           pointerDownPos = event.pointerPos
           dragging = false
@@ -74,7 +75,7 @@
        * @param {MouseEvent|TouchEvent|object} event - The event param.
        * @return {boolean} The return value.
        */
-      const onPointerMove = event => {
+      const onPointerMove = (event) => {
         if (pointerDownPos) {
           const delta = pointerDownPos.subtract(event.pointerPos)
           // if (dragging) {
@@ -86,7 +87,7 @@
           if (dist > 4) {
             dragging = true
             // Start drawing the selection rectangle on screen.
-            rectItem.getParameter('Visible').setValue(true)
+            rectItem.getParameter('Visible').value = true
             __resizeRect(event.viewport, delta)
           }
           event.stopPropagation()
@@ -99,10 +100,10 @@
        * @param {MouseEvent|TouchEvent|object} event - The event param.
        * @return {boolean} The return value.
        */
-      const onPointerUp = event => {
+      const onPointerUp = (event) => {
         if (pointerDownPos) {
           if (dragging) {
-            rectItem.getParameter('Visible').setValue(false)
+            rectItem.getParameter('Visible').value = false
             const pointerUpPos = event.pointerPos
             const tl = new Vec2(Math.min(pointerDownPos.x, pointerUpPos.x), Math.min(pointerDownPos.y, pointerUpPos.y))
             const br = new Vec2(Math.max(pointerDownPos.x, pointerUpPos.x), Math.max(pointerDownPos.y, pointerUpPos.y))
@@ -118,28 +119,22 @@
       renderer.getViewport().on('pointerMove', onPointerMove)
       renderer.getViewport().on('pointerUp', onPointerUp)
 
-      const postMessage = msg => {
+      const postMessage = (msg) => {
         console.log(msg)
         window.postMessage(msg)
       }
       postMessage('done-loading')
 
       // {{{ Messages handler.
-      const handleMessage = event => {
+      const handleMessage = (event) => {
         const { data } = event
 
         if (data === 'variant-01') {
-          renderer
-            .getViewport()
-            .getCamera()
-            .setPositionAndTarget(new Vec3(2, 2, -2.7), new Vec3(0, 0, 0.4))
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, -2.7), new Vec3(0, 0, 0.4))
           renderer.frameAll()
           postMessage(`done-${data}`)
         } else if (data === 'variant-02') {
-          renderer
-            .getViewport()
-            .getCamera()
-            .setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 0.4))
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 0.4))
           renderer.frameAll()
           postMessage(`done-${data}`)
         }
@@ -151,7 +146,7 @@
   </head>
   <body class="bg-blue-100">
     <div class="h-screen">
-      <canvas class="absolute" id="renderer"></canvas>
+      <canvas id="viewport"></canvas>
     </div>
   </body>
 </html>

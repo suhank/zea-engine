@@ -15,30 +15,45 @@ import { Vec2Attribute } from '../Vec2Attribute'
  * @extends ProceduralMesh
  */
 class Torus extends ProceduralMesh {
-  protected __arcAngleParam: NumberParameter
-  protected __detailParam: NumberParameter
-  protected __innerRadiusParam: NumberParameter
-  protected __outerRadiusParam: NumberParameter
+  /**
+   * @member arcAngleParam - TODO
+   */
+  arcAngleParam: NumberParameter
+
+  /**
+   * @member detailParam - TODO
+   */
+  detailParam: NumberParameter
+
+  /**
+   * @member innerRadiusParam - TODO
+   */
+  innerRadiusParam: NumberParameter
+
+  /**
+   * @member outerRadiusParam - TODO
+   */
+  outerRadiusParam: NumberParameter
 
   /**
    * Creates an instance of Torus.
    *
-   * @param {number} [innerRadius=0.5] - The inner radius of the torus.
-   * @param {number} [outerRadius=3] - The outer radius of the torus.
-   * @param {number} [detail=32] - The detail of the cone.
-   * @param {number} [arcAngle=Math.PI * 2.0] - The angle of the arc.
+   * @param innerRadius - The inner radius of the torus.
+   * @param outerRadius - The outer radius of the torus.
+   * @param detail - The detail of the cone.
+   * @param arcAngle - The angle of the arc.
    */
   constructor(innerRadius = 0.5, outerRadius = 3, detail = 32, arcAngle = Math.PI * 2.0) {
     super()
 
     if (isNaN(innerRadius) || isNaN(outerRadius) || isNaN(detail)) throw new Error('Invalid geom args')
 
-    this.__innerRadiusParam = this.addParameter(new NumberParameter('InnerRadius', innerRadius)) as NumberParameter
-    this.__outerRadiusParam = this.addParameter(new NumberParameter('OuterRadius', outerRadius)) as NumberParameter
-    this.__detailParam = this.addParameter(
+    this.innerRadiusParam = this.addParameter(new NumberParameter('InnerRadius', innerRadius)) as NumberParameter
+    this.outerRadiusParam = this.addParameter(new NumberParameter('OuterRadius', outerRadius)) as NumberParameter
+    this.detailParam = this.addParameter(
       new NumberParameter('Detail', detail >= 3 ? detail : 3, [3, 200], 1)
     ) as NumberParameter
-    this.__arcAngleParam = this.addParameter(new NumberParameter('ArcAngle', arcAngle)) as NumberParameter
+    this.arcAngleParam = this.addParameter(new NumberParameter('ArcAngle', arcAngle)) as NumberParameter
 
     this.addVertexAttribute('texCoords', new Vec2Attribute())
     this.addVertexAttribute('normals', new Vec3Attribute())
@@ -52,9 +67,9 @@ class Torus extends ProceduralMesh {
    * @private
    */
   rebuild(): void {
-    const arcAngle = this.__arcAngleParam.getValue() || Math.PI * 2.0
+    const arcAngle = this.arcAngleParam.value
     const open = arcAngle < 2.0 * Math.PI
-    const detail = this.__detailParam.getValue() || 32
+    const detail = this.detailParam.value
     const nbSlices = detail
     const nbLoops = detail * 2 + (open ? 1 : 0)
     const numVertices = nbSlices * nbLoops
@@ -94,10 +109,10 @@ class Torus extends ProceduralMesh {
    * @private
    */
   resize(): void {
-    const innerRadius = this.__innerRadiusParam.getValue() || 0.5
-    const outerRadius = this.__outerRadiusParam.getValue() || 3
-    const arcAngle = this.__arcAngleParam.getValue() || Math.PI * 2
-    const detail = this.__detailParam.getValue() || 32
+    const innerRadius = this.innerRadiusParam.value
+    const outerRadius = this.outerRadiusParam.value
+    const arcAngle = this.arcAngleParam.value
+    const detail = this.detailParam.value
     const open = arcAngle < 2.0 * Math.PI
     const nbSlices = detail
     const nbLoops = detail * 2 + (open ? 1 : 0)

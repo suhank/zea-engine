@@ -2,14 +2,10 @@ import { Color } from '../../Math/index'
 import { Registry } from '../../Registry'
 import { BaseImage } from '../BaseImage'
 import { resourceLoader } from '../resourceLoader'
-import { FilePathParameter } from '../Parameters/FilePathParameter'
 import { BinReader } from '../BinReader'
 
 /**
  * Class representing a VLH image.
- *
- * **Parameters**
- * * **FilePath(`FilePathParameter`):** Used to specify the path to the file.
  *
  * **Events**
  * * **loaded:** Triggered when image data is loaded.
@@ -18,19 +14,16 @@ import { BinReader } from '../BinReader'
  * @extends BaseImage
  */
 class VLHImage extends BaseImage {
-  protected __loaded: boolean
   protected __exposure: number
   protected __ambientLightFactor: number
   protected __hdrTint: Color
   protected __stream: boolean
   protected __data: Record<string, any> = {}
 
-  // loaded: any
-  updated: any // TODO: treated as a boolean and function
   /**
    * Create a VLH image.
-   * @param {string} name - The name value.
-   * @param {Record<any,any>} params - The params value.
+   * @param name - The name value.
+   * @param params - The params value.
    */
   constructor(name?: string, params: Record<string, any> = {}) {
     super(name) // TODO: used to be: super(name, params)
@@ -39,71 +32,58 @@ class VLHImage extends BaseImage {
       filepath = name
       this.setName(name.substring(name.lastIndexOf('/') + 1, name.lastIndexOf('.')))
     }
-    this.__loaded = false
     this.__exposure = 1.0
     this.__ambientLightFactor = 0.0
     this.__hdrTint = new Color(1, 1, 1, 1)
     this.__stream = 'stream' in params ? params['stream'] : false
     this.type = 'FLOAT'
 
-    const fileParam = this.addParameter(new FilePathParameter('FilePath'))
-    fileParam.on('valueChanged', () => {
-      this.loaded = false
-      const url = (<FilePathParameter>fileParam).getUrl()
-      this.load(url)
-    })
-
     if (filepath) {
-      ;(<FilePathParameter>this.getParameter('FilePath')).setFilepath(filepath)
+      this.load(filepath)
     }
-  }
-
-  /**
-   * Returns `FilePath` parameter's value.
-   *
-   * @return {string} - The return value.
-   */
-  getResourcePath(): string {
-    return this.getParameter('FilePath')!.getValue()
   }
 
   /**
    * The __decodeData method.
-   * @param {Record<string, any>} entries - The entries value.
+   * @param entries - The entries value.
    * @private
    */
-  __decodeData(entries: Record<string, any>): void {
-    const ldr = entries.ldr
-    const cdm = entries.cdm
+  __decodeData(entries: Record<string, any>): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const ldr = entries.ldr
+      const cdm = entries.cdm
 
-    // ///////////////////////////////
-    // Parse the data.
-    const blob = new Blob([ldr.buffer])
-    const ldrPic = new Image()
-    ldrPic.onload = () => {
-      this.width = ldrPic.width
-      this.height = ldrPic.height
-      // console.log(resourcePath + ": [" + this.width + ", " + this.height + "]");
-      this.__data = {
-        ldr: ldrPic,
-        cdm: cdm
+      // ///////////////////////////////
+      // Parse the data.
+      const blob = new Blob([ldr.buffer])
+      const ldrPic = new Image()
+      ldrPic.onload = () => {
+        this.width = ldrPic.width
+        this.height = ldrPic.height
+        // console.log(resourcePath + ": [" + this.width + ", " + this.height + "]");
+        this.__data = {
+          ldr: ldrPic,
+          cdm: cdm,
+        }
+        if (!this.loaded) {
+          this.loaded = true
+          this.emit('loaded')
+        } else {
+          this.emit('updated')
+        }
+        resolve()
       }
-      if (!this.__loaded) {
-        this.__loaded = true
-        this.emit('loaded', {})
-      } else {
-        this.emit('updated', {})
-      }
-    }
-    ldrPic.src = URL.createObjectURL(blob)
+      ldrPic.src = URL.createObjectURL(blob)
+    })
   }
 
   /**
    * Loads a vlh file given a URL.
-   * @param {string} url - The URL of the vlh file to load
-   * @return {Promise} - Returns a promise that resolves once the initial load is complete
+   * @param url - The URL of the vlh file to load
+   * @return - Returns a promise that resolves once the initial load is complete
    */
   load(url: string): Promise<void> {
+    this.loaded = false
     return new Promise<void>((resolve, reject) => {
       const filename = url.lastIndexOf('/') > -1 ? url.substring(url.lastIndexOf('/') + 1) : ''
       const stem = filename.substring(0, filename.lastIndexOf('.'))
@@ -125,8 +105,9 @@ class VLHImage extends BaseImage {
               }
             }
           }
-          this.__decodeData(entries)
-          resolve()
+          this.__decodeData(entries).then(() => {
+            resolve()
+          })
         },
         (error: any) => {
           this.emit('error', error)
@@ -139,29 +120,20 @@ class VLHImage extends BaseImage {
   /**
    * Returns if the data is a stream or not.
    *
-   * @return {boolean} - The return value.
+   * @return - The return value.
    */
   isStream(): boolean {
     return false
   }
 
   /**
-   * Returns the status of the data, whether is loaded or not.
-   *
-   * @return {boolean} - The return value.
-   */
-  isLoaded(): boolean {
-    return this.__loaded
-  }
-
-  /**
    * Returns all parameters and class state values.
    *
-   * @return {Record<any,any>} - The return value.
+   * @return - The return value.
    */
   getParams(): Record<string, any> {
     const params = super.getParams()
-    if (this.__loaded) {
+    if (this.loaded) {
       params['data'] = this.__data
       params['exposure'] = this.__exposure
     }
@@ -171,7 +143,7 @@ class VLHImage extends BaseImage {
   /**
    * The setHDRTint method.
    * @private
-   * @param {Color} hdrTint - The hdrTint value.
+   * @param hdrTint - The hdrTint value.
    */
   setHDRTint(hdrTint: Color) {
     this.__hdrTint = hdrTint
@@ -180,7 +152,7 @@ class VLHImage extends BaseImage {
   /**
    * The getHDRTint method.
    * @private
-   * @return {Color} - The return value.
+   * @return - The return value.
    */
   getHDRTint(): Color {
     return this.__hdrTint
@@ -192,7 +164,7 @@ class VLHImage extends BaseImage {
   /**
    * The toJSON method encodes this type as a json object for persistence.
    *
-   * @param {Record<string, any>} context - The context value.
+   * @param context - The context value.
    */
   toJSON(context?: Record<string, any>): Record<string, any> {
     return {}
@@ -201,8 +173,8 @@ class VLHImage extends BaseImage {
   /**
    * The fromJSON method decodes a json object for this type.
    *
-   * @param {Record<string, any>} json - The json object this item must decode.
-   * @param {Record<string, any>} context - The context value.
+   * @param json - The json object this item must decode.
+   * @param context - The context value.
    */
   fromJSON(json: Record<string, any>, context: Record<string, any>): Record<string, any> {
     return {}
@@ -211,24 +183,15 @@ class VLHImage extends BaseImage {
   /**
    * Sets state of current Image using a binary reader object, and adds it to the resource loader.
    *
-   * @param {BinReader} reader - The reader value.
-   * @param {Record<string, any>} context - The context value.
+   * @param reader - The reader value.
+   * @param context - The context value.
    */
   readBinary(reader: BinReader, context: Record<string, any>): void {
     // super.readBinary(reader, context);
     this.setName(reader.loadStr())
-    let resourcePath: string = reader.loadStr()
-    if (typeof resourcePath === 'string' && resourcePath != '') {
-      if (context.lod >= 0) {
-        const suffixSt = resourcePath.lastIndexOf('.')
-        if (suffixSt != -1) {
-          const lodPath = resourcePath.substring(0, suffixSt) + context.lod + resourcePath.substring(suffixSt)
-          if (resourceLoader.resourceAvailable(lodPath)) {
-            resourcePath = lodPath
-          }
-        }
-      }
-      this.getParameter('FilePath')!.setValue(resourcePath)
+    let url: string = reader.loadStr()
+    if (typeof url === 'string' && url != '') {
+      this.load(url)
     }
   }
 }

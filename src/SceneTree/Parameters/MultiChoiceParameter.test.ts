@@ -10,9 +10,9 @@ describe('MultiChoiceParameter', () => {
 
   it('sets value.', () => {
     const multiChoiceParameter = new MultiChoiceParameter('Foo', 0, [1, 2, 3])
-    multiChoiceParameter.setValue(1)
+    multiChoiceParameter.value = 1
 
-    expect(multiChoiceParameter.getValue()).toEqual(1)
+    expect(multiChoiceParameter.value).toEqual(1)
   })
 
   it('saves to JSON (serialization).', () => {
@@ -27,7 +27,7 @@ describe('MultiChoiceParameter', () => {
     const input = { value: 1 }
     multiChoiceParameter.fromJSON(input)
 
-    expect(multiChoiceParameter.getValue()).toEqual(input.value)
+    expect(multiChoiceParameter.value).toEqual(input.value)
   })
 
   it('loads from binary (serialization).', () => {
@@ -37,12 +37,12 @@ describe('MultiChoiceParameter', () => {
     const reader = new BinReader(<Buffer>data.buffer)
     multiChoiceParameter.readBinary(reader)
 
-    expect(multiChoiceParameter.getValue()).toEqual(1)
+    expect(multiChoiceParameter.value).toEqual(1)
   })
 
   it('clones parameter object', () => {
     const parameter = new MultiChoiceParameter('Foo', 1, [1, 2, 3])
-    parameter.setValue(2)
+    parameter.value = 2
 
     const parameter2 = parameter.clone()
 

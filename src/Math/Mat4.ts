@@ -2,6 +2,7 @@ import { Vec3 } from './Vec3'
 import { Mat3 } from './Mat3'
 import { Vec4 } from './Vec4'
 import { BinReader } from '../SceneTree/BinReader'
+import { StringFunctions } from '../Utilities/StringFunctions'
 
 /**
  * A class representing a 4x4 matrix.
@@ -9,27 +10,27 @@ import { BinReader } from '../SceneTree/BinReader'
  *
  */
 class Mat4 {
+  __data: Float32Array
   /**
    * Initializes the Mat3 class with given data.
    *
-   * @param {number | Float32Array | ArrayBuffer} m00 - Row 0, column 0.
-   * @param {number} m01 - Row 0, column 1.
-   * @param {number} m02 - Row 0, column 2.
-   * @param {number} m03 - Row 0, column 3.
-   * @param {number} m10 - Row 1, column 0.
-   * @param {number} m11 - Row 1, column 1.
-   * @param {number} m12 - Row 1, column 2.
-   * @param {number} m13 - Row 1, column 3.
-   * @param {number} m20 - Row 2, column 0.
-   * @param {number} m21 - Row 2, column 1.
-   * @param {number} m22 - Row 2, column 2.
-   * @param {number} m23 - Row 2, column 3.
-   * @param {number} m30 - Row 3, column 0.
-   * @param {number} m31 - Row 3, column 1.
-   * @param {number} m32 - Row 3, column 2.
-   * @param {number} m33 - Row 3, column 3.
+   * @param m00 - Row 0, column 0.
+   * @param m01 - Row 0, column 1.
+   * @param m02 - Row 0, column 2.
+   * @param m03 - Row 0, column 3.
+   * @param m10 - Row 1, column 0.
+   * @param m11 - Row 1, column 1.
+   * @param m12 - Row 1, column 2.
+   * @param m13 - Row 1, column 3.
+   * @param m20 - Row 2, column 0.
+   * @param m21 - Row 2, column 1.
+   * @param m22 - Row 2, column 2.
+   * @param m23 - Row 2, column 3.
+   * @param m30 - Row 3, column 0.
+   * @param m31 - Row 3, column 1.
+   * @param m32 - Row 3, column 2.
+   * @param m33 - Row 3, column 3.
    */
-  __data: Float32Array
   constructor(
     m00: number | Float32Array | ArrayBuffer = 1,
     m01 = 0,
@@ -66,7 +67,7 @@ class Mat4 {
   /**
    * Getter for row 0, column 0.
    *
-   * @return {number} - Returns the m00 value.
+   * @return - Returns the m00 value.
    */
   get m00(): number {
     return this.__data[0]
@@ -75,7 +76,7 @@ class Mat4 {
   /**
    * Setter for row 0, column 0.
    *
-   * @param {number} val - The val param.
+   * @param val - The val param.
    */
   set m00(val: number) {
     this.__data[0] = val
@@ -84,7 +85,7 @@ class Mat4 {
   /**
    * Getter for row 0, column 1.
    *
-   * @return {number} - Returns the m01 value.
+   * @return - Returns the m01 value.
    */
   get m01(): number {
     return this.__data[1]
@@ -93,7 +94,7 @@ class Mat4 {
   /**
    * Setter for row 0, column 1.
    *
-   * @param {number} val - The val param.
+   * @param val - The val param.
    */
   set m01(val: number) {
     this.__data[1] = val
@@ -102,7 +103,7 @@ class Mat4 {
   /**
    * Getter for row 0, column 2.
    *
-   * @return {number} - Returns the m02 value.
+   * @return - Returns the m02 value.
    */
   get m02(): number {
     return this.__data[2]
@@ -111,7 +112,7 @@ class Mat4 {
   /**
    * Setter for row 0, column 2.
    *
-   * @param {number} val - The val param.
+   * @param val - The val param.
    */
   set m02(val: number) {
     this.__data[2] = val
@@ -120,7 +121,7 @@ class Mat4 {
   /**
    * Getter for row 0, column 3.
    *
-   * @return {number} - Returns the m03 value.
+   * @return - Returns the m03 value.
    */
   get m03(): number {
     return this.__data[3]
@@ -129,7 +130,7 @@ class Mat4 {
   /**
    * Setter for row 0, column 3.
    *
-   * @param {number} val - The val param.
+   * @param val - The val param.
    */
   set m03(val: number) {
     this.__data[3] = val
@@ -138,7 +139,7 @@ class Mat4 {
   /**
    * Getter for row 1, column 0.
    *
-   * @return {number} - Returns the m10 value.
+   * @return - Returns the m10 value.
    */
   get m10(): number {
     return this.__data[4]
@@ -147,7 +148,7 @@ class Mat4 {
   /**
    * Setter for row 1, column 0.
    *
-   * @param {number} val - The val param.
+   * @param val - The val param.
    */
   set m10(val: number) {
     this.__data[4] = val
@@ -156,7 +157,7 @@ class Mat4 {
   /**
    * Getter for row 1, column 1.
    *
-   * @return {number} - Returns the m11 value.
+   * @return - Returns the m11 value.
    */
   get m11(): number {
     return this.__data[5]
@@ -165,7 +166,7 @@ class Mat4 {
   /**
    * Setter for row 1, column 1.
    *
-   * @param {number} val - The val param.
+   * @param val - The val param.
    */
   set m11(val: number) {
     this.__data[5] = val
@@ -174,7 +175,7 @@ class Mat4 {
   /**
    * Getter for row 1, column 2.
    *
-   * @return {number} - Returns the m12 value.
+   * @return - Returns the m12 value.
    */
   get m12(): number {
     return this.__data[6]
@@ -183,7 +184,7 @@ class Mat4 {
   /**
    * Setter for row 1, column 2.
    *
-   * @param {number} val - The val param.
+   * @param val - The val param.
    */
   set m12(val: number) {
     this.__data[6] = val
@@ -192,7 +193,7 @@ class Mat4 {
   /**
    * Getter for row 1, column 3.
    *
-   * @return {number} - Returns the m13 value.
+   * @return - Returns the m13 value.
    */
   get m13(): number {
     return this.__data[7]
@@ -201,7 +202,7 @@ class Mat4 {
   /**
    * Setter for row 1, column 3.
    *
-   * @param {number} val - The val param.
+   * @param val - The val param.
    */
   set m13(val: number) {
     this.__data[7] = val
@@ -210,7 +211,7 @@ class Mat4 {
   /**
    * Getter for row 2, column 0.
    *
-   * @return {number} - Returns the m20 value.
+   * @return - Returns the m20 value.
    */
   get m20(): number {
     return this.__data[8]
@@ -219,7 +220,7 @@ class Mat4 {
   /**
    * Setter for row 2, column 0.
    *
-   * @param {number} val - The val param.
+   * @param val - The val param.
    */
   set m20(val: number) {
     this.__data[8] = val
@@ -228,7 +229,7 @@ class Mat4 {
   /**
    * Getter for row 2, column 1.
    *
-   * @return {number} - Returns the m21 value.
+   * @return - Returns the m21 value.
    */
   get m21(): number {
     return this.__data[9]
@@ -237,7 +238,7 @@ class Mat4 {
   /**
    * Setter for row 2, column 1
    *
-   * @param {number} val - The val param.
+   * @param val - The val param.
    */
   set m21(val: number) {
     this.__data[9] = val
@@ -246,7 +247,7 @@ class Mat4 {
   /**
    * Getter for row 2, column 2.
    *
-   * @return {number} - Returns the m22 value.
+   * @return - Returns the m22 value.
    */
   get m22(): number {
     return this.__data[10]
@@ -255,7 +256,7 @@ class Mat4 {
   /**
    * Setter for row 2, column 2.
    *
-   * @param {number} val - The val param.
+   * @param val - The val param.
    */
   set m22(val: number) {
     this.__data[10] = val
@@ -264,7 +265,7 @@ class Mat4 {
   /**
    * Getter for row 2, column 3.
    *
-   * @return {number} - Returns the m23 value.
+   * @return - Returns the m23 value.
    */
   get m23(): number {
     return this.__data[11]
@@ -273,7 +274,7 @@ class Mat4 {
   /**
    * Setter for row 2, column 3.
    *
-   * @param {number} val - The val param.
+   * @param val - The val param.
    */
   set m23(val: number) {
     this.__data[11] = val
@@ -282,7 +283,7 @@ class Mat4 {
   /**
    * Getter for row 3, column 0
    *
-   * @return {number} - Returns the m30 value.
+   * @return - Returns the m30 value.
    */
   get m30(): number {
     return this.__data[12]
@@ -291,7 +292,7 @@ class Mat4 {
   /**
    * Setter for row 3, column 0.
    *
-   * @param {number} val - The val param.
+   * @param val - The val param.
    */
   set m30(val: number) {
     this.__data[12] = val
@@ -300,7 +301,7 @@ class Mat4 {
   /**
    * Getter for row 3, column 1.
    *
-   * @return {number} - Returns the m31 value.
+   * @return - Returns the m31 value.
    */
   get m31(): number {
     return this.__data[13]
@@ -309,7 +310,7 @@ class Mat4 {
   /**
    * Setter for row 3, column 1.
    *
-   * @param {number} val - The val param.
+   * @param val - The val param.
    */
   set m31(val: number) {
     this.__data[13] = val
@@ -318,7 +319,7 @@ class Mat4 {
   /**
    * Getter for row 3, column 2.
    *
-   * @return {number} - Returns the m32 value.
+   * @return - Returns the m32 value.
    */
   get m32(): number {
     return this.__data[14]
@@ -327,7 +328,7 @@ class Mat4 {
   /**
    * Setter for row 3, column 2.
    *
-   * @param {number} val - The val param.
+   * @param val - The val param.
    */
   set m32(val: number) {
     this.__data[14] = val
@@ -336,7 +337,7 @@ class Mat4 {
   /**
    * Getter for row 3, column 3.
    *
-   * @return {number} - Returns the m33 value.
+   * @return - Returns the m33 value.
    */
   get m33(): number {
     return this.__data[15]
@@ -345,7 +346,7 @@ class Mat4 {
   /**
    * Setter for row 3, column 3.
    *
-   * @param {number} val - The val param.
+   * @param val - The val param.
    */
   set m33(val: number) {
     this.__data[15] = val
@@ -354,7 +355,7 @@ class Mat4 {
   /**
    * Getter for the `x` axis.
    *
-   * @return {Vec3} - Returns the `x` axis as a Vec3.
+   * @return - Returns the `x` axis as a Vec3.
    */
   get xAxis(): Vec3 {
     return new Vec3(new Float32Array(this.__data.buffer, 0, 3))
@@ -363,7 +364,7 @@ class Mat4 {
   /**
    * Setter for the `x` axis.
    *
-   * @param {Vec3} vec3 - The vec3 value.
+   * @param vec3 - The vec3 value.
    */
   set xAxis(vec3: Vec3) {
     this.xAxis.set(vec3.x, vec3.y, vec3.z)
@@ -372,7 +373,7 @@ class Mat4 {
   /**
    * Getter for the `y` axis.
    *
-   * @return {Vec3} - Returns the `y` axis as a Vec3.
+   * @return - Returns the `y` axis as a Vec3.
    */
   get yAxis(): Vec3 {
     return new Vec3(new Float32Array(this.__data.buffer, 4 * 4, 3))
@@ -381,7 +382,7 @@ class Mat4 {
   /**
    * Setter for the `y` axis.
    *
-   * @param {Vec3} vec3 - The vec3 value.
+   * @param vec3 - The vec3 value.
    */
   set yAxis(vec3: Vec3) {
     this.yAxis.set(vec3.x, vec3.y, vec3.z)
@@ -390,7 +391,7 @@ class Mat4 {
   /**
    * Getter for the `z` axis.
    *
-   * @return {Vec3} - Returns the `z` axis as a Vec3.
+   * @return - Returns the `z` axis as a Vec3.
    */
   get zAxis(): Vec3 {
     return new Vec3(new Float32Array(this.__data.buffer, 8 * 4, 3))
@@ -399,7 +400,7 @@ class Mat4 {
   /**
    * Setter for the `z` axis.
    *
-   * @param {Vec3} vec3 - The vec3 value.
+   * @param vec3 - The vec3 value.
    */
   set zAxis(vec3: Vec3) {
     this.zAxis.set(vec3.x, vec3.y, vec3.z)
@@ -408,7 +409,7 @@ class Mat4 {
   /**
    * Getter for the translation of the matrix. Assumes the translation values are 12, 13, & 14.
    *
-   * @return {Vec3} - Returns the translation.
+   * @return - Returns the translation.
    */
   get translation(): Vec3 {
     return new Vec3(new Float32Array(this.__data.buffer, 12 * 4, 3))
@@ -417,7 +418,7 @@ class Mat4 {
   /**
    * Setter for the translation of the matrix. Assumes the translation values are 12, 13, & 14.
    *
-   * @param {Vec3} vec3 - The translation.
+   * @param vec3 - The translation.
    */
   set translation(vec3: Vec3) {
     this.translation.set(vec3.x, vec3.y, vec3.z)
@@ -429,22 +430,22 @@ class Mat4 {
   /**
    * Sets the state of the Mat4 class
    *
-   * @param {number} m00 - Row 0, column 0.
-   * @param {number} m01 - Row 0, column 1.
-   * @param {number} m02 - Row 0, column 2.
-   * @param {number} m03 - Row 0, column 3.
-   * @param {number} m10 - Row 1, column 0.
-   * @param {number} m11 - Row 1, column 1.
-   * @param {number} m12 - Row 1, column 2.
-   * @param {number} m13 - Row 1, column 3.
-   * @param {number} m20 - Row 2, column 0.
-   * @param {number} m21 - Row 2, column 1.
-   * @param {number} m22 - Row 2, column 2.
-   * @param {number} m23 - Row 2, column 3.
-   * @param {number} m30 - Row 3, column 0.
-   * @param {number} m31 - Row 3, column 1.
-   * @param {number} m32 - Row 3, column 2.
-   * @param {number} m33 - Row 3, column 3.
+   * @param m00 - Row 0, column 0.
+   * @param m01 - Row 0, column 1.
+   * @param m02 - Row 0, column 2.
+   * @param m03 - Row 0, column 3.
+   * @param m10 - Row 1, column 0.
+   * @param m11 - Row 1, column 1.
+   * @param m12 - Row 1, column 2.
+   * @param m13 - Row 1, column 3.
+   * @param m20 - Row 2, column 0.
+   * @param m21 - Row 2, column 1.
+   * @param m22 - Row 2, column 2.
+   * @param m23 - Row 2, column 3.
+   * @param m30 - Row 3, column 0.
+   * @param m31 - Row 3, column 1.
+   * @param m32 - Row 3, column 2.
+   * @param m33 - Row 3, column 3.
    */
   set(
     m00 = 1,
@@ -492,7 +493,7 @@ class Mat4 {
   /**
    * Sets the state of the Mat4 Object.
    *
-   * @param {Float32Array} float32Array - The float32Array value.
+   * @param float32Array - The float32Array value.
    */
   setDataArray(float32Array: Float32Array): void {
     this.__data = float32Array
@@ -500,12 +501,12 @@ class Mat4 {
 
   /**
    * Sets state of the Mat4 from another Mat4
-   * <br>
+   *
    * Note: works with either Mat3 or Mat4.
    *
-   * @param {Mat4} mat4 - The mat4 value.
+   * @param mat4 - The mat4 value.
    */
-  setFromMat4(mat4: any): void {
+  setFromMat4(mat4: Mat4): void {
     this.__data[0] = mat4.m00
     this.__data[1] = mat4.m01
     this.__data[2] = mat4.m02
@@ -527,7 +528,7 @@ class Mat4 {
   /**
    * Converts a Mat4 to a Mat3.
    *
-   * @return {Mat3} - Returns a new Mat3.
+   * @return - Returns a new Mat3.
    */
   toMat3(): Mat3 {
     return new Mat3(
@@ -573,7 +574,7 @@ class Mat4 {
    * Transposes (exchanges columns with rows) this matrix
    * and returns the result as a new instance.
    *
-   * @return {Mat4} - Return a new transposed Mat4.
+   * @return - Return a new transposed Mat4.
    */
   transpose(): Mat4 {
     return new Mat4(
@@ -599,7 +600,7 @@ class Mat4 {
   /**
    * Inverts a Mat4 and returns the result as a new instance.
    *
-   * @return {Mat4} - Returns a new Mat4.
+   * @return - Returns a new Mat4.
    */
   inverse(): Mat4 {
     const a00 = this.__data[0]
@@ -664,7 +665,7 @@ class Mat4 {
   /**
    * Inverts a Mat4.
    *
-   * @return {boolean} - The return value.
+   * @return - The return value.
    */
   invertInPlace() {
     const a00 = this.__data[0]
@@ -729,8 +730,8 @@ class Mat4 {
   /**
    * Sets this matrix as the inverse of the given Mat4.
    *
-   * @param {Mat4} mat4 - The mat4 value.
-   * @return {null} - In case the `determinant` can't be calculated, a `null` will be returned, otherwise, nothing is returned
+   * @param mat4 - The mat4 value.
+   * @return - In case the `determinant` can't be calculated, a `null` will be returned, otherwise, nothing is returned
    */
   setInverse(mat4: Mat4): void {
     const a00 = mat4.__data[0]
@@ -793,8 +794,8 @@ class Mat4 {
   /**
    * Multiplies two Mat4s and returns the result as a new instance.
    *
-   * @param {Mat4} other - The other Mat4 to multiply with.
-   * @return {Mat4} - Returns a new Mat4.
+   * @param other - The other Mat4 to multiply with.
+   * @return - Returns a new Mat4.
    */
   multiply(other: Mat4): Mat4 {
     const a00 = this.__data[0]
@@ -858,8 +859,8 @@ class Mat4 {
   /**
    * Multiplies two Mat4s in place explicitly not using SIMD.
    *
-   * @param {Mat4} other - The other Mat4 to multiply with.
-   * @return {Mat4} - Returns a new Mat4.
+   * @param other - The other Mat4 to multiply with.
+   * @return - Returns a new Mat4.
    */
   multiplyInPlace(other: Mat4): Mat4 {
     const a = this.asArray()
@@ -923,8 +924,8 @@ class Mat4 {
   /**
    * Post multiplies two Mat4s in place explicitly not using SIMD.
    *
-   * @param {Mat4} other - The other Mat4 to multiply with.
-   * @return {Mat4} - Returns the result as a new Mat4.
+   * @param other - The other Mat4 to multiply with.
+   * @return - Returns the result as a new Mat4.
    */
   postMultiplyInPlace(other: Mat4): Mat4 {
     const a = other.asArray()
@@ -988,8 +989,8 @@ class Mat4 {
   /**
    * Translate a Mat4 by the given vector not using SIMD.
    *
-   * @param {Vec3} v3 - The given vector to translate along.
-   * @return {Mat4} - The return value.
+   * @param v3 - The given vector to translate along.
+   * @return - The return value.
    */
   translateInPlace(v3: Vec3): Mat4 {
     const a = this.__data
@@ -1006,9 +1007,9 @@ class Mat4 {
   /**
    * Generates a look-at matrix with the given position, focal point, and up axis.
    *
-   * @param {Vec3} pos - Position of the viewer.
-   * @param {Vec3} target - Point the viewer is looking at.
-   * @param {Vec3} up - Vec3 pointing up.
+   * @param pos - Position of the viewer.
+   * @param target - Point the viewer is looking at.
+   * @param up - Vec3 pointing up.
    */
   setLookAt(pos: Vec3, target: Vec3, up: Vec3): void {
     const zAxis = pos.subtract(target)
@@ -1056,9 +1057,9 @@ class Mat4 {
    *     mat4.identity(dest);
    *     mat4.rotate(dest, dest, rad, axis);
    *
-   * @param {Vec3} axis - The axis to rotate around.
-   * @param {number} rad - The angle to rotate the matrix by.
-   * @return {Mat4} - The return value.
+   * @param axis - The axis to rotate around.
+   * @param rad - The angle to rotate the matrix by.
+   * @return - The return value.
    */
   setRotation(axis: Vec3, rad: number): Mat4 | null {
     const len = axis.length()
@@ -1103,8 +1104,8 @@ class Mat4 {
    *     mat4.identity(dest);
    *     mat4.rotateX(dest, dest, rad);
    *
-   * @param {number} rad - The angle to rotate the matrix by.
-   * @return {Mat4} - The return value.
+   * @param rad - The angle to rotate the matrix by.
+   * @return - The return value.
    */
   setXRotation(rad: number): Mat4 {
     const s = Math.sin(rad)
@@ -1140,8 +1141,8 @@ class Mat4 {
    *     mat4.identity(dest);
    *     mat4.rotateY(dest, dest, rad);
    *
-   * @param {number} rad - The angle to rotate the matrix by.
-   * @return {Mat4} - The return value.
+   * @param rad - The angle to rotate the matrix by.
+   * @return - The return value.
    */
   setYRotation(rad: number): Mat4 {
     const s = Math.sin(rad)
@@ -1177,8 +1178,8 @@ class Mat4 {
    *     mat4.identity(dest);
    *     mat4.rotateZ(dest, dest, rad);
    *
-   * @param {number} rad - The angle to rotate the matrix by.
-   * @return {Mat4} - The return value.
+   * @param rad - The angle to rotate the matrix by.
+   * @return - The return value.
    */
   setZRotation(rad: number): Mat4 {
     const s = Math.sin(rad)
@@ -1210,8 +1211,8 @@ class Mat4 {
   /**
    * Transforms the Vec4 with a Mat4.
    *
-   * @param {Vec4} vec - The vec value.
-   * @return {Vec4} - Return the result as a new Vec4.
+   * @param vec - The vec value.
+   * @return - Return the result as a new Vec4.
    */
   transformVec4(vec: Vec4): Vec4 {
     const a = this.__data
@@ -1230,8 +1231,8 @@ class Mat4 {
   /**
    * Transforms the Vec3 with a Mat4.
    *
-   * @param {Vec3} vec - The vec value.
-   * @return {Vec3} - Return the result as a new Vec3.
+   * @param vec - The vec value.
+   * @return - Return the result as a new Vec3.
    */
   transformVec3(vec: Vec3): Vec3 {
     const a = this.__data
@@ -1247,8 +1248,8 @@ class Mat4 {
 
   /**
    * Rotates a given `Vec3` and the result is returned as a new `Vec3`, applying only the top left components of the matrix, so not applying any translation.
-   * @param {Vec3} vec - The vec value.
-   * @return {Vec3} - Return the result as a new Vec3.
+   * @param vec - The vec value.
+   * @return - Return the result as a new Vec3.
    */
   rotateVec3(vec: Vec3): Vec3 {
     const a = this.__data
@@ -1261,10 +1262,10 @@ class Mat4 {
   /**
    * Set the perspective from a Mat4.
    *
-   * @param {number} fovY - The fovY value.
-   * @param {number} aspect - The aspect value.
-   * @param {number} near - The near value.
-   * @param {number} far - The far value.
+   * @param fovY - The fovY value.
+   * @param aspect - The aspect value.
+   * @param near - The near value.
+   * @param far - The far value.
    */
   setPerspectiveMatrix(fovy: number, aspect: number, near: number, far: number): void {
     const f = Math.tan(Math.PI * 0.5 - 0.5 * fovy)
@@ -1277,12 +1278,12 @@ class Mat4 {
   /**
    * Calculates the orthographic matrix and sets the state of the Mat4 class
    *
-   * @param {number} left - The left value.
-   * @param {number} right - The right value.
-   * @param {number} bottom - The bottom value.
-   * @param {number} top - The top value.
-   * @param {number} near - The near value.
-   * @param {number} far - The far value.
+   * @param left - The left value.
+   * @param right - The right value.
+   * @param bottom - The bottom value.
+   * @param top - The top value.
+   * @param near - The near value.
+   * @param far - The far value.
    */
   setOrthographicMatrix(left: number, right: number, bottom: number, top: number, near: number, far: number): void {
     const lr = 1 / (left - right)
@@ -1313,9 +1314,9 @@ class Mat4 {
   /**
    * Set the Matrix to be a scale matrix.
    *
-   * @param {number | Vec3} x - The x value.
-   * @param {number} y - The y value.
-   * @param {number} z - The z value.
+   * @param x - The x value.
+   * @param y - The y value.
+   * @param z - The z value.
    */
   setScale(x: number | Vec3, y: number, z: number): void {
     /* eslint-disable prettier/prettier*/
@@ -1330,7 +1331,7 @@ class Mat4 {
   /**
    * Transforms a 3x4 matrix into a 4x4 matrix and set the result to the Math4 state.
    *
-   * @param {array} m3x4 - The m3x4 value.
+   * @param m3x4 - The m3x4 value.
    */
   setFromMat3x4Array(m3x4: number[]): void {
     /* eslint-disable prettier/prettier*/
@@ -1358,7 +1359,7 @@ class Mat4 {
   /**
    * Clones this Mat4 returning a new instance.
    *
-   * @return {Mat4} - Returns a new Mat4.
+   * @return - Returns a new Mat4.
    */
   clone(): Mat4 {
     return new Mat4(
@@ -1385,18 +1386,28 @@ class Mat4 {
   // Persistence
 
   /**
+   * Converts this Vec3 to a string in JSON format.
+   *
+   * @return - The return value.
+   */
+  toString() {
+    // eslint-disable-next-line new-cap
+    return StringFunctions.stringifyJSONWithFixedPrecision(this.toJSON())
+  }
+
+  /**
    * The toJSON method encodes this type as a json object for persistence.
    *
-   * @return {Float32Array } - The json object.
+   * @return {Float32Array} - The json object.
    */
   toJSON(): Float32Array {
-    return Float32Array.from(this.__data)
+    return this.__data
   }
 
   /**
    * The fromJSON method decodes a json object for this type.
    *
-   * @param {number[]} json - The json param.
+   * @param json - The json param.
    */
   fromJSON(json: number[]): void {
     this.__data = new Float32Array(json)
@@ -1405,7 +1416,7 @@ class Mat4 {
   /**
    * Loads the state of the value from a binary reader.
    *
-   * @param {BinReader} reader - The reader value.
+   * @param reader - The reader value.
    */
   readBinary(reader: BinReader): void {
     this.__data = reader.loadFloat32Array(16)
@@ -1414,7 +1425,7 @@ class Mat4 {
   /**
    * Returns current Math type data as array. Often used to pass types to the GPU.
    *
-   * @return {Float32Array} - Returns the result as an array.
+   * @return - Returns the result as an array.
    */
   asArray(): Float32Array {
     return this.__data

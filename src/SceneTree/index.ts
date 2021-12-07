@@ -16,9 +16,9 @@ export * from './Parameters/MaterialParameter'
 export * from './Parameters/MaterialFloatParam'
 export * from './Parameters/MaterialColorParam'
 // export * from './Parameters/GeometryParameter'
-export * from './Parameters/FilePathParameter'
 export * from './Geometry/index'
 export * from './Images/index'
+export * from './Materials/index'
 
 export * from './TreeItem'
 export * from './InstanceItem'
@@ -26,6 +26,7 @@ export * from './InstanceItem'
 export * from './BaseGeomItem'
 export * from './GeomItem'
 export * from './AssetItem'
+export * from './AssetLoadContext'
 export * from './BillboardItem'
 export * from './Camera'
 
@@ -45,6 +46,3 @@ export * from './ObjAsset'
 
 export * from './Operators/index'
 export * from './Manipulators/index'
-
-// Added this for backwards compatibility, removing later on
-export * from './SGFactory'

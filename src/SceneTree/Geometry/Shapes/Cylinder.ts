@@ -24,41 +24,64 @@ import { Vec2Attribute } from '../Vec2Attribute'
  * @extends {ProceduralMesh}
  */
 class Cylinder extends ProceduralMesh {
-  protected __baseZAtZeroParam: BooleanParameter
-  protected __capsParam: BooleanParameter
-  protected __heightParam: NumberParameter
-  protected __loopsParam: NumberParameter
-  protected __radiusParam: NumberParameter
-  protected __sidesParam: NumberParameter
+  /**
+   * @member baseZAtZeroParam - Property to start or not `Z` axis from position `0.
+   */
+  baseZAtZeroParam: BooleanParameter
+
+  /**
+   * @member capsParam - Specifies whether the ends of the cylinder are capped or open.
+   */
+  capsParam: BooleanParameter
+
+  /**
+   * @member heightParam - Specifies the height of the cone.
+   */
+  heightParam: NumberParameter
+
+  /**
+   * @member loopsParam - Specifies the number of subdivisions(stacks) on the `Z` axis.
+   */
+  loopsParam: NumberParameter
+
+  /**
+   * @member radiusParam - Specifies the radius of the cylinder.
+   */
+  radiusParam: NumberParameter
+
+  /**
+   * @member sidesParam - Specifies the number of subdivisions around the `Z` axis.
+   */
+  sidesParam: NumberParameter
   // topologyParams: string[]
 
   /**
    * Create a cylinder.
-   * @param {number} radius - The radius of the cylinder.
-   * @param {number} height - The height of the cylinder.
-   * @param {number} sides - The number of sides.
-   * @param {number} loops - The number of loops.
-   * @param {boolean} caps - A boolean indicating whether the ends of the cylinder are capped or open.
-   * @param {boolean} baseZAtZero - The baseZAtZero value.
+   * @param radius - The radius of the cylinder.
+   * @param height - The height of the cylinder.
+   * @param sides - The number of sides.
+   * @param loops - The number of loops.
+   * @param caps - A boolean indicating whether the ends of the cylinder are capped or open.
+   * @param baseZAtZero - The baseZAtZero value.
    */
   constructor(radius = 0.5, height = 1.0, sides = 32, loops = 2, caps = true, baseZAtZero = false) {
     super()
     this.topologyParams = []
     if (isNaN(radius) || isNaN(height) || isNaN(sides) || isNaN(loops)) throw new Error('Invalid geom args')
 
-    this.__radiusParam = this.addParameter(new NumberParameter('Radius', radius)) as NumberParameter
-    this.__heightParam = this.addParameter(new NumberParameter('Height', height)) as NumberParameter
-    this.__sidesParam = this.addParameter(
+    this.radiusParam = this.addParameter(new NumberParameter('Radius', radius)) as NumberParameter
+    this.heightParam = this.addParameter(new NumberParameter('Height', height)) as NumberParameter
+    this.sidesParam = this.addParameter(
       new NumberParameter('Sides', sides >= 3 ? sides : 3, [3, 200], 1)
     ) as NumberParameter
-    this.__loopsParam = this.addParameter(
+    this.loopsParam = this.addParameter(
       new NumberParameter('Loops', loops >= 2 ? loops : 2, [1, 200], 1)
     ) as NumberParameter
-    this.__capsParam = this.addParameter(new BooleanParameter('Caps', caps)) as BooleanParameter
-    this.__baseZAtZeroParam = this.addParameter(new BooleanParameter('BaseZAtZero', baseZAtZero)) as BooleanParameter
+    this.capsParam = this.addParameter(new BooleanParameter('Caps', caps)) as BooleanParameter
+    this.baseZAtZeroParam = this.addParameter(new BooleanParameter('BaseZAtZero', baseZAtZero)) as BooleanParameter
 
     this.addVertexAttribute('texCoords', new Vec2Attribute())
-    this.addVertexAttribute('normals',new Vec3Attribute()) // TODO: review args/params. 
+    this.addVertexAttribute('normals', new Vec3Attribute()) // TODO: review args/params.
 
     this.topologyParams.push('Sides')
     this.topologyParams.push('Loops')
@@ -70,9 +93,9 @@ class Cylinder extends ProceduralMesh {
    * @private
    */
   rebuild(): void {
-    const nbSides = this.__sidesParam.getValue() || 32
-    const nbLoops = this.__loopsParam.getValue() || 2
-    const caps = this.__capsParam.getValue()
+    const nbSides = this.sidesParam.value
+    const nbLoops = this.loopsParam.value
+    const caps = this.capsParam.value
 
     let numVertices = nbSides * nbLoops
     if (caps) {
@@ -190,12 +213,12 @@ class Cylinder extends ProceduralMesh {
    * @private
    */
   resize(): void {
-    const nbSides = this.__sidesParam.getValue() || 32
-    const nbLoops = this.__loopsParam.getValue() || 2
-    const radius = this.__radiusParam.getValue() || 0.5
-    const height = this.__heightParam.getValue() || 1.0
-    const caps = this.__capsParam.getValue()
-    const baseZAtZero = this.__baseZAtZeroParam.getValue()
+    const nbSides = this.sidesParam.value
+    const nbLoops = this.loopsParam.value
+    const radius = this.radiusParam.value
+    const height = this.heightParam.value
+    const caps = this.capsParam.value
+    const baseZAtZero = this.baseZAtZeroParam.value
 
     let numVertices = nbSides * nbLoops
     if (caps) {
@@ -205,7 +228,7 @@ class Cylinder extends ProceduralMesh {
     let zoff = 0.5
     if (baseZAtZero) zoff = 0.0
 
-    const positions =  <Vec3Attribute>this.getVertexAttribute('positions')
+    const positions = <Vec3Attribute>this.getVertexAttribute('positions')
     if (positions) {
       for (let i = 0; i < nbLoops; i++) {
         const z = (i / (nbLoops - 1)) * height - height * zoff

@@ -1,5 +1,6 @@
 /* eslint-disable require-jsdoc */
 import { GLShader } from '../GLShader'
+import { WebGL12RenderingContext } from '../types/webgl'
 
 import './GLSL/index'
 // @ts-ignore
@@ -14,7 +15,7 @@ import vert from './PreComputeBRDF.vert'
 class PreComputeBRDFShader extends GLShader {
   /**
    * Create a GL renderer.
-   * @param {WebGL12RenderingContext} gl - The options value.
+   * @param gl - The options value.
    */
   constructor(gl: WebGL12RenderingContext) {
     super(gl, 'PreComputeBRDFShader')

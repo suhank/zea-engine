@@ -1,11 +1,11 @@
-import { Vec2 } from '../../../Math/Vec2'
 import { BooleanParameter } from '../../../SceneTree/Parameters/BooleanParameter'
 import { NumberParameter } from '../../../SceneTree/Parameters/NumberParameter'
 import { Vec3 } from '../../../Math/Vec3'
 import { ProceduralMesh } from './ProceduralMesh'
 import { Registry } from '../../../Registry'
 import { Vec3Attribute } from '../Vec3Attribute'
-import { Vec2Attribute } from '../Vec2Attribute'
+// import { Vec2 } from '../../../Math/Vec2'
+// import { Vec2Attribute } from '../Vec2Attribute'
 
 /**
  * A class for generating a cuboid geometry.
@@ -19,27 +19,42 @@ import { Vec2Attribute } from '../Vec2Attribute'
  * @extends {ProceduralMesh}
  */
 class Cuboid extends ProceduralMesh {
-  protected __baseZAtZeroParam: BooleanParameter
-  protected sizeX: NumberParameter
-  protected sizeY: NumberParameter
-  protected sizeZ: NumberParameter
+  /**
+   * @member baseZAtZeroParam - Property to start or not `Z` axis from position `0.
+   */
+  baseZAtZeroParam: BooleanParameter
+
+  /**
+   * @member sizeXParam - Length of the line cuboid along the `X` axis
+   */
+  sizeXParam: NumberParameter
+
+  /**
+   * @member sizeYParam - Length of the line cuboid along the `Y` axis
+   */
+  sizeYParam: NumberParameter
+
+  /**
+   * @member sizeZParam - Length of the line cuboid along the `Z` axis
+   */
+  sizeZParam: NumberParameter
 
   /**
    * Create a cuboid.
-   * @param {number} x - The length of the cuboid along the X axis.
-   * @param {number} y - The length of the cuboid along the Y axis.
-   * @param {number} z - The length of the cuboid along the Z axis.
-   * @param {boolean} baseZAtZero - The baseZAtZero value.
+   * @param x - The length of the cuboid along the X axis.
+   * @param y - The length of the cuboid along the Y axis.
+   * @param z - The length of the cuboid along the Z axis.
+   * @param baseZAtZero - The baseZAtZero value.
    */
   constructor(x = 1.0, y = 1.0, z = 1.0, baseZAtZero = false) {
     super()
 
     if (isNaN(x) || isNaN(y) || isNaN(z)) throw new Error('Invalid geom args')
 
-    this.sizeX = this.addParameter(new NumberParameter('X', x)) as NumberParameter
-    this.sizeY = this.addParameter(new NumberParameter('Y', y)) as NumberParameter
-    this.sizeZ = this.addParameter(new NumberParameter('Z', z)) as NumberParameter
-    this.__baseZAtZeroParam = this.addParameter(new BooleanParameter('BaseZAtZero', baseZAtZero)) as BooleanParameter
+    this.sizeXParam = this.addParameter(new NumberParameter('X', x)) as NumberParameter
+    this.sizeYParam = this.addParameter(new NumberParameter('Y', y)) as NumberParameter
+    this.sizeZParam = this.addParameter(new NumberParameter('Z', z)) as NumberParameter
+    this.baseZAtZeroParam = this.addParameter(new BooleanParameter('BaseZAtZero', baseZAtZero)) as BooleanParameter
 
     this.setFaceCounts([0, 6])
     this.setFaceVertexIndices(0, [0, 1, 2, 3])
@@ -53,30 +68,6 @@ class Cuboid extends ProceduralMesh {
     this.setNumVertices(8)
     this.addVertexAttribute('normals', new Vec3Attribute())
     // this.addVertexAttribute('texCoords', new Vec2Attribute())
-  }
-
-  /**
-   * Setter for the size of the cuboid.
-   *
-   * @param {number} x - The length of the edges along the X axis.
-   * @param {number} y - The length of the edges along the Y axis.
-   * @param {number} z - The length of the edges along the Z axis.
-   */
-  setSize(x: number, y: number, z: number): void {
-    this.sizeX.setValue(x)
-    this.sizeY.setValue(y)
-    this.sizeZ.setValue(z)
-  }
-
-  /**
-   * Setter for the base size of the cuboid.
-   *
-   * @param {number} x - The length of the edges along the X axis.
-   * @param {number} y - The length of the edges along the Y axis.
-   */
-  setBaseSize(x: number, y: number): void {
-    this.sizeX.setValue(x)
-    this.sizeY.setValue(y)
   }
 
   /**
@@ -133,10 +124,10 @@ class Cuboid extends ProceduralMesh {
    * @private
    */
   resize(): void {
-    const x = this.sizeX.getValue() || 1.0
-    const y = this.sizeY.getValue() || 1.0
-    const z = this.sizeZ.getValue() || 1.0
-    const baseZAtZero = this.__baseZAtZeroParam.getValue()
+    const x = this.sizeXParam.value
+    const y = this.sizeYParam.value
+    const z = this.sizeZParam.value
+    const baseZAtZero = this.baseZAtZeroParam.value
     let zoff = 0.5
     const positions = <Vec3Attribute>this.getVertexAttribute('positions')
     if (baseZAtZero) zoff = 1.0

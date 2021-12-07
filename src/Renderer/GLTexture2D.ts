@@ -2,10 +2,11 @@ import { BaseImage, RefCounted } from '../SceneTree/index'
 import { ResizedEvent } from '../Utilities/Events/ResizedEvent'
 import { MathFunctions } from '../Utilities/MathFunctions'
 import { processTextureParams } from './processTextureParams'
+import { Uniform, Uniforms, RenderState } from './types/renderer'
+import { WebGL12RenderingContext } from './types/webgl'
 
 /**
  * Represents a texture that contains 2-dimensional images.
- * <br>
  * Images have width and height, but no depth.
  *
  * @extends RefCounted
@@ -42,8 +43,8 @@ class GLTexture2D extends RefCounted {
   /**
    * Create a GL texture 2D.
    *
-   * @param {WebGL12RenderingContext } gl - The gl value.
-   * @param {BaseImage | Record<any,any>} params - The params value.
+   * @param gl - The gl value.
+   * @param params - The params value.
    */
   constructor(gl: WebGL12RenderingContext, params?: BaseImage | Record<string, any>) {
     super()
@@ -86,7 +87,7 @@ class GLTexture2D extends RefCounted {
   /**
    * Returns the loaded status of the 2D Texture
    *
-   * @return {boolean} - The return value.
+   * @return - The return value.
    */
   isLoaded(): boolean {
     return this.__loaded
@@ -95,7 +96,7 @@ class GLTexture2D extends RefCounted {
   /**
    * Returns the `BaseImage` of the GL Texture
    *
-   * @return {BaseImage} - The return value.
+   * @return - The return value.
    */
   getImage(): BaseImage | null {
     return this.__image
@@ -104,7 +105,7 @@ class GLTexture2D extends RefCounted {
   /**
    * Returns the specified value of the color components in the texture.
    *
-   * @return {GLenum | enum} - The return value.
+   * @return - The return value.
    */
   getInternalFormat(): number {
     return this.__internalFormat
@@ -113,7 +114,7 @@ class GLTexture2D extends RefCounted {
   /**
    * Returns the value of the specified data type of the texel data.
    *
-   * @return {GLenum | enum} - The return value.
+   * @return - The return value.
    */
   getType(): number {
     return this.__type
@@ -122,7 +123,7 @@ class GLTexture2D extends RefCounted {
   /**
    * Returns the value of the specified texel data. It must be the same as the `internalFormat`
    *
-   * @return {GLenum | enum} - The return value.
+   * @return - The return value.
    */
   getFormat(): number {
     return this.__format
@@ -131,7 +132,7 @@ class GLTexture2D extends RefCounted {
   /**
    * Returns the value of the specified wrapping function for texture coordinate
    *
-   * @return {GLenum | enum} - The return value.
+   * @return - The return value.
    */
   getWrap(): number {
     return this.__wrapParam
@@ -140,7 +141,7 @@ class GLTexture2D extends RefCounted {
   /**
    * Returns the value of the specified binding point.
    *
-   * @return {GLenum | enum} - The return value.
+   * @return - The return value.
    */
   getMipMapped() {
     return this.__mipMapped
@@ -150,9 +151,9 @@ class GLTexture2D extends RefCounted {
    * Builds the GLTexture2D using the specified parameters object.
    * Parameters must have the `BaseImage` properties structure.
    *
-   * @param {Record<any,any>} params - The params value.
+   * @param params - The params value.
    *
-   * @param {boolean} emit - The emit value.
+   * @param emit - The emit value.
    */
   configure(params: Record<string, any>) {
     const gl = this.__gl
@@ -223,11 +224,11 @@ class GLTexture2D extends RefCounted {
   /**
    * Initializes and creates the buffer of the object's data store.
    *
-   * @param {Image | ImageData | HTMLCanvasElement | HTMLImageElement | HTMLVideoElement | Record<string, any>} data - The data value.
-   * @param {number} width - The width value.
-   * @param {number} height - The height value.
-   * @param {boolean} bind - The bind value.
-   * @param {boolean} emit - The emit value.
+   * @param data - The data value.
+   * @param width - The width value.
+   * @param height - The height value.
+   * @param bind - The bind value.
+   * @param emit - The emit value.
    */
 
   // TODO: type Image doesn't exist.
@@ -413,10 +414,10 @@ class GLTexture2D extends RefCounted {
 
   /**
    * The resize method.
-   * @param {number} width - The width value.
-   * @param {number} height - The height value.
-   * @param {boolean} preserveData - The preserveData value.
-   * @param {boolean} emit - The emit value.
+   * @param width - The width value.
+   * @param height - The height value.
+   * @param preserveData - The preserveData value.
+   * @param emit - The emit value.
    */
   resize(width: number, height: number, preserveData = false, emit = true) {
     const gl = this.__gl
@@ -470,12 +471,12 @@ class GLTexture2D extends RefCounted {
   /**
    * Upload data for the image to the GPU.
    *
-   * @param {Uint16Array} dataArray - The dataArray value.
-   * @param {number} width - The width value
-   * @param {number} height - The height value
-   * @param {number} offsetX - The offsetX value
-   * @param {number} offsetY - The offsetY value
-   * @param {boolean} bind - The bind value
+   * @param dataArray - The dataArray value.
+   * @param width - The width value
+   * @param height - The height value
+   * @param offsetX - The offsetX value
+   * @param offsetY - The offsetY value
+   * @param bind - The bind value
    */
   populate(
     dataArray: Uint16Array | Float32Array,
@@ -493,7 +494,7 @@ class GLTexture2D extends RefCounted {
   /**
    * Returns the `width`(Index 0) and the `height`(Index 1) of the GL Texture.
    *
-   * @return {number[]} - The return value.
+   * @return - The return value.
    */
   getSize(): number[] {
     return [this.width, this.height]
@@ -502,7 +503,7 @@ class GLTexture2D extends RefCounted {
   /**
    * Returns the value of the WebGLTexture value
    *
-   * @return {WebGLTexture} - The return value.
+   * @return - The return value.
    */
   get glTex(): WebGLTexture | null {
     return this.__gltex
@@ -511,44 +512,32 @@ class GLTexture2D extends RefCounted {
   /**
    * Returns the value of the WebGLTexture value
    *
-   * @return {WebGLTexture} - The return value.
+   * @return - The return value.
    */
   getTexHdl(): WebGLTexture | null {
     return this.__gltex
   }
 
   /**
-   * The bind method.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
-   * @param {WebGLUniformLocation} unif - The WebGL uniform
-   * @return {boolean} - The return value.
-   * @deprecated
-   */
-  bind(renderstate: RenderState, unif: Uniform): boolean {
-    console.warn("'bind' is deprecated. Please use 'bindToUniform'")
-    return this.bindToUniform(renderstate, unif)
-  }
-
-  /**
    * The preBind method.
-   * @param {Uniform} unif - The unif value.
-   * @param {Uniforms} unifs - The unifs value.
-   * @return {Record<string, any>} - The return value.
+   * @param unif - The unif value.
+   * @param unifs - The unifs value.
+   * @return - The return value.
    */
-  preBind(unif: Uniform, unifs: Uniforms) {
+  preBind(unif: Uniform, unifs: Uniforms): Record<string, Uniform> {
     return {
       textureTypeUnif: unifs[unif.name + 'Type'],
-      textureDescUnif: unifs[unif.name + 'Desc']
+      textureDescUnif: unifs[unif.name + 'Desc'],
     }
   }
 
   /**
    * Binds Texture to the Uniform attribute.
    *
-   * @param {RenderState} renderstate - The renderstate value.
-   * @param {Uniform} unif - The unif value.
-   * @param {Record<string, any>} bindings - The bindings value.
-   * @return {boolean} - The return value.
+   * @param renderstate - The renderstate value.
+   * @param unif - The unif value.
+   * @param bindings - The bindings value.
+   * @return - The return value.
    */
   bindToUniform(renderstate: RenderState, unif: Uniform, bindings?: Record<string, any>) {
     if (!this.__loaded) {

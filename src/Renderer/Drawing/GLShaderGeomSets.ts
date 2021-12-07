@@ -9,6 +9,8 @@ import { GLMeshItemSet } from './GLMeshItemSet'
 import { GLStandardGeomsPass } from '../Passes'
 import { GLGeomItem } from './GLGeomItem'
 import { Vec3 } from '../../Math/Vec3'
+import { RenderState, GeomDataRenderState } from '../types/renderer'
+import { WebGL12RenderingContext } from '../types/webgl'
 
 /** Class representing GL shader materials.
  * @private
@@ -26,9 +28,9 @@ class GLShaderGeomSets extends EventEmitter {
   protected glHighlightShaderKey: string = ''
   /**
    * Create a GL shader material.
-   * @param {GLStandardGeomsPass} pass - The pass that owns this object.
-   * @param {WebGL12RenderingContext } gl - The glShader value.
-   * @param {Record<any,any>} shaders - The shader value.
+   * @param pass - The pass that owns this object.
+   * @param gl - The glShader value.
+   * @param shaders - The shader value.
    */
   constructor(pass: GLStandardGeomsPass, gl: WebGL12RenderingContext, shaders: Record<string, any>) {
     super()
@@ -47,8 +49,8 @@ class GLShaderGeomSets extends EventEmitter {
 
   /**
    * Given a GeomItem, constructs the GLGeomItemSet that handles drawing that type of geometry.
-   * @param {BaseGeom} geom - The geomitem value.
-   * @return {GLGeomItemSet} - The return value.
+   * @param geom - The geomitem value.
+   * @return - The return value.
    * */
   getOrCreateGLGeomItemSet(geom: BaseGeom) {
     let glGeomItemSet
@@ -80,20 +82,20 @@ class GLShaderGeomSets extends EventEmitter {
 
   /**
    * The addGLGeomItem method.
-   * @param {GLGeomItem} glGeomItem - The glGeomItem value.
+   * @param glGeomItem - The glGeomItem value.
    */
   addGLGeomItem(glGeomItem: GLGeomItem) {
     const geomItem = glGeomItem.geomItem
-    const geom = geomItem.getParameter('Geometry')!.getValue()
-    const material = glGeomItem.geomItem.getParameter('Material')!.getValue()
+    const geom = geomItem.geomParam.value
+    const material = glGeomItem.geomItem.materialParam.value
 
-    const geomItemParamChanged = (event: Record<string, any>) => {
+    const geomItemParamChanged = () => {
       this.pass.removeGeomItem(geomItem)
       this.pass.renderer!.assignTreeItemToGLPass(geomItem)
     }
     material.on('transparencyChanged', geomItemParamChanged)
-    geomItem.getParameter('Material')!.on('valueChanged', geomItemParamChanged)
-    geomItem.getParameter('Geometry')!.on('valueChanged', geomItemParamChanged)
+    geomItem.materialParam.on('valueChanged', geomItemParamChanged)
+    geomItem.geomParam.on('valueChanged', geomItemParamChanged)
 
     const glGeomItemSet = this.getOrCreateGLGeomItemSet(geom)
     glGeomItem.material = material
@@ -104,15 +106,15 @@ class GLShaderGeomSets extends EventEmitter {
 
   /**
    *  Called by the GLPass to remove an item from this GLShaderGeomSets object.
-   * @param {GLGeomItem} glGeomItem - The glGeomItem value.
+   * @param glGeomItem - The glGeomItem value.
    */
   removeGLGeomItem(glGeomItem: GLGeomItem) {
     const geomItem = glGeomItem.geomItem
     const material = glGeomItem.material
     const geomItemParamChanged = glGeomItem.geomItemParamChanged
     material.off('transparencyChanged', geomItemParamChanged)
-    geomItem.getParameter('Material')!.off('valueChanged', geomItemParamChanged)
-    geomItem.getParameter('Geometry')!.off('valueChanged', geomItemParamChanged)
+    geomItem.materialParam.off('valueChanged', geomItemParamChanged)
+    geomItem.geomParam.off('valueChanged', geomItemParamChanged)
     glGeomItem.material = null
     glGeomItem.geomItemParamChanged = null
 
@@ -123,9 +125,9 @@ class GLShaderGeomSets extends EventEmitter {
 
   /**
    * Binds one of its shaders for rendering, and also the other textures and values needed.
-   * @param {Record<any,any>} glShader - The shader to bind
-   * @param {RenderState} renderstate - The render state for the current draw traversal
-   * @param {string} key - The key to use to cache the shader binding.
+   * @param glShader - The shader to bind
+   * @param renderstate - The render state for the current draw traversal
+   * @param key - The key to use to cache the shader binding.
    * @private
    */
   bindShader(glShader: Record<string, any>, renderstate: RenderState, key: string) {
@@ -151,7 +153,7 @@ class GLShaderGeomSets extends EventEmitter {
 
   /**
    * Draws all elements, binding the shader and continuing into the GLGLGeomSetGeomItemSets
-   * @param {RenderState} renderstate - The render state for the current draw traversal
+   * @param renderstate - The render state for the current draw traversal
    */
   draw(renderstate: RenderState) {
     this.bindShader(this.glShader, renderstate, this.glShaderKey)
@@ -165,7 +167,7 @@ class GLShaderGeomSets extends EventEmitter {
 
   /**
    * The drawHighlightedGeoms method.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
+   * @param renderstate - The object tracking the current state of the renderer
    */
   drawHighlightedGeoms(renderstate: RenderState) {
     if (!this.glHighlightShader) return
@@ -179,18 +181,18 @@ class GLShaderGeomSets extends EventEmitter {
 
   /**
    * The drawGeomData method.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
+   * @param renderstate - The object tracking the current state of the renderer
    */
-  drawGeomData(renderstate: RenderState) {
+  drawGeomData(renderstate: GeomDataRenderState) {
     this.bindShader(this.glGeomDataShader, renderstate, this.glGeomDataShaderKey)
 
-    const gl = this.gl
-    const unifs = renderstate.unifs
-    if (unifs.floatGeomBuffer) {
-      gl.uniform1i(unifs.floatGeomBuffer.location, 1)
+    const gl = renderstate.gl
+    const { floatGeomBuffer, passId } = renderstate.unifs
+    if (floatGeomBuffer) {
+      gl.uniform1i(floatGeomBuffer.location, renderstate.floatGeomBuffer ? 1 : 0)
     }
-    if (unifs.passId) {
-      gl.uniform1i(unifs.passId.location, renderstate.passIndex)
+    if (passId) {
+      gl.uniform1i(passId.location, renderstate.passIndex)
     }
 
     for (const elementType in this.glGeomItemSets) {
@@ -202,7 +204,7 @@ class GLShaderGeomSets extends EventEmitter {
 
   /**
    * Sorts the drawn items in order furthest to nearest when rendering transparent objects.
-   * @param {Vec3} viewPos - The position of the camera that we are sorting relative to.
+   * @param viewPos - The position of the camera that we are sorting relative to.
    */
   sortItems(viewPos: Vec3) {
     // Note: sorting here will not sort geometries of different types.

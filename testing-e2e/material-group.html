@@ -8,10 +8,10 @@
   </head>
   <body class="bg-blue-100 h-full">
     <div class="h-full">
-      <canvas class="absolute" id="app"></canvas>
+      <canvas id="viewport"></canvas>
     </div>
 
-    <script src="../dist/index.umd.development.js"></script>
+    <script src="../dist/index.umd.js"></script>
 
     <script type="module">
       const {
@@ -28,39 +28,39 @@
         Torus,
         GeomItem,
         TreeItem,
-        Material,
-        MaterialGroup
+        SimpleSurfaceMaterial,
+        MaterialGroup,
       } = zeaEngine
 
-      const domElement = document.getElementById('app')
+      const domElement = document.getElementById('viewport')
 
       const scene = new Scene()
       scene.setupGrid(10.0, 10)
 
-      const renderer = new GLRenderer(domElement, { hideSplash: true, antialias: false })
+      const renderer = new GLRenderer(domElement, { antialias: false })
       renderer.setScene(scene)
 
       const tree1 = new TreeItem('tree1')
       // scene.getRoot().addChild(tree1)
 
       const materialGroup1 = new MaterialGroup('materialGroup1')
-      const material1 = new Material('surfaces', 'SimpleSurfaceShader')
-      material1.getParameter('BaseColor').setValue(new Color('lemonchiffon'))
-      materialGroup1.getParameter('Material').setValue(material1)
+      const material1 = new SimpleSurfaceMaterial('surfaces')
+      material1.baseColorParam.value = new Color('lemonchiffon')
+      materialGroup1.materialParam.value = material1
       scene.getRoot().addChild(materialGroup1)
 
       const materialGroup2 = new MaterialGroup('materialGroup2')
-      const material2 = new Material('surfaces', 'SimpleSurfaceShader')
-      material2.getParameter('BaseColor').setValue(new Color('mediumblue'))
-      materialGroup2.getParameter('Material').setValue(material2)
+      const material2 = new SimpleSurfaceMaterial('surfaces')
+      material2.baseColorParam.value = new Color('mediumblue')
+      materialGroup2.materialParam.value = material2
       scene.getRoot().addChild(materialGroup2)
 
-      const standardMaterial = new Material('surfaces', 'SimpleSurfaceShader')
-      standardMaterial.getParameter('BaseColor').setValue(new Color(89 / 255, 182 / 255, 92 / 255))
+      const standardMaterial = new SimpleSurfaceMaterial('surfaces')
+      standardMaterial.baseColorParam.value = new Color(89 / 255, 182 / 255, 92 / 255)
 
       const addGeomItem = (shape, row, count, i) => {
         const geomItem = new GeomItem('Item' + row + '-' + i, shape, standardMaterial)
-        geomItem.getParameter('LocalXfo').setValue(new Xfo(new Vec3(i * 3, row * 3, 0)))
+        geomItem.localXfoParam.value = new Xfo(new Vec3(i * 3, row * 3, 0))
         tree1.addChild(geomItem)
 
         if (i % 3 == 0) {
@@ -86,29 +86,26 @@
       // Once fixed, we should modify this test to show material changes.
       scene.getRoot().addChild(tree1)
 
-      renderer
-        .getViewport()
-        .getCamera()
-        .setPositionAndTarget(new Vec3(25, 25, 13), new Vec3(10, 0, 0))
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(25, 25, 13), new Vec3(10, 0, 0))
       renderer.frameAll()
 
       window.postMessage('done-loading')
 
       // {{{ Messages handler.
-      const handleMessage = event => {
+      const handleMessage = (event) => {
         const { data } = event
 
         // Note: changing materials on items is currently broken.
         // Once fixed, we should modify this test to show material changes.
         if (data === 'variant-01') {
-          materialGroup1.getParameter('Material').setValue(null)
+          materialGroup1.materialParam.value = null
           window.postMessage(`done-${data}`)
         } else if (data === 'variant-02') {
-          materialGroup2.getParameter('Material').setValue(null)
+          materialGroup2.materialParam.value = null
           window.postMessage(`done-${data}`)
         } else if (data === 'variant-03') {
-          materialGroup1.getParameter('Material').setValue(material1)
-          materialGroup2.getParameter('Material').setValue(material2)
+          materialGroup1.materialParam.value = material1
+          materialGroup2.materialParam.value = material2
           window.postMessage(`done-${data}`)
         }
       }

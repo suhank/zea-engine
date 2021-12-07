@@ -4,23 +4,23 @@ describe('LinesCuboid', () => {
   it('tests default parameters', () => {
     const linesCuboid = new LinesCuboid()
 
-    expect(linesCuboid.getParameter('X').getValue()).toBe(1)
-    expect(linesCuboid.getParameter('Y').getValue()).toBe(1)
-    expect(linesCuboid.getParameter('Z').getValue()).toBe(1)
-    expect(linesCuboid.getParameter('BaseZAtZero').getValue()).toBeFalsy()
+    expect(linesCuboid.sizeXParam.value).toBe(1)
+    expect(linesCuboid.sizeYParam.value).toBe(1)
+    expect(linesCuboid.sizeZParam.value).toBe(1)
+    expect(linesCuboid.baseZAtZeroParam.value).toBeFalsy()
   })
 
   it('updates parameters', () => {
     const linesCuboid = new LinesCuboid()
-    linesCuboid.getParameter('X').setValue(3)
-    linesCuboid.getParameter('Y').setValue(3)
-    linesCuboid.getParameter('Z').setValue(3)
-    linesCuboid.getParameter('BaseZAtZero').setValue(true)
+    linesCuboid.sizeXParam.value = 3
+    linesCuboid.sizeYParam.value = 3
+    linesCuboid.sizeZParam.value = 3
+    linesCuboid.baseZAtZeroParam.value = true
 
-    expect(linesCuboid.getParameter('X').getValue()).toBe(3)
-    expect(linesCuboid.getParameter('Y').getValue()).toBe(3)
-    expect(linesCuboid.getParameter('Z').getValue()).toBe(3)
-    expect(linesCuboid.getParameter('BaseZAtZero').getValue()).toBeTruthy()
+    expect(linesCuboid.sizeXParam.value).toBe(3)
+    expect(linesCuboid.sizeYParam.value).toBe(3)
+    expect(linesCuboid.sizeZParam.value).toBe(3)
+    expect(linesCuboid.baseZAtZeroParam.value).toBeTruthy()
   })
 
   // There's an issue with flags, that are preventing parameters to be exported.
@@ -36,7 +36,7 @@ describe('LinesCuboid', () => {
     const inputJSON = {
       params: { X: { value: 2 }, Y: { value: 2 }, Z: { value: 2 }, BaseZAtZero: { value: true } },
       type: 'LinesCuboid',
-      vertexAttributes: {},
+      vertexAttributes: {}
     }
     linesCuboid.fromJSON(inputJSON)
 

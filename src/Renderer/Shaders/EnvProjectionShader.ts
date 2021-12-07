@@ -12,11 +12,12 @@ import OctahedralEnvProjectionFrag from './OctahedralEnvProjection.frag'
 import { shaderLibrary } from '../ShaderLibrary'
 
 import { Material, Vec3Parameter } from '../../SceneTree'
+import { WebGL12RenderingContext } from '../types/webgl'
 
 class EnvProjectionShader extends GLShader {
   /**
    * Create a GL shader.
-   * @param {WebGL12RenderingContext} gl - The webgl rendering context.
+   * @param gl - The webgl rendering context.
    */
   constructor(gl: WebGL12RenderingContext) {
     super(gl, 'EnvProjectionShader')
@@ -27,7 +28,7 @@ class EnvProjectionShader extends GLShader {
 class OctahedralEnvProjectionShader extends EnvProjectionShader {
   /**
    * Create a GL shader.
-   * @param {WebGL12RenderingContext} gl - The webgl rendering context.
+   * @param gl - The webgl rendering context.
    */
   constructor(gl: WebGL12RenderingContext) {
     super(gl)
@@ -40,7 +41,7 @@ class OctahedralEnvProjectionShader extends EnvProjectionShader {
 class LatLongEnvProjectionShader extends EnvProjectionShader {
   /**
    * Create a GL shader.
-   * @param {WebGL12RenderingContext} gl - The webgl rendering context.
+   * @param gl - The webgl rendering context.
    */
   constructor(gl: WebGL12RenderingContext) {
     super(gl)
@@ -48,8 +49,7 @@ class LatLongEnvProjectionShader extends EnvProjectionShader {
   }
 }
 
-// Registry.register('LatLongEnvProjectionShader', LatLongEnvProjectionShader)
-export { EnvProjectionShader, OctahedralEnvProjectionShader, LatLongEnvProjectionShader }
 const material = new Material('EnvProjectionShader_template')
 material.addParameter(new Vec3Parameter('projectionCenter', new Vec3(0.0, 0.0, 1.7)))
-shaderLibrary.registerMaterialTemplate('EnvProjectionShader', material)
+
+export { EnvProjectionShader, OctahedralEnvProjectionShader, LatLongEnvProjectionShader }

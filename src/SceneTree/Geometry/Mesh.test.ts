@@ -167,18 +167,18 @@ describe('Mesh', () => {
     mesh.computeVertexNormals()
 
     // Now check that the 2 faces have normals
-    const faceNormals = mesh.getFaceAttribute('normals')
-    expect(faceNormals.getValueRef(0)).toEqual(new Vec3(1, 0, 0))
-    expect(faceNormals.getValueRef(1)).toEqual(new Vec3(0, -1, 0))
+    const faceNormals = <Vec3Attribute>mesh.getFaceAttribute('normals')
+    expect(faceNormals.getValueRef(0)).toEqual(new Vec3(-1, 0, 0))
+    expect(faceNormals.getValueRef(1)).toEqual(new Vec3(0, 1, 0))
 
     // Now we check that the 2 normal values for the ve
     // vertex id 2 is used by Face 0 at faceVertex 2, and Face 1 and faceVertex index 1
     // vertex id 3 is used by Face 0 at faceVertex 3, and Face 1 and faceVertex index 0
     const normals = <Vec3Attribute>mesh.getVertexAttribute('normals')
-    expect(normals.getFaceVertexValueRef(0, 2)).toEqual(new Vec3(1, 0, 0))
-    expect(normals.getFaceVertexValueRef(1, 1)).toEqual(new Vec3(0, -1, 0))
-    expect(normals.getFaceVertexValueRef(0, 3)).toEqual(new Vec3(1, 0, 0))
-    expect(normals.getFaceVertexValueRef(1, 0)).toEqual(new Vec3(0, -1, 0))
+    expect(normals.getFaceVertexValueRef(0, 2)).toEqual(new Vec3(-1, 0, 0))
+    expect(normals.getFaceVertexValueRef(1, 1)).toEqual(new Vec3(0, 1, 0))
+    expect(normals.getFaceVertexValueRef(0, 3)).toEqual(new Vec3(-1, 0, 0))
+    expect(normals.getFaceVertexValueRef(1, 0)).toEqual(new Vec3(0, 1, 0))
 
     expect(JSON.stringify(mesh.toJSON())).toMatchSnapshot()
   })

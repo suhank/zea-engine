@@ -7,10 +7,11 @@ import { GLTexture2D } from '../GLTexture2D'
 
 // import { handleMessage } from './GLGeomItemLibraryCullingWorker'
 // @ts-ignore
-import GLGeomItemLibraryCullingWorker from './GLGeomItemLibraryCulling-worker.js'
+import GLGeomItemLibraryCullingWorker from 'web-worker:./GLGeomItemLibraryCulling-worker.js'
 import { GeomItem } from '../../SceneTree/GeomItem'
 import { GLBaseRenderer } from '../GLBaseRenderer'
 import { Material } from '../../SceneTree/Material'
+import { RenderState } from '../types/renderer'
 
 const pixelsPerItem = 6 // The number of RGBA pixels per draw item.
 
@@ -26,13 +27,15 @@ class GLGeomItemLibrary extends EventEmitter {
   protected dirtyItemIndices: number[]
   protected dirtyWorkerItemIndices: Set<number> = new Set()
   protected removedItemIndices: number[]
-  protected worker: typeof GLGeomItemLibraryCullingWorker
   protected glGeomItemsTexture: GLTexture2D | null = null
-  protected enableFrustumCulling: any
+  protected enableFrustumCulling: boolean
+
+  private worker: GLGeomItemLibraryCullingWorker
+
   /**
    * Create a GLGeomItemLibrary.
-   * @param {GLBaseRenderer} renderer - The renderer instance
-   * @param {Record<string, any>} options - The options object passed to the GLRenderer constructor.
+   * @param renderer - The renderer instance
+   * @param options - The options object passed to the GLRenderer constructor.
    */
   constructor(renderer: GLBaseRenderer, options: Record<string, any>) {
     super()
@@ -56,7 +59,7 @@ class GLGeomItemLibrary extends EventEmitter {
 
   /**
    * Sets up the Culling Worker to start calculating frustum culling.
-   * @param {GLBaseRenderer} renderer - The renderer instance
+   * @param renderer - The renderer instance
    */
   setupCullingWorker(renderer: GLBaseRenderer) {
     // this.worker = {
@@ -95,7 +98,7 @@ class GLGeomItemLibrary extends EventEmitter {
           frustumHeight,
           frustumWidth,
           isOrthographic: true,
-          solidAngleLimit: renderer.solidAngleLimit
+          solidAngleLimit: renderer.solidAngleLimit,
         })
       } else {
         const frustumHalfAngleY = camera.getFov() * 0.5
@@ -105,7 +108,7 @@ class GLGeomItemLibrary extends EventEmitter {
           frustumHalfAngleX,
           frustumHalfAngleY,
           isOrthographic: false,
-          solidAngleLimit: renderer.solidAngleLimit
+          solidAngleLimit: renderer.solidAngleLimit,
         })
       }
     }
@@ -137,7 +140,7 @@ class GLGeomItemLibrary extends EventEmitter {
             frustumHalfAngleX,
             frustumHalfAngleY,
             isOrthographic: false,
-            solidAngleLimit: renderer.solidAngleLimit * 2
+            solidAngleLimit: renderer.solidAngleLimit * 2,
           })
         } else {
           cullFreq = 5
@@ -148,7 +151,7 @@ class GLGeomItemLibrary extends EventEmitter {
 
     let tick = 0
     let cullFreq = 5
-    renderer.on('viewChanged', event => {
+    renderer.on('viewChanged', (event) => {
       // Calculate culling every Nth frame.
       if (workerReady) {
         if (tick % cullFreq == 0) {
@@ -159,7 +162,7 @@ class GLGeomItemLibrary extends EventEmitter {
             type: 'ViewChanged',
             cameraPos: pos.asArray(),
             cameraOri: ori.asArray(),
-            solidAngleLimit: renderer.solidAngleLimit
+            solidAngleLimit: renderer.solidAngleLimit,
           })
         }
         tick++
@@ -168,23 +171,20 @@ class GLGeomItemLibrary extends EventEmitter {
 
     const forceViewChanged = () => {
       const camera = renderer.getViewport().getCamera()
-      const viewXfo = camera.getParameter('GlobalXfo')!.getValue()
+      const viewXfo = camera.globalXfoParam.value
       const pos = viewXfo.tr
       const ori = viewXfo.ori
       this.worker.postMessage({
         type: 'ViewChanged',
         cameraPos: pos.asArray(),
         cameraOri: ori.asArray(),
-        solidAngleLimit: renderer.solidAngleLimit
+        solidAngleLimit: renderer.solidAngleLimit,
       })
     }
 
     // If a movement finishes, we should update the culling results
     // based on the last position. (we might have skipped it in the viewChanged handler above)
-    renderer
-      .getViewport()
-      .getCamera()
-      .on('movementFinished', forceViewChanged)
+    renderer.getViewport().getCamera().on('movementFinished', forceViewChanged)
 
     // Initialize the view values on the worker.
     forceViewChanged()
@@ -192,8 +192,8 @@ class GLGeomItemLibrary extends EventEmitter {
 
   /**
    * The addGeomItem method.
-   * @param {GeomItem} geomItem - The geomItem value.
-   * @return {number} - The index of GLGeomItem
+   * @param geomItem - The geomItem value.
+   * @return - The index of GLGeomItem
    */
   addGeomItem(geomItem: GeomItem) {
     let index = this.glGeomItemsMap[geomItem.getId()] //  number | undefined
@@ -204,19 +204,19 @@ class GLGeomItemLibrary extends EventEmitter {
 
     // ///////////////////////////////////////////
     // Material
-    const materialParam = geomItem.getParameter('Material')!
-    let material = materialParam.getValue()
+    const materialParam = geomItem.materialParam
+    let material = materialParam.value!
 
     // Add the material here so that when we populate the GeomItem texture.
     // the material already has an Id.
     let matIndex: number = -1
-    if (material.getShaderClass().getPackedMaterialData) {
+    {
       matIndex = this.renderer.glMaterialLibrary.addMaterial(material)
     }
     const materialChanged = () => {
       // Ref count the materials in the material library.
       this.renderer.glMaterialLibrary.removeMaterial(material)
-      material = materialParam.getValue()
+      material = materialParam.value!
       glGeomItem.materialId = this.renderer.glMaterialLibrary.addMaterial(material)
       geomItemChanged()
     }
@@ -224,13 +224,13 @@ class GLGeomItemLibrary extends EventEmitter {
 
     // ///////////////////////////////////////////
     // Geometry
-    const geomParm = geomItem.getParameter('Geometry')!
-    let geom = geomParm.getValue()
+    const geomParm = geomItem.geomParam
+    let geom = geomParm.value!
     const geomIndex = this.renderer.glGeomLibrary.addGeom(geom)
 
     const geomChanged = (event: Record<string, any>) => {
       this.renderer.glGeomLibrary.removeGeom(geom)
-      geom = geomParm.getValue()
+      geom = geomParm.value!
       glGeomItem.geomId = this.renderer.glGeomLibrary.addGeom(geom)
 
       if (this.enableFrustumCulling) this.dirtyWorkerItemIndices.add(index)
@@ -243,12 +243,7 @@ class GLGeomItemLibrary extends EventEmitter {
     // GeomItem
     // Use recycled indices if there are any available...
     if (this.glGeomItemsIndexFreeList.length > 0) {
-      let index_check = this.glGeomItemsIndexFreeList.pop()
-      if (!index_check) {
-        console.warn('No glGeomItems in array')
-        return
-      }
-      index = index_check
+      index = this.glGeomItemsIndexFreeList.pop()!
     } else {
       index = this.glGeomItems.length
       this.glGeomItems.push(null)
@@ -269,7 +264,7 @@ class GLGeomItemLibrary extends EventEmitter {
       this.dirtyItemIndices.push(index)
       this.renderer.drawItemChanged()
     }
-    geomItem.getParameter('GeomMat')!.on('valueChanged', geomItemChanged)
+    geomItem.geomMatParam.on('valueChanged', geomItemChanged)
     geomItem.on('cutAwayChanged', geomItemChanged)
     geomItem.on('highlightChanged', geomItemChanged)
     geomItem.on('selectabilityChanged', geomItemChanged)
@@ -287,7 +282,7 @@ class GLGeomItemLibrary extends EventEmitter {
     }
 
     geomItem.on('visibilityChanged', workerItemDataChanged)
-    geomItem.getParameter('GeomMat')!.on('valueChanged', workerItemDataChanged)
+    geomItem.geomMatParam.on('valueChanged', workerItemDataChanged)
     geomParm.on('boundingBoxChanged', workerItemDataChanged)
 
     this.glGeomItems[index] = glGeomItem
@@ -295,7 +290,7 @@ class GLGeomItemLibrary extends EventEmitter {
       geomItemChanged,
       materialChanged,
       geomChanged,
-      workerItemDataChanged
+      workerItemDataChanged,
     }
     this.glGeomItemsMap[geomItem.getId()] = index
 
@@ -306,8 +301,8 @@ class GLGeomItemLibrary extends EventEmitter {
   }
 
   /**
-   * Handles applyging the culling results recieved from the GLGeomItemLibraryCullingWorker
-   * @param {Record<any,any>} data - The object containing the newlyCulled and newlyUnCulled results.
+   * Handles applying the culling results received from the GLGeomItemLibraryCullingWorker
+   * @param data - The object containing the newlyCulled and newlyUnCulled results.
    */
   applyCullResults(data: Record<string, any>) {
     const { newlyCulled, newlyUnCulled } = data
@@ -338,30 +333,36 @@ class GLGeomItemLibrary extends EventEmitter {
 
   /**
    * The removeGeomItem method.
-   * @param {any} geomItem - The geomItem value.
-   * @return {any} - The return value.
+   * @param geomItem - The geomItem value.
+   * @return - The return value.
    */
-  removeGeomItem(geomItem: any) {
+  removeGeomItem(geomItem: GeomItem): GLGeomItem {
     const index = this.glGeomItemsMap[geomItem.getId()]
+
+    // This GeomItem may not yet have been added to the Renderer.
+    // This may be because it is part of an asset that is still loading
+    // and has not yet received its geometry.
+    if (index == undefined) return null
+
     const glGeomItem = this.glGeomItems[index]
 
-    const geom = geomItem.getParameter('Geometry')!.getValue()
+    const geom = geomItem.geomParam.value!
     this.renderer.glGeomLibrary.removeGeom(geom)
 
-    const material = geomItem.getParameter('Material').getValue()
+    const material = geomItem.materialParam.value!
     this.renderer.glMaterialLibrary.removeMaterial(material)
 
     const handlers = this.glGeomItemEventHandlers[index]
 
-    geomItem.getParameter('Material').off('valueChanged', handlers.materialChanged)
-    geomItem.getParameter('GeomMat').off('valueChanged', handlers.geomItemChanged)
+    geomItem.materialParam.off('valueChanged', handlers.materialChanged)
+    geomItem.geomMatParam.off('valueChanged', handlers.geomItemChanged)
     geomItem.off('cutAwayChanged', handlers.geomItemChanged)
     geomItem.off('highlightChanged', handlers.geomItemChanged)
 
     geomItem.off('visibilityChanged', handlers.workerItemDataChanged)
-    geomItem.getParameter('GeomMat').off('valueChanged', handlers.workerItemDataChanged)
+    geomItem.geomMatParam.off('valueChanged', handlers.workerItemDataChanged)
 
-    const geomParm = geomItem.getParameter('Geometry')
+    const geomParm = geomItem.geomParam
     geomParm.off('valueChanged', handlers.geomChanged)
     geomParm.off('boundingBoxChanged', handlers.workerItemDataChanged)
 
@@ -379,8 +380,8 @@ class GLGeomItemLibrary extends EventEmitter {
 
   /**
    * The getGeomItem method.
-   * @param {number} index - The index value.
-   * @return {GLGeomItem} - The GLGeomItem that wraps the provided GeomItem
+   * @param index - The index value.
+   * @return - The GLGeomItem that wraps the provided GeomItem
    */
   getGeomItem(index: number): GeomItem | undefined {
     if (index >= this.glGeomItems.length) {
@@ -392,8 +393,8 @@ class GLGeomItemLibrary extends EventEmitter {
 
   /**
    * The getGeomItem method.
-   * @param {GeomItem} geomItem - The geomItem value.
-   * @return {GLGeomItem} - The GLGeomItem that wraps the provided GeomItem
+   * @param geomItem - The geomItem value.
+   * @return - The GLGeomItem that wraps the provided GeomItem
    */
   getGLGeomItem(geomItem: GeomItem): GLGeomItem | null {
     const index = this.glGeomItemsMap[geomItem.getId()]
@@ -409,9 +410,9 @@ class GLGeomItemLibrary extends EventEmitter {
 
   /**
    * The populateDrawItemDataArray method.
-   * @param {number} index - The index of the item in the library.
-   * @param {number} subIndex - The index of the item within the block being uploaded.
-   * @param {Float32Array} dataArray - The dataArray value.
+   * @param index - The index of the item in the library.
+   * @param subIndex - The index of the item within the block being uploaded.
+   * @param dataArray - The dataArray value.
    * @private
    */
   populateDrawItemDataArray(index: number, subIndex: number, dataArray: Float32Array) {
@@ -430,14 +431,14 @@ class GLGeomItemLibrary extends EventEmitter {
     if (geomItem.isCutawayEnabled()) {
       flags |= GLGeomItemFlags.GEOMITEM_FLAG_CUTAWAY
     }
-    if (geomItem.getSelectable() == false) {
+    if (geomItem.isSelectable() == false) {
       flags |= GLGeomItemFlags.GEOMITEM_INVISIBLE_IN_GEOMDATA
     }
 
     const pix0 = new Vec4(new Float32Array(dataArray.buffer, (offset + 0) * 4, 4))
     pix0.set(flags, 0, 0, 0)
 
-    const material = geomItem.getParameter('Material')!.getValue()
+    const material = geomItem.materialParam.value!
     const allocation = this.renderer.glMaterialLibrary.getMaterialAllocation(material)
     if (allocation) {
       pix0.z = allocation.start
@@ -449,7 +450,7 @@ class GLGeomItemLibrary extends EventEmitter {
 
     // /////////////////////////
     // Geom Matrix
-    const mat4 = geomItem.getGeomMat4()
+    const mat4 = geomItem.geomMatParam.value
     const pix1 = new Vec4(new Float32Array(dataArray.buffer, (offset + 4) * 4, 4))
     const pix2 = new Vec4(new Float32Array(dataArray.buffer, (offset + 8) * 4, 4))
     const pix3 = new Vec4(new Float32Array(dataArray.buffer, (offset + 12) * 4, 4))
@@ -478,13 +479,13 @@ class GLGeomItemLibrary extends EventEmitter {
 
   /**
    * Gathers data to pass to the culling worker.
-   * @param {GeomItem} geomItem - The GeomItem to gether the data for.
-   * @param {Material} material - The material of GeomItem.
-   * @param {number} index - The index of the item to gether the data for.
-   * @return {Record<string, any>} - the JSON data that will be passed to the worker.
+   * @param geomItem - The GeomItem to gether the data for.
+   * @param material - The material of GeomItem.
+   * @param index - The index of the item to gether the data for.
+   * @return - the JSON data that will be passed to the worker.
    */
   getCullingWorkerData(geomItem: GeomItem, material: Material, index: number): Record<string, any> {
-    const bbox = geomItem.getParameter('BoundingBox')!.getValue()
+    const bbox = geomItem.boundingBoxParam.value
     const boundingRadius = bbox.size() * 0.5
     const pos = bbox.center()
 
@@ -493,7 +494,7 @@ class GLGeomItemLibrary extends EventEmitter {
     // screen simply cannot be culled, as they
     let cullable = geomItem.cullable != false
     const fixedSizeParam = material.getParameter('MaintainScreenSize')
-    if (fixedSizeParam && fixedSizeParam.getValue()) {
+    if (fixedSizeParam && fixedSizeParam.value) {
       cullable = false
     }
     if (material.getShaderName().startsWith('ScreenSpace')) {
@@ -508,7 +509,7 @@ class GLGeomItemLibrary extends EventEmitter {
       boundingRadius,
       pos: pos.asArray(),
       cullable,
-      visible: geomItem.isVisible()
+      visible: geomItem.isVisible(),
     }
   }
 
@@ -518,13 +519,13 @@ class GLGeomItemLibrary extends EventEmitter {
   uploadGeomItemsToWorker() {
     if (this.enableFrustumCulling) {
       const geomItemsUpdateToCullingWorker: any[] = []
-      this.dirtyWorkerItemIndices.forEach(index => {
+      this.dirtyWorkerItemIndices.forEach((index) => {
         const glGeomItem = this.glGeomItems[index]
         // When an item is deleted, we allocate its index to the free list
         // and null this item in the array. skip over null items.
         if (!glGeomItem) return
         const { geomItem } = glGeomItem
-        const material = geomItem.getParameter('Material')!.getValue()
+        const material = geomItem.materialParam.value!
         geomItemsUpdateToCullingWorker.push(this.getCullingWorkerData(geomItem, material, index))
       })
 
@@ -533,7 +534,7 @@ class GLGeomItemLibrary extends EventEmitter {
       this.worker.postMessage({
         type: 'UpdateGeomItems',
         geomItems: geomItemsUpdateToCullingWorker,
-        removedItemIndices: this.removedItemIndices
+        removedItemIndices: this.removedItemIndices,
       })
 
       this.dirtyWorkerItemIndices.clear()
@@ -543,7 +544,7 @@ class GLGeomItemLibrary extends EventEmitter {
 
   /**
    * The uploadGeomItems method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param renderstate - The object tracking the current state of the renderer
    */
   uploadGeomItems(renderstate: RenderState) {
     const gl = this.renderer.gl
@@ -567,7 +568,7 @@ class GLGeomItemLibrary extends EventEmitter {
         height: size,
         filter: 'NEAREST',
         wrap: 'CLAMP_TO_EDGE',
-        mipMapped: false
+        mipMapped: false,
       })
       this.glGeomItemsTexture.clear()
     } else if (this.glGeomItemsTexture.width != size) {
@@ -623,7 +624,7 @@ class GLGeomItemLibrary extends EventEmitter {
 
   /**
    * Updates the GPU state if any update is needed.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
+   * @param renderstate - The object tracking the current state of the renderer
    */
   bind(renderstate: RenderState) {
     if (this.dirtyWorkerItemIndices.size > 0 || this.removedItemIndices.length > 0) {

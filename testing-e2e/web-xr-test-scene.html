@@ -10,7 +10,7 @@
 
     <link rel="stylesheet" href="styles/tailwind.min.css" />
 
-    <script src="../dist/index.umd.development.js"></script>
+    <script src="../dist/index.umd.js"></script>
     <style>
       .label {
         position: absolute;
@@ -63,15 +63,17 @@
         EulerAngles,
         Color,
         Sphere,
-        Material,
+        SimpleSurfaceMaterial,
+        FlatSurfaceMaterial,
+        StandardSurfaceMaterial,
         TreeItem,
         GeomItem,
         ObjAsset,
         Cylinder,
-        Cuboid
+        Cuboid,
       } = window.zeaEngine
 
-      const canvas = document.querySelector('#renderer')
+      const canvas = document.getElementById('viewport')
 
       const scene = new Scene()
       const renderer = new GLRenderer(canvas, {
@@ -87,17 +89,14 @@
 
       scene.setupGrid(10.0, 10, new Color())
 
-      if (false) {
-        renderer
-          .getViewport()
-          .getCamera()
-          .setPositionAndTarget(new Vec3(5, -5, 2), new Vec3(0, 1, 0.75))
+      if (true) {
+        renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(5, -5, 2), new Vec3(0, 1, 0.75))
         let defaultColor
         const pointerOverColor = new Color(0, 1, 1)
         const pointerDownColor = new Color(1, 0, 0)
 
-        const material = new Material('surfaces', 'StandardSurfaceShader')
-        material.getParameter('BaseColor').setValue(new Color(0.75, 0.75, 0.75))
+        const material = new StandardSurfaceMaterial('surfaces')
+        material.baseColorParam.value = new Color(0.75, 0.75, 0.75)
 
         const cylinder = new Cylinder(1.5, 2.0, 6)
         const geomItem1 = new GeomItem('Cylinder', cylinder, material, new Xfo(new Vec3(-2.2, 2, 1)))
@@ -112,15 +111,15 @@
         scene.getRoot().addChild(geomItem3)
 
         const objAsset = new ObjAsset('cow')
-        objAsset.getParameter('FilePath').setValue('data/cow.obj')
-        objAsset.getParameter('splitGroupsIntoObjects').setValue(true)
+        objAsset.load('data/cow.obj')
+        objAsset.splitGroupsIntoObjectsParam.value = true
         scene.getRoot().addChild(objAsset)
 
         const xfo = new Xfo()
         xfo.tr.set(0, 0, 3.55 * 0.3048)
         xfo.ori.setFromEulerAngles(new EulerAngles(90 * (Math.PI / 180), 0, 0))
         xfo.sc.set(0.3048, 0.3048, 0.3048)
-        objAsset.getParameter('GlobalXfo').setValue(xfo)
+        objAsset.globalXfoParam.value = xfo
         objAsset.on('loaded', () => {
           window.postMessage(`done-Loading`)
         })
@@ -131,21 +130,18 @@
         const dim = Math.round(Math.cbrt(count))
         console.log('Will render GeomItem count:', Math.pow(dim, 3))
 
-        renderer
-          .getViewport()
-          .getCamera()
-          .setPositionAndTarget(new Vec3(-15, -15, 2), new Vec3(0, 1, 10.75))
+        renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-15, -15, 2), new Vec3(0, 1, 10.75))
         const cuboid = new Cuboid(0.5, 0.5, 0.5)
         const sphere = new Sphere(0.5, 12, 24)
 
         // scene.getRoot().addChild(geomItem)
-        const simpleMaterial = new Material('mat', 'SimpleSurfaceShader')
-        const flatMaterial = new Material('mat', 'FlatSurfaceShader')
+        const simpleMaterial = new SimpleSurfaceMaterial('mat')
+        const flatMaterial = new FlatSurfaceMaterial('mat')
 
         const addLayers = (layerId, treeItem) => {
           for (let j = 0; j < dim; j += 1) {
-            // const material = new Material('mat', 'SimpleSurfaceShader')
-            // material.getParameter('BaseColor').setValue(new Color(layerId / dim, j / dim, 1))
+            // const material = new SimpleSurfaceMaterial('mat')
+            // material.baseColorParam.value = new Color(layerId / dim, j / dim, 1)
             const material = simpleMaterial //layerId > dim / 2 ? simpleMaterial : flatMaterial
             const treeItemJ = new TreeItem('TreeItem' + j)
             treeItem.addChild(treeItemJ)
@@ -156,7 +152,7 @@
 
               const xfo = new Xfo()
               xfo.tr.set(j, k, layerId)
-              geomItem.getParameter('GlobalXfo').setValue(xfo)
+              geomItem.globalXfoParam.value = xfo
             }
           }
         }
@@ -172,7 +168,7 @@
       // //////////////////////////////////////
       // Setup Highlighting
       let geomItem
-      scene.getRoot().on('pointerEnter', event => {
+      scene.getRoot().on('pointerEnter', (event) => {
         if (event.intersectionData && event.intersectionData.geomItem) {
           geomItem = event.intersectionData.geomItem
           if (geomItem) {
@@ -180,19 +176,19 @@
           }
         }
       })
-      scene.getRoot().on('pointerLeave', event => {
+      scene.getRoot().on('pointerLeave', (event) => {
         if (event.leftGeometry == geomItem) {
           geomItem.removeHighlight('pointerEnter')
         }
       })
-      scene.getRoot().on('pointerDown', event => {
+      scene.getRoot().on('pointerDown', (event) => {
         if (event.intersectionData && event.intersectionData.geomItem) {
           event.setCapture(geomItem)
           geomItem.addHighlight('pointerDown', new Color(0, 1, 0, 0.3))
           geomItem = event.intersectionData.geomItem
         }
       })
-      scene.getRoot().on('pointerUp', event => {
+      scene.getRoot().on('pointerUp', (event) => {
         if (event.getCapture() == geomItem) event.releaseCapture()
         const intersectionData = event.controller ? event.controller.getGeomItemAtTip() : event.intersectionData
         geomItem.removeHighlight('pointerDown')
@@ -204,11 +200,11 @@
       const h = document.querySelector('#buttonHolder')
       const b = document.querySelector('#button')
 
-      renderer.getXRViewport().then(xrvp => {
+      renderer.getXRViewport().then((xrvp) => {
         h.textContent = 'XR Device Detected'
         b.textContent = 'Launch VR'
 
-        xrvp.on('presentingChanged', event => {
+        xrvp.on('presentingChanged', (event) => {
           const { state } = event
           if (state) {
             h.textContent = 'Session In Progress'
@@ -219,11 +215,11 @@
           }
         })
 
-        b.addEventListener('click', function(event) {
+        b.addEventListener('click', function (event) {
           xrvp.togglePresenting()
         })
 
-        document.addEventListener('keydown', event => {
+        document.addEventListener('keydown', (event) => {
           if (event.key == ' ') {
             xrvp.togglePresenting()
           }
@@ -252,7 +248,7 @@
   </head>
   <body class="bg-blue-100 h-full">
     <div class="h-full" id="canvasHolder">
-      <canvas class="absolute" id="renderer"></canvas>
+      <canvas id="viewport"></canvas>
       <div class="label" id="buttonHolder"></div>
       <div class="button" id="button">XR Device Not Detected</div>
       <div class="fps-display" id="fps"></div>

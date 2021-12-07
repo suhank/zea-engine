@@ -2,9 +2,8 @@ import { GLTexture2D } from './GLTexture2D'
 import { GLFbo } from './GLFbo'
 import { GLImageAtlas } from './GLImageAtlas'
 import { GLScreenQuad } from './GLScreenQuad'
-import { BaseImage } from '../SceneTree/BaseImage'
-
-// import './Shaders/GLSL/ImagePyramid'
+import { RenderState } from './types/renderer'
+import { WebGL12RenderingContext } from './types/webgl'
 
 const Math_log2 = function (value: number) {
   // IE11 doesn't support Math.log2.
@@ -24,11 +23,11 @@ class ImagePyramid extends GLImageAtlas {
 
   /**
    * Create an image pyramid.
-   * @param {WebGL12RenderingContext} gl - The webgl rendering context.
-   * @param {string} name - The name value.
-   * @param {any} srcGLTex - The srcGLTex value.
-   * @param {boolean} destroySrcImage - The destroySrcImage value.
-   * @param {number} minTileSize - The minTileSize value.
+   * @param gl - The webgl rendering context.
+   * @param name - The name value.
+   * @param srcGLTex - The srcGLTex value.
+   * @param destroySrcImage - The destroySrcImage value.
+   * @param minTileSize - The minTileSize value.
    */
   constructor(
     gl: WebGL12RenderingContext,
@@ -56,14 +55,14 @@ class ImagePyramid extends GLImageAtlas {
       })
     }
     srcGLTex.on('destructing', () => {
-      console.log(this.__srcGLTex.__id + ' ImagePyramid destructing') // TODO: getName() doesn't exist on GLTexture2D
+      console.log(this.__srcGLTex.getId() + ' ImagePyramid destructing') // TODO: getName() doesn't exist on GLTexture2D
       this.destroy()
     })
   }
 
   /**
    * The generateAtlasLayout method.
-   * @param {any} minTileSize - The minTileSize value.
+   * @param minTileSize - The minTileSize value.
    */
   generateAtlasLayout(minTileSize: any) {
     const gl = this.__gl
@@ -95,10 +94,9 @@ class ImagePyramid extends GLImageAtlas {
 
   /**
    * The renderAtlas method.
-   * @param {boolean} cleanup - The cleanup value.
+   * @param cleanup - The cleanup value.
    */
   renderAtlas(cleanup = true) {
-    const gl = this.__gl
     const renderstate: RenderState = <RenderState>{} // cast to allow empty initialization
     this.screenQuad.bindShader(renderstate)
 

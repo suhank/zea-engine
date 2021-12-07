@@ -8,10 +8,10 @@
   </head>
   <body class="bg-blue-100 h-full">
     <div class="h-full">
-      <canvas class="absolute" id="app"></canvas>
+      <canvas id="viewport"></canvas>
     </div>
 
-    <script src="../dist/index.umd.development.js"></script>
+    <script src="../dist/index.umd.js"></script>
 
     <script type="module">
       const {
@@ -27,16 +27,16 @@
         Torus,
         GeomItem,
         TreeItem,
-        Material,
-        KinematicGroup
+        SimpleSurfaceMaterial,
+        KinematicGroup,
       } = zeaEngine
 
-      const domElement = document.getElementById('app')
+      const domElement = document.getElementById('viewport')
 
       const scene = new Scene()
       scene.setupGrid(10.0, 10)
 
-      const renderer = new GLRenderer(domElement, { hideSplash: true, antialias: false })
+      const renderer = new GLRenderer(domElement, { antialias: false })
       renderer.setScene(scene)
 
       const tree1 = new TreeItem('tree1')
@@ -45,14 +45,14 @@
       const kinematicGroup = new KinematicGroup('CuttingPlane')
       scene.getRoot().addChild(kinematicGroup)
 
-      const standardMaterial = new Material('surfaces', 'SimpleSurfaceShader')
-      standardMaterial.getParameter('BaseColor').setValue(new Color(89 / 255, 182 / 255, 92 / 255))
+      const standardMaterial = new SimpleSurfaceMaterial('surfaces')
+      standardMaterial.baseColorParam.value = new Color(89 / 255, 182 / 255, 92 / 255)
 
       let i = 0
 
-      const addMeshShape = shape => {
+      const addMeshShape = (shape) => {
         const geomItem = new GeomItem(`item-${i}`, shape, standardMaterial)
-        geomItem.getParameter('LocalXfo').setValue(new Xfo(new Vec3(i * 3, 0, 0)))
+        geomItem.localXfoParam.value = new Xfo(new Vec3(i * 3, 0, 0))
         tree1.addChild(geomItem)
 
         kinematicGroup.addItem(geomItem)
@@ -66,16 +66,13 @@
       addMeshShape(new Cone(1, 2), 4)
       addMeshShape(new Cylinder(1, 2, 20, 2, true))
 
-      renderer
-        .getViewport()
-        .getCamera()
-        .setPositionAndTarget(new Vec3(25, 25, 13), new Vec3(10, 0, 0))
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(25, 25, 13), new Vec3(10, 0, 0))
       renderer.frameAll()
 
       window.postMessage('done-loading')
 
       // {{{ Messages handler.
-      const handleMessage = event => {
+      const handleMessage = (event) => {
         const { data } = event
 
         if (data === 'variant-01') {
@@ -83,14 +80,14 @@
           const xfo = new Xfo()
           xfo.tr.set(6, Math.cos(angle) * 2, 0)
           xfo.ori.setFromAxisAndAngle(new Vec3(0, 0, 1), angle)
-          kinematicGroup.getParameter('LocalXfo').setValue(xfo)
+          kinematicGroup.localXfoParam.value = xfo
           window.postMessage(`done-${data}`)
         } else if (data === 'variant-02') {
           const angle = 3
           const xfo = new Xfo()
           xfo.tr.set(-6, Math.cos(angle) * 2, 0)
           xfo.ori.setFromAxisAndAngle(new Vec3(0, 0, 1), angle)
-          kinematicGroup.getParameter('LocalXfo').setValue(xfo)
+          kinematicGroup.localXfoParam.value = xfo
           window.postMessage(`done-${data}`)
         }
       }

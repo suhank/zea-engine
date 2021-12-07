@@ -6,7 +6,6 @@ import { BaseImage } from '../BaseImage'
  * @extends BaseImage
  */
 class VideoStreamImage2D extends BaseImage {
-  __loaded: any
   __data: any
   __intervalId: any
   /**
@@ -14,14 +13,14 @@ class VideoStreamImage2D extends BaseImage {
    */
   constructor() {
     super('')
-    this.__loaded = false
+    this.loaded = false
   }
 
   /**
    * The connectWebcam method.
-   * @param {number} width - The width of the video.
-   * @param {number} height - The height of the video.
-   * @param {false} rearCamera - Boolean determining if it is a rear camera or not.
+   * @param width - The width of the video.
+   * @param height - The height of the video.
+   * @param rearCamera - Boolean determining if it is a rear camera or not.
    */
   connectWebcam(width: number, height: number, rearCamera = false) {
     const video: Record<string, any> = {
@@ -29,16 +28,16 @@ class VideoStreamImage2D extends BaseImage {
       height,
       frameRate: {
         ideal: 60,
-        max: 60
-      }
+        max: 60,
+      },
     }
     if (rearCamera) {
       video.facingMode = {
-        exact: 'environment'
+        exact: 'environment',
       }
     } else {
       video.facingMode = {
-        facingMode: 'user'
+        facingMode: 'user',
       }
     }
 
@@ -68,19 +67,19 @@ class VideoStreamImage2D extends BaseImage {
     navigator.mediaDevices
       .getUserMedia({
         audio: false,
-        video
+        video,
       })
-      .then(mediaStream => {
+      .then((mediaStream) => {
         domElement.srcObject = mediaStream
-        domElement.onloadedmetadata = e => {
+        domElement.onloadedmetadata = (e) => {
           domElement.play()
 
           this.width = domElement.videoWidth
           this.height = domElement.videoHeight
           console.log('Webcam:[' + this.width + ', ' + this.height + ']')
           this.__data = domElement
-          this.__loaded = true
-          this.emit('loaded', {})
+          this.loaded = true
+          this.emit('loaded')
 
           let prevFrame = 0
           const frameRate = 60
@@ -92,7 +91,7 @@ class VideoStreamImage2D extends BaseImage {
             // If so, then we emit and update, which will cause a redraw.
             const currentFrame = Math.floor(domElement.currentTime * frameRate)
             if (prevFrame != currentFrame) {
-              this.emit('updated', {})
+              this.emit('updated')
               prevFrame = currentFrame
             }
             setTimeout(timerCallback, 20) // Sample at 50fps.
@@ -100,23 +99,23 @@ class VideoStreamImage2D extends BaseImage {
           timerCallback()
         }
       })
-      .catch(function(err) {
+      .catch(function (err) {
         /* handle the error */
       })
   }
 
   /**
    * The setVideoStream method.
-   * @param {any} video - The video value.
+   * @param video - The video value.
    */
-  setVideoStream(video: any) {
-    this.__loaded = false
+  setVideoStream(video: HTMLVideoElement) {
+    this.loaded = false
     this.width = video.videoWidth
     this.height = video.videoHeight
     this.start()
     this.__data = video
-    this.__loaded = true
-    this.emit('loaded', {})
+    this.loaded = true
+    this.emit('loaded')
   }
 
   // getAudioSource() {
@@ -135,21 +134,21 @@ class VideoStreamImage2D extends BaseImage {
    */
   start() {
     this.__intervalId = setInterval(() => {
-      this.emit('updated', {})
+      this.emit('updated')
     }, 20) // Sample at 50fps.
   }
 
   /**
    * The isLoaded method.
-   * @return {boolean} - The return value.
+   * @return - The return value.
    */
   isLoaded() {
-    return this.__loaded
+    return this.loaded
   }
 
   /**
    * The getParams method.
-   * @return {any} - The return value.
+   * @return - The return value.
    */
   getParams(): Record<string, any> {
     return {
@@ -158,7 +157,7 @@ class VideoStreamImage2D extends BaseImage {
       width: this.width,
       height: this.height,
       data: this.__data,
-      flipY: this.getParameter('FlipY')!.getValue()
+      flipY: true,
     }
   }
 }

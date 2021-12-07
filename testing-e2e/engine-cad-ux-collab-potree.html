@@ -10,15 +10,6 @@
 
     <link rel="stylesheet" href="styles/tailwind.min.css" />
 
-    <script src="../dist/index.umd.development.js"></script>
-
-    <script defer crossorigin src="https://cdn.jsdelivr.net/npm/@zeainc/zea-cad@3.3.0/dist/index.umd.js"></script>
-    <script defer crossorigin src="https://cdn.jsdelivr.net/npm/@zeainc/zea-ux/dist/index.umd.js"></script>
-    <script src="https://websocket-staging.zea.live/socket.io/socket.io.js"></script>
-    <script defer crossorigin src="https://cdn.jsdelivr.net/npm/@zeainc/zea-collab/dist/index.umd.js"></script>
-    <script src="https://www.gstatic.com/draco/v1/decoders/draco_decoder_gltf.js"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/@zeainc/gltf-loader/dist/index.umd.js"></script>
-
     <style>
       body {
         height: 100vh;
@@ -30,7 +21,7 @@
           'header header header'
           'nav main right'
           'footer footer footer';
-        grid-template-columns: 20% 1fr 5px;
+        grid-template-columns: 5px 1fr 5px;
         grid-template-rows: 50px 1fr 20px;
       }
 
@@ -49,7 +40,20 @@
         gap: 1em;
       }
     </style>
+    <!-- <script src="https://websocket-staging.zea.live/socket.io/socket.io.js"></script>
+    <script src="https://www.gstatic.com/draco/v1/decoders/draco_decoder_gltf.js"></script> -->
     <script type="module">
+      import '../dist/index.umd.js'
+      import '../node_modules/@zeainc/zea-cad/dist/index.umd.js'
+      // import '../node_modules/@zeainc/zea-ux/dist/index.umd.js'
+      // import '../node_modules/@zeainc/zea-potree/dist/index.umd.js'
+
+      // // import 'https://websocket-staging.zea.live/socket.io/socket.io.js'
+      // import '../node_modules/@zeainc/zea-collab/dist/index.umd.js'
+
+      // // import 'https://www.gstatic.com/draco/v1/decoders/draco_decoder_gltf.js'
+      // import '../node_modules/@zeainc/gltf-loader/dist/index.umd.js'
+
       const urlParams = new URLSearchParams(window.location.search)
 
       const {
@@ -62,20 +66,18 @@
         EnvMap,
         InstanceItem,
         CameraManipulator,
-        GLBoundingBoxPass
-      } = window.zeaEngine
+        GLBoundingBoxPass,
+        AssetLoadContext,
+      } = zeaEngine
 
-      const canvas = document.querySelector('#renderer')
+      const canvas = document.getElementById('viewport')
 
       const scene = new Scene()
       const renderer = new GLRenderer(canvas, { debugGeomIds: false, antialias: false })
       renderer.setScene(scene)
       renderer.outlineThickness = 0.5
       renderer.outlineColor = new Color(0.2, 0.2, 0.2, 1)
-      scene
-        .getSettings()
-        .getParameter('BackgroundColor')
-        .setValue(new Color(0.85, 0.85, 0.85, 1))
+      renderer.getViewport().backgroundColorParam.value = new Color(0.85, 0.85, 0.85, 1)
       renderer.getViewport().debugGeomShader = urlParams.has('debugGeomShader')
 
       const envMap = new EnvMap()
@@ -84,32 +86,39 @@
 
       scene.setupGrid(1.0, 10, new Color(0.2, 0.2, 0.2))
 
-      const boundingBoxPass = new GLBoundingBoxPass()
-      renderer.addPass(boundingBoxPass)
+      canvas.addEventListener(
+        'webglcontextlost',
+        function (event) {
+          event.preventDefault()
+        },
+        false
+      )
+      // const boundingBoxPass = new GLBoundingBoxPass()
+      // renderer.addPass(boundingBoxPass)
 
       /** HIGHLIGHT START */
       let highlightedItem
-      renderer.getViewport().on('pointerOverGeom', event => {
+      renderer.getViewport().on('pointerOverGeom', (event) => {
         const item = event.intersectionData.geomItem
         if (item) {
           highlightedItem = item
           highlightedItem.addHighlight('pointerOverGeom', new Color(0, 0.7, 0, 0.3), true)
         }
       })
-      renderer.getViewport().on('pointerLeaveGeom', event => {
+      renderer.getViewport().on('pointerLeaveGeom', (event) => {
         highlightedItem.removeHighlight('pointerOverGeom', true)
         highlightedItem = null
       })
-      renderer.getViewport().on('keyDown', event => {
+      renderer.getViewport().on('keyDown', (event) => {
         if (event.key == 'f') renderer.frameAll()
       })
-      renderer.getViewport().on('pointerUp', event => {
+      renderer.getViewport().on('pointerUp', (event) => {
         if (event.intersectionData) {
           const geomItem = event.intersectionData.geomItem
           console.log('', geomItem.getPath())
         }
       })
-      renderer.getViewport().on('keyDown', event => {
+      renderer.getViewport().on('keyDown', (event) => {
         if (event.key == 'f') renderer.frameAll()
         else if (event.key == 'd') {
           renderer.getViewport().debugGeomShader = !renderer.getViewport().debugGeomShader
@@ -153,22 +162,22 @@
       const selectionColor = new Color('#F9CE03')
       selectionColor.a = 0.1
       const subtreeColor = selectionColor //.lerp(new Color(1, 1, 1, 0), 0.5)
-      selectionManager.selectionGroup.getParameter('HighlightColor').setValue(selectionColor)
-      selectionManager.selectionGroup.getParameter('SubtreeHighlightColor').setValue(subtreeColor)
+      selectionManager.selectionGroup.highlightColorParam.value = selectionColor
+      selectionManager.selectionGroup.subtreeHighlightColorParam.value = subtreeColor
 
       // Color the selection rect.
       const selectionRectColor = new Color(0, 0, 0, 1)
       selectionTool.rectItem
-        .getParameter('Material')
+        .materialParam
         .getValue()
-        .getParameter('BaseColor')
-        .setValue(selectionRectColor)
+        .baseColorParam
+        .value = selectionRectColor
 
       /** SELECTION END * /
 
       /** FREEHAND LINES TOOL START * /
       const freeHandLineTool = new CreateFreehandLineTool(appData)
-      freeHandLineTool.getParameter('LineThickness').setValue(0.01)
+      freeHandLineTool.lineThicknessParam.value = 0.01
 
       /** FREEHAND LINES TOOL END * /
 
@@ -215,11 +224,13 @@
 
       /** LOAD ASSETS START */
       const { CADAsset, CADBody } = window.zeaCad
-      const { GLTFAsset } = gltfLoader
 
       const loadZCADAsset = (url, filename) => {
         const asset = new CADAsset()
-        asset.load(url).then(() => {
+        const context = new AssetLoadContext()
+        context.units = 'millimeters'
+        context.camera = context
+        asset.load(url, context).then(() => {
           renderer.frameAll()
         })
         asset.getGeometryLibrary().on('loaded', () => {
@@ -229,6 +240,7 @@
         return asset
       }
       const loadGLTFAsset = (url, filename) => {
+        const { GLTFAsset } = gltfLoader
         const asset = new GLTFAsset()
         asset.load(url, filename).then(() => {
           renderer.frameAll()
@@ -245,7 +257,7 @@
         } else if (filename.endsWith('gltf') || filename.endsWith('glb')) {
           res = loadGLTFAsset(url, filename)
         }
-        boundingBoxPass.addTreeItem(res, true)
+        // boundingBoxPass.addTreeItem(res, true)
         return res
       }
       let assetUrl = 'data/Dead_eye_bearing.zcad'
@@ -283,27 +295,21 @@
       }
       /** COLLAB END */
 
-      const postMessage = msg => {
+      const postMessage = (msg) => {
         console.log(msg)
         window.postMessage(msg)
       }
 
       // {{{ Messages handler.
-      const handleMessage = event => {
+      const handleMessage = (event) => {
         const { data } = event
 
         if (data === 'variant-01') {
-          renderer
-            .getViewport()
-            .getCamera()
-            .setPositionAndTarget(new Vec3(2, 2, -2.7), new Vec3(0, 0, 0.4))
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, -2.7), new Vec3(0, 0, 0.4))
           renderer.frameAll()
           postMessage(`done-${data}`)
         } else if (data === 'variant-02') {
-          renderer
-            .getViewport()
-            .getCamera()
-            .setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 0.4))
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 0.4))
           renderer.frameAll()
           postMessage(`done-${data}`)
         }
@@ -315,21 +321,10 @@
   </head>
   <body class="bg-blue-100 h-full">
     <div class="main-wrapper grid h-screen">
-      <header class="border border-blue-400 flex justify-center items-center">
-        <div id="controllers">
-          <div>
-            <label for="camera">Camera Manipulator</label>
-            <input type="checkbox" id="camera" value="CameraManipulator" class="tool" />
-          </div>
-          <div>
-            <label for="selection">Selection Tool</label>
-            <input type="checkbox" id="selection" value="SelectionTool" class="tool" />
-          </div>
-        </div>
-      </header>
+      <header class="border border-blue-400 flex justify-center items-center"></header>
       <nav class="border border-blue-400 flex justify-center items-center">nav</nav>
       <main>
-        <canvas class="absolute" id="renderer"></canvas>
+        <canvas id="viewport"></canvas>
       </main>
       <aside class="border border-blue-400 flex justify-center items-center"></aside>
       <footer class="border border-blue-400 flex justify-center items-center"></footer>

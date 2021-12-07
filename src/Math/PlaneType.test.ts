@@ -1,6 +1,6 @@
 // import { PlaneType } from './PlaneType'
 
-import { EventEmitter } from "../Utilities/EventEmitter"
+import { EventEmitter } from '../Utilities/EventEmitter'
 
 describe.skip('PlaneType', () => {
   describe('#on', () => {
@@ -42,68 +42,68 @@ describe.skip('PlaneType', () => {
     //   expect(fake).to.have.been.calledWith(event)
     // })
 
-  //   it('calls the listener multiple times.', () => {
-  //     const eventEmitter = new EventEmitter()
+    //   it('calls the listener multiple times.', () => {
+    //     const eventEmitter = new EventEmitter()
 
-  //     const fake = sinon.fake()
+    //     const fake = sinon.fake()
 
-  //     const event = {
-  //       detail: 'foo',
-  //     }
+    //     const event = {
+    //       detail: 'foo',
+    //     }
 
-  //     eventEmitter.on('fake', fake)
-  //     eventEmitter.emit('fake', event)
-  //     eventEmitter.emit('fake', event)
+    //     eventEmitter.on('fake', fake)
+    //     eventEmitter.emit('fake', event)
+    //     eventEmitter.emit('fake', event)
 
-  //     expect(fake).to.have.been.calledWith(event)
-  //   })
-  // })
+    //     expect(fake).to.have.been.calledWith(event)
+    //   })
+    // })
 
-  // describe('#once', () => {
-  //   it('calls the listener only once.', () => {
-  //     const eventEmitter = new EventEmitter()
+    // describe('#once', () => {
+    //   it('calls the listener only once.', () => {
+    //     const eventEmitter = new EventEmitter()
 
-  //     const fake = sinon.fake()
+    //     const fake = sinon.fake()
 
-  //     const event = {
-  //       detail: 'foo',
-  //     }
+    //     const event = {
+    //       detail: 'foo',
+    //     }
 
-  //     eventEmitter.once('fake', fake)
-  //     eventEmitter.emit('fake', event)
-  //     eventEmitter.emit('fake', event)
+    //     eventEmitter.once('fake', fake)
+    //     eventEmitter.emit('fake', event)
+    //     eventEmitter.emit('fake', event)
 
-  //     expect(fake).to.have.been.calledOnceWith(event)
-  //   })
-  // })
+    //     expect(fake).to.have.been.calledOnceWith(event)
+    //   })
+    // })
 
-  // describe('#off', () => {
-  //   it('needs a callback', () => {
-  //     const eventEmitter = new EventEmitter()
+    // describe('#off', () => {
+    //   it('needs a callback', () => {
+    //     const eventEmitter = new EventEmitter()
 
-  //     const fn = () => {
-  //       eventEmitter.off('fake')
-  //     }
+    //     const fn = () => {
+    //       eventEmitter.off('fake')
+    //     }
 
-  //     expect(fn).to.throw()
-  //   })
+    //     expect(fn).to.throw()
+    //   })
 
-  //   it('stops calling the listener.', () => {
-  //     const eventEmitter = new EventEmitter()
+    //   it('stops calling the listener.', () => {
+    //     const eventEmitter = new EventEmitter()
 
-  //     const fake = sinon.fake()
+    //     const fake = sinon.fake()
 
-  //     const event = {
-  //       detail: 'foo',
-  //     }
+    //     const event = {
+    //       detail: 'foo',
+    //     }
 
-  //     eventEmitter.on('fake', fake)
-  //     eventEmitter.emit('fake', event)
-  //     eventEmitter.off('fake', fake)
-  //     eventEmitter.emit('fake', event)
+    //     eventEmitter.on('fake', fake)
+    //     eventEmitter.emit('fake', event)
+    //     eventEmitter.off('fake', fake)
+    //     eventEmitter.emit('fake', event)
 
-  //     expect(fake).to.have.been.calledOnceWith(event)
-  //   })
+    //     expect(fake).to.have.been.calledOnceWith(event)
+    //   })
 
     it('fails when trying to unregister a listener that was not registered.', () => {
       const eventEmitter = new EventEmitter()

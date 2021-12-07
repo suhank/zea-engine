@@ -89,11 +89,11 @@ describe('Lines', () => {
           count: 3,
           dataType: 'Vec3',
           normalized: false,
-          values: new Float32Array([1, 2, 3, -1, -2, -3, 2, 1, -3])
-        }
+          values: new Float32Array([1, 2, 3, -1, -2, -3, 2, 1, -3]),
+        },
       },
       indices: new Uint8Array([0, 1, 1, 2]),
-      numVertices: 3
+      numVertices: 3,
     })
   })
 
@@ -119,9 +119,9 @@ describe('Lines', () => {
       type: 'Lines',
       numVertices: 3,
       vertexAttributes: {
-        positions: { data: [1, 2, 3, -1, -2, -3, 2, 1, -3], dataType: 'Vec3', defaultValue: 0, length: 3 }
+        positions: { data: [1, 2, 3, -1, -2, -3, 2, 1, -3], dataType: 'Vec3', defaultValue: 0, length: 3 },
       },
-      indices: [0, 1, 1, 2]
+      indices: [0, 1, 1, 2],
     }
     lines.fromJSON(input)
 

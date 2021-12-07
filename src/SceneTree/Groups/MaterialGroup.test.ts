@@ -3,7 +3,6 @@ import { TreeItem } from '../TreeItem'
 import { Material } from '../Material'
 import { GeomItem } from '../GeomItem'
 
-
 describe('MaterialGroup', () => {
   test('Changing GeomItem Material by the tree.', () => {
     const group = new MaterialGroup('Foo')
@@ -15,8 +14,8 @@ describe('MaterialGroup', () => {
     group.addItem(parent)
 
     const material = new Material('MyMaterial')
-    group.getParameter('Material').setValue(material)
+    group.materialParam.value = (material)
 
-    expect(geomItem.getParameter('Material').getValue()).toBe(material)
+    expect(geomItem.materialParam.value).toBe(material)
   })
 })

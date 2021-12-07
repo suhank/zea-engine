@@ -22,8 +22,8 @@ class ImageParameter extends Parameter<BaseImage | undefined> {
   /**
    * Create an image parameter.
    *
-   * @param {string} name - The name of the image parameter.
-   * @param {BaseImage} value - The value of the parameter.
+   * @param name - The name of the image parameter.
+   * @param value - The value of the parameter.
    */
   constructor(name: string = '', value?: BaseImage) {
     super(name, value, 'BaseImage')
@@ -35,17 +35,17 @@ class ImageParameter extends Parameter<BaseImage | undefined> {
   /**
    * The toJSON method encodes this type as a json object for persistence.
    *
-   * @param {Record<string, any>} context - The context value.
-   * @return {Record<string, unknown>} - Returns the json object.
+   * @param context - The context value.
+   * @return - Returns the json object.
    */
   toJSON(context?: Record<string, any>): Record<string, unknown> {
     const j: Record<string, unknown> = {
-      name: this.name
+      name: this.name,
     }
 
-    if (this.value) {
-      j.imageType = this.value.getClassName()
-      j.value = this.value.toJSON()
+    if (this.__value) {
+      j.imageType = this.__value.getClassName()
+      j.value = this.__value.toJSON()
     }
 
     return j
@@ -54,14 +54,14 @@ class ImageParameter extends Parameter<BaseImage | undefined> {
   /**
    * The fromJSON method decodes a json object for this type.
    *
-   * @param {Record<string, unknown>} j - The json object this item must decode.
-   * @param {Record<string, any>} context - The context value.
-   * @return {Record<string, any>} - Returns the json object.
+   * @param j - The json object this item must decode.
+   * @param context - The context value.
+   * @return - Returns the json object.
    */
   fromJSON(j: Record<string, unknown>, context: Record<string, any>): void {
     if (j.imageType) {
-      this.value = Registry.constructClass(j.imageType as string) as any
-      if (j.value) this.value?.fromJSON(j.value as any, context)
+      this.__value = Registry.constructClass(j.imageType as string) as any
+      if (j.value) this.__value?.fromJSON(j.value as any, context)
     }
   }
 
@@ -72,10 +72,10 @@ class ImageParameter extends Parameter<BaseImage | undefined> {
    * The clone method constructs a new image parameter,
    * copies its values from this parameter and returns it.
    *
-   * @return {ImageParameter} - Returns a new cloned image parameter.
+   * @return - Returns a new cloned image parameter.
    */
   clone(): ImageParameter {
-    const clonedParam = new ImageParameter(this.name, this.value)
+    const clonedParam = new ImageParameter(this.name, this.__value)
     return clonedParam
   }
 }

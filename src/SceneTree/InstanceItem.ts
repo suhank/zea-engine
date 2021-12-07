@@ -11,10 +11,11 @@ import { BinReader } from './BinReader'
  * @extends {TreeItem}
  */
 class InstanceItem extends TreeItem {
-  protected __srcTree: TreeItem | null = null
+  protected srcTreePath: Array<string> = []
+  protected srcTree: TreeItem | null = null
   /**
    * Create an instance item.
-   * @param {string} name - The name of the instance item.
+   * @param name - The name of the instance item.
    */
   constructor(name?: string) {
     super(name)
@@ -23,32 +24,22 @@ class InstanceItem extends TreeItem {
   /**
    * Clones passed in `TreeItem` all the way down and adds it as a child of current item.
    *
-   * @param {TreeItem} treeItem - The treeItem value.
+   * @param treeItem - The treeItem value.
    */
   setSrcTree(treeItem: TreeItem, context: Record<string, any>) {
-    this.__srcTree = treeItem
-
-    const numChildren = this.__srcTree.getNumChildren()
-    if (numChildren == 0) {
-      const clonedTree = this.__srcTree.clone(context)
-      clonedTree.getParameter('LocalXfo')!.loadValue(new Xfo())
-      this.addChild(clonedTree, false)
-    } else {
-      const children = this.__srcTree.getChildren()
-      children.forEach((child: any) => {
-        const clonedChild = child.clone(context)
-        this.addChild(clonedChild, false)
-      })
-    }
+    this.srcTree = treeItem
+    const clonedTree = this.srcTree.clone(context)
+    clonedTree.localXfoParam.value = new Xfo()
+    this.addChild(clonedTree, false)
   }
 
   /**
    * Returns the last `TreeItem` cloned.
    *
-   * @return {TreeItem} - The return value.
+   * @return - The return value.
    */
   getSrcTree() {
-    return this.__srcTree
+    return this.srcTree
   }
 
   // ////////////////////////////////////////
@@ -57,29 +48,39 @@ class InstanceItem extends TreeItem {
   /**
    * Sets state of current Item(Including cloned item) using a binary reader object.
    *
-   * @param {BinReader} reader - The reader value.
-   * @param {Record<any,any>} context - The context value.
+   * @param reader - The reader value.
+   * @param context - The context value.
    */
   readBinary(reader: BinReader, context: Record<string, any> = {}) {
     super.readBinary(reader, context)
 
     // console.log("numTreeItems:", context.numTreeItems, " numGeomItems:", context.numGeomItems)
-    const path = reader.loadStrArray()
-    // console.log("InstanceItem of:", path)
-    try {
-      context.resolvePath(path, (treeItem: TreeItem) => {
-        this.setSrcTree(treeItem, context)
-      })
-    } catch (e) {
-      console.warn(`Error loading InstanceItem: ${this.getPath()}: ` + e.message)
+    this.srcTreePath = reader.loadStrArray()
+    if (this.srcTreePath.length > 0) {
+      console.log('InstanceItem of:', this.srcTreePath)
+      try {
+        context.resolvePath(
+          this.srcTreePath,
+          (treeItem: TreeItem) => {
+            this.setSrcTree(treeItem, context)
+          },
+          (error: Error) => {
+            console.warn(
+              `Error loading InstanceItem: ${this.getPath()}, unable to resolve: ${this.srcTreePath}. ` + error.message
+            )
+          }
+        )
+      } catch (error: any) {
+        console.warn(`Error loading InstanceItem: ${this.getPath()}: ` + error)
+      }
     }
   }
 
   /**
    * The toJSON method encodes this type as a json object for persistence.
    *
-   * @param {Record<string, any>} context - The context value.
-   * @return {Record<string, any>} - Returns the json object.
+   * @param context - The context value.
+   * @return - Returns the json object.
    */
   toJSON(context = {}): Record<string, any> {
     const j = super.toJSON(context)
@@ -90,11 +91,47 @@ class InstanceItem extends TreeItem {
    * The fromJSON method decodes a json object for this type.
    *
    * @todo Needs to be implemented.
-   * @param {Record<string, any>} j - The json object this item must decode.
-   * @param {Record<string, any>} context - The context value.
-   * @param {function} onDone - The onDone value.
+   * @param j - The json object this item must decode.
+   * @param context - The context value.
+   * @param onDone - The onDone value.
    */
   fromJSON(j: Record<string, any>, context: Record<string, any> = {}) {}
+
+  // ////////////////////////////////////////
+  // Clone and Destroy
+
+  /**
+   * The clone method constructs a new instance item, copies its values
+   * from this item and returns it.
+   *
+   * @param context - The context value.
+   * @return - Returns a new cloned geom item.
+   */
+  clone(context?: Record<string, any>) {
+    const cloned = new InstanceItem()
+    cloned.copyFrom(this, context)
+
+    return cloned
+  }
+
+  /**
+   * Copies current TreeItem with all its children.
+   *
+   * @param src - The tree item to copy from.
+   * @param context - The context value.
+   */
+  copyFrom(src: TreeItem, context?: Record<string, any>): void {
+    super.copyFrom(src, context)
+
+    this.srcTreePath = (<InstanceItem>src).srcTreePath
+    if (this.srcTreePath.length > 0 && this.getNumChildren() == 0) {
+      src.once('childAdded', (event) => {
+        // @ts-ignore
+        const childItem = <TreeItem>event.childItem
+        this.setSrcTree(childItem, context)
+      })
+    }
+  }
 }
 
 Registry.register('InstanceItem', InstanceItem)
