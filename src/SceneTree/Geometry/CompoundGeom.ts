@@ -7,9 +7,30 @@ import { Xfo } from '../../Math/Xfo'
 // import { Box3 } from '../../Math/Box3'
 // import { Vec3Attribute } from './Vec3Attribute'
 
-const resizeUIntArray = (intArray: Uint32Array, newSize: number) => {
-  const newArray = new Uint32Array(newSize)
-  newArray.set(intArray)
+const copyIndicesArray = (
+  intArray: Uint8Array | Uint16Array | Uint32Array,
+  newArray: Uint8Array | Uint16Array | Uint32Array
+) => {
+  for (let i = 0; i < intArray.length; i++) {
+    newArray[i] += intArray[i]
+  }
+}
+
+const resizeIndicesArray = (intArray: Uint8Array | Uint16Array | Uint32Array, newSize: number, numVertices: number) => {
+  let newArray
+  if (numVertices <= 255) {
+    newArray = new Uint8Array(newSize)
+    if (intArray instanceof Uint32Array) newArray.set(intArray)
+    else copyIndicesArray(intArray, newArray)
+  } else if (numVertices <= 65536) {
+    newArray = new Uint16Array(newSize)
+    if (intArray instanceof Uint32Array) newArray.set(intArray)
+    else copyIndicesArray(intArray, newArray)
+  } else {
+    newArray = new Uint32Array(newSize)
+    if (intArray instanceof Uint32Array) newArray.set(intArray)
+    else copyIndicesArray(intArray, newArray)
+  }
   return newArray
 }
 
@@ -33,7 +54,9 @@ interface SubGeomData {
  * @extends BaseGeom
  */
 class CompoundGeom extends BaseGeom {
-  protected indices: Record<string, Uint32Array>
+  protected indices: Uint8Array | Uint16Array | Uint32Array = new Uint8Array(0)
+  private offsets: Record<string, number> = {}
+  private counts: Record<string, number> = {}
   protected subGeoms: Array<SubGeomData> = []
   /**
    * Create points.
@@ -41,7 +64,7 @@ class CompoundGeom extends BaseGeom {
   constructor() {
     super()
 
-    this.indices = {}
+    // this.indices = {}
   }
 
   /**
@@ -52,31 +75,34 @@ class CompoundGeom extends BaseGeom {
     this.emit('geomDataTopologyChanged')
   }
 
-  addSubGeomIndices(type: string, indices: Uint32Array, offset = 0) {
-    if (!this.indices[type]) this.indices[type] = new Uint32Array(0)
-    const mergedIndices = this.indices[type]
+  setNumVertices(numVertices: number) {
+    super.setNumVertices(numVertices)
+  }
 
-    const prevLength = mergedIndices.length
-    const newMergedIndices = resizeUIntArray(mergedIndices, prevLength + indices.length)
-    newMergedIndices.set(indices, prevLength)
+  addSubGeomIndices(type: string, indices: Uint32Array, offset = 0) {
+    const numVertices = this.numVertices()
+    const prevLength = this.indices.length
+    this.indices = resizeIndicesArray(this.indices, prevLength + indices.length, numVertices)
     if (offset > 0) {
       for (let i = 0; i < indices.length; i++) {
-        newMergedIndices[prevLength + i] += offset
+        this.indices[prevLength + i] += offset
       }
     }
 
-    let offsetWithinUnifiedIndices = 0
-    for (let key in this.indices) {
-      if (key == type) break
-      offsetWithinUnifiedIndices += this.indices[key].length
+    this.counts[type] += indices.length
+    if (type == 'POINTS') {
+      this.offsets['LINES'] += indices.length
+      this.offsets['TRIANGLES'] += indices.length
+    } else if (type == 'LINES') {
+      this.offsets['TRIANGLES'] += indices.length
     }
-    this.indices[type] = newMergedIndices
+
     const subGeomIndex = this.subGeoms.length
     this.subGeoms.push({
       type,
-      start: offsetWithinUnifiedIndices + prevLength,
+      start: prevLength,
       count: indices.length,
-      metadata: {}
+      metadata: {},
     })
     return subGeomIndex
   }
@@ -86,20 +112,6 @@ class CompoundGeom extends BaseGeom {
   }
 
   genBuffers() {
-    let indicesCount = 0
-    for (let key in this.indices) indicesCount += this.indices[key].length
-    const indices = new Uint32Array(indicesCount)
-
-    let offset = 0
-    const offsets: Record<string, number> = {}
-    const counts: Record<string, number> = {}
-    for (let key in this.indices) {
-      indices.set(this.indices[key], offset)
-      offsets[key] = offset
-      counts[key] = this.indices[key].length
-      offset += this.indices[key].length
-    }
-
     const attrBuffers: Record<string, any> = {}
     for (const [attrName, attr] of this.__vertexAttributes) {
       attrBuffers[attrName] = attr.genBuffer()
@@ -109,11 +121,11 @@ class CompoundGeom extends BaseGeom {
     const result = {
       numVertices,
       numRenderVerts: numVertices,
-      indices,
+      indices: this.indices,
       attrBuffers,
-      offsets,
-      counts,
-      subGeoms: this.subGeoms
+      offsets: this.offsets,
+      counts: this.counts,
+      subGeoms: this.subGeoms,
     }
     return result
   }
@@ -130,7 +142,25 @@ class CompoundGeom extends BaseGeom {
   readBinary(reader: BinReader, context: Record<string, unknown>) {
     super.loadBaseGeomBinary(reader)
 
-    // this.computeVertexNormals();
+    const numPointsIndices = reader.loadUInt32()
+    const numLinesIndices = reader.loadUInt32()
+    const numTriangleIndices = reader.loadUInt32()
+
+    this.offsets['POINT'] = 0
+    this.counts['POINT'] = numPointsIndices
+    this.offsets['LINES'] = numPointsIndices
+    this.counts['LINES'] = numPointsIndices + numLinesIndices
+    this.offsets['TRIANGLES'] = numPointsIndices + numLinesIndices
+    this.counts['TRIANGLES'] = numPointsIndices + numLinesIndices + numTriangleIndices
+
+    const bytes = reader.loadUInt8()
+    if (bytes == 1) this.indices = reader.loadUInt8Array()
+    else if (bytes == 2) this.indices = reader.loadUInt16Array()
+    else if (bytes == 4) this.indices = reader.loadUInt32Array()
+    else {
+      throw Error('indices undefined')
+    }
+
     this.emit('geomDataChanged', {})
   }
 }

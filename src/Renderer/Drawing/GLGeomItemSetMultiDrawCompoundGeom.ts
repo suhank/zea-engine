@@ -4,6 +4,7 @@ import '../../SceneTree/GeomItem'
 import { EventEmitter, MathFunctions, Allocator1D } from '../../Utilities/index'
 import { GLBaseRenderer } from '../GLBaseRenderer'
 import { GLTexture2D } from '../GLTexture2D'
+import { RenderState } from '../types/renderer'
 import { GLGeomItem } from './GLGeomItem'
 
 /** This class abstracts the rendering of a collection of geometries to screen.
@@ -174,7 +175,7 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
    * @param {RenderState} renderstate - The object used to track state changes during rendering.
    */
   updateDrawIDsBuffer(renderstate: RenderState) {
-    this.dirtyGeomItems.forEach(index => {
+    this.dirtyGeomItems.forEach((index) => {
       const glGeomItem = this.glGeomItems[index]!
       if (glGeomItem.isVisible()) {
         const geomBuffers = this.renderer.glGeomLibrary.getGeomBuffers(glGeomItem.geomId)
@@ -228,7 +229,7 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
     }
 
     const elementSize = 4 //  Uint32Array for UNSIGNED_INT
-    this.dirtyGeomItems.forEach(index => {
+    this.dirtyGeomItems.forEach((index) => {
       const glGeomItem = this.glGeomItems[index]!
       const offsetAndCount = this.renderer.glGeomLibrary.getGeomOffsetAndCount(glGeomItem.geomId)
       const geomBuffers = this.renderer.glGeomLibrary.getGeomBuffers(glGeomItem.geomId)
@@ -292,7 +293,7 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
           height: drawIdsTextureSize,
           filter: 'NEAREST',
           wrap: 'CLAMP_TO_EDGE',
-          mipMapped: false
+          mipMapped: false,
         })
         this.drawIdsTextures[key] = drawIdsTexture
       } else if (drawIdsTexture.width < drawIdsTextureSize || drawIdsTexture.height < drawIdsTextureSize) {
