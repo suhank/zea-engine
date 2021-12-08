@@ -46,21 +46,6 @@ vec4 getHighlightColor() {
 #endif // DRAW_HIGHLIGHT
 
 
-#ifdef ENABLE_FLOAT_TEXTURES
-vec4 getCutaway(int id) {
-  return fetchTexel(instancesTexture, instancesTextureSize, (id * pixelsPerItem) + 5);
-}
-
-#else
-
-uniform vec4 cutawayData;
-
-vec4 getCutaway(int id) {
-  return cutawayData;
-}
-
-#endif
-
 /* VS Outputs */
 varying float v_drawItemId;
 varying vec4 v_geomItemData;

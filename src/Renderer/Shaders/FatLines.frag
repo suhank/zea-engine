@@ -27,21 +27,6 @@ import 'GLSLBits.glsl'
 uniform int floatGeomBuffer;
 uniform int passId;
 
-#ifdef ENABLE_FLOAT_TEXTURES
-vec4 getCutaway(int id) {
-  return fetchTexel(instancesTexture, instancesTextureSize, (id * pixelsPerItem) + 5);
-}
-#else
-
-uniform vec4 cutawayData;
-
-vec4 getCutaway(int id) {
-  return cutawayData;
-}
-
-
-#endif
-
 
 #if defined(DRAW_HIGHLIGHT)
   import 'surfaceHighlight.glsl'

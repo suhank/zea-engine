@@ -28,23 +28,6 @@ varying vec2 v_textureCoord;
 #endif
 varying vec3 v_worldPos;
 
-uniform color cutColor;
-
-#ifdef ENABLE_FLOAT_TEXTURES
-vec4 getCutaway(int id) {
-  return fetchTexel(instancesTexture, instancesTextureSize, (id * pixelsPerItem) + 5);
-}
-
-#else
-
-uniform vec4 cutawayData;
-
-vec4 getCutaway(int id) {
-  return cutawayData;
-}
-
-#endif
-
 #ifdef ENABLE_ES3
 out vec4 fragColor;
 #endif

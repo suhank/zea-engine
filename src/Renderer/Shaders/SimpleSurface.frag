@@ -15,23 +15,6 @@ import 'materialparams.glsl'
 import 'debugColors.glsl'
 #endif
 
-uniform color cutColor;
-
-#ifdef ENABLE_FLOAT_TEXTURES
-vec4 getCutaway(int id) {
-  return fetchTexel(instancesTexture, instancesTextureSize, (id * pixelsPerItem) + 5);
-}
-
-#else
-
-uniform vec4 cutawayData;
-
-vec4 getCutaway(int id) {
-  return cutawayData;
-}
-
-#endif
-
 /* VS Outputs */
 varying vec3 v_drawItemIds;
 varying vec4 v_geomItemData;

@@ -2,6 +2,22 @@
 const int GEOMITEM_FLAG_CUTAWAY = 1; // 1<<0;
 const int GEOMITEM_INVISIBLE_IN_GEOMDATA = 2; // 1<<1;
 
+uniform color cutColor;
+
+#ifdef ENABLE_FLOAT_TEXTURES
+  vec4 getCutaway(int id) {
+    return fetchTexel(instancesTexture, instancesTextureSize, (id * pixelsPerItem) + 5);
+  }
+
+#else
+
+  uniform vec4 cutawayData;
+
+  vec4 getCutaway(int id) {
+    return cutawayData;
+  }
+
+#endif
 
 #define RAY_EPS 0.0000001
 struct Ray {

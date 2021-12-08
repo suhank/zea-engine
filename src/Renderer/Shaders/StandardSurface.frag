@@ -6,20 +6,6 @@
   import 'materialparams.glsl'
   import 'GLSLBits.glsl'
 
-  #ifdef ENABLE_FLOAT_TEXTURES
-    vec4 getCutaway(int id) {
-      return fetchTexel(instancesTexture, instancesTextureSize, (id * pixelsPerItem) + 5);
-    }
-
-  #else
-
-    uniform vec4 cutawayData;
-
-    vec4 getCutaway(int id) {
-      return cutawayData;
-    }
-
-  #endif
 
 /* VS Outputs */
 varying float v_drawItemId;
@@ -46,14 +32,17 @@ import 'debugColors.glsl'
 #endif
 
 
-uniform color cutColor;
-
 #ifdef ENABLE_INLINE_GAMMACORRECTION
 uniform float exposure;
 #endif
 
 uniform mat4 cameraMatrix;
 uniform int isOrthographic;
+
+
+// Now that we render multiple types of geometry from a single shader
+// we need to know what kind of geometry it is...
+uniform int geomType;
 
 #ifndef ENABLE_MULTI_DRAW
 
@@ -64,6 +53,9 @@ uniform float Metallic;
 uniform float Reflectance;
 uniform float EmissiveStrength;
 uniform float Opacity;
+
+uniform color EdgeColor;
+uniform color PointColor;
 
 #ifdef ENABLE_TEXTURES
 uniform sampler2D BaseColorTex;
