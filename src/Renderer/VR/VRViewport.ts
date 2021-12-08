@@ -327,14 +327,14 @@ class VRViewport extends GLBaseViewport {
               const controller = this.controllersMap[ev.inputSource.handedness]
               if (controller) {
                 controller.buttonPressed = true
-                this.onPointerDown(new XRControllerEvent(1, controller))
+                this.onPointerDown(new XRControllerEvent(this, controller, 1))
               }
             }
             const onSelectEnd = (ev: any) => {
               const controller = this.controllersMap[ev.inputSource.handedness]
               if (controller) {
                 controller.buttonPressed = false
-                this.onPointerUp(new XRControllerEvent(1, controller))
+                this.onPointerUp(new XRControllerEvent(this, controller, 1))
               }
             }
 
