@@ -622,6 +622,7 @@ class GLBillboardsPass extends GLPass {
     }
     return {
       geomItem: this.billboards[itemId].billboard,
+      componentId: 0,
       dist,
     }
   }

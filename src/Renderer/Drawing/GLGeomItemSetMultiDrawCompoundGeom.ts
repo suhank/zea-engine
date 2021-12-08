@@ -5,6 +5,7 @@ import { EventEmitter, MathFunctions, Allocator1D } from '../../Utilities/index'
 import { GLBaseRenderer } from '../GLBaseRenderer'
 import { GLTexture2D } from '../GLTexture2D'
 import { RenderState } from '../types/renderer'
+import { WebGL12RenderingContext } from '../types/webgl'
 import { GLGeomItem } from './GLGeomItem'
 
 /** This class abstracts the rendering of a collection of geometries to screen.
@@ -695,7 +696,7 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
     const indices: any[] = []
     this.visibleItems.forEach((glGeomItem, index) => {
       if (glGeomItem) {
-        const mat4 = glGeomItem.geomItem.getGeomMat4()
+        const mat4 = glGeomItem.geomItem.geomMatParam.value
         const dist = mat4.translation.distanceTo(viewPos)
         distances.push(dist)
         indices.push(index)
@@ -725,8 +726,8 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
    * Users should never need to call this method directly.
    */
   destroy() {
-    if (this.drawIdsTextures) {
-      this.drawIdsTextures.destroy()
+    for (let key in this.drawIdsTextures) {
+      this.drawIdsTextures[key].destroy()
     }
 
     if (this.highlightedIdsTexture) {
