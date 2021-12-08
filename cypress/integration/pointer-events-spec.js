@@ -10,7 +10,8 @@ describe('pointer-events', () => {
   })
 
   it('Mouse Move - Camera Manipulator', () => {
-    cy.get('canvas').trigger('mousedown', 600, 400).trigger('mousemove', 700, 400).trigger('mouseup', 700, 600)
+    cyFocusCanvas()
+    cy.get('canvas').trigger('mousedown', 100, 230).trigger('mousemove', 250, 230).trigger('mouseup', 250, 230)
 
     cy.get('canvas').percySnapshot(`MouseMoveCameraManipulator`)
   })
