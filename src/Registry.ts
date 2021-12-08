@@ -35,7 +35,8 @@ class Registry {
    */
   static register(className: string, classDef: typeof BaseClass): void {
     if (className in registeredClasses) {
-      console.warn(`There's a class registered with '${className}' name`)
+      console.warn(`There's a class registered with '${className}' name. Second registration failed.`)
+      return
     }
 
     // Note: To provide backwards compatibility, same classDef can be stored under multiple names.
