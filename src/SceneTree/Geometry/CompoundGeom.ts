@@ -90,7 +90,7 @@ class CompoundGeom extends BaseGeom {
     }
 
     this.counts[type] += indices.length
-    if (type == 'POINTS') {
+    if (type == 'POINTSS') {
       this.offsets['LINES'] += indices.length
       this.offsets['TRIANGLES'] += indices.length
     } else if (type == 'LINES') {
@@ -146,12 +146,12 @@ class CompoundGeom extends BaseGeom {
     const numLinesIndices = reader.loadUInt32()
     const numTriangleIndices = reader.loadUInt32()
 
-    this.offsets['POINT'] = 0
-    this.counts['POINT'] = numPointsIndices
+    this.offsets['POINTS'] = 0
+    this.counts['POINTS'] = numPointsIndices
     this.offsets['LINES'] = numPointsIndices
-    this.counts['LINES'] = numPointsIndices + numLinesIndices
+    this.counts['LINES'] = numLinesIndices
     this.offsets['TRIANGLES'] = numPointsIndices + numLinesIndices
-    this.counts['TRIANGLES'] = numPointsIndices + numLinesIndices + numTriangleIndices
+    this.counts['TRIANGLES'] = numTriangleIndices
 
     const bytes = reader.loadUInt8()
     if (bytes == 1) this.indices = reader.loadUInt8Array()

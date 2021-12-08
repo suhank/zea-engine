@@ -161,4 +161,50 @@ class MeshProxy extends BaseProxy {
   }
 }
 
-export { BaseProxy, PointsProxy, LinesProxy, MeshProxy }
+/** Class representing a mesh proxy.
+ * @extends BaseProxy
+ * @private
+ */
+class CompoundGeomProxy extends BaseProxy {
+  private offsets: Record<string, number> = {}
+  private counts: Record<string, number> = {}
+  /**
+   * Create a mesh proxy.
+   * @param data - The data value.
+   */
+  constructor(data: any) {
+    super(data)
+
+    this.counts = data.geomBuffers.counts
+    this.offsets = data.geomBuffers.offsets
+  }
+
+  /**
+   * Returns the number line segments in this lines proxy geometry
+   *
+   * @return - The return value.
+   */
+  getNumPoints() {
+    return this.counts['POINTS']
+  }
+
+  /**
+   * Returns the number line segments in this lines proxy geometry
+   *
+   * @return - The return value.
+   */
+  getNumLineSegments() {
+    return this.counts['LINES'] / 2
+  }
+
+  /**
+   * Returns the number of triangles in this mesh proxy geometry.
+   *
+   * @return - The return value.
+   */
+  getNumTriangles() {
+    return this.counts['TRIANGLES'] / 3
+  }
+}
+
+export { BaseProxy, PointsProxy, LinesProxy, MeshProxy, CompoundGeomProxy }

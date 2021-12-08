@@ -31,6 +31,7 @@ export * from './BillboardItem'
 export * from './Camera'
 
 export * from './Groups/index'
+export * from './CAD/CADBody'
 
 export * from './GeomLibrary'
 export * from './Material'

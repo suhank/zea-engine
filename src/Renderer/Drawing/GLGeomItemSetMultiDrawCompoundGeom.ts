@@ -187,16 +187,21 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
             drawCounts[subGeom.type]++
           })
         } else {
-          for (let key in geomBuffers.offsets) {
-            drawCounts[key] = 1
-          }
+          drawCounts = geomBuffers.counts
+          // for (let key in geomBuffers.counts) {
+          //   if (geomBuffers.counts[key] > 0)
+          //     drawCounts[key] = 1
+          // }
         }
         for (let key in drawCounts) {
+          const drawCount = drawCounts[key]
+          if (drawCount == 0) continue
+
           if (!this.allocators[key]) {
             this.allocators[key] = new Allocator1D()
           }
           const prevAllocation = this.allocators[key].getAllocation(index)
-          const newAllocation = this.allocators[key].allocate(index, drawCounts[key])
+          const newAllocation = this.allocators[key].allocate(index, drawCount)
           if (prevAllocation && prevAllocation.start != newAllocation.start && this.drawIdsArrays[key]) {
             // Clear the previous allocation to remove any rendering.
             for (let i = 0; i < prevAllocation.size; i++) {
@@ -261,8 +266,9 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
         )
       } else {
         for (let key in geomBuffers.offsets) {
-          const offset = geomBuffers.offsets[key]
           const count = geomBuffers.counts[key]
+          if (count == 0) continue
+          const offset = geomBuffers.offsets[key]
           const allocator = this.allocators[key]
           const allocation = allocator.getAllocation(index)
           const drawId = allocation.start
@@ -520,35 +526,35 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
     }
 
     renderstate.bindViewports(unifs, () => {
-      if (drawIdsArray['MESH']) {
-        bindTex('MESH')
+      if (drawIdsArray['TRIANGLES']) {
+        bindTex('TRIANGLES')
 
         this.multiDrawMeshes(
           renderstate,
-          drawIdsArray['MESH'],
-          counts['MESH'],
-          offsets['MESH'],
-          allocators['MESH'].allocatedSpace
+          drawIdsArray['TRIANGLES'],
+          counts['TRIANGLES'],
+          offsets['TRIANGLES'],
+          allocators['TRIANGLES'].allocatedSpace
         )
       }
-      if (drawIdsArray['LINE']) {
-        bindTex('LINE')
+      if (drawIdsArray['LINES']) {
+        bindTex('LINES')
         this.multiDrawLines(
           renderstate,
-          drawIdsArray['LINE'],
-          counts['LINE'],
-          offsets['LINE'],
-          allocators['LINE'].allocatedSpace
+          drawIdsArray['LINES'],
+          counts['LINES'],
+          offsets['LINES'],
+          allocators['LINES'].allocatedSpace
         )
       }
-      if (drawIdsArray['POINT']) {
-        bindTex('POINT')
+      if (drawIdsArray['POINTS']) {
+        bindTex('POINTS')
         this.multiDrawPoints(
           renderstate,
-          drawIdsArray['POINT'],
-          counts['POINT'],
-          offsets['POINT'],
-          allocators['POINT'].allocatedSpace
+          drawIdsArray['POINTS'],
+          counts['POINTS'],
+          offsets['POINTS'],
+          allocators['POINTS'].allocatedSpace
         )
       }
     })
@@ -598,16 +604,16 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
     this.renderer.glGeomLibrary.bind(renderstate)
     const gl = this.gl
 
-    // don't rely on z-Buffer for line, disable depth check
-    gl.disable(gl.DEPTH_TEST)
+    // // don't rely on z-Buffer for line, disable depth check
+    // gl.disable(gl.DEPTH_TEST)
 
-    // enable stencil buffer check instead
-    gl.enable(gl.STENCIL_TEST)
+    // // enable stencil buffer check instead
+    // gl.enable(gl.STENCIL_TEST)
 
-    gl.stencilMask(0x00)
+    // gl.stencilMask(0x00)
 
-    // render line only where stencil buffer was incremented exactly twice
-    gl.stencilFunc(gl.EQUAL, 2, 0xff)
+    // // render line only where stencil buffer was incremented exactly twice
+    // gl.stencilFunc(gl.EQUAL, 2, 0xff)
 
     if (gl.multiDrawElements) {
       const { occluded } = renderstate.unifs
@@ -646,8 +652,8 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
     }
 
     // restore flags to initial order
-    gl.disable(gl.STENCIL_TEST)
-    gl.enable(gl.DEPTH_TEST)
+    // gl.disable(gl.STENCIL_TEST)
+    // gl.enable(gl.DEPTH_TEST)
   }
 
   multiDrawPoints(
@@ -707,17 +713,17 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
     // TODO:
 
     // const visibleItems: any[] = []
-    // const drawElementCounts = new Int32Array(this.drawElementCounts['MESH'].length)
-    // const drawElementOffsets = new Int32Array(this.drawElementOffsets['MESH'].length)
+    // const drawElementCounts = new Int32Array(this.drawElementCounts['TRIANGLES'].length)
+    // const drawElementOffsets = new Int32Array(this.drawElementOffsets['TRIANGLES'].length)
     // indices.forEach((tgtIndex, srcIndex) => {
     //   visibleItems[srcIndex] = this.visibleItems[tgtIndex]
-    //   drawElementCounts[srcIndex] = this.drawElementCounts['MESH'][tgtIndex]
-    //   drawElementOffsets[srcIndex] = this.drawElementOffsets['MESH'][tgtIndex]
-    //   this.drawIdsArrays['MESH'][srcIndex] = this.visibleItems[tgtIndex].drawItemId
+    //   drawElementCounts[srcIndex] = this.drawElementCounts['TRIANGLES'][tgtIndex]
+    //   drawElementOffsets[srcIndex] = this.drawElementOffsets['TRIANGLES'][tgtIndex]
+    //   this.drawIdsArrays['TRIANGLES'][srcIndex] = this.visibleItems[tgtIndex].drawItemId
     // })
     // this.visibleItems = visibleItems
-    // this.drawElementCounts['MESH'] = drawElementCounts
-    // this.drawElementOffsets['MESH'] = drawElementOffsets
+    // this.drawElementCounts['TRIANGLES'] = drawElementCounts
+    // this.drawElementOffsets['TRIANGLES'] = drawElementOffsets
     // this.drawIdsBufferDirty = true
   }
 

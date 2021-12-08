@@ -1,7 +1,7 @@
 /* eslint-disable require-jsdoc */
 import { SystemDesc } from '../SystemDesc'
 import { BinReader } from './BinReader'
-import { BaseProxy, PointsProxy, LinesProxy, MeshProxy } from './Geometry/GeomProxies'
+import { BaseProxy, PointsProxy, LinesProxy, MeshProxy, CompoundGeomProxy } from './Geometry/GeomProxies'
 import { EventEmitter } from '../Utilities/index'
 import { resourceLoader } from './resourceLoader'
 
@@ -13,7 +13,7 @@ import { parseGeomsBinary } from './Geometry/parseGeomsBinary'
 
 // @ts-ignore
 import GeomParserWorker from 'web-worker:./Geometry/GeomParser-worker.js'
-const workerParsing = true
+const workerParsing = false
 
 import { StreamFileParsedEvent } from '../Utilities/Events/StreamFileParsedEvent'
 import { RangeLoadedEvent } from '../Utilities/Events/RangeLoadedEvent'
@@ -352,6 +352,9 @@ class GeomLibrary extends EventEmitter {
         case 'Sphere':
         case 'Cone':
           proxy = new MeshProxy(geomData)
+          break
+        case 'CompoundGeom':
+          proxy = new CompoundGeomProxy(geomData)
           break
         default:
           throw new Error('Unsupported Geom type:')

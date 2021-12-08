@@ -1,6 +1,16 @@
 /* eslint-disable guard-for-in */
 import { EventEmitter } from '../../Utilities/index'
-import { Points, Lines, Mesh, CompoundGeom, PointsProxy, LinesProxy, MeshProxy, BaseGeom } from '../../SceneTree/index'
+import {
+  Points,
+  Lines,
+  Mesh,
+  CompoundGeom,
+  PointsProxy,
+  LinesProxy,
+  MeshProxy,
+  BaseGeom,
+  CompoundGeomProxy,
+} from '../../SceneTree/index'
 import { GLGeomItemSetMultiDrawCompoundGeom } from './GLGeomItemSetMultiDrawCompoundGeom'
 import { GLGeomItemSetMultiDraw } from './GLGeomItemSetMultiDraw'
 import { GLLinesItemSet } from './GLLinesItemSet'
@@ -54,7 +64,7 @@ class GLShaderGeomSets extends EventEmitter {
    * */
   getOrCreateGLGeomItemSet(geom: BaseGeom) {
     let glGeomItemSet
-    if (geom instanceof CompoundGeom) {
+    if (geom instanceof CompoundGeom || geom instanceof CompoundGeomProxy) {
       if (this.glGeomItemSets['CompoundGeom']) return this.glGeomItemSets['CompoundGeom']
       glGeomItemSet = new GLGeomItemSetMultiDrawCompoundGeom(this.pass.renderer!)
       this.glGeomItemSets['CompoundGeom'] = glGeomItemSet
