@@ -48,7 +48,7 @@ void main(void) {
   // fragColor.r = 1.0;
   // fragColor.a = 1.0;
 #elif defined(DRAW_GEOMDATA)
-  fragColor = setFragColor_geomData(v_viewPos, floatGeomBuffer, passId, v_instanceID, isOrthographic);
+  fragColor = setFragColor_geomData(v_viewPos, floatGeomBuffer, passId, v_instanceID, 0, isOrthographic);
 #elif defined(DRAW_HIGHLIGHT)
   fragColor = getHilightColor(instanceID);
   // Skip unhilighting labels.

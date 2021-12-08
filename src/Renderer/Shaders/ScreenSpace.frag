@@ -79,7 +79,7 @@ void main(void) {
   //////////////////////////////////////////////
   // GeomData
 #elif defined(DRAW_GEOMDATA)
-  fragColor = setFragColor_geomData(vec3(0,0,0), floatGeomBuffer, passId,v_drawItemId, isOrthographic);
+  fragColor = setFragColor_geomData(vec3(0,0,0), floatGeomBuffer, passId, v_drawItemId, 0.0, isOrthographic);
 #elif defined(DRAW_HIGHLIGHT)
   fragColor = setFragColor_highlight(v_drawItemId);
 #endif // DRAW_HIGHLIGHT
