@@ -424,7 +424,11 @@ class CameraManipulator extends BaseTool {
         const vec = xfo.inverse().transformVec3(event.intersectionData.intersectionPos)
         camera.setFocalDistance(-vec.z)
       } else {
-        this.__orbitTarget = event.pointerRay.pointAtDist(camera.getFocalDistance())
+        if (event.pointerRay) {
+          this.__orbitTarget = event.pointerRay.pointAtDist(camera.getFocalDistance())
+        } else {
+          this.__orbitTarget = xfo.tr.add(xfo.ori.getZaxis().scale(-camera.getFocalDistance()))
+        }
       }
     } else {
       this.__orbitTarget = xfo.tr.add(xfo.ori.getZaxis().scale(-camera.getFocalDistance()))
