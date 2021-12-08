@@ -26,6 +26,7 @@ import { KeyboardEvent } from '../Utilities/Events/KeyboardEvent'
 import { GLShader } from './GLShader'
 import { WebGL12RenderingContext } from './types/webgl'
 import { RenderState, Uniforms, GeomDataRenderState } from './types/renderer'
+import { StateChangedEvent } from '../Utilities/Events/StateChangedEvent'
 
 let activeGLRenderer: GLBaseRenderer | undefined
 let pointerIsDown = false
@@ -979,12 +980,16 @@ class GLBaseRenderer extends ParameterOwner {
     // Always get the last display. Additional displays are added at the end.(e.g. [Polyfill, HMD])
     const xrvp = new VRViewport(this)
 
-    const emitViewChanged = (event: Record<string, any>) => {
+    const emitViewChanged = (event: ViewChangedEvent) => {
       this.emit('viewChanged', event)
     }
 
-    xrvp.on('presentingChanged', (event: any) => {
+    xrvp.on('presentingChanged', (event: StateChangedEvent) => {
       const state = event.state
+
+      // Note: the WebXREmulator does a double emit and this causes issues.
+      if (this.__xrViewportPresenting == state) return
+
       this.__xrViewportPresenting = state
       if (state) {
         // Let the passes know that VR is starting.

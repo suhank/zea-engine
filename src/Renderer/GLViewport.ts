@@ -702,6 +702,7 @@ class GLViewport extends GLBaseViewport {
           if (event.propagating) this.emit('pointerLeaveGeom', event)
         }
 
+        event.propagating = true
         this.pointerOverItem = event.intersectionData.geomItem
         this.pointerOverItem.onPointerEnter(event)
 
@@ -710,6 +711,7 @@ class GLViewport extends GLBaseViewport {
         this.emit('pointerOverGeom', event)
       }
 
+      event.propagating = true
       event.intersectionData.geomItem.onPointerMove(event)
       if (!event.propagating || event.getCapture()) return
     } else if (this.pointerOverItem) {
