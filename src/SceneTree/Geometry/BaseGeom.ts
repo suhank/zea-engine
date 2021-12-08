@@ -6,6 +6,61 @@ import { Vec3Attribute } from './Vec3Attribute'
 import { Vec2Attribute } from './Vec2Attribute'
 import { BinReader } from '../../SceneTree/BinReader'
 
+const parse8BitPositionsArray = (
+  range: Array<number>,
+  offset: Vec3,
+  sclVec: Vec3,
+  positions_8bit: Uint8Array,
+  positionsAttr: Vec3Attribute
+) => {
+  for (let i = range[0]; i < range[1]; i++) {
+    const pos = new Vec3(
+      positions_8bit[i * 3 + 0] / 255.0,
+      positions_8bit[i * 3 + 1] / 255.0,
+      positions_8bit[i * 3 + 2] / 255.0
+    )
+    pos.multiplyInPlace(sclVec)
+    pos.addInPlace(offset)
+    positionsAttr.setValue(i, pos)
+  }
+}
+const parse8BitNormalsArray = (
+  range: Array<number>,
+  offset: Vec3,
+  sclVec: Vec3,
+  normals_8bit: Uint8Array,
+  normalsAttr: Vec3Attribute
+) => {
+  if (sclVec.isNull()) sclVec.set(1, 1, 1)
+  for (let i = range[0]; i < range[1]; i++) {
+    const normal = new Vec3(
+      normals_8bit[i * 3 + 0] / 255.0,
+      normals_8bit[i * 3 + 1] / 255.0,
+      normals_8bit[i * 3 + 2] / 255.0
+    )
+    normal.multiplyInPlace(sclVec)
+    normal.addInPlace(offset)
+    normal.normalizeInPlace()
+    normalsAttr.setValue(i, normal)
+  }
+}
+const parse8BitTextureCoordsArray = (
+  range: Array<number>,
+  offset: Vec2,
+  sclVec: Vec2,
+  texCoords_8bit: Uint8Array,
+  texCoordsAttr: Vec2Attribute
+) => {
+  // if (sclVec.isNull())
+  //     sclVec.set(1, 1, 1);
+  for (let i = range[0]; i < range[1]; i++) {
+    const textureCoord = new Vec2(texCoords_8bit[i * 2 + 0] / 255.0, texCoords_8bit[i * 2 + 1] / 255.0)
+    textureCoord.multiplyInPlace(sclVec)
+    textureCoord.addInPlace(offset)
+    texCoordsAttr.setValue(i, textureCoord)
+  }
+}
+
 /**
  * Represents a base class for 3D geometry items.
  *
@@ -259,66 +314,24 @@ class BaseGeom extends ParameterOwner {
         this.addVertexAttribute('texCoords', texCoordsAttr)
       }
     }
-    const parse8BitPositionsArray = (range: Array<number>, offset: Vec3, sclVec: Vec3, positions_8bit: Uint8Array) => {
-      for (let i = range[0]; i < range[1]; i++) {
-        const pos = new Vec3(
-          positions_8bit[i * 3 + 0] / 255.0,
-          positions_8bit[i * 3 + 1] / 255.0,
-          positions_8bit[i * 3 + 2] / 255.0
-        )
-        pos.multiplyInPlace(sclVec)
-        pos.addInPlace(offset)
-        if (positionsAttr) positionsAttr.setValue(i, pos)
-      }
-    }
-    const parse8BitNormalsArray = (range: Array<number>, offset: Vec3, sclVec: Vec3, normals_8bit: Uint8Array) => {
-      if (sclVec.isNull()) sclVec.set(1, 1, 1)
-      for (let i = range[0]; i < range[1]; i++) {
-        const normal = new Vec3(
-          normals_8bit[i * 3 + 0] / 255.0,
-          normals_8bit[i * 3 + 1] / 255.0,
-          normals_8bit[i * 3 + 2] / 255.0
-        )
-        normal.multiplyInPlace(sclVec)
-        normal.addInPlace(offset)
-        normal.normalizeInPlace()
-        normalsAttr.setValue(i, normal)
-      }
-    }
-    const parse8BitTextureCoordsArray = (
-      range: Array<number>,
-      offset: Vec2,
-      sclVec: Vec2,
-      texCoords_8bit: Uint8Array
-    ) => {
-      // if (sclVec.isNull())
-      //     sclVec.set(1, 1, 1);
-      for (let i = range[0]; i < range[1]; i++) {
-        const textureCoord = new Vec2(texCoords_8bit[i * 2 + 0] / 255.0, texCoords_8bit[i * 2 + 1] / 255.0)
-        textureCoord.multiplyInPlace(sclVec)
-        textureCoord.addInPlace(offset)
-        texCoordsAttr.setValue(i, textureCoord)
-      }
-    }
-
     const numClusters = reader.loadUInt32()
     if (numClusters == 1) {
       {
         const box3 = this.__boundingBox
         const positions_8bit = reader.loadUInt8Array(numVerts * 3)
-        parse8BitPositionsArray([0, numVerts], box3.p0, box3.diagonal(), positions_8bit)
+        parse8BitPositionsArray([0, numVerts], box3.p0, box3.diagonal(), positions_8bit, positionsAttr)
       }
 
       if (normalsAttr) {
         const box3 = new Box3(reader.loadFloat32Vec3(), reader.loadFloat32Vec3())
         const normals_8bit = reader.loadUInt8Array(numVerts * 3)
-        parse8BitNormalsArray([0, numVerts], box3.p0, box3.diagonal(), normals_8bit)
+        parse8BitNormalsArray([0, numVerts], box3.p0, box3.diagonal(), normals_8bit, normalsAttr)
         normalsAttr.loadSplitValues(reader)
       }
       if (texCoordsAttr) {
         const box2 = new Box2(reader.loadFloat32Vec2(), reader.loadFloat32Vec2())
         const texCoords_8bit = reader.loadUInt8Array(numVerts * 2)
-        parse8BitTextureCoordsArray([0, numVerts], box2.p0, box2.diagonal(), texCoords_8bit)
+        parse8BitTextureCoordsArray([0, numVerts], box2.p0, box2.diagonal(), texCoords_8bit, texCoordsAttr)
         texCoordsAttr.loadSplitValues(reader)
       }
     } else {
@@ -355,16 +368,16 @@ class BaseGeom extends ParameterOwner {
       for (let i = 0; i < numClusters; i++) {
         {
           const box3 = clusters[i].bbox
-          parse8BitPositionsArray(clusters[i].range, box3.p0, box3.diagonal(), positions_8bit)
+          parse8BitPositionsArray(clusters[i].range, box3.p0, box3.diagonal(), positions_8bit, positionsAttr)
         }
 
         if (normalsAttr) {
           const box3 = clusters[i].normalsRange
-          parse8BitNormalsArray(clusters[i].range, box3.p0, box3.diagonal(), normals_8bit!)
+          parse8BitNormalsArray(clusters[i].range, box3.p0, box3.diagonal(), normals_8bit!, normalsAttr)
         }
         if (texCoordsAttr) {
           const box2 = clusters[i].texCoordsRange
-          parse8BitTextureCoordsArray(clusters[i].range, box2.p0, box2.diagonal(), texCoords_8bit!)
+          parse8BitTextureCoordsArray(clusters[i].range, box2.p0, box2.diagonal(), texCoords_8bit!, texCoordsAttr)
         }
       }
       if (normalsAttr) {
