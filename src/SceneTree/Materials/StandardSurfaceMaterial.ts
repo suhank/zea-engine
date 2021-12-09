@@ -15,6 +15,9 @@ export class StandardSurfaceMaterial extends Material {
   emissiveStrengthParam: MaterialFloatParam = new MaterialFloatParam('EmissiveStrength', 0, [0, 1])
   opacityParam: MaterialFloatParam = new MaterialFloatParam('Opacity', 1, [0, 1])
 
+  edgeColorParam: MaterialColorParam = new MaterialColorParam('EdgeColor', new Color(0.2, 0.2, 0.2))
+  pointColorParam: MaterialColorParam = new MaterialColorParam('PointColor', new Color(0.1, 0.1, 0.1))
+
   constructor(name?: string) {
     super(name)
     this.__shaderName = 'StandardSurfaceShader'
@@ -26,6 +29,9 @@ export class StandardSurfaceMaterial extends Material {
     this.addParameter(this.reflectanceParam)
     this.addParameter(this.emissiveStrengthParam)
     this.addParameter(this.opacityParam)
+
+    this.addParameter(this.edgeColorParam)
+    this.addParameter(this.pointColorParam)
   }
 }
 

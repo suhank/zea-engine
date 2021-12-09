@@ -1,10 +1,10 @@
-  precision highp float;
-  import 'GLSLUtils.glsl'
-  import 'drawItemTexture.glsl' 
-  import 'cutaways.glsl'
-  import 'gamma.glsl'
-  import 'materialparams.glsl'
-  import 'GLSLBits.glsl'
+precision highp float;
+import 'GLSLUtils.glsl'
+import 'drawItemTexture.glsl' 
+import 'cutaways.glsl'
+import 'gamma.glsl'
+import 'materialparams.glsl'
+import 'GLSLBits.glsl'
 
 
 /* VS Outputs */
@@ -138,6 +138,13 @@ void main(void) {
   }
   
 #if defined(DRAW_COLOR)
+#ifdef ENABLE_MULTI_DRAW
+  vec2 materialCoords = v_geomItemData.zw;
+#endif
+
+
+  if (geomType == 2) { // start 'TRIANGLES'
+
   // Cutaways
   if (testFlag(flags, GEOMITEM_FLAG_CUTAWAY)) {
     if (!gl_FrontFacing) {
@@ -149,6 +156,8 @@ void main(void) {
       return;
     }
   }
+
+  
 
   //////////////////////////////////////////////
   // Normals
@@ -167,9 +176,9 @@ void main(void) {
     viewVector = vec3(-cameraMatrix[2][0], -cameraMatrix[2][1], -cameraMatrix[2][2]);
     
   if (dot(normal, viewVector) < 0.0) {
-      normal = -normal;
-      // Note: this line can be used to debug inverted meshes.
-      //material.baseColor = vec3(1.0, 0.0, 0.0);
+    normal = -normal;
+    // Note: this line can be used to debug inverted meshes.
+    //material.baseColor = vec3(1.0, 0.0, 0.0);
   }
 
   //////////////////////////////////////////////
@@ -178,7 +187,6 @@ void main(void) {
   MaterialParams material;
 
 #ifdef ENABLE_MULTI_DRAW
-  vec2 materialCoords = v_geomItemData.zw;
   vec4 matValue0      = getMaterialValue(materialCoords, 0);
   vec4 matValue1      = getMaterialValue(materialCoords, 1);
   vec4 matValue2      = getMaterialValue(materialCoords, 2);
@@ -250,6 +258,24 @@ void main(void) {
   // fragColor = vec4(vec3(material.metallic), 1.0);;
   // fragColor = vec4(vec3(material.roughness), 1.0);;
   // fragColor = vec4(vec3(material.ambientOcclusion), 1.0);
+
+  } // end 'TRIANGLES'
+  else if (geomType == 1) { // start 'LINES'
+#ifdef ENABLE_MULTI_DRAW
+    vec4 edgeColor      = getMaterialValue(materialCoords, 3);
+#else 
+    vec4 edgeColor      = EdgeColor;
+#endif // ENABLE_MULTI_DRAW
+    fragColor = edgeColor;
+  } // end 'LINES'
+  else if (geomType == 0) { // start 'POINTS'
+#ifdef ENABLE_MULTI_DRAW
+    vec4 pointColor      = getMaterialValue(materialCoords, 4);
+#else 
+    vec4 pointColor      = PointColor;
+#endif // ENABLE_MULTI_DRAW
+    fragColor = pointColor;
+  }  // end 'POINTS'
   
 #ifdef DEBUG_GEOM_ID
   // ///////////////////////

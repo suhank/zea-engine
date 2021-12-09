@@ -59,7 +59,7 @@ class StandardSurfaceShader extends GLShader {
    * @return - The return value.
    */
   static getPackedMaterialData(material: Material): Float32Array {
-    const matData = new Float32Array(12) // TODO: no extra space needed right?
+    const matData = new Float32Array(20) // TODO: no extra space needed right?
 
     const baseColor = material.getParameter('BaseColor')!.value
     matData[0] = baseColor.r
@@ -74,6 +74,18 @@ class StandardSurfaceShader extends GLShader {
 
     matData[8] = material.getParameter('EmissiveStrength')!.value
     matData[9] = material.getParameter('Opacity')!.value
+
+    const edgeColor = material.getParameter('EdgeColor')!.value
+    matData[12] = edgeColor.r
+    matData[13] = edgeColor.g
+    matData[14] = edgeColor.b
+    matData[15] = edgeColor.a
+
+    const pointColor = material.getParameter('PointColor')!.value
+    matData[16] = pointColor.r
+    matData[17] = pointColor.g
+    matData[18] = pointColor.b
+    matData[19] = pointColor.a
 
     return matData
   }
