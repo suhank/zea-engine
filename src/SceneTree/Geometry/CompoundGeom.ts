@@ -154,9 +154,9 @@ class CompoundGeom extends BaseGeom {
     this.counts['TRIANGLES'] = numTriangleIndices
 
     const bytes = reader.loadUInt8()
-    if (bytes == 1) this.indices = reader.loadUInt8Array()
-    else if (bytes == 2) this.indices = reader.loadUInt16Array()
-    else if (bytes == 4) this.indices = reader.loadUInt32Array()
+    if (bytes == 1) this.indices = reader.loadUInt8Array(undefined, true)
+    else if (bytes == 2) this.indices = reader.loadUInt16Array(undefined, true)
+    else if (bytes == 4) this.indices = reader.loadUInt32Array(undefined, true)
     else {
       throw Error('indices undefined')
     }

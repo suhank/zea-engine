@@ -187,11 +187,10 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
             drawCounts[subGeom.type]++
           })
         } else {
-          drawCounts = geomBuffers.counts
-          // for (let key in geomBuffers.counts) {
-          //   if (geomBuffers.counts[key] > 0)
-          //     drawCounts[key] = 1
-          // }
+          // for non-shattered geoms, we just draw once for each element type per GeomItem.
+          for (let key in geomBuffers.counts) {
+            if (geomBuffers.counts[key] > 0) drawCounts[key] = 1
+          }
         }
         for (let key in drawCounts) {
           const drawCount = drawCounts[key]
@@ -223,11 +222,11 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
     let regen = false
     for (let key in this.allocators) {
       const allocator = this.allocators[key]
-      if (!this.drawIdsArrays[key] || allocator.reservedSpace > this.drawIdsArrays[key].length) {
-        this.drawIdsArrays[key] = new Float32Array(allocator.reservedSpace * 4) // RGBA pixels.
+      if (!this.drawElementCounts[key] || allocator.reservedSpace > this.drawElementCounts[key].length) {
+        if (this.drawElementCounts[key] && allocator.reservedSpace > this.drawElementCounts[key].length) regen = true
+        this.drawIdsArrays[key] = new Float32Array(allocator.reservedSpace * 4) // one RGBA pixel per drawn geometry.
         this.drawElementOffsets[key] = new Int32Array(allocator.reservedSpace)
         this.drawElementCounts[key] = new Int32Array(allocator.reservedSpace)
-        regen = true
       }
     }
     if (regen) {
@@ -287,11 +286,11 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
     const updateDrawIdsTexture = (key: string) => {
       const drawIdsArray = this.drawIdsArrays[key]
       let drawIdsTexture = this.drawIdsTextures[key]
-      const drawCount = this.allocators[key].allocatedSpace
+      const reservedSpaceDrawCount = this.allocators[key].reservedSpace
       const unit = renderstate.boundTextures++
       gl.activeTexture(gl.TEXTURE0 + unit)
 
-      const drawIdsTextureSize = MathFunctions.nextPow2(Math.ceil(Math.sqrt(drawCount))) * 2
+      const drawIdsTextureSize = MathFunctions.nextPow2(Math.ceil(Math.sqrt(reservedSpaceDrawCount)))
       if (!drawIdsTexture) {
         drawIdsTexture = new GLTexture2D(this.gl, {
           format: 'RGBA',
@@ -315,6 +314,8 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
         const height = 1
         const format = tex.getFormat()
         const type = tex.getType()
+
+        const drawCount = this.allocators[key].allocatedSpace
         const rows = Math.ceil((xoffset + drawCount) / texWidth)
 
         let consumed = 0
@@ -331,6 +332,9 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
           const x = consumed % texWidth
           const y = Math.floor(consumed / texWidth)
           const data = drawIdsArray.subarray(consumed * 4, (consumed + width) * 4)
+          if (data.length != width * 4) {
+            throw new Error('Invalid drawIds subarray :' + data.length + ' width:' + width)
+          }
           gl.texSubImage2D(gl.TEXTURE_2D, level, x, y, width, height, format, type, data)
           consumed += width
           remaining -= width
@@ -524,10 +528,14 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
         drawIdsTextures[key].bindToUniform(renderstate, drawIdsTexture)
       }
     }
+    this.renderer.glGeomLibrary.bind(renderstate)
 
+    const { geomType } = renderstate.unifs
     renderstate.bindViewports(unifs, () => {
       if (drawIdsArray['TRIANGLES']) {
         bindTex('TRIANGLES')
+
+        if (geomType) gl.uniform1i(geomType.location, 2)
 
         this.multiDrawMeshes(
           renderstate,
@@ -539,6 +547,9 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
       }
       if (drawIdsArray['LINES']) {
         bindTex('LINES')
+
+        if (geomType) gl.uniform1i(geomType.location, 1)
+
         this.multiDrawLines(
           renderstate,
           drawIdsArray['LINES'],
@@ -549,6 +560,9 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
       }
       if (drawIdsArray['POINTS']) {
         bindTex('POINTS')
+
+        if (geomType) gl.uniform1i(geomType.location, 0)
+
         this.multiDrawPoints(
           renderstate,
           drawIdsArray['POINTS'],
@@ -567,22 +581,7 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
     offsets: Int32Array,
     drawCount: number
   ) {
-    this.renderer.glGeomLibrary.bind(renderstate)
     const gl = this.gl
-
-    // enable stencil buffer test
-    gl.enable(gl.STENCIL_TEST)
-
-    // do it just for all mesh pixels
-    gl.stencilFunc(gl.ALWAYS, 1, 0xff)
-
-    // ... with no masking
-    gl.stencilMask(0xff)
-
-    // ... simply increment stencil buffer value for each draw call,
-    // (important, here we have
-    gl.stencilOp(gl.KEEP, gl.KEEP, gl.INCR)
-
     if (gl.multiDrawElements) {
       gl.multiDrawElements(gl.TRIANGLES, counts, 0, gl.UNSIGNED_INT, offsets, 0, drawCount)
     } else {
@@ -601,7 +600,6 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
     offsets: Int32Array,
     drawCount: number
   ) {
-    this.renderer.glGeomLibrary.bind(renderstate)
     const gl = this.gl
 
     // // don't rely on z-Buffer for line, disable depth check
@@ -663,7 +661,6 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
     offsets: Int32Array,
     drawCount: number
   ) {
-    this.renderer.glGeomLibrary.bind(renderstate)
     const gl = this.gl
     if (gl.multiDrawElements) {
       gl.multiDrawElements(gl.POINTS, counts, 0, gl.UNSIGNED_INT, offsets, 0, drawCount)

@@ -57,7 +57,6 @@ class InstanceItem extends TreeItem {
     // console.log("numTreeItems:", context.numTreeItems, " numGeomItems:", context.numGeomItems)
     this.srcTreePath = reader.loadStrArray()
     if (this.srcTreePath.length > 0) {
-      console.log('InstanceItem of:', this.srcTreePath)
       try {
         context.resolvePath(
           this.srcTreePath,
