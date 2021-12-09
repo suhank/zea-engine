@@ -219,7 +219,13 @@ class BinReader {
    */
   loadUInt8Array(size?: number, clone = false): Uint8Array {
     if (size == undefined) size = this.loadUInt32()
-    const result = new Uint8Array(this.__data, this.__byteOffset, size)
+    let result
+    if (clone) {
+      result = new Uint8Array(this.__data.slice(this.__byteOffset, this.__byteOffset + size))
+      if (result.length != size) console.log('broken')
+    } else {
+      result = new Uint8Array(this.__data, this.__byteOffset, size)
+    }
     this.__byteOffset += size
     return result
   }
@@ -245,7 +251,12 @@ class BinReader {
         this.__byteOffset += 2
       }
     } else {
-      result = new Uint16Array(this.__data, this.__byteOffset, size)
+      if (clone) {
+        result = new Uint16Array(this.__data.slice(this.__byteOffset, this.__byteOffset + size * 2))
+        if (result.length != size) console.log('broken')
+      } else {
+        result = new Uint16Array(this.__data, this.__byteOffset, size)
+      }
       this.__byteOffset += size * 2
     }
     return result
@@ -272,7 +283,12 @@ class BinReader {
         this.__byteOffset += 4
       }
     } else {
-      result = new Uint32Array(this.__data, this.__byteOffset, size)
+      if (clone) {
+        result = new Uint32Array(this.__data.slice(this.__byteOffset, this.__byteOffset + size * 4))
+        if (result.length != size) console.log('broken')
+      } else {
+        result = new Uint32Array(this.__data, this.__byteOffset, size)
+      }
       this.__byteOffset += size * 4
     }
     return result
@@ -299,7 +315,11 @@ class BinReader {
         this.__byteOffset += 4
       }
     } else {
-      result = new Float32Array(this.__data, this.__byteOffset, size)
+      if (clone) {
+        result = new Float32Array(this.__data.slice(this.__byteOffset, this.__byteOffset + size * 4))
+      } else {
+        result = new Float32Array(this.__data, this.__byteOffset, size)
+      }
       this.__byteOffset += size * 4
     }
     return result
