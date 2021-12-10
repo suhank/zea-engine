@@ -14,10 +14,8 @@ import { BinReader } from '../BinReader'
  * @extends BaseImage
  */
 class VLHImage extends BaseImage {
-  protected __exposure: number
-  protected __ambientLightFactor: number
-  protected __hdrTint: Color
-  protected __stream: boolean
+  exposure: number = 1.0
+  hdrTint: Color = new Color(1, 1, 1, 1)
   protected __data: Record<string, any> = {}
 
   /**
@@ -32,10 +30,6 @@ class VLHImage extends BaseImage {
       filepath = name
       this.setName(name.substring(name.lastIndexOf('/') + 1, name.lastIndexOf('.')))
     }
-    this.__exposure = 1.0
-    this.__ambientLightFactor = 0.0
-    this.__hdrTint = new Color(1, 1, 1, 1)
-    this.__stream = 'stream' in params ? params['stream'] : false
     this.type = 'FLOAT'
 
     if (filepath) {
@@ -135,7 +129,7 @@ class VLHImage extends BaseImage {
     const params = super.getParams()
     if (this.loaded) {
       params['data'] = this.__data
-      params['exposure'] = this.__exposure
+      params['exposure'] = this.exposure
     }
     return params
   }
@@ -146,7 +140,7 @@ class VLHImage extends BaseImage {
    * @param hdrTint - The hdrTint value.
    */
   setHDRTint(hdrTint: Color) {
-    this.__hdrTint = hdrTint
+    this.hdrTint = hdrTint
   }
 
   /**
@@ -155,7 +149,7 @@ class VLHImage extends BaseImage {
    * @return - The return value.
    */
   getHDRTint(): Color {
-    return this.__hdrTint
+    return this.hdrTint
   }
 
   // ////////////////////////////////////////

@@ -23,8 +23,6 @@ class FileImage extends BaseImage {
     super(name)
     this.type = 'UNSIGNED_BYTE'
     this.crossOrigin = 'anonymous'
-    this.loaded = false
-
     if (filePath && filePath != '') this.load(filePath)
   }
 

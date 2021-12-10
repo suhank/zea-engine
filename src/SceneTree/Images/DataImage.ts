@@ -12,7 +12,6 @@ import { BaseImage } from '../BaseImage'
  * @extends BaseImage
  */
 class DataImage extends BaseImage {
-  protected __loaded: boolean
   protected __data: Uint8Array | ImageData = new Uint8Array(4)
   /**
    * Create a data image.
@@ -20,13 +19,8 @@ class DataImage extends BaseImage {
    */
   constructor(name?: string) {
     super(name)
-
-    if (name == undefined) name = this.constructor.name
-    this.__name = name
     this.format = 'RGBA'
     this.type = 'UNSIGNED_BYTE'
-    this.__loaded = false
-
     // this.__data = new Uint8Array(4);
     this.width = 1
     this.height = 1
@@ -37,7 +31,7 @@ class DataImage extends BaseImage {
    * @return - `true` if bytes data is fully loaded, `false` otherwise.
    */
   isLoaded(): boolean {
-    return this.__loaded
+    return this.loaded
   }
 
   // TODO: video / webcam will return true.
@@ -62,8 +56,8 @@ class DataImage extends BaseImage {
     this.width = width
     this.height = height
     this.__data = data
-    if (!this.__loaded) {
-      this.__loaded = true
+    if (!this.loaded) {
+      this.loaded = true
       this.emit('loaded')
     } else this.emit('updated')
   }
