@@ -13,28 +13,19 @@ class BaseImage extends BaseItem {
   height: number = 0
   format: string = 'RGB'
   type: string = 'UNSIGNED_BYTE'
-  mipMapped: boolean = true
-
-  protected wrapS: string = 'REPEAT'
-  protected wrapT: string = 'REPEAT'
-  protected minFilter: string = 'LINEAR'
-  protected magFilter: string = 'LINEAR'
   loaded: boolean = false
+  mipMapped: boolean = true
+  wrapS: string = 'REPEAT'
+  wrapT: string = 'REPEAT'
+  minFilter: string = 'LINEAR'
+  magFilter: string = 'LINEAR'
+
   /**
    * Creates an instance of BaseImage.
    * @param name - name of the item
    */
   constructor(name?: string) {
     super(name)
-    this.width = 0
-    this.height = 0
-    this.format = 'RGB'
-    this.type = 'UNSIGNED_BYTE'
-    this.wrapS = 'CLAMP_TO_EDGE'
-    this.wrapT = 'CLAMP_TO_EDGE'
-    this.minFilter = 'LINEAR'
-    this.magFilter = 'LINEAR'
-
     this.on('parameterValueChanged', () => {
       this.emit('updated')
     })
