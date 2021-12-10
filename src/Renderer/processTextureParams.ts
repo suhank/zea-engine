@@ -32,8 +32,8 @@ const processTextureParams = function (gl: Record<any, any>, params: any) {
   processParam('type', gl.UNSIGNED_BYTE)
   processParam('minFilter', params.filter ? params.filter : gl.LINEAR)
   processParam('magFilter', params.filter ? params.filter : gl.LINEAR)
-  processParam('wrapS', params.wrap ? params.wrap : gl.CLAMP_TO_EDGE)
-  processParam('wrapT', params.wrap ? params.wrap : gl.CLAMP_TO_EDGE)
+  processParam('wrapS', params.wrapS ? params.wrapS : gl.REPEAT)
+  processParam('wrapT', params.wrapT ? params.wrapT : gl.REPEAT)
   processParam('flipY', false)
   processParam('mipMapped', false)
 
