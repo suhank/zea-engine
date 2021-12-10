@@ -228,8 +228,7 @@ For a high end VR experience, there are a range of options such as the HTC Vive 
 AR devices such as the microsoft Hololens is also supported by WebXR in the new Chromium Edge browser, enabling AR based apps to be build and deployed using only the web browser and Zea Engine.
 
 ## Mobile
-
-Support for mobile devices is improving as the browsers on those devices improve. Currently, Zea Engine supports mobile devices, but some rendering features may not work on all devices. Any browser that supports WebGL2 will be able to support Zea Engine. Check [here](https://caniuse.com/?search=webgl2) for an updated view of which browsers/browser versions support WebGL2.
+Any browser that supports WebGL2 will be able to support Zea Engine. Check [here](https://caniuse.com/?search=webgl2) for an updated view of which browsers/browser versions support WebGL2.
 
 ### iOS
 As of September 2021, iOS Safari browsers now supports WebGL2. 
@@ -241,9 +240,7 @@ Android devices provide great support for WebGL through the installed chrome bro
 
 The latest Microsoft surface hardware runs a full version of Windows 10 and so provide excellent support for Zea Engine and application built with it.
 
-## Class Hierarchy
 
-![renderer-class-hierarchy](/img/misc/renderer-class-hierarchy.svg)
 
 ## Summary
 
