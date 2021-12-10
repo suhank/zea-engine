@@ -19,7 +19,7 @@ Create a scene.
 
 #### Defined in
 
-[SceneTree/Scene.ts:34](https://github.com/ZeaInc/zea-engine/blob/8dadca029/src/SceneTree/Scene.ts#L34)
+[SceneTree/Scene.ts:34](https://github.com/ZeaInc/zea-engine/blob/ad29d1184/src/SceneTree/Scene.ts#L34)
 
 ## Properties
 
@@ -31,7 +31,7 @@ Create a scene.
 
 #### Defined in
 
-[SceneTree/Scene.ts:22](https://github.com/ZeaInc/zea-engine/blob/8dadca029/src/SceneTree/Scene.ts#L22)
+[SceneTree/Scene.ts:22](https://github.com/ZeaInc/zea-engine/blob/ad29d1184/src/SceneTree/Scene.ts#L22)
 
 ___
 
@@ -43,7 +43,7 @@ ___
 
 #### Defined in
 
-[SceneTree/Scene.ts:27](https://github.com/ZeaInc/zea-engine/blob/8dadca029/src/SceneTree/Scene.ts#L27)
+[SceneTree/Scene.ts:27](https://github.com/ZeaInc/zea-engine/blob/ad29d1184/src/SceneTree/Scene.ts#L27)
 
 ___
 
@@ -55,7 +55,7 @@ ___
 
 #### Defined in
 
-[SceneTree/Scene.ts:17](https://github.com/ZeaInc/zea-engine/blob/8dadca029/src/SceneTree/Scene.ts#L17)
+[SceneTree/Scene.ts:17](https://github.com/ZeaInc/zea-engine/blob/ad29d1184/src/SceneTree/Scene.ts#L17)
 
 ___
 
@@ -65,7 +65,7 @@ ___
 
 #### Defined in
 
-[SceneTree/Scene.ts:29](https://github.com/ZeaInc/zea-engine/blob/8dadca029/src/SceneTree/Scene.ts#L29)
+[SceneTree/Scene.ts:29](https://github.com/ZeaInc/zea-engine/blob/ad29d1184/src/SceneTree/Scene.ts#L29)
 
 ## Methods
 
@@ -83,7 +83,7 @@ Returns resourceLoader object set on class initialization.
 
 #### Defined in
 
-[SceneTree/Scene.ts:50](https://github.com/ZeaInc/zea-engine/blob/8dadca029/src/SceneTree/Scene.ts#L50)
+[SceneTree/Scene.ts:50](https://github.com/ZeaInc/zea-engine/blob/ad29d1184/src/SceneTree/Scene.ts#L50)
 
 ___
 
@@ -101,7 +101,7 @@ Returns the scene's root item(`TreeItem`) that owns every item in the scene.
 
 #### Defined in
 
-[SceneTree/Scene.ts:41](https://github.com/ZeaInc/zea-engine/blob/8dadca029/src/SceneTree/Scene.ts#L41)
+[SceneTree/Scene.ts:41](https://github.com/ZeaInc/zea-engine/blob/ad29d1184/src/SceneTree/Scene.ts#L41)
 
 ___
 
@@ -123,7 +123,7 @@ Sets Environment Map with the BaseImage you'd like to display in your scene back
 
 #### Defined in
 
-[SceneTree/Scene.ts:59](https://github.com/ZeaInc/zea-engine/blob/8dadca029/src/SceneTree/Scene.ts#L59)
+[SceneTree/Scene.ts:59](https://github.com/ZeaInc/zea-engine/blob/ad29d1184/src/SceneTree/Scene.ts#L59)
 
 ___
 
@@ -153,5 +153,5 @@ and highlights the X and Y axes with Red and Green lines.
 
 #### Defined in
 
-[SceneTree/Scene.ts:75](https://github.com/ZeaInc/zea-engine/blob/8dadca029/src/SceneTree/Scene.ts#L75)
+[SceneTree/Scene.ts:75](https://github.com/ZeaInc/zea-engine/blob/ad29d1184/src/SceneTree/Scene.ts#L75)
 
