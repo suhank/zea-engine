@@ -33,7 +33,7 @@ Create an BaseEvent.
 
 #### Defined in
 
-[Utilities/Events/VRViewChangedEvent.ts:11](https://github.com/ZeaInc/zea-engine/blob/ad29d1184/src/Utilities/Events/VRViewChangedEvent.ts#L11)
+[Utilities/Events/VRViewChangedEvent.ts:11](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/Events/VRViewChangedEvent.ts#L11)
 
 ## Properties
 
@@ -43,7 +43,7 @@ Create an BaseEvent.
 
 #### Defined in
 
-[Utilities/Events/VRViewChangedEvent.ts:8](https://github.com/ZeaInc/zea-engine/blob/ad29d1184/src/Utilities/Events/VRViewChangedEvent.ts#L8)
+[Utilities/Events/VRViewChangedEvent.ts:8](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/Events/VRViewChangedEvent.ts#L8)
 
 ___
 
@@ -53,7 +53,7 @@ ___
 
 #### Defined in
 
-[Utilities/Events/VRViewChangedEvent.ts:7](https://github.com/ZeaInc/zea-engine/blob/ad29d1184/src/Utilities/Events/VRViewChangedEvent.ts#L7)
+[Utilities/Events/VRViewChangedEvent.ts:7](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/Events/VRViewChangedEvent.ts#L7)
 
 ___
 
@@ -67,7 +67,7 @@ ___
 
 #### Defined in
 
-[Utilities/Events/ViewChangedEvent.ts:6](https://github.com/ZeaInc/zea-engine/blob/ad29d1184/src/Utilities/Events/ViewChangedEvent.ts#L6)
+[Utilities/Events/ViewChangedEvent.ts:6](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/Events/ViewChangedEvent.ts#L6)
 
 ___
 
@@ -81,7 +81,7 @@ ___
 
 #### Defined in
 
-[Utilities/Events/ViewChangedEvent.ts:7](https://github.com/ZeaInc/zea-engine/blob/ad29d1184/src/Utilities/Events/ViewChangedEvent.ts#L7)
+[Utilities/Events/ViewChangedEvent.ts:7](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/Events/ViewChangedEvent.ts#L7)
 
 ___
 
@@ -95,7 +95,7 @@ ___
 
 #### Defined in
 
-[Utilities/Events/ViewChangedEvent.ts:8](https://github.com/ZeaInc/zea-engine/blob/ad29d1184/src/Utilities/Events/ViewChangedEvent.ts#L8)
+[Utilities/Events/ViewChangedEvent.ts:8](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/Events/ViewChangedEvent.ts#L8)
 
 ___
 
@@ -105,5 +105,5 @@ ___
 
 #### Defined in
 
-[Utilities/Events/VRViewChangedEvent.ts:9](https://github.com/ZeaInc/zea-engine/blob/ad29d1184/src/Utilities/Events/VRViewChangedEvent.ts#L9)
+[Utilities/Events/VRViewChangedEvent.ts:9](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/Events/VRViewChangedEvent.ts#L9)
 

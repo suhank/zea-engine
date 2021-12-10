@@ -42,7 +42,7 @@ Create a base proxy.
 
 #### Defined in
 
-[SceneTree/Geometry/GeomProxies.ts:19](https://github.com/ZeaInc/zea-engine/blob/ad29d1184/src/SceneTree/Geometry/GeomProxies.ts#L19)
+[SceneTree/Geometry/GeomProxies.ts:19](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/Geometry/GeomProxies.ts#L19)
 
 ## Properties
 
@@ -52,7 +52,7 @@ Create a base proxy.
 
 #### Defined in
 
-[SceneTree/Geometry/GeomProxies.ts:11](https://github.com/ZeaInc/zea-engine/blob/ad29d1184/src/SceneTree/Geometry/GeomProxies.ts#L11)
+[SceneTree/Geometry/GeomProxies.ts:11](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/Geometry/GeomProxies.ts#L11)
 
 ___
 
@@ -66,7 +66,7 @@ ___
 
 #### Defined in
 
-[Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/ad29d1184/src/Utilities/BaseClass.ts#L11)
+[Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/BaseClass.ts#L11)
 
 ___
 
@@ -76,7 +76,7 @@ ___
 
 #### Defined in
 
-[SceneTree/Geometry/GeomProxies.ts:13](https://github.com/ZeaInc/zea-engine/blob/ad29d1184/src/SceneTree/Geometry/GeomProxies.ts#L13)
+[SceneTree/Geometry/GeomProxies.ts:13](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/Geometry/GeomProxies.ts#L13)
 
 ___
 
@@ -86,7 +86,7 @@ ___
 
 #### Defined in
 
-[SceneTree/Geometry/GeomProxies.ts:12](https://github.com/ZeaInc/zea-engine/blob/ad29d1184/src/SceneTree/Geometry/GeomProxies.ts#L12)
+[SceneTree/Geometry/GeomProxies.ts:12](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/Geometry/GeomProxies.ts#L12)
 
 ___
 
@@ -100,7 +100,7 @@ ___
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/ad29d1184/src/Utilities/EventEmitter.ts#L26)
+[Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/EventEmitter.ts#L26)
 
 ___
 
@@ -110,7 +110,7 @@ ___
 
 #### Defined in
 
-[SceneTree/Geometry/GeomProxies.ts:10](https://github.com/ZeaInc/zea-engine/blob/ad29d1184/src/SceneTree/Geometry/GeomProxies.ts#L10)
+[SceneTree/Geometry/GeomProxies.ts:10](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/Geometry/GeomProxies.ts#L10)
 
 ## Methods
 
@@ -132,7 +132,7 @@ Removes metadata for a given key.
 
 #### Defined in
 
-[SceneTree/Geometry/GeomProxies.ts:99](https://github.com/ZeaInc/zea-engine/blob/ad29d1184/src/SceneTree/Geometry/GeomProxies.ts#L99)
+[SceneTree/Geometry/GeomProxies.ts:99](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/Geometry/GeomProxies.ts#L99)
 
 ___
 
@@ -159,7 +159,7 @@ Triggers all listener functions in an event.
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/ad29d1184/src/Utilities/EventEmitter.ts#L154)
+[Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/EventEmitter.ts#L154)
 
 ___
 
@@ -177,7 +177,7 @@ The genBuffers method.
 
 #### Defined in
 
-[SceneTree/Geometry/GeomProxies.ts:60](https://github.com/ZeaInc/zea-engine/blob/ad29d1184/src/SceneTree/Geometry/GeomProxies.ts#L60)
+[SceneTree/Geometry/GeomProxies.ts:60](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/Geometry/GeomProxies.ts#L60)
 
 ___
 
@@ -195,7 +195,7 @@ Returns the bounding box for geometry.
 
 #### Defined in
 
-[SceneTree/Geometry/GeomProxies.ts:52](https://github.com/ZeaInc/zea-engine/blob/ad29d1184/src/SceneTree/Geometry/GeomProxies.ts#L52)
+[SceneTree/Geometry/GeomProxies.ts:52](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/Geometry/GeomProxies.ts#L52)
 
 ___
 
@@ -217,7 +217,7 @@ Returns the unmangled name of the class.
 
 #### Defined in
 
-[Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/ad29d1184/src/Utilities/BaseClass.ts#L33)
+[Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/BaseClass.ts#L33)
 
 ___
 
@@ -241,7 +241,7 @@ Returns the unique id of the object.
 
 #### Defined in
 
-[Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/ad29d1184/src/Utilities/BaseClass.ts#L25)
+[Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/BaseClass.ts#L25)
 
 ___
 
@@ -265,7 +265,7 @@ The getMetadata method.
 
 #### Defined in
 
-[SceneTree/Geometry/GeomProxies.ts:72](https://github.com/ZeaInc/zea-engine/blob/ad29d1184/src/SceneTree/Geometry/GeomProxies.ts#L72)
+[SceneTree/Geometry/GeomProxies.ts:72](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/Geometry/GeomProxies.ts#L72)
 
 ___
 
@@ -283,7 +283,7 @@ Returns the number of vertex attributes.
 
 #### Defined in
 
-[SceneTree/Geometry/GeomProxies.ts:44](https://github.com/ZeaInc/zea-engine/blob/ad29d1184/src/SceneTree/Geometry/GeomProxies.ts#L44)
+[SceneTree/Geometry/GeomProxies.ts:44](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/Geometry/GeomProxies.ts#L44)
 
 ___
 
@@ -307,7 +307,7 @@ The hasMetadata method.
 
 #### Defined in
 
-[SceneTree/Geometry/GeomProxies.ts:81](https://github.com/ZeaInc/zea-engine/blob/ad29d1184/src/SceneTree/Geometry/GeomProxies.ts#L81)
+[SceneTree/Geometry/GeomProxies.ts:81](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/Geometry/GeomProxies.ts#L81)
 
 ___
 
@@ -334,7 +334,7 @@ Removes a listener function from the specified event, using either the function 
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/ad29d1184/src/Utilities/EventEmitter.ts#L97)
+[Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/EventEmitter.ts#L97)
 
 ___
 
@@ -363,7 +363,7 @@ Adds a listener function for a given event name.
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/ad29d1184/src/Utilities/EventEmitter.ts#L44)
+[Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/EventEmitter.ts#L44)
 
 ___
 
@@ -401,7 +401,7 @@ asset.once('loaded', () => {
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/ad29d1184/src/Utilities/EventEmitter.ts#L82)
+[Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/EventEmitter.ts#L82)
 
 ___
 
@@ -428,7 +428,7 @@ remove listener by ID returned from #on
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/ad29d1184/src/Utilities/EventEmitter.ts#L134)
+[Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/EventEmitter.ts#L134)
 
 ___
 
@@ -451,5 +451,5 @@ The setMetadata method.
 
 #### Defined in
 
-[SceneTree/Geometry/GeomProxies.ts:90](https://github.com/ZeaInc/zea-engine/blob/ad29d1184/src/SceneTree/Geometry/GeomProxies.ts#L90)
+[SceneTree/Geometry/GeomProxies.ts:90](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/Geometry/GeomProxies.ts#L90)
 

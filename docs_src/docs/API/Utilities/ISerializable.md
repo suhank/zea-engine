@@ -32,7 +32,7 @@ The fromJSON method takes a JSON and deserializes into an instance of this type.
 
 #### Defined in
 
-[Utilities/ISerializable.ts:18](https://github.com/ZeaInc/zea-engine/blob/ad29d1184/src/Utilities/ISerializable.ts#L18)
+[Utilities/ISerializable.ts:18](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/ISerializable.ts#L18)
 
 ___
 
@@ -57,5 +57,5 @@ It can be used for persistence, data transfer, etc.
 
 #### Defined in
 
-[Utilities/ISerializable.ts:10](https://github.com/ZeaInc/zea-engine/blob/ad29d1184/src/Utilities/ISerializable.ts#L10)
+[Utilities/ISerializable.ts:10](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/ISerializable.ts#L10)
 

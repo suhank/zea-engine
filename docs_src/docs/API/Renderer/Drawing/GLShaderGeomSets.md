@@ -37,7 +37,7 @@ Create a GL shader material.
 
 #### Defined in
 
-[Renderer/Drawing/GLShaderGeomSets.ts:31](https://github.com/ZeaInc/zea-engine/blob/ad29d1184/src/Renderer/Drawing/GLShaderGeomSets.ts#L31)
+[Renderer/Drawing/GLShaderGeomSets.ts:31](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/Drawing/GLShaderGeomSets.ts#L31)
 
 ## Properties
 
@@ -51,7 +51,7 @@ Create a GL shader material.
 
 #### Defined in
 
-[Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/ad29d1184/src/Utilities/BaseClass.ts#L11)
+[Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/BaseClass.ts#L11)
 
 ___
 
@@ -61,7 +61,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLShaderGeomSets.ts:16](https://github.com/ZeaInc/zea-engine/blob/ad29d1184/src/Renderer/Drawing/GLShaderGeomSets.ts#L16)
+[Renderer/Drawing/GLShaderGeomSets.ts:16](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/Drawing/GLShaderGeomSets.ts#L16)
 
 ___
 
@@ -71,7 +71,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLShaderGeomSets.ts:18](https://github.com/ZeaInc/zea-engine/blob/ad29d1184/src/Renderer/Drawing/GLShaderGeomSets.ts#L18)
+[Renderer/Drawing/GLShaderGeomSets.ts:18](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/Drawing/GLShaderGeomSets.ts#L18)
 
 ___
 
@@ -81,7 +81,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLShaderGeomSets.ts:23](https://github.com/ZeaInc/zea-engine/blob/ad29d1184/src/Renderer/Drawing/GLShaderGeomSets.ts#L23)
+[Renderer/Drawing/GLShaderGeomSets.ts:23](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/Drawing/GLShaderGeomSets.ts#L23)
 
 ___
 
@@ -91,7 +91,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLShaderGeomSets.ts:20](https://github.com/ZeaInc/zea-engine/blob/ad29d1184/src/Renderer/Drawing/GLShaderGeomSets.ts#L20)
+[Renderer/Drawing/GLShaderGeomSets.ts:20](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/Drawing/GLShaderGeomSets.ts#L20)
 
 ___
 
@@ -101,7 +101,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLShaderGeomSets.ts:19](https://github.com/ZeaInc/zea-engine/blob/ad29d1184/src/Renderer/Drawing/GLShaderGeomSets.ts#L19)
+[Renderer/Drawing/GLShaderGeomSets.ts:19](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/Drawing/GLShaderGeomSets.ts#L19)
 
 ___
 
@@ -111,7 +111,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLShaderGeomSets.ts:24](https://github.com/ZeaInc/zea-engine/blob/ad29d1184/src/Renderer/Drawing/GLShaderGeomSets.ts#L24)
+[Renderer/Drawing/GLShaderGeomSets.ts:24](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/Drawing/GLShaderGeomSets.ts#L24)
 
 ___
 
@@ -121,7 +121,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLShaderGeomSets.ts:17](https://github.com/ZeaInc/zea-engine/blob/ad29d1184/src/Renderer/Drawing/GLShaderGeomSets.ts#L17)
+[Renderer/Drawing/GLShaderGeomSets.ts:17](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/Drawing/GLShaderGeomSets.ts#L17)
 
 ___
 
@@ -131,7 +131,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLShaderGeomSets.ts:22](https://github.com/ZeaInc/zea-engine/blob/ad29d1184/src/Renderer/Drawing/GLShaderGeomSets.ts#L22)
+[Renderer/Drawing/GLShaderGeomSets.ts:22](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/Drawing/GLShaderGeomSets.ts#L22)
 
 ___
 
@@ -145,7 +145,7 @@ ___
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/ad29d1184/src/Utilities/EventEmitter.ts#L26)
+[Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/EventEmitter.ts#L26)
 
 ___
 
@@ -155,7 +155,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLShaderGeomSets.ts:15](https://github.com/ZeaInc/zea-engine/blob/ad29d1184/src/Renderer/Drawing/GLShaderGeomSets.ts#L15)
+[Renderer/Drawing/GLShaderGeomSets.ts:15](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/Drawing/GLShaderGeomSets.ts#L15)
 
 ## Methods
 
@@ -177,7 +177,7 @@ The addGLGeomItem method.
 
 #### Defined in
 
-[Renderer/Drawing/GLShaderGeomSets.ts:80](https://github.com/ZeaInc/zea-engine/blob/ad29d1184/src/Renderer/Drawing/GLShaderGeomSets.ts#L80)
+[Renderer/Drawing/GLShaderGeomSets.ts:80](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/Drawing/GLShaderGeomSets.ts#L80)
 
 ___
 
@@ -201,7 +201,7 @@ Binds one of its shaders for rendering, and also the other textures and values n
 
 #### Defined in
 
-[Renderer/Drawing/GLShaderGeomSets.ts:126](https://github.com/ZeaInc/zea-engine/blob/ad29d1184/src/Renderer/Drawing/GLShaderGeomSets.ts#L126)
+[Renderer/Drawing/GLShaderGeomSets.ts:126](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/Drawing/GLShaderGeomSets.ts#L126)
 
 ___
 
@@ -223,7 +223,7 @@ Draws all elements, binding the shader and continuing into the GLGLGeomSetGeomIt
 
 #### Defined in
 
-[Renderer/Drawing/GLShaderGeomSets.ts:151](https://github.com/ZeaInc/zea-engine/blob/ad29d1184/src/Renderer/Drawing/GLShaderGeomSets.ts#L151)
+[Renderer/Drawing/GLShaderGeomSets.ts:151](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/Drawing/GLShaderGeomSets.ts#L151)
 
 ___
 
@@ -245,7 +245,7 @@ The drawGeomData method.
 
 #### Defined in
 
-[Renderer/Drawing/GLShaderGeomSets.ts:179](https://github.com/ZeaInc/zea-engine/blob/ad29d1184/src/Renderer/Drawing/GLShaderGeomSets.ts#L179)
+[Renderer/Drawing/GLShaderGeomSets.ts:179](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/Drawing/GLShaderGeomSets.ts#L179)
 
 ___
 
@@ -267,7 +267,7 @@ The drawHighlightedGeoms method.
 
 #### Defined in
 
-[Renderer/Drawing/GLShaderGeomSets.ts:165](https://github.com/ZeaInc/zea-engine/blob/ad29d1184/src/Renderer/Drawing/GLShaderGeomSets.ts#L165)
+[Renderer/Drawing/GLShaderGeomSets.ts:165](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/Drawing/GLShaderGeomSets.ts#L165)
 
 ___
 
@@ -294,7 +294,7 @@ Triggers all listener functions in an event.
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/ad29d1184/src/Utilities/EventEmitter.ts#L154)
+[Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/EventEmitter.ts#L154)
 
 ___
 
@@ -316,7 +316,7 @@ Returns the unmangled name of the class.
 
 #### Defined in
 
-[Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/ad29d1184/src/Utilities/BaseClass.ts#L33)
+[Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/BaseClass.ts#L33)
 
 ___
 
@@ -340,7 +340,7 @@ Returns the unique id of the object.
 
 #### Defined in
 
-[Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/ad29d1184/src/Utilities/BaseClass.ts#L25)
+[Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/BaseClass.ts#L25)
 
 ___
 
@@ -364,7 +364,7 @@ Given a GeomItem, constructs the GLGeomItemSet that handles drawing that type of
 
 #### Defined in
 
-[Renderer/Drawing/GLShaderGeomSets.ts:52](https://github.com/ZeaInc/zea-engine/blob/ad29d1184/src/Renderer/Drawing/GLShaderGeomSets.ts#L52)
+[Renderer/Drawing/GLShaderGeomSets.ts:52](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/Drawing/GLShaderGeomSets.ts#L52)
 
 ___
 
@@ -391,7 +391,7 @@ Removes a listener function from the specified event, using either the function 
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/ad29d1184/src/Utilities/EventEmitter.ts#L97)
+[Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/EventEmitter.ts#L97)
 
 ___
 
@@ -420,7 +420,7 @@ Adds a listener function for a given event name.
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/ad29d1184/src/Utilities/EventEmitter.ts#L44)
+[Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/EventEmitter.ts#L44)
 
 ___
 
@@ -458,7 +458,7 @@ asset.once('loaded', () => {
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/ad29d1184/src/Utilities/EventEmitter.ts#L82)
+[Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/EventEmitter.ts#L82)
 
 ___
 
@@ -480,7 +480,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLShaderGeomSets.ts:104](https://github.com/ZeaInc/zea-engine/blob/ad29d1184/src/Renderer/Drawing/GLShaderGeomSets.ts#L104)
+[Renderer/Drawing/GLShaderGeomSets.ts:104](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/Drawing/GLShaderGeomSets.ts#L104)
 
 ___
 
@@ -507,7 +507,7 @@ remove listener by ID returned from #on
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/ad29d1184/src/Utilities/EventEmitter.ts#L134)
+[Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/EventEmitter.ts#L134)
 
 ___
 
@@ -529,5 +529,5 @@ Sorts the drawn items in order furthest to nearest when rendering transparent ob
 
 #### Defined in
 
-[Renderer/Drawing/GLShaderGeomSets.ts:202](https://github.com/ZeaInc/zea-engine/blob/ad29d1184/src/Renderer/Drawing/GLShaderGeomSets.ts#L202)
+[Renderer/Drawing/GLShaderGeomSets.ts:202](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/Drawing/GLShaderGeomSets.ts#L202)
 
