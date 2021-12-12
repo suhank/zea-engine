@@ -21,8 +21,8 @@
           'header header header'
           'nav main right'
           'footer footer footer';
-        grid-template-columns: 5px 1fr 5px;
-        grid-template-rows: 50px 1fr 20px;
+        grid-template-columns: 2px 1fr 2px;
+        grid-template-rows: 50px 1fr 5px;
       }
 
       header {
@@ -38,6 +38,20 @@
         align-items: center;
         padding: 0.5em;
         gap: 1em;
+      }
+      .stats-display {
+        position: fixed;
+        bottom: 25px;
+        left: 10px;
+        color: #333333;
+        font-size: 24px;
+      }
+      .fps-display {
+        position: fixed;
+        bottom: 10px;
+        right: 10px;
+        color: #333333;
+        font-size: 45px;
       }
     </style>
     <!-- <script src="https://websocket-staging.zea.live/socket.io/socket.io.js"></script>
@@ -68,7 +82,13 @@
         CameraManipulator,
         GLBoundingBoxPass,
         AssetLoadContext,
+        GeomItem,
+        MeshProxy,
+        CompoundGeomProxy,
+        CADBody,
       } = zeaEngine
+
+      const { CADAsset, CADPart } = window.zeaCad
 
       const canvas = document.getElementById('viewport')
 
@@ -84,7 +104,9 @@
       envMap.load('data/StudioG.zenv')
       scene.setEnvMap(envMap)
 
-      scene.setupGrid(1.0, 10, new Color(0.2, 0.2, 0.2))
+      globalThis.renderer = renderer
+
+      // scene.setupGrid(1.0, 10, new Color(0.2, 0.2, 0.2))
 
       canvas.addEventListener(
         'webglcontextlost',
@@ -223,19 +245,48 @@
       /** TOOL MANAGER END */
 
       /** LOAD ASSETS START */
-      const { CADAsset, CADBody } = window.zeaCad
 
       const loadZCADAsset = (url, filename) => {
+        const start = performance.now()
+        let treeLoadTime = 0
+        let stats = document.getElementById('stats')
+        stats.textContent = `Loading...`
         const asset = new CADAsset()
         const context = new AssetLoadContext()
-        context.units = 'millimeters'
+        context.units = 'meters'
         context.camera = context
         asset.load(url, context).then(() => {
+          treeLoadTime = ((performance.now() - start) / 1000).toFixed(2)
+          stats.textContent = `Load Time Tree: ${treeLoadTime}`
           renderer.frameAll()
         })
         asset.getGeometryLibrary().on('loaded', () => {
+          const modelLoadTime = ((performance.now() - start) / 1000).toFixed(2)
+          stats.textContent = `Load Time Tree: ${treeLoadTime} \n All: ${modelLoadTime}`
+
+          let parts = 0
+          let bodies = 0
+          let triangles = 0
+          asset.traverse((item) => {
+            if (item instanceof CADPart) {
+              parts++
+            } else if (item instanceof CADBody) {
+              bodies++
+              const geom = item.geomParam.value
+              if (geom instanceof MeshProxy) {
+                triangles += geom.__buffers.indices ? geom.getNumTriangles() : geom.__buffers.numVertices / 3
+              } else if (geom instanceof CompoundGeomProxy) {
+                triangles += geom.getNumTriangles()
+              }
+            }
+          })
+          console.log('parts:' + parts + ' bodies:' + bodies + ' triangles:', triangles)
+
           postMessage('done-loading')
         })
+        const xfo = new Xfo()
+        xfo.ori.setFromAxisAndAngle(new Vec3(1, 0, 0), Math.PI * 0.5)
+        asset.globalXfoParam.value = xfo
         scene.getRoot().addChild(asset)
         return asset
       }
@@ -295,8 +346,8 @@
       }
       /** COLLAB END */
 
-      const postMessage = (msg) => {
-        console.log(msg)
+      const postMessage = (msg, arg) => {
+        console.log(msg, arg)
         window.postMessage(msg)
       }
 
@@ -317,6 +368,24 @@
 
       window.addEventListener('message', handleMessage, false)
       // }}}
+
+      // //////////////////////////////////////
+      // Setup FPS Counter
+      let frameCounter = 0
+      let fps = 0
+      renderer.on('redrawOccurred', () => {
+        frameCounter++
+      })
+
+      const fpsElement = document.getElementById('fps')
+      setInterval(() => {
+        if (fps != frameCounter * 2) {
+          fps = frameCounter * 2
+          fpsElement.textContent = `FPS: ${fps}`
+        }
+        frameCounter = 0
+      }, 500)
+      // renderer.startContinuousDrawing()
     </script>
   </head>
   <body class="bg-blue-100 h-full">
@@ -325,6 +394,8 @@
       <nav class="border border-blue-400 flex justify-center items-center">nav</nav>
       <main>
         <canvas id="viewport"></canvas>
+        <div class="stats-display" id="stats"></div>
+        <div class="fps-display" id="fps"></div>
       </main>
       <aside class="border border-blue-400 flex justify-center items-center"></aside>
       <footer class="border border-blue-400 flex justify-center items-center"></footer>
