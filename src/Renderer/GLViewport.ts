@@ -642,7 +642,7 @@ class GLViewport extends GLBaseViewport {
 
     if (event.getCapture()) {
       event.getCapture().onPointerUp(event)
-      if (!event.propagating) return
+      return
     }
 
     if (event.intersectionData != undefined) {
@@ -689,7 +689,7 @@ class GLViewport extends GLBaseViewport {
     // the geom under the pointer. e.g. the CameraManipulator during a drag.
     if (event.getCapture()) {
       event.getCapture().onPointerMove(event)
-      if (!event.propagating) return
+      return
     }
 
     event.intersectionData = this.getGeomDataAtPos(event.pointerPos, event.pointerRay)
@@ -873,11 +873,17 @@ class GLViewport extends GLBaseViewport {
     // Turn this on to debug the geom data buffer.
     if (this.debugGeomShader) {
       this.renderGeomDataFbo()
+      // Note: renderGeomDataFbo would have bound other shaders.
+      // and the renderstate used above is no blonger valid. Reset.
+      const renderstate: ColorRenderState = <ColorRenderState>{}
       const screenQuad = this.__renderer.screenQuad!
       screenQuad.bindShader(renderstate)
       screenQuad.draw(renderstate, this.__geomDataBuffer, new Vec2(0, 0), new Vec2(1, 1))
     }
     if (this.debugHighlightedGeomsBuffer) {
+      // Note: renderGeomDataFbo would have bound other shaders.
+      // and the renderstate used above is no blonger valid. Reset.
+      const renderstate: ColorRenderState = <ColorRenderState>{}
       const screenQuad = this.__renderer.screenQuad!
       screenQuad.bindShader(renderstate)
       screenQuad.draw(renderstate, this.highlightedGeomsBuffer, new Vec2(0, 0), new Vec2(1, 1))

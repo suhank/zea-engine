@@ -139,6 +139,7 @@ class GLMaterialGeomItemSets extends EventEmitter {
       const glGeomItemSet = this.glGeomItemSets[key]
       glGeomItemSet.draw(renderstate)
     }
+    this.glMaterial.unbind(renderstate)
   }
 
   /**
@@ -151,6 +152,7 @@ class GLMaterialGeomItemSets extends EventEmitter {
       const glGeomItemSet = this.glGeomItemSets[key]
       glGeomItemSet.drawHighlighted(renderstate)
     }
+    this.glMaterial.unbind(renderstate)
   }
 
   /**
@@ -163,6 +165,7 @@ class GLMaterialGeomItemSets extends EventEmitter {
       const glGeomItemSet = this.glGeomItemSets[key]
       glGeomItemSet.draw(renderstate)
     }
+    this.glMaterial.unbind(renderstate)
   }
 }
 
