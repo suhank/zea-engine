@@ -58,10 +58,7 @@ class VRViewport extends GLBaseViewport {
 
   protected __refSpace: any
 
-  protected capturedItem: any
   protected stroke: any
-
-  protected capturedElement?: TreeItem
   protected __projectionMatrices: Array<Mat4> = []
 
   protected __hmdCanvasSize: any
@@ -559,10 +556,9 @@ class VRViewport extends GLBaseViewport {
     // Prepare the pointerMove event.
     const event = new XRPoseEvent(this, viewXfo, this.controllers)
     this.updateControllers(xrFrame, event)
-    if (this.capturedElement && event.propagating) {
-      this.capturedElement.onPointerMove(event)
-    }
-    if (this.manipulator && event.propagating) {
+    if (event.getCapture() && event.propagating) {
+      event.getCapture().onPointerMove(event)
+    } else if (this.manipulator && event.propagating) {
       this.manipulator.onPointerMove(event)
     }
 
@@ -621,18 +617,18 @@ class VRViewport extends GLBaseViewport {
 
     // //////////////////////////////////////
 
-    if (this.capturedItem) {
-      this.capturedItem.onPointerDown(event)
+    if (event.getCapture()) {
+      event.getCapture().onPointerDown(event)
       return
     }
 
     if (event.intersectionData != undefined) {
       event.intersectionData.geomItem.onPointerDown(event)
-      if (!event.propagating || this.capturedItem) return
+      if (!event.propagating) return
     }
 
     this.emit('pointerDown', event)
-    if (!event.propagating || this.capturedItem) return
+    if (!event.propagating) return
 
     if (this.manipulator) {
       this.manipulator.onPointerDown(event)
@@ -648,8 +644,8 @@ class VRViewport extends GLBaseViewport {
     this.controllerPointerDownTime[event.controller.id] = 0
     event.pointerRay = event.controller.pointerRay
 
-    if (this.capturedItem) {
-      this.capturedItem.onPointerUp(event)
+    if (event.getCapture()) {
+      event.getCapture().onPointerUp(event)
       return
     }
 

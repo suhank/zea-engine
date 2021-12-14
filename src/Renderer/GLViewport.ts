@@ -642,7 +642,7 @@ class GLViewport extends GLBaseViewport {
 
     if (event.getCapture()) {
       event.getCapture().onPointerUp(event)
-      if (!event.propagating) return
+      return
     }
 
     if (event.intersectionData != undefined) {
@@ -689,7 +689,7 @@ class GLViewport extends GLBaseViewport {
     // the geom under the pointer. e.g. the CameraManipulator during a drag.
     if (event.getCapture()) {
       event.getCapture().onPointerMove(event)
-      if (!event.propagating) return
+      return
     }
 
     event.intersectionData = this.getGeomDataAtPos(event.pointerPos, event.pointerRay)
