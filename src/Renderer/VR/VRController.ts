@@ -29,6 +29,7 @@ class VRController {
   raycastTick: number = 5
   raycastArea: number = 0.04
   raycastDist: number = 0.04
+  pointerRay: Ray = new Ray()
   private raycastAreaCache: number = 0
   private raycastDistCache: number = 0
   private rayCastRenderTargetProjMatrix: Mat4 = new Mat4()
@@ -37,6 +38,7 @@ class VRController {
   private hitTested: boolean
   private pointerOverItem: any
   private intersectionData: IntersectionData
+
   /**
    * Create a VR controller.
    * @param xrvp - The Vr viewport.
@@ -304,21 +306,25 @@ class VRController {
 
     const renderer = this.xrvp.getRenderer()
     const xfo = this.tipItem.globalXfoParam.value
-    const ray = new Ray(xfo.tr, xfo.ori.getZaxis().negate())
-    if (this.raycastDist != this.raycastDistCache || this.raycastArea != this.raycastAreaCache) {
+    this.pointerRay.start = xfo.tr
+    this.pointerRay.dir = xfo.ori.getZaxis().negate()
+    const dist = this.raycastDist / this.xrvp.stageScale
+    const area = this.raycastArea / this.xrvp.stageScale
+    if (dist != this.raycastDistCache || area != this.raycastAreaCache) {
       this.rayCastRenderTargetProjMatrix.setOrthographicMatrix(
-        this.raycastArea * -0.5,
-        this.raycastArea * 0.5,
-        this.raycastArea * -0.5,
-        this.raycastArea * 0.5,
+        area * -0.5,
+        area * 0.5,
+        area * -0.5,
+        area * 0.5,
         0.0,
-        this.raycastDist
+        dist
       )
-      this.raycastDistCache = this.raycastDist
-      this.raycastAreaCache = this.raycastArea
+      this.raycastDistCache = dist
+      this.raycastAreaCache = area
     }
 
-    this.intersectionData = renderer.raycastWithProjection(xfo, this.rayCastRenderTargetProjMatrix, ray)
+    this.intersectionData = renderer.raycastWithProjection(xfo, this.rayCastRenderTargetProjMatrix, this.pointerRay)
+    if (this.intersectionData) this.intersectionData.dist *= this.xrvp.stageScale
     return this.intersectionData
   }
 }

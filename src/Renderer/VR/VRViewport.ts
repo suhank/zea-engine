@@ -40,6 +40,7 @@ class VRViewport extends GLBaseViewport {
   protected controllerPointerDownTime: number[]
   protected spectatorMode: boolean
   protected tick: number
+  stageScale: number
 
   protected __leftViewMatrix: Mat4
   protected __leftProjectionMatrix: Mat4
@@ -47,9 +48,7 @@ class VRViewport extends GLBaseViewport {
   protected __rightProjectionMatrix: Mat4
   protected __vrAsset?: VLAAsset
   protected __stageXfo: Xfo = new Xfo()
-
   protected __stageMatrix: Mat4 = new Mat4()
-  protected __stageScale: any
   protected session: any
   protected __canPresent: any
 
@@ -155,7 +154,7 @@ class VRViewport extends GLBaseViewport {
     this.__stageTreeItem.globalXfoParam.value = xfo
     this.__stageMatrix = xfo.inverse().toMat4()
     // this.__stageMatrix.multiplyInPlace(this.__sittingToStandingMatrix);
-    this.__stageScale = xfo.sc.x
+    this.stageScale = xfo.sc.x
   }
 
   /**
@@ -549,7 +548,7 @@ class VRViewport extends GLBaseViewport {
     }
 
     renderstate.viewXfo = viewXfo
-    renderstate.viewScale = 1.0 / this.__stageScale
+    renderstate.viewScale = 1.0 / this.stageScale
     renderstate.cameraMatrix = renderstate.viewXfo.toMat4()
     renderstate.region = this.__region
     renderstate.vrPresenting = true // Some rendering is adjusted slightly in VR. e.g. Billboards
