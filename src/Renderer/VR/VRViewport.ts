@@ -1,6 +1,6 @@
 import { SystemDesc } from '../../SystemDesc'
 import { Vec3, Mat4, Xfo } from '../../Math/index'
-import { TreeItem, VLAAsset } from '../../SceneTree/index'
+import { BaseTool, TreeItem, VLAAsset } from '../../SceneTree/index'
 import { GLBaseViewport } from '../GLBaseViewport'
 import { VRHead } from './VRHead'
 import { VRController } from './VRController'
@@ -49,21 +49,17 @@ class VRViewport extends GLBaseViewport {
   protected __vrAsset?: VLAAsset
   protected __stageXfo: Xfo = new Xfo()
   protected __stageMatrix: Mat4 = new Mat4()
-  protected session: any
-  protected __canPresent: any
+  protected session: any = null
 
   protected __hmd: string = ''
   protected __hmdAssetPromise?: Promise<VLAAsset | null>
-  protected __region: any
+  protected __region: Array<number> = []
 
   protected __refSpace: any
 
-  protected stroke: any
   protected __projectionMatrices: Array<Mat4> = []
-
-  protected __hmdCanvasSize: any
-  protected __viewMatrices: any
-  protected __cameraMatrices: any
+  protected __viewMatrices: Array<Mat4> = []
+  protected __cameraMatrices: Array<Mat4> = []
   /**
    * Create a VR viewport.
    * @param renderer - The renderer value.
@@ -166,19 +162,11 @@ class VRViewport extends GLBaseViewport {
   // Presenting
 
   /**
-   * The canPresent method.
-   * @return - The return value.
-   */
-  canPresent() {
-    return this.__canPresent
-  }
-
-  /**
    * The isPresenting method.
    * @return - The return value.
    */
   isPresenting() {
-    return this.session
+    return this.session != null
   }
 
   /**
@@ -439,14 +427,6 @@ class VRViewport extends GLBaseViewport {
   togglePresenting() {
     if (this.session) this.stopPresenting()
     else this.startPresenting()
-  }
-
-  /**
-   * The getHMDCanvasSize method.
-   * @return - The return value.
-   */
-  getHMDCanvasSize() {
-    return this.__hmdCanvasSize
   }
 
   // //////////////////////////
