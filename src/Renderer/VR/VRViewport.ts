@@ -601,6 +601,7 @@ class VRViewport extends GLBaseViewport {
    */
   onPointerDown(event: XRControllerEvent) {
     event.intersectionData = event.controller.getGeomItemAtTip()
+    event.pointerRay = event.controller.pointerRay
 
     // //////////////////////////////////////
     // Double Tap
@@ -646,6 +647,7 @@ class VRViewport extends GLBaseViewport {
    */
   onPointerUp(event: XRControllerEvent) {
     this.controllerPointerDownTime[event.controller.id] = 0
+    event.pointerRay = event.controller.pointerRay
 
     if (this.capturedItem) {
       this.capturedItem.onPointerUp(event)
