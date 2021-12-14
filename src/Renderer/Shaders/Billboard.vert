@@ -128,7 +128,17 @@ void main(void) {
   // Note: items in front of the camera will have a negative value here.
   float sc = 1.0;
   if (fixedSizeOnscreen) {
-    sc = -modelViewMatrix[3][2];;
+    sc = -modelViewMatrix[3][2];
+    
+    if (inVR == 1) {
+      // During XR sessions, there is a scaling applied to the view matrix
+      // which causes a distortion to the line width. We extract that scale here
+      // and use to correct the distortion.
+      // See also: FatPointsShader
+      vec3 viewZ = modelViewMatrix[2].xyz;
+      float viewScale = length(viewZ);
+      sc /= viewScale;
+    }
   }
   
   mat4 modelViewProjectionMatrix;
