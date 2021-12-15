@@ -10,7 +10,7 @@ import { EnvMapShader } from './Shaders/EnvMapShader'
 import { HighlightsShader } from './Shaders/HighlightsShader'
 import { SilhouetteShader } from './Shaders/SilhouetteShader'
 import { generateShaderGeomBinding, IGeomShaderBinding } from './Drawing/GeomShaderBinding'
-import { VLHImage } from '../SceneTree/Images/VLHImage'
+import { HDRImage } from '../SceneTree/Images/HDRImage'
 import { EnvMapAssignedEvent } from '../Utilities/Events/EnvMapAssignedEvent'
 import { GLViewport } from './GLViewport'
 import { IntersectionData } from '../Utilities/IntersectionData'
@@ -126,7 +126,7 @@ class GLRenderer extends GLBaseRenderer {
       this.__glBackgroundMap = backgroundMap.getMetadata('gltexture')
       if (!this.__glBackgroundMap) {
         if (backgroundMap.type === 'FLOAT') {
-          this.__glBackgroundMap = new GLHDRImage(this.__gl, <VLHImage>backgroundMap) // todo: is this cast ok?
+          this.__glBackgroundMap = new GLHDRImage(this.__gl, <HDRImage>backgroundMap) // todo: is this cast ok?
         } else {
           this.__glBackgroundMap = new GLTexture2D(this.__gl, backgroundMap)
         }

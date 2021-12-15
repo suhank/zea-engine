@@ -1,5 +1,22 @@
 import { BaseItem } from './BaseItem'
 
+interface ImageParams {
+  type: string
+  format: string
+  width: number
+  height: number
+
+  wrapS?: string
+  wrapT?: string
+  minFilter?: string
+  magFilter?: string
+  mipMapped?: boolean
+
+  data?: HTMLImageElement | HTMLVideoElement | Uint8Array | Float32Array | HTMLCanvasElement | ImageData | Record<string, any>
+  exposure?: number
+
+  flipY?: boolean
+}
 /**
  * Represents a 2D image item, containing width and height.
  *
@@ -45,7 +62,7 @@ class BaseImage extends BaseItem {
    *
    * @return - The return value.
    */
-  getParams(): Record<string, any> {
+  getParams(): ImageParams {
     return {
       type: this.type,
       format: this.format,
@@ -60,4 +77,4 @@ class BaseImage extends BaseItem {
   }
 }
 
-export { BaseImage }
+export { BaseImage, ImageParams }

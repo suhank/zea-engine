@@ -4,6 +4,7 @@ import { BooleanParameter, NumberParameter, ColorParameter, StringParameter } fr
 import { Registry } from '../../Registry'
 import { DataImage } from './DataImage'
 import { labelManager } from './LabelManager'
+import { ImageParams } from '../BaseImage'
 
 // http://stackoverflow.com/questions/1255512/how-to-draw-a-rounded-rectangle-on-html-canvas
 /**
@@ -400,7 +401,7 @@ class Label extends DataImage {
    *
    * @return - The return value.
    */
-  getParams(): Record<string, any> {
+  getParams(): ImageParams {
     if (this.needsRender) this.renderLabelToImage()
     return super.getParams()
   }

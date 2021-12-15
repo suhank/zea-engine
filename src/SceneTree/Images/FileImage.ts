@@ -1,3 +1,4 @@
+import { ImageParams } from '..'
 import { Registry } from '../../Registry'
 import { BaseImage } from '../BaseImage'
 import { BinReader } from '../BinReader'
@@ -117,7 +118,7 @@ class FileImage extends BaseImage {
    * The getParams method.
    * @return - The return value.
    */
-  getParams() {
+  getParams(): ImageParams {
     const params = super.getParams()
     if (this.loaded) {
       params['data'] = this.__data

@@ -1,5 +1,5 @@
 import { Registry } from '../../Registry'
-import { BaseImage } from '../BaseImage'
+import { BaseImage, ImageParams } from '../BaseImage'
 
 // let ResourceLoaderWorker = require("worker-loader?inline!./ResourceLoaderWorker.js");
 
@@ -67,7 +67,7 @@ class DataImage extends BaseImage {
    *
    * @return - The return value.
    */
-  getParams(): Record<string, any> {
+  getParams(): ImageParams {
     const params = super.getParams()
     params['data'] = this.__data
     return params

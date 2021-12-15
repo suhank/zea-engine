@@ -5,7 +5,7 @@ import {
   Parameter,
   MaterialFloatParam,
   BaseImage,
-  VLHImage,
+  HDRImage,
   MaterialColorParam,
   Mat4Parameter,
   ColorParameter,
@@ -107,7 +107,7 @@ class SimpleUniformBinding extends ParamUniformBinding {
       const textureType = 1
       if (!gltexture) {
         if (image.type === 'FLOAT') {
-          gltexture = new GLHDRImage(gl, <VLHImage>image)
+          gltexture = new GLHDRImage(gl, <HDRImage>image)
         } else {
           gltexture = new GLTexture2D(gl, image)
         }
@@ -380,7 +380,7 @@ class ColorUniformBinding extends ParamUniformBinding {
       const textureType = 1
       if (!gltexture) {
         if (image.type === 'FLOAT') {
-          gltexture = new GLHDRImage(gl, <VLHImage>image)
+          gltexture = new GLHDRImage(gl, <HDRImage>image)
         } else {
           gltexture = new GLTexture2D(gl, image)
         }
