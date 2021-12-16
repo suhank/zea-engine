@@ -1,5 +1,5 @@
 /* eslint-disable guard-for-in */
-import { Vec2, Vec3, Ray, Mat4, Xfo, Color } from '../Math/index'
+import { Vec2, Vec3, Ray, Mat4, Xfo, Color, Vec4 } from '../Math/index'
 import { Camera, GeomItem, TreeItem } from '../SceneTree/index'
 import { GLBaseViewport } from './GLBaseViewport'
 import { GLFbo } from './GLFbo'
@@ -291,6 +291,27 @@ class GLViewport extends GLBaseViewport {
     }
   }
 
+  /**
+   *
+   */
+  calcScreenPosFromWorldPoint(worldPoint: Vec3): Vec3 {
+    // calculate view-projection matrix
+    const mat = this.__projectionMatrix.multiply(this.__viewMat)
+
+    // multiply world point by VP matrix
+    const temp = mat.transformVec4(new Vec4(worldPoint.x, worldPoint.y, worldPoint.z, 1.0))
+
+    if (temp.w == 0) {
+      // point is exactly on camera focus point, screen point is undefined
+      // unity handles this by returning 0,0,0
+      return new Vec3(0, 0, 0)
+    } else {
+      // convert x and y from clip space to window coordinates
+      temp.x = (temp.x / temp.w + 1) * 0.5 * this.__canvasWidth
+      temp.y = (temp.y / temp.w + 1) * 0.5 * this.__canvasHeight
+      return new Vec3(temp.x, temp.y, worldPoint.z)
+    }
+  }
   /**
    * Compute a ray into the scene based on a mouse coordinate.
    * @param screenPos - The screen position.
