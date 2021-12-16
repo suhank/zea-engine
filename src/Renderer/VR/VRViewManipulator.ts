@@ -109,9 +109,12 @@ class VRViewManipulator extends BaseTool {
    */
   onVRControllerButtonDown(event: XRControllerEvent) {
     if (event.button != 1) return
-    this.__controllerTriggersHeld.push(event.controller)
-    this.__initMoveStage()
-    event.stopPropagation()
+    const index = this.__controllerTriggersHeld.indexOf(event.controller)
+    if (index == -1) {
+      this.__controllerTriggersHeld.push(event.controller)
+      this.__initMoveStage()
+      event.stopPropagation()
+    }
   }
 
   /**
@@ -122,9 +125,11 @@ class VRViewManipulator extends BaseTool {
   onVRControllerButtonUp(event: XRControllerEvent) {
     if (event.button != 1) return
     const index = this.__controllerTriggersHeld.indexOf(event.controller)
-    this.__controllerTriggersHeld.splice(index, 1)
-    this.__initMoveStage()
-    event.stopPropagation()
+    if (index != -1) {
+      this.__controllerTriggersHeld.splice(index, 1)
+      this.__initMoveStage()
+      event.stopPropagation()
+    }
   }
 
   /**
