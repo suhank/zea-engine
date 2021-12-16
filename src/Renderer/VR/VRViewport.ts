@@ -536,9 +536,13 @@ class VRViewport extends GLBaseViewport {
     // Prepare the pointerMove event.
     const event = new XRPoseEvent(this, viewXfo, this.controllers)
     this.updateControllers(xrFrame, event)
-    if (event.getCapture() && event.propagating) {
+    if (event.getCapture()) {
       event.getCapture().onPointerMove(event)
-    } else if (this.manipulator && event.propagating) {
+      // events are now always sent to the capture item first,
+      // but can continue propagating to other items if no call
+      // to event.stopPropagation() was made.
+    }
+    if (this.manipulator && event.propagating) {
       this.manipulator.onPointerMove(event)
     }
 
@@ -599,7 +603,10 @@ class VRViewport extends GLBaseViewport {
 
     if (event.getCapture()) {
       event.getCapture().onPointerDown(event)
-      return
+      // events are now always sent to the capture item first,
+      // but can continue propagating to other items if no call
+      // to event.stopPropagation() was made.
+      if (!event.propagating) return
     }
 
     if (event.intersectionData != undefined) {
@@ -626,7 +633,10 @@ class VRViewport extends GLBaseViewport {
 
     if (event.getCapture()) {
       event.getCapture().onPointerUp(event)
-      return
+      // events are now always sent to the capture item first,
+      // but can continue propagating to other items if no call
+      // to event.stopPropagation() was made.
+      if (!event.propagating) return
     }
 
     event.intersectionData = event.controller.getGeomItemAtTip()
