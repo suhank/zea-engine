@@ -1,4 +1,5 @@
 precision highp float;
+precision highp int;
 import 'GLSLUtils.glsl'
 import 'drawItemTexture.glsl' 
 import 'cutaways.glsl'

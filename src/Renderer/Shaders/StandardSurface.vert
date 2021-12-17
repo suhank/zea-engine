@@ -1,5 +1,6 @@
 
 precision highp float;
+precision highp int;
 
 attribute vec3 positions;
 attribute vec3 normals;
@@ -9,6 +10,10 @@ attribute vec2 texCoords;
 
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
+
+// Now that we render multiple types of geometry from a single shader
+// we need to know what kind of geometry it is...
+uniform int geomType;
 
 // should be imported by bottom 3
 import 'GLSLUtils.glsl'
@@ -53,6 +58,18 @@ void main(void) {
   mat3 normalMatrix = mat3(transpose(inverse(modelViewMatrix)));
   v_viewPos       = -viewPos.xyz;
   v_viewNormal    = normalMatrix * normals;
+  
+  // offset slightly the lines and points to make them clearly defined.
+  // This ensures that lines drawn over surfaces are solid and not clipped
+  // at all by the surface.
+  if (geomType == 1) { // start 'LINES'
+    float overlay = 0.000001;
+    gl_Position.z = mix(gl_Position.z, -gl_Position.w, overlay);
+  } // end 'LINES'
+  else if (geomType == 0) { // start 'POINTS'
+    float overlay = 0.000003;
+    gl_Position.z = mix(gl_Position.z, -gl_Position.w, overlay);
+  }  // end 'POINTS'
 
 #ifdef ENABLE_TEXTURES
   v_textureCoord  = texCoords;
