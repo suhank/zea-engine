@@ -1,13 +1,13 @@
-import { VRViewport } from '../../Renderer/VR/XRViewport'
-import { VRController } from '../../Renderer/VR/XRController'
+import { XRViewport } from '../../Renderer/VR/XRViewport'
+import { XRController } from '../../Renderer/VR/XRController'
 import { ZeaPointerEvent, POINTER_TYPES } from './ZeaPointerEvent'
 import { BaseTool, TreeItem } from '../../SceneTree'
 
 class XRControllerEvent extends ZeaPointerEvent {
-  controller: VRController
+  controller: XRController
   button: number
   buttonPressed: boolean
-  constructor(viewport: VRViewport, controller: VRController, button: number) {
+  constructor(viewport: XRViewport, controller: XRController, button: number) {
     super(POINTER_TYPES.xr)
     this.viewport = viewport
     this.controller = controller
