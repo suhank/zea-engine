@@ -2,13 +2,13 @@ import { SystemDesc } from '../../SystemDesc'
 import { Vec3, Mat4, Xfo } from '../../Math/index'
 import { BaseTool, TreeItem, VLAAsset } from '../../SceneTree/index'
 import { GLBaseViewport } from '../GLBaseViewport'
-import { VRHead } from './VRHead'
-import { VRController } from './VRController'
-import { VRViewManipulator } from './VRViewManipulator'
+import { XRHead } from './XRHead'
+import { XRController } from './XRController'
+import { XRViewManipulator } from './XRViewManipulator'
 import { resourceLoader } from '../../SceneTree/resourceLoader'
 
 // import { XRWebGLLayer } from 'webxr'
-import { VRViewChangedEvent } from '../../Utilities/Events/VRViewChangedEvent'
+import { XRViewChangedEvent } from '../../Utilities/Events/XRViewChangedEvent'
 import { ControllerAddedEvent } from '../../Utilities/Events/ControllerAddedEvent'
 import { StateChangedEvent } from '../../Utilities/Events/StateChangedEvent'
 import { XRControllerEvent } from '../../Utilities/Events/XRControllerEvent'
@@ -30,13 +30,13 @@ import { GLViewport } from '../GLViewport'
  *
  * @extends GLBaseViewport
  */
-class VRViewport extends GLBaseViewport {
+class XRViewport extends GLBaseViewport {
   protected __projectionMatricesUpdated: boolean
   protected __stageTreeItem: TreeItem
   // __renderer: any // GLBaseRenderer
-  protected __vrhead: VRHead
-  protected controllersMap: Record<string, VRController>
-  protected controllers: VRController[]
+  protected __xrhead: XRHead
+  protected controllersMap: Record<string, XRController>
+  protected controllers: XRController[]
   protected controllerPointerDownTime: number[]
   protected spectatorMode: boolean
   protected tick: number
@@ -79,7 +79,7 @@ class VRViewport extends GLBaseViewport {
     this.__stageTreeItem.setVisible(false)
     this.__renderer.addTreeItem(this.__stageTreeItem)
 
-    this.__vrhead = new VRHead(this, this.__stageTreeItem)
+    this.__xrhead = new XRHead(this, this.__stageTreeItem)
 
     this.controllersMap = {}
     this.controllers = []
@@ -99,7 +99,7 @@ class VRViewport extends GLBaseViewport {
     this.__rightViewMatrix = new Mat4()
     this.__rightProjectionMatrix = new Mat4()
 
-    this.setManipulator(new VRViewManipulator(this))
+    this.setManipulator(new XRViewManipulator(this))
   }
 
   getRenderer() {
@@ -127,7 +127,7 @@ class VRViewport extends GLBaseViewport {
    * @return - The return value.
    */
   getVRHead() {
-    return this.__vrhead
+    return this.__xrhead
   }
 
   /**
@@ -154,7 +154,7 @@ class VRViewport extends GLBaseViewport {
    * The getControllers method.
    * @return - The return value.
    */
-  getControllers(): VRController[] {
+  getControllers(): XRController[] {
     return this.controllers
   }
 
@@ -325,7 +325,7 @@ class VRViewport extends GLBaseViewport {
             const createController = (inputSource: any) => {
               console.log('creating controller:', inputSource.handedness, inputSource.profiles)
               const id = this.controllers.length
-              const controller = new VRController(this, inputSource, id)
+              const controller = new XRController(this, inputSource, id)
               this.controllersMap[inputSource.handedness] = controller
               this.controllers[id] = controller
 
@@ -471,8 +471,8 @@ class VRViewport extends GLBaseViewport {
       return
     }
 
-    this.__vrhead.update(pose)
-    const viewXfo = this.__vrhead.getTreeItem().globalXfoParam.value
+    this.__xrhead.update(pose)
+    const viewXfo = this.__xrhead.getTreeItem().globalXfoParam.value
 
     const views = pose.views
 
@@ -549,7 +549,7 @@ class VRViewport extends GLBaseViewport {
     // ///////////////////////
     // Emit a signal for the shared session.
 
-    const viewChangedEvent = new VRViewChangedEvent(renderstate.viewXfo)
+    const viewChangedEvent = new XRViewChangedEvent(renderstate.viewXfo)
     // TODO: better solution than setting members individually?
     viewChangedEvent.hmd = this.__hmd
     viewChangedEvent.controllers = this.controllers
@@ -564,9 +564,9 @@ class VRViewport extends GLBaseViewport {
       const viewport = this.__renderer.getViewport()
       if (viewport) {
         // display the head in spectator mode.
-        this.__vrhead.setVisible(true)
+        this.__xrhead.setVisible(true)
         viewport.draw()
-        this.__vrhead.setVisible(false)
+        this.__xrhead.setVisible(false)
       }
     }
 
@@ -656,4 +656,4 @@ class VRViewport extends GLBaseViewport {
   }
 }
 
-export { VRViewport }
+export { XRViewport }

@@ -1,9 +1,9 @@
-import { VRViewport } from '../..'
+import { XRViewport } from '../..'
 import { BaseEvent } from '../BaseEvent'
 
 class XrViewportEvent extends BaseEvent {
-  xrViewport?: VRViewport
-  constructor(xrViewport: VRViewport) {
+  xrViewport?: XRViewport
+  constructor(xrViewport: XRViewport) {
     super()
     this.xrViewport = xrViewport
   }

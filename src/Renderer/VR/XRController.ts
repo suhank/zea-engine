@@ -2,7 +2,7 @@ import { SystemDesc } from '../../SystemDesc'
 import { Vec3, Xfo, Mat4, Ray, Color } from '../../Math/index'
 import { BaseTool, GeomItem, Lines, Material, TreeItem, Vec3Attribute } from '../../SceneTree/index'
 import { IntersectionData } from '../../Utilities/IntersectionData'
-import { VRViewport } from '.'
+import { XRViewport } from '.'
 import { XRPoseEvent } from '../../Utilities/Events/XRPoseEvent'
 import { XRControllerEvent } from '../../Utilities/Events/XRControllerEvent'
 
@@ -16,10 +16,10 @@ import { XRControllerEvent } from '../../Utilities/Events/XRControllerEvent'
 // line.setBoundingBoxDirty()
 
 /** Class representing a VR controller. */
-class VRController {
+class XRController {
   id: number
   buttonPressed: boolean
-  private xrvp: VRViewport
+  private xrvp: XRViewport
   private inputSource: any
   private mat4: Mat4
   private xfo: Xfo
@@ -63,7 +63,7 @@ class VRController {
 
     // this.setVisible(true);
 
-    this.treeItem = new TreeItem('VRController:' + inputSource.handedness + id)
+    this.treeItem = new TreeItem('XRController:' + inputSource.handedness + id)
     // Controller coordinate system
     // X = Horizontal.
     // Y = Up.
@@ -336,4 +336,4 @@ class VRController {
   }
 }
 
-export { VRController }
+export { XRController }

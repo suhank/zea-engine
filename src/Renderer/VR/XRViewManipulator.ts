@@ -7,13 +7,13 @@ import { BaseTool } from '../../SceneTree/Manipulators/BaseTool'
 import { ZeaPointerEvent, POINTER_TYPES } from '../../Utilities/Events/ZeaPointerEvent'
 import { XRControllerEvent } from '../../Utilities/Events/XRControllerEvent'
 import { XRPoseEvent } from '../../Utilities/Events/XRPoseEvent'
-import { VRController } from './VRController'
+import { XRController } from './XRController'
 
 /**
  * Class representing a view tool
  * @extends BaseTool
  */
-class VRViewManipulator extends BaseTool {
+class XRViewManipulator extends BaseTool {
   protected listenerIDs: Record<string, number> = {}
   protected __controllerTriggersHeld: any[]
   protected xrvp: any
@@ -47,7 +47,7 @@ class VRViewManipulator extends BaseTool {
    * @param event
    * @private
    */
-  addIconToController(controller: VRController) {
+  addIconToController(controller: XRController) {
     const geomItem = new GeomItem('HandleToolTip', this.vrControllerToolTip, this.vrControllerToolTipMat)
     geomItem.setSelectable(false)
     controller.getTipItem().removeAllChildren()
@@ -81,7 +81,7 @@ class VRViewManipulator extends BaseTool {
   }
 
   // ///////////////////////////////////
-  // VRController events
+  // XRController events
 
   // eslint-disable-next-line require-jsdoc
   __initMoveStage() {
@@ -262,4 +262,4 @@ class VRViewManipulator extends BaseTool {
   }
 }
 
-export { VRViewManipulator }
+export { XRViewManipulator }

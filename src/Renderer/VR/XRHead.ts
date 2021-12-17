@@ -4,7 +4,7 @@ import { TreeItem } from '../../SceneTree/index'
 /** Class representing a VR head.
  * @private
  */
-class VRHead {
+class XRHead {
   protected __xrvp: any
   protected __treeItem: TreeItem
   protected __mat4: Mat4
@@ -17,7 +17,7 @@ class VRHead {
    */
   constructor(xrvp: any, stageTreeItem: any) {
     this.__xrvp = xrvp
-    this.__treeItem = new TreeItem('VRHead')
+    this.__treeItem = new TreeItem('XRHead')
     stageTreeItem.addChild(this.__treeItem)
 
     this.__mat4 = new Mat4()
@@ -88,4 +88,4 @@ class VRHead {
   }
 }
 
-export { VRHead }
+export { XRHead }

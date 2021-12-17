@@ -19,7 +19,7 @@ export * from './TransparencyChangedEvent'
 export * from './ViewChangedEvent'
 export * from './VisibilityChangedEvent'
 
-export * from './VRViewChangedEvent'
+export * from './XRViewChangedEvent'
 export * from './XRControllerEvent'
 export * from './XRPoseEvent'
 export * from './XrViewportEvent'

@@ -8,7 +8,7 @@ import { create3DContext } from './GLContext'
 import { GLScreenQuad } from './GLScreenQuad'
 import { GLViewport } from './GLViewport'
 import { Registry } from '../Registry'
-import { VRViewport } from './VR/VRViewport'
+import { XRViewport } from './VR/XRViewport'
 import { GLMaterialLibrary } from './Drawing/GLMaterialLibrary'
 import { GLGeomLibrary } from './Drawing/GLGeomLibrary'
 import { GLGeomItemLibrary } from './Drawing/GLGeomItemLibrary'
@@ -65,8 +65,8 @@ class GLBaseRenderer extends ParameterOwner {
   floatGeomBuffer: boolean = true
 
   protected __supportXR: boolean = false
-  protected __xrViewport: VRViewport | undefined = undefined
-  protected __xrViewportPromise: Promise<VRViewport>
+  protected __xrViewport: XRViewport | undefined = undefined
+  protected __xrViewportPromise: Promise<XRViewport>
 
   glMaterialLibrary: GLMaterialLibrary
   glGeomItemLibrary: GLGeomItemLibrary
@@ -977,9 +977,9 @@ class GLBaseRenderer extends ParameterOwner {
    * @return - The return value.
    * @private
    */
-  __setupXRViewport(): VRViewport {
+  __setupXRViewport(): XRViewport {
     // Always get the last display. Additional displays are added at the end.(e.g. [Polyfill, HMD])
-    const xrvp = new VRViewport(this)
+    const xrvp = new XRViewport(this)
 
     const emitViewChanged = (event: ViewChangedEvent) => {
       this.emit('viewChanged', event)
@@ -1028,7 +1028,7 @@ class GLBaseRenderer extends ParameterOwner {
    * The getVRViewport method.
    * @return - The return value.
    */
-  getVRViewport(): VRViewport | undefined {
+  getVRViewport(): XRViewport | undefined {
     return this.__xrViewport
   }
 
@@ -1036,7 +1036,7 @@ class GLBaseRenderer extends ParameterOwner {
    * The getXRViewport method.
    * @return - The return value.
    */
-  getXRViewport(): Promise<VRViewport> {
+  getXRViewport(): Promise<XRViewport> {
     return this.__xrViewportPromise
   }
 
