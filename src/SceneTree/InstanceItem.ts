@@ -4,6 +4,8 @@ import { Xfo } from '../Math/index'
 import { TreeItem } from './TreeItem'
 import { Registry } from '../Registry'
 import { BinReader } from './BinReader'
+import { ChildAddedEvent } from '..'
+import { BaseEvent } from '../Utilities/BaseEvent'
 
 /**
  * TreeItem type of class designed for making duplications of parts of the tree.
@@ -124,9 +126,9 @@ class InstanceItem extends TreeItem {
 
     this.srcTreePath = (<InstanceItem>src).srcTreePath
     if (this.srcTreePath.length > 0 && this.getNumChildren() == 0) {
-      src.once('childAdded', (event) => {
-        // @ts-ignore
-        const childItem = <TreeItem>event.childItem
+      src.once('childAdded', (event: BaseEvent) => {
+        const childAddedEvent = event as ChildAddedEvent
+        const childItem = childAddedEvent.childItem
         this.setSrcTree(childItem, context)
       })
     }

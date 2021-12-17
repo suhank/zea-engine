@@ -27,6 +27,7 @@ import { GLShader } from './GLShader'
 import { WebGL12RenderingContext } from './types/webgl'
 import { RenderState, Uniforms, GeomDataRenderState } from './types/renderer'
 import { StateChangedEvent } from '../Utilities/Events/StateChangedEvent'
+import { ChildAddedEvent } from '../Utilities/Events/ChildAddedEvent'
 
 let activeGLRenderer: GLBaseRenderer | undefined
 let pointerIsDown = false
@@ -375,7 +376,7 @@ class GLBaseRenderer extends ParameterOwner {
       if (childItem) this.addTreeItem(<TreeItem>childItem)
     }
 
-    listenerIDs['childAdded'] = treeItem.on('childAdded', (event) => {
+    listenerIDs['childAdded'] = treeItem.on('childAdded', (event: ChildAddedEvent) => {
       this.addTreeItem(event.childItem)
     })
     listenerIDs['childRemoved'] = treeItem.on('childRemoved', (event) => {

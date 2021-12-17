@@ -29,3 +29,5 @@ export * from './ZeaPointerEvent'
 export * from './ZeaTouchEvent'
 export * from './ZeaUIEvent'
 export * from './ZeaWheelEvent'
+
+export * from './ChildAddedEvent'
