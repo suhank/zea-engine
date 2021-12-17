@@ -437,7 +437,7 @@ class VRViewport extends GLBaseViewport {
    * @param xrFrame - The xrFrame value.
    * @param event - The pose changed event object that will be emitted for observers such as collab.
    */
-  updateControllers(xrFrame: any, event: XRPoseEvent) {
+  updateControllers(xrFrame: any) {
     const inputSources = this.session.inputSources
     for (let i = 0; i < inputSources.length; i++) {
       const inputSource = inputSources[i]
@@ -451,7 +451,7 @@ class VRViewport extends GLBaseViewport {
         continue
         // this.__createController(i, inputSource)
       }
-      this.controllers[i].updatePose(this.__refSpace, xrFrame, inputSource, event)
+      this.controllers[i].updatePose(this.__refSpace, xrFrame, inputSource)
     }
   }
 
@@ -535,10 +535,14 @@ class VRViewport extends GLBaseViewport {
     // ///////////////////////
     // Prepare the pointerMove event.
     const event = new XRPoseEvent(this, viewXfo, this.controllers)
-    this.updateControllers(xrFrame, event)
-    if (event.getCapture() && event.propagating) {
+    this.updateControllers(xrFrame)
+    if (event.getCapture()) {
       event.getCapture().onPointerMove(event)
-    } else if (this.manipulator && event.propagating) {
+      // events are now always sent to the capture item first,
+      // but can continue propagating to other items if no call
+      // to event.stopPropagation() was made.
+    }
+    if (this.manipulator && event.propagating) {
       this.manipulator.onPointerMove(event)
     }
 
@@ -599,7 +603,10 @@ class VRViewport extends GLBaseViewport {
 
     if (event.getCapture()) {
       event.getCapture().onPointerDown(event)
-      return
+      // events are now always sent to the capture item first,
+      // but can continue propagating to other items if no call
+      // to event.stopPropagation() was made.
+      if (!event.propagating) return
     }
 
     if (event.intersectionData != undefined) {
@@ -626,7 +633,10 @@ class VRViewport extends GLBaseViewport {
 
     if (event.getCapture()) {
       event.getCapture().onPointerUp(event)
-      return
+      // events are now always sent to the capture item first,
+      // but can continue propagating to other items if no call
+      // to event.stopPropagation() was made.
+      if (!event.propagating) return
     }
 
     event.intersectionData = event.controller.getGeomItemAtTip()

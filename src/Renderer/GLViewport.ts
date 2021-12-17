@@ -599,16 +599,19 @@ class GLViewport extends GLBaseViewport {
 
     if (event.getCapture()) {
       event.getCapture().onPointerDown(event)
-      return
+      // events are now always sent to the capture item first,
+      // but can continue propagating to other items if no call
+      // to event.stopPropagation() was made.
+      if (!event.propagating) return
     }
 
     if (event.intersectionData != undefined) {
       event.intersectionData.geomItem.onPointerDown(event)
-      if (!event.propagating || event.getCapture()) return
+      if (!event.propagating) return
     }
 
     this.emit('pointerDown', event)
-    if (!event.propagating || event.getCapture()) return
+    if (!event.propagating) return
 
     if (this.manipulator) {
       this.manipulator.onPointerDown(event)
@@ -642,7 +645,10 @@ class GLViewport extends GLBaseViewport {
 
     if (event.getCapture()) {
       event.getCapture().onPointerUp(event)
-      return
+      // events are now always sent to the capture item first,
+      // but can continue propagating to other items if no call
+      // to event.stopPropagation() was made.
+      if (!event.propagating) return
     }
 
     if (event.intersectionData != undefined) {
@@ -689,7 +695,10 @@ class GLViewport extends GLBaseViewport {
     // the geom under the pointer. e.g. the CameraManipulator during a drag.
     if (event.getCapture()) {
       event.getCapture().onPointerMove(event)
-      return
+      // events are now always sent to the capture item first,
+      // but can continue propagating to other items if no call
+      // to event.stopPropagation() was made.
+      if (!event.propagating) return
     }
 
     event.intersectionData = this.getGeomDataAtPos(event.pointerPos, event.pointerRay)
@@ -713,7 +722,7 @@ class GLViewport extends GLBaseViewport {
 
       event.propagating = true
       event.intersectionData.geomItem.onPointerMove(event)
-      if (!event.propagating || event.getCapture()) return
+      if (!event.propagating) return
     } else if (this.pointerOverItem) {
       event.leftGeometry = this.pointerOverItem
       this.pointerOverItem.onPointerLeave(event)
@@ -822,13 +831,16 @@ class GLViewport extends GLBaseViewport {
     this.prepareUIEvent(event)
 
     if (event.getCapture()) {
+      // events are now always sent to the capture item first,
+      // but can continue propagating to other items if no call
+      // to event.stopPropagation() was made.
       event.getCapture().onTouchCancel(event)
-      return
+      if (!event.propagating) return
     }
 
     if (this.manipulator) {
       this.manipulator.onTouchCancel(event)
-      return
+      if (!event.propagating) return
     }
     this.emit('touchCancel', event)
   }

@@ -1,9 +1,10 @@
 import { SystemDesc } from '../../SystemDesc'
 import { Vec3, Xfo, Mat4, Ray, Color } from '../../Math/index'
-import { GeomItem, Lines, Material, TreeItem, Vec3Attribute } from '../../SceneTree/index'
+import { BaseTool, GeomItem, Lines, Material, TreeItem, Vec3Attribute } from '../../SceneTree/index'
 import { IntersectionData } from '../../Utilities/IntersectionData'
 import { VRViewport } from '.'
 import { XRPoseEvent } from '../../Utilities/Events/XRPoseEvent'
+import { XRControllerEvent } from '../../Utilities/Events/XRControllerEvent'
 
 // const line = new Lines()
 // line.setNumVertices(2)
@@ -38,6 +39,9 @@ class VRController {
   private hitTested: boolean
   private pointerOverItem: any
   private intersectionData: IntersectionData
+
+  // Each XRController has a separate capture item.
+  capturedItem: TreeItem | BaseTool = null
 
   /**
    * Create a VR controller.
@@ -238,9 +242,8 @@ class VRController {
    * @param refSpace - The refSpace value.
    * @param xrFrame - The xrFrame value.
    * @param inputSource - The inputSource value.
-   * @param event - The event object.
    */
-  updatePose(refSpace: any, xrFrame: any, inputSource: any, event: XRPoseEvent) {
+  updatePose(refSpace: any, xrFrame: any, inputSource: any) {
     const inputPose = xrFrame.getPose(inputSource.gripSpace, refSpace)
 
     // We may not get a inputPose back in cases where the input source has lost
@@ -267,10 +270,12 @@ class VRController {
     // /////////////////////////////////
     // Simulate Pointer Enter/Leave Events.
     // Check for pointer over every Nth frame (at 90fps this should be fine.)
-    if (this.raycastTick > 0 && this.tick % this.raycastTick == 0 && !event.getCapture()) {
+    if (this.raycastTick > 0 && this.tick % this.raycastTick == 0) {
       const intersectionData = this.getGeomItemAtTip()
       if (intersectionData != undefined) {
+        const event = new XRControllerEvent(this.xrvp, this, this.buttonPressed ? 1 : 0)
         event.intersectionData = intersectionData
+        event.pointerRay = this.pointerRay
         if (intersectionData.geomItem != this.pointerOverItem) {
           if (this.pointerOverItem) {
             event.leftGeometry = this.pointerOverItem
@@ -286,6 +291,8 @@ class VRController {
         // emit the pointer move event directly to the item.
         intersectionData.geomItem.onPointerMove(event)
       } else if (this.pointerOverItem) {
+        const event = new XRControllerEvent(this.xrvp, this, this.buttonPressed ? 1 : 0)
+        event.pointerRay = this.pointerRay
         event.leftGeometry = this.pointerOverItem
         this.pointerOverItem.onPointerLeave(event)
         this.pointerOverItem = null

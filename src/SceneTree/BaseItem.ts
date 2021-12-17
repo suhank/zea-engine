@@ -333,6 +333,8 @@ class BaseItem extends ParameterOwner implements Owner {
   copyFrom(src: BaseItem, context?: Record<string, any>): void {
     super.copyFrom(src, context)
     this.setName(src.getName())
+
+    this.setSelectable(src.isSelectable())
   }
 }
 
