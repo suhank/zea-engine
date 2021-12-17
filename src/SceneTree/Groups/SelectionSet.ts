@@ -6,6 +6,7 @@ import { BaseGroup } from './BaseGroup'
 import { TreeItem } from '../TreeItem'
 import { BaseGeomItem } from '../BaseGeomItem'
 import { BaseItem } from '../BaseItem'
+import { CloneContext } from '../CloneContext'
 
 /**
  *
@@ -191,7 +192,7 @@ class SelectionSet extends BaseGroup {
    * @param context - The context value.
    * @return - Returns a new cloned group.
    */
-  clone(context: Record<string, any>) {
+  clone(context: CloneContext) {
     const cloned = new SelectionSet(this.__name + ' clone')
     cloned.copyFrom(this, context)
     return cloned

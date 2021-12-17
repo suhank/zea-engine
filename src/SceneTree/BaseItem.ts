@@ -9,6 +9,7 @@ import { BaseEvent } from '../Utilities/BaseEvent'
 import { Parameter } from './Parameters/Parameter'
 import { SelectabilityChangedEvent } from '../Utilities/Events/SelectabilityChangedEvent'
 import { SelectedEvent } from '../Utilities/Events/SelectedEvent'
+import { CloneContext } from './CloneContext'
 import { AssetLoadContext } from './AssetLoadContext'
 
 let numBaseItems = 0
@@ -315,7 +316,7 @@ class BaseItem extends ParameterOwner implements Owner {
    * **Note:** Each class should implement clone to be clonable.
    * @param context - The context value.
    */
-  clone(context?: Record<string, any>): BaseItem {
+  clone(context?: CloneContext): BaseItem {
     throw new Error(this.constructor.name + ' does not implement its clone method')
   }
 
@@ -331,7 +332,7 @@ class BaseItem extends ParameterOwner implements Owner {
    * @param src - The BaseItem to copy from.
    * @param context - The context value
    */
-  copyFrom(src: BaseItem, context?: Record<string, any>): void {
+  copyFrom(src: BaseItem, context?: CloneContext): void {
     super.copyFrom(src, context)
     this.setName(src.getName())
 

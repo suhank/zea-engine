@@ -15,6 +15,7 @@ import { ShaderNameChangedEvent } from '../Utilities/Events/ShaderNameChangedEve
 import { TransparencyChangedEvent } from '../Utilities/Events/TransparencyChangedEvent'
 import { TexturedChangedEvent } from '../Utilities/Events/TexturedChangedEvent'
 import { GLShader } from '../Renderer'
+import { CloneContext } from './CloneContext'
 import { AssetLoadContext, ColorParameter, NumberParameter } from '..'
 
 /**
@@ -340,7 +341,7 @@ class Material extends BaseItem {
    * @param context - The context value.
    * @return - Returns a new cloned material.
    */
-  clone(context?: Record<string, any>) {
+  clone(context?: CloneContext) {
     const cloned = new Material('clone', '') // TODO: what should the arguemnts be here?
     cloned.copyFrom(this, context)
     return cloned
@@ -352,7 +353,7 @@ class Material extends BaseItem {
    * @param src - The material to copy from.
    * @param context - The context value.
    */
-  copyFrom(src: Material, context?: Record<string, any>) {
+  copyFrom(src: Material, context?: CloneContext) {
     this.setShaderName(src.getShaderName())
     super.copyFrom(src, context)
   }

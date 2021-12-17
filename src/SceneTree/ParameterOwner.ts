@@ -9,6 +9,7 @@ import { BinReader } from './BinReader'
 import { ParameterAddedEvent } from '../Utilities/Events/ParameterAddedEvent'
 import { ParameterRemovedEvent } from '../Utilities/Events/ParameterRemovedEvent'
 import { Parameter } from './Parameters/Parameter'
+import { CloneContext } from './CloneContext'
 import { AssetLoadContext } from './AssetLoadContext'
 
 /**
@@ -312,7 +313,7 @@ class ParameterOwner extends EventEmitter {
    * @param src - The ParameterOwner copy from.
    * @param context - The context value
    */
-  copyFrom(src: ParameterOwner, context?: Record<string, any>): void {
+  copyFrom(src: ParameterOwner, context?: CloneContext): void {
     // Note: Loop over the parameters in reverse order,
     // this is because often, parameter dependencies
     // are bottom to top (bottom params dependent on higher params).

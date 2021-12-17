@@ -8,6 +8,7 @@ import { Material } from '../../SceneTree/Material'
 import { Color } from '../../Math/Color'
 import { BaseItem } from '../BaseItem'
 import { BaseGeomItem } from '../BaseGeomItem'
+import { CloneContext } from '../CloneContext'
 
 /**
  *
@@ -202,7 +203,7 @@ class MaterialGroup extends BaseGroup {
    * @param context - The context value.
    * @return - Returns a new cloned group.
    */
-  clone(context: Record<string, unknown>) {
+  clone(context: CloneContext) {
     const cloned = new MaterialGroup(this.__name + 'clone')
     cloned.copyFrom(this, context)
     return cloned
