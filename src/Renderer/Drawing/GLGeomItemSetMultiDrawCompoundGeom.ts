@@ -32,10 +32,10 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
   protected drawElementOffsets: Record<string, Int32Array> = {}
 
   protected highlightedDrawCounts: Record<string, number> = {}
-  protected highlightElementCounts: Int32Array = new Int32Array(0)
-  protected highlightElementOffsets: Int32Array = new Int32Array(0)
-  protected highlightedIdsArray?: null | Float32Array = null
-  protected highlightedIdsTexture: GLTexture2D | null = null
+  protected highlightElementCounts: Record<string, Int32Array> = {}
+  protected highlightElementOffsets: Record<string, Int32Array> = {}
+  protected highlightedIdsArray?: Record<string, Float32Array> = {}
+  protected highlightedIdsTexture: Record<string, GLTexture2D> = {}
   protected highlightedIdsBufferDirty: boolean = true
 
   /**
@@ -181,11 +181,9 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
       if (glGeomItem.isVisible()) {
         const geomBuffers = this.renderer.glGeomLibrary.getGeomBuffers(glGeomItem.geomId)
         let drawCounts: Record<string, number> = {}
-        if (geomBuffers.subGeoms.length > 0) {
-          geomBuffers.subGeoms.forEach((subGeom: { start: number; count: number; type: string }) => {
-            if (!drawCounts[subGeom.type]) drawCounts[subGeom.type] = 0
-            drawCounts[subGeom.type]++
-          })
+        if (true) {
+          drawCounts['TRIANGLES'] = geomBuffers.subGeomCounts['TRIANGLES'].length
+          drawCounts['LINES'] = geomBuffers.subGeomCounts['LINES'].length
         } else {
           // for non-shattered geoms, we just draw once for each element type per GeomItem.
           for (let key in geomBuffers.counts) {
@@ -239,30 +237,29 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
       const offsetAndCount = this.renderer.glGeomLibrary.getGeomOffsetAndCount(glGeomItem.geomId)
       const geomBuffers = this.renderer.glGeomLibrary.getGeomBuffers(glGeomItem.geomId)
 
-      if (geomBuffers.subGeoms.length > 0) {
-        const counts: Record<string, number> = {}
-        geomBuffers.subGeoms.forEach(
-          (subGeom: { start: number; count: number; type: string; materialId: number }, subIndex: number) => {
-            const allocator = this.allocators[subGeom.type]
-            const allocation = allocator.getAllocation(index)
+      if (true) {
+        let offset = 0
+        const addSubGeoms = (offsets: Uint32Array, counts: Uint8Array | Uint16Array | Uint32Array, type: string) => {
+          const allocator = this.allocators[type]
+          const allocation = allocator.getAllocation(index)
+          const drawIdsArray = this.drawIdsArrays[type]
+          const drawElementOffsets = this.drawElementOffsets[type]
+          const drawElementCounts = this.drawElementCounts[type]
 
-            if (!counts[subGeom.type]) counts[subGeom.type] = 0
-            const drawId = allocation.start + counts[subGeom.type]
+          for (let i = 0; i < offsets.length; i++) {
+            const drawId = allocation.start + offset
 
-            const drawIdsArray = this.drawIdsArrays[subGeom.type]
-            const drawElementOffsets = this.drawElementOffsets[subGeom.type]
-            const drawElementCounts = this.drawElementCounts[subGeom.type]
-
-            drawElementOffsets[drawId] = offsetAndCount[0] + subGeom.start * elementSize
-            drawElementCounts[drawId] = subGeom.count
+            drawElementOffsets[drawId] = offsetAndCount[0] + offsets[i] * elementSize
+            drawElementCounts[drawId] = counts[i]
             drawIdsArray[drawId * 4 + 0] = glGeomItem.drawItemId
-            drawIdsArray[drawId * 4 + 1] = subIndex
-            drawIdsArray[drawId * 4 + 3] = subGeom.materialId ? subGeom.materialId : -1.0
+            drawIdsArray[drawId * 4 + 1] = i ///subIndex
+            // drawIdsArray[drawId * 4 + 3] = subGeom.materialId ? subGeom.materialId : -1.0
             drawIdsArray[drawId * 4 + 4] = 0.0 // spare
-
-            counts[subGeom.type]++
+            offset++
           }
-        )
+        }
+        addSubGeoms(geomBuffers.subGeomOffsets['TRIANGLES'], geomBuffers.subGeomCounts['TRIANGLES'], 'TRIANGLES')
+        addSubGeoms(geomBuffers.subGeomOffsets['LINES'], geomBuffers.subGeomCounts['LINES'], 'LINES')
       } else {
         for (let key in geomBuffers.offsets) {
           const count = geomBuffers.counts[key]

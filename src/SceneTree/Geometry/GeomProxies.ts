@@ -166,9 +166,10 @@ class MeshProxy extends BaseProxy {
  * @private
  */
 class CompoundGeomProxy extends BaseProxy {
-  private offsets: Record<string, number> = {}
-  private counts: Record<string, number> = {}
-  private subGeomOffsets: Uint32Array
+  private offsets: Record<string, number>
+  private counts: Record<string, number>
+  private subGeomOffsets: Record<string, Uint32Array>
+  private subGeomCounts: Record<string, Uint8Array | Uint16Array | Uint32Array>
   /**
    * Create a mesh proxy.
    * @param data - The data value.
@@ -179,6 +180,7 @@ class CompoundGeomProxy extends BaseProxy {
     this.counts = data.geomBuffers.counts
     this.offsets = data.geomBuffers.offsets
     this.subGeomOffsets = data.geomBuffers.subGeomOffsets
+    this.subGeomCounts = data.geomBuffers.subGeomCounts
   }
 
   /**

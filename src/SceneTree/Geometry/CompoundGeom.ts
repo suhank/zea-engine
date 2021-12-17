@@ -57,7 +57,8 @@ class CompoundGeom extends BaseGeom {
   protected indices: Uint8Array | Uint16Array | Uint32Array = new Uint8Array(0)
   private offsets: Record<string, number> = {}
   private counts: Record<string, number> = {}
-  private subGeomOffsets: Uint32Array
+  private subGeomOffsets: Record<string, Uint32Array> = {}
+  private subGeomCounts: Record<string, Uint8Array | Uint16Array | Uint32Array> = {}
   protected subGeoms: Array<SubGeomData> = []
   /**
    * Create points.
@@ -127,6 +128,7 @@ class CompoundGeom extends BaseGeom {
       offsets: this.offsets,
       counts: this.counts,
       subGeomOffsets: this.subGeomOffsets,
+      subGeomCounts: this.subGeomCounts,
       subGeoms: this.subGeoms,
     }
     return result
@@ -144,40 +146,55 @@ class CompoundGeom extends BaseGeom {
   readBinary(reader: BinReader, context: Record<string, unknown>) {
     super.loadBaseGeomBinary(reader)
 
-    const numPointsIndices = reader.loadUInt32()
-    const numLinesIndices = reader.loadUInt32()
-    const numTriangleIndices = reader.loadUInt32()
-
-    this.offsets['POINTS'] = 0
-    this.counts['POINTS'] = numPointsIndices
-    this.offsets['LINES'] = numPointsIndices
-    this.counts['LINES'] = numLinesIndices
-    this.offsets['TRIANGLES'] = numPointsIndices + numLinesIndices
-    this.counts['TRIANGLES'] = numTriangleIndices
+    const geomCountsByType = reader.loadUInt32Array(3)
+    this.offsets['TRIANGLES'] = 0
+    this.counts['TRIANGLES'] = geomCountsByType[0]
+    this.offsets['LINES'] = geomCountsByType[0]
+    this.counts['LINES'] = geomCountsByType[1]
+    this.offsets['POINTS'] = geomCountsByType[0] + geomCountsByType[1]
+    this.counts['POINTS'] = geomCountsByType[2]
 
     const bytes = reader.loadUInt8()
     if (bytes == 1) this.indices = reader.loadUInt8Array(undefined, true)
     else if (bytes == 2) this.indices = reader.loadUInt16Array(undefined, true)
     else if (bytes == 4) this.indices = reader.loadUInt32Array(undefined, true)
-    else {
-      throw Error('indices undefined')
-    }
 
-    const bytesSubGeoms = reader.loadUInt8()
-    let subGeomDeltas: Uint8Array | Uint16Array | Uint32Array
-    if (bytesSubGeoms == 1) subGeomDeltas = reader.loadUInt8Array()
-    else if (bytesSubGeoms == 2) subGeomDeltas = reader.loadUInt16Array()
-    else if (bytesSubGeoms == 4) subGeomDeltas = reader.loadUInt32Array()
+    // /////////////////////////////////
+    // TRIANGLES subgeoms
+    const bytesMeshSubGeoms = reader.loadUInt8()
+    let subGeomCountsMesh: Uint8Array | Uint16Array | Uint32Array
+    if (bytesMeshSubGeoms == 1) subGeomCountsMesh = reader.loadUInt8Array()
+    else if (bytesMeshSubGeoms == 2) subGeomCountsMesh = reader.loadUInt16Array()
+    else if (bytesMeshSubGeoms == 4) subGeomCountsMesh = reader.loadUInt32Array()
     else {
       throw Error('subGeomOffsets undefined')
     }
-    this.subGeomOffsets = new Uint32Array(subGeomDeltas.length)
-
+    const subGeomOffsetsMesh = new Uint32Array(subGeomCountsMesh.length)
     let offset = 0
-    for (let i = 0; i < subGeomDeltas.length; i++) {
-      offset += subGeomDeltas[i]
-      this.subGeomOffsets[i] = offset
+    for (let i = 0; i < subGeomCountsMesh.length; i++) {
+      subGeomOffsetsMesh[i] = offset
+      offset += subGeomCountsMesh[i]
     }
+    this.subGeomOffsets['TRIANGLES'] = subGeomOffsetsMesh
+    this.subGeomCounts['TRIANGLES'] = subGeomCountsMesh
+
+    // /////////////////////////////////
+    // LINES subgeoms
+    const bytesLinesSubGeoms = reader.loadUInt8()
+    let subGeomCountsLines: Uint8Array | Uint16Array | Uint32Array
+    if (bytesLinesSubGeoms == 1) subGeomCountsLines = reader.loadUInt8Array()
+    else if (bytesLinesSubGeoms == 2) subGeomCountsLines = reader.loadUInt16Array()
+    else if (bytesLinesSubGeoms == 4) subGeomCountsLines = reader.loadUInt32Array()
+    else {
+      throw Error('subGeomOffsets undefined')
+    }
+    const subGeomOffsetsLines = new Uint32Array(subGeomCountsLines.length)
+    for (let i = 0; i < subGeomCountsLines.length; i++) {
+      subGeomOffsetsLines[i] = offset
+      offset += subGeomCountsLines[i]
+    }
+    this.subGeomOffsets['LINES'] = subGeomOffsetsLines
+    this.subGeomCounts['LINES'] = subGeomCountsLines
 
     this.emit('geomDataChanged', {})
   }
