@@ -3,12 +3,6 @@ import { VRController } from '../../Renderer/VR/VRController'
 import { ZeaPointerEvent, POINTER_TYPES } from './ZeaPointerEvent'
 import { BaseTool, TreeItem } from '../../SceneTree'
 
-// Ensure that XRControllers have a separate capture
-// to the mouse and touch events. This is simply to
-// avoid a capture being left on in either part breaking
-// the other.
-let capturedItem: TreeItem | BaseTool = null
-
 class XRControllerEvent extends ZeaPointerEvent {
   controller: VRController
   button: number
@@ -25,15 +19,15 @@ class XRControllerEvent extends ZeaPointerEvent {
   }
 
   setCapture(item: TreeItem | BaseTool) {
-    capturedItem = item
+    this.controller.capturedItem = item
   }
 
   getCapture() {
-    return capturedItem
+    return this.controller.capturedItem
   }
 
   releaseCapture() {
-    capturedItem = null
+    this.controller.capturedItem = null
   }
 }
 export { XRControllerEvent }
