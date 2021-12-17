@@ -57,6 +57,7 @@ class CompoundGeom extends BaseGeom {
   protected indices: Uint8Array | Uint16Array | Uint32Array = new Uint8Array(0)
   private offsets: Record<string, number> = {}
   private counts: Record<string, number> = {}
+  private subGeomOffsets: Uint32Array
   protected subGeoms: Array<SubGeomData> = []
   /**
    * Create points.
@@ -125,6 +126,7 @@ class CompoundGeom extends BaseGeom {
       attrBuffers,
       offsets: this.offsets,
       counts: this.counts,
+      subGeomOffsets: this.subGeomOffsets,
       subGeoms: this.subGeoms,
     }
     return result
@@ -159,6 +161,22 @@ class CompoundGeom extends BaseGeom {
     else if (bytes == 4) this.indices = reader.loadUInt32Array(undefined, true)
     else {
       throw Error('indices undefined')
+    }
+
+    const bytesSubGeoms = reader.loadUInt8()
+    let subGeomDeltas: Uint8Array | Uint16Array | Uint32Array
+    if (bytesSubGeoms == 1) subGeomDeltas = reader.loadUInt8Array()
+    else if (bytesSubGeoms == 2) subGeomDeltas = reader.loadUInt16Array()
+    else if (bytesSubGeoms == 4) subGeomDeltas = reader.loadUInt32Array()
+    else {
+      throw Error('subGeomOffsets undefined')
+    }
+    this.subGeomOffsets = new Uint32Array(subGeomDeltas.length)
+
+    let offset = 0
+    for (let i = 0; i < subGeomDeltas.length; i++) {
+      offset += subGeomDeltas[i]
+      this.subGeomOffsets[i] = offset
     }
 
     this.emit('geomDataChanged', {})
