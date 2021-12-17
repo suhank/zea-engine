@@ -33,7 +33,7 @@ Create a GL geom.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `gl` | `WebGL12RenderingContext` | The webgl rendering context. |
+| `gl` | [`WebGL12RenderingContext`](../types/Renderer_types_webgl.WebGL12RenderingContext) | The webgl rendering context. |
 | `geom` | [`BaseGeom`](../../SceneTree/Geometry/SceneTree_Geometry_BaseGeom.BaseGeom) | A geometry object |
 
 #### Overrides
@@ -42,7 +42,7 @@ Create a GL geom.
 
 #### Defined in
 
-[Renderer/Drawing/GLGeom.ts:20](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/Drawing/GLGeom.ts#L20)
+[src/Renderer/Drawing/GLGeom.ts:22](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/Drawing/GLGeom.ts#L22)
 
 ## Properties
 
@@ -56,7 +56,7 @@ Create a GL geom.
 
 #### Defined in
 
-[SceneTree/RefCounted.ts:15](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/RefCounted.ts#L15)
+[src/SceneTree/RefCounted.ts:15](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/RefCounted.ts#L15)
 
 ___
 
@@ -66,17 +66,17 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLGeom.ts:9](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/Drawing/GLGeom.ts#L9)
+[src/Renderer/Drawing/GLGeom.ts:11](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/Drawing/GLGeom.ts#L11)
 
 ___
 
 ### \_\_gl
 
-• `Protected` **\_\_gl**: `WebGL12RenderingContext`
+• `Protected` **\_\_gl**: [`WebGL12RenderingContext`](../types/Renderer_types_webgl.WebGL12RenderingContext)
 
 #### Defined in
 
-[Renderer/Drawing/GLGeom.ts:8](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/Drawing/GLGeom.ts#L8)
+[src/Renderer/Drawing/GLGeom.ts:10](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/Drawing/GLGeom.ts#L10)
 
 ___
 
@@ -86,7 +86,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLGeom.ts:10](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/Drawing/GLGeom.ts#L10)
+[src/Renderer/Drawing/GLGeom.ts:12](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/Drawing/GLGeom.ts#L12)
 
 ___
 
@@ -100,7 +100,7 @@ ___
 
 #### Defined in
 
-[Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/BaseClass.ts#L11)
+[src/Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/BaseClass.ts#L11)
 
 ___
 
@@ -110,7 +110,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLGeom.ts:14](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/Drawing/GLGeom.ts#L14)
+[src/Renderer/Drawing/GLGeom.ts:16](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/Drawing/GLGeom.ts#L16)
 
 ___
 
@@ -124,7 +124,7 @@ ___
 
 #### Defined in
 
-[SceneTree/RefCounted.ts:14](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/RefCounted.ts#L14)
+[src/SceneTree/RefCounted.ts:14](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/RefCounted.ts#L14)
 
 ___
 
@@ -134,7 +134,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLGeom.ts:11](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/Drawing/GLGeom.ts#L11)
+[src/Renderer/Drawing/GLGeom.ts:13](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/Drawing/GLGeom.ts#L13)
 
 ___
 
@@ -144,7 +144,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLGeom.ts:12](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/Drawing/GLGeom.ts#L12)
+[src/Renderer/Drawing/GLGeom.ts:14](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/Drawing/GLGeom.ts#L14)
 
 ___
 
@@ -154,7 +154,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLGeom.ts:13](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/Drawing/GLGeom.ts#L13)
+[src/Renderer/Drawing/GLGeom.ts:15](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/Drawing/GLGeom.ts#L15)
 
 ___
 
@@ -168,7 +168,7 @@ ___
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/EventEmitter.ts#L26)
+[src/Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/EventEmitter.ts#L26)
 
 ## Methods
 
@@ -196,7 +196,7 @@ The addRef method.
 
 #### Defined in
 
-[SceneTree/RefCounted.ts:51](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/RefCounted.ts#L51)
+[src/SceneTree/RefCounted.ts:51](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/RefCounted.ts#L51)
 
 ___
 
@@ -210,7 +210,7 @@ The bind method.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `renderstate` | `RenderState` | The object tracking the current state of the renderer |
+
 
 #### Returns
 
@@ -220,7 +220,7 @@ The bind method.
 
 #### Defined in
 
-[Renderer/Drawing/GLGeom.ts:85](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/Drawing/GLGeom.ts#L85)
+[src/Renderer/Drawing/GLGeom.ts:87](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/Drawing/GLGeom.ts#L87)
 
 ___
 
@@ -234,7 +234,7 @@ The bindAndDraw method.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `renderstate` | `RenderState` | The object tracking the current state of the renderer |
+
 
 #### Returns
 
@@ -242,7 +242,7 @@ The bindAndDraw method.
 
 #### Defined in
 
-[Renderer/Drawing/GLGeom.ts:138](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/Drawing/GLGeom.ts#L138)
+[src/Renderer/Drawing/GLGeom.ts:140](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/Drawing/GLGeom.ts#L140)
 
 ___
 
@@ -258,7 +258,7 @@ The clearBuffers method.
 
 #### Defined in
 
-[Renderer/Drawing/GLGeom.ts:146](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/Drawing/GLGeom.ts#L146)
+[src/Renderer/Drawing/GLGeom.ts:148](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/Drawing/GLGeom.ts#L148)
 
 ___
 
@@ -279,7 +279,7 @@ Users should never need to call this method directly.
 
 #### Defined in
 
-[Renderer/Drawing/GLGeom.ts:168](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/Drawing/GLGeom.ts#L168)
+[src/Renderer/Drawing/GLGeom.ts:170](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/Drawing/GLGeom.ts#L170)
 
 ___
 
@@ -301,7 +301,7 @@ The dirtyBuffers method.
 
 #### Defined in
 
-[Renderer/Drawing/GLGeom.ts:56](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/Drawing/GLGeom.ts#L56)
+[src/Renderer/Drawing/GLGeom.ts:58](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/Drawing/GLGeom.ts#L58)
 
 ___
 
@@ -315,7 +315,7 @@ The draw method.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `renderstate` | `RenderState` | The object tracking the current state of the renderer |
+
 
 #### Returns
 
@@ -323,7 +323,7 @@ The draw method.
 
 #### Defined in
 
-[Renderer/Drawing/GLGeom.ts:121](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/Drawing/GLGeom.ts#L121)
+[src/Renderer/Drawing/GLGeom.ts:123](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/Drawing/GLGeom.ts#L123)
 
 ___
 
@@ -337,7 +337,7 @@ The drawInstanced method.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `renderstate` | `RenderState` | The object tracking the current state of the renderer |
+
 | `instanceCount` | `number` | The instanceCount param. |
 
 #### Returns
@@ -346,7 +346,7 @@ The drawInstanced method.
 
 #### Defined in
 
-[Renderer/Drawing/GLGeom.ts:130](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/Drawing/GLGeom.ts#L130)
+[src/Renderer/Drawing/GLGeom.ts:132](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/Drawing/GLGeom.ts#L132)
 
 ___
 
@@ -373,7 +373,7 @@ Triggers all listener functions in an event.
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/EventEmitter.ts#L154)
+[src/Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/EventEmitter.ts#L154)
 
 ___
 
@@ -387,7 +387,7 @@ The genBuffers method.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `renderstate?` | `RenderState` | The object tracking the current state of the renderer |
+
 
 #### Returns
 
@@ -395,7 +395,7 @@ The genBuffers method.
 
 #### Defined in
 
-[Renderer/Drawing/GLGeom.ts:66](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/Drawing/GLGeom.ts#L66)
+[src/Renderer/Drawing/GLGeom.ts:68](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/Drawing/GLGeom.ts#L68)
 
 ___
 
@@ -417,7 +417,7 @@ Returns the unmangled name of the class.
 
 #### Defined in
 
-[Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/BaseClass.ts#L33)
+[src/Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/BaseClass.ts#L33)
 
 ___
 
@@ -435,7 +435,7 @@ Returns the owned Geometry object
 
 #### Defined in
 
-[Renderer/Drawing/GLGeom.ts:45](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/Drawing/GLGeom.ts#L45)
+[src/Renderer/Drawing/GLGeom.ts:47](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/Drawing/GLGeom.ts#L47)
 
 ___
 
@@ -458,7 +458,7 @@ identifier which is based on a counter that is incremented.
 
 #### Defined in
 
-[SceneTree/RefCounted.ts:34](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/RefCounted.ts#L34)
+[src/SceneTree/RefCounted.ts:34](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/RefCounted.ts#L34)
 
 ___
 
@@ -486,7 +486,7 @@ The getRefIndex method.
 
 #### Defined in
 
-[SceneTree/RefCounted.ts:89](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/RefCounted.ts#L89)
+[src/SceneTree/RefCounted.ts:89](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/RefCounted.ts#L89)
 
 ___
 
@@ -514,7 +514,7 @@ The getRefer method.
 
 #### Defined in
 
-[SceneTree/RefCounted.ts:80](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/RefCounted.ts#L80)
+[src/SceneTree/RefCounted.ts:80](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/RefCounted.ts#L80)
 
 ___
 
@@ -536,7 +536,7 @@ Returns true if this object has already been destroyed.
 
 #### Defined in
 
-[SceneTree/RefCounted.ts:97](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/RefCounted.ts#L97)
+[src/SceneTree/RefCounted.ts:97](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/RefCounted.ts#L97)
 
 ___
 
@@ -558,7 +558,7 @@ The numRefs method.
 
 #### Defined in
 
-[SceneTree/RefCounted.ts:42](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/RefCounted.ts#L42)
+[src/SceneTree/RefCounted.ts:42](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/RefCounted.ts#L42)
 
 ___
 
@@ -585,7 +585,7 @@ Removes a listener function from the specified event, using either the function 
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/EventEmitter.ts#L97)
+[src/Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/EventEmitter.ts#L97)
 
 ___
 
@@ -614,7 +614,7 @@ Adds a listener function for a given event name.
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/EventEmitter.ts#L44)
+[src/Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/EventEmitter.ts#L44)
 
 ___
 
@@ -652,7 +652,7 @@ asset.once('loaded', () => {
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/EventEmitter.ts#L82)
+[src/Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/EventEmitter.ts#L82)
 
 ___
 
@@ -679,7 +679,7 @@ remove listener by ID returned from #on
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/EventEmitter.ts#L134)
+[src/Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/EventEmitter.ts#L134)
 
 ___
 
@@ -705,7 +705,7 @@ The removeRef method.
 
 #### Defined in
 
-[SceneTree/RefCounted.ts:64](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/RefCounted.ts#L64)
+[src/SceneTree/RefCounted.ts:64](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/RefCounted.ts#L64)
 
 ___
 
@@ -719,7 +719,7 @@ The unbind method.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `renderstate` | `RenderState` | The object tracking the current state of the renderer |
+
 
 #### Returns
 
@@ -727,7 +727,7 @@ The unbind method.
 
 #### Defined in
 
-[Renderer/Drawing/GLGeom.ts:104](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/Drawing/GLGeom.ts#L104)
+[src/Renderer/Drawing/GLGeom.ts:106](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/Drawing/GLGeom.ts#L106)
 
 ___
 
@@ -741,7 +741,7 @@ The updateBuffers method.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `renderstate?` | `RenderState` | The object tracking the current state of the renderer |
+
 
 #### Returns
 
@@ -749,5 +749,5 @@ The updateBuffers method.
 
 #### Defined in
 
-[Renderer/Drawing/GLGeom.ts:72](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/Drawing/GLGeom.ts#L72)
+[src/Renderer/Drawing/GLGeom.ts:74](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/Drawing/GLGeom.ts#L74)
 

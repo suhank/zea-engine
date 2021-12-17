@@ -67,7 +67,7 @@ Create an operator input.
 
 #### Defined in
 
-[SceneTree/Operators/OperatorInput.ts:20](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/Operators/OperatorInput.ts#L20)
+[src/SceneTree/Operators/OperatorInput.ts:20](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/Operators/OperatorInput.ts#L20)
 
 ## Properties
 
@@ -81,7 +81,7 @@ Create an operator input.
 
 #### Defined in
 
-[Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/BaseClass.ts#L11)
+[src/Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/BaseClass.ts#L11)
 
 ___
 
@@ -91,7 +91,7 @@ ___
 
 #### Defined in
 
-[SceneTree/Operators/OperatorInput.ts:12](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/Operators/OperatorInput.ts#L12)
+[src/SceneTree/Operators/OperatorInput.ts:12](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/Operators/OperatorInput.ts#L12)
 
 ___
 
@@ -101,7 +101,7 @@ ___
 
 #### Defined in
 
-[SceneTree/Operators/OperatorInput.ts:14](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/Operators/OperatorInput.ts#L14)
+[src/SceneTree/Operators/OperatorInput.ts:14](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/Operators/OperatorInput.ts#L14)
 
 ___
 
@@ -115,7 +115,7 @@ ___
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/EventEmitter.ts#L26)
+[src/Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/EventEmitter.ts#L26)
 
 ___
 
@@ -125,7 +125,7 @@ ___
 
 #### Defined in
 
-[SceneTree/Operators/OperatorInput.ts:11](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/Operators/OperatorInput.ts#L11)
+[src/SceneTree/Operators/OperatorInput.ts:11](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/Operators/OperatorInput.ts#L11)
 
 ___
 
@@ -135,7 +135,7 @@ ___
 
 #### Defined in
 
-[SceneTree/Operators/OperatorInput.ts:13](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/Operators/OperatorInput.ts#L13)
+[src/SceneTree/Operators/OperatorInput.ts:13](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/Operators/OperatorInput.ts#L13)
 
 ## Methods
 
@@ -152,7 +152,7 @@ It removes all connections to parameters in the scene.
 
 #### Defined in
 
-[SceneTree/Operators/OperatorInput.ts:161](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/Operators/OperatorInput.ts#L161)
+[src/SceneTree/Operators/OperatorInput.ts:161](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/Operators/OperatorInput.ts#L161)
 
 ___
 
@@ -179,7 +179,7 @@ Triggers all listener functions in an event.
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/EventEmitter.ts#L154)
+[src/Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/EventEmitter.ts#L154)
 
 ___
 
@@ -202,7 +202,7 @@ The fromJSON method decodes a json object for this type.
 
 #### Defined in
 
-[SceneTree/Operators/OperatorInput.ts:140](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/Operators/OperatorInput.ts#L140)
+[src/SceneTree/Operators/OperatorInput.ts:140](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/Operators/OperatorInput.ts#L140)
 
 ___
 
@@ -224,7 +224,7 @@ Returns the unmangled name of the class.
 
 #### Defined in
 
-[Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/BaseClass.ts#L33)
+[src/Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/BaseClass.ts#L33)
 
 ___
 
@@ -248,7 +248,7 @@ Returns the unique id of the object.
 
 #### Defined in
 
-[Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/BaseClass.ts#L25)
+[src/Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/BaseClass.ts#L25)
 
 ___
 
@@ -266,7 +266,7 @@ The getName method.
 
 #### Defined in
 
-[SceneTree/Operators/OperatorInput.ts:29](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/Operators/OperatorInput.ts#L29)
+[src/SceneTree/Operators/OperatorInput.ts:29](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/Operators/OperatorInput.ts#L29)
 
 ___
 
@@ -284,7 +284,7 @@ Returns operator that owns this input.
 
 #### Defined in
 
-[SceneTree/Operators/OperatorInput.ts:45](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/Operators/OperatorInput.ts#L45)
+[src/SceneTree/Operators/OperatorInput.ts:45](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/Operators/OperatorInput.ts#L45)
 
 ___
 
@@ -302,7 +302,7 @@ The getParam method.
 
 #### Defined in
 
-[SceneTree/Operators/OperatorInput.ts:61](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/Operators/OperatorInput.ts#L61)
+[src/SceneTree/Operators/OperatorInput.ts:61](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/Operators/OperatorInput.ts#L61)
 
 ___
 
@@ -320,7 +320,7 @@ The getValue method.
 
 #### Defined in
 
-[SceneTree/Operators/OperatorInput.ts:93](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/Operators/OperatorInput.ts#L93)
+[src/SceneTree/Operators/OperatorInput.ts:93](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/Operators/OperatorInput.ts#L93)
 
 ___
 
@@ -338,7 +338,7 @@ Returns true if this input is connected to a parameter.
 
 #### Defined in
 
-[SceneTree/Operators/OperatorInput.ts:53](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/Operators/OperatorInput.ts#L53)
+[src/SceneTree/Operators/OperatorInput.ts:53](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/Operators/OperatorInput.ts#L53)
 
 ___
 
@@ -365,7 +365,7 @@ Removes a listener function from the specified event, using either the function 
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/EventEmitter.ts#L97)
+[src/Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/EventEmitter.ts#L97)
 
 ___
 
@@ -394,7 +394,7 @@ Adds a listener function for a given event name.
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/EventEmitter.ts#L44)
+[src/Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/EventEmitter.ts#L44)
 
 ___
 
@@ -432,7 +432,7 @@ asset.once('loaded', () => {
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/EventEmitter.ts#L82)
+[src/Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/EventEmitter.ts#L82)
 
 ___
 
@@ -446,7 +446,7 @@ ___
 
 #### Defined in
 
-[SceneTree/Operators/OperatorInput.ts:70](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/Operators/OperatorInput.ts#L70)
+[src/SceneTree/Operators/OperatorInput.ts:70](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/Operators/OperatorInput.ts#L70)
 
 ___
 
@@ -462,7 +462,7 @@ The reattach method can be called when re-instating an operator in the scene.
 
 #### Defined in
 
-[SceneTree/Operators/OperatorInput.ts:174](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/Operators/OperatorInput.ts#L174)
+[src/SceneTree/Operators/OperatorInput.ts:174](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/Operators/OperatorInput.ts#L174)
 
 ___
 
@@ -489,7 +489,7 @@ remove listener by ID returned from #on
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/EventEmitter.ts#L134)
+[src/Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/EventEmitter.ts#L134)
 
 ___
 
@@ -505,7 +505,7 @@ Propagates from the upstream parameter to the connected operator.
 
 #### Defined in
 
-[SceneTree/Operators/OperatorInput.ts:111](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/Operators/OperatorInput.ts#L111)
+[src/SceneTree/Operators/OperatorInput.ts:111](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/Operators/OperatorInput.ts#L111)
 
 ___
 
@@ -527,7 +527,7 @@ Sets operator that owns this input. Called by the operator when adding inputs
 
 #### Defined in
 
-[SceneTree/Operators/OperatorInput.ts:37](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/Operators/OperatorInput.ts#L37)
+[src/SceneTree/Operators/OperatorInput.ts:37](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/Operators/OperatorInput.ts#L37)
 
 ___
 
@@ -549,7 +549,7 @@ Assigns the Paramter to be used to provide the input value.
 
 #### Defined in
 
-[SceneTree/Operators/OperatorInput.ts:78](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/Operators/OperatorInput.ts#L78)
+[src/SceneTree/Operators/OperatorInput.ts:78](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/Operators/OperatorInput.ts#L78)
 
 ___
 
@@ -571,7 +571,7 @@ The setValue method.
 
 #### Defined in
 
-[SceneTree/Operators/OperatorInput.ts:102](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/Operators/OperatorInput.ts#L102)
+[src/SceneTree/Operators/OperatorInput.ts:102](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/Operators/OperatorInput.ts#L102)
 
 ___
 
@@ -600,5 +600,5 @@ The toJSON method encodes this type as a json object for persistence.
 
 #### Defined in
 
-[SceneTree/Operators/OperatorInput.ts:126](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/Operators/OperatorInput.ts#L126)
+[src/SceneTree/Operators/OperatorInput.ts:126](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/Operators/OperatorInput.ts#L126)
 

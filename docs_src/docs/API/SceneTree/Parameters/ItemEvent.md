@@ -34,7 +34,7 @@ Create an BaseEvent.
 
 #### Defined in
 
-[SceneTree/Parameters/ItemSetParameter.ts:10](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/Parameters/ItemSetParameter.ts#L10)
+[src/SceneTree/Parameters/ItemSetParameter.ts:10](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/Parameters/ItemSetParameter.ts#L10)
 
 ## Properties
 
@@ -44,7 +44,7 @@ Create an BaseEvent.
 
 #### Defined in
 
-[SceneTree/Parameters/ItemSetParameter.ts:9](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/Parameters/ItemSetParameter.ts#L9)
+[src/SceneTree/Parameters/ItemSetParameter.ts:9](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/Parameters/ItemSetParameter.ts#L9)
 
 ___
 
@@ -54,5 +54,5 @@ ___
 
 #### Defined in
 
-[SceneTree/Parameters/ItemSetParameter.ts:8](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/Parameters/ItemSetParameter.ts#L8)
+[src/SceneTree/Parameters/ItemSetParameter.ts:8](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/Parameters/ItemSetParameter.ts#L8)
 

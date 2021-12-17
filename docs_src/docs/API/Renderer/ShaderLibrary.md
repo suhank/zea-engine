@@ -19,7 +19,7 @@ Create a shader library.
 
 #### Defined in
 
-[Renderer/ShaderLibrary.ts:25](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/ShaderLibrary.ts#L25)
+[src/Renderer/ShaderLibrary.ts:26](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/ShaderLibrary.ts#L26)
 
 ## Properties
 
@@ -29,7 +29,7 @@ Create a shader library.
 
 #### Defined in
 
-[Renderer/ShaderLibrary.ts:19](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/ShaderLibrary.ts#L19)
+[src/Renderer/ShaderLibrary.ts:20](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/ShaderLibrary.ts#L20)
 
 ___
 
@@ -39,7 +39,7 @@ ___
 
 #### Defined in
 
-[Renderer/ShaderLibrary.ts:20](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/ShaderLibrary.ts#L20)
+[src/Renderer/ShaderLibrary.ts:21](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/ShaderLibrary.ts#L21)
 
 ## Methods
 
@@ -63,7 +63,7 @@ The getShaderModule method. Access specific uniforms, attributes of a particular
 
 #### Defined in
 
-[Renderer/ShaderLibrary.ts:49](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/ShaderLibrary.ts#L49)
+[src/Renderer/ShaderLibrary.ts:50](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/ShaderLibrary.ts#L50)
 
 ___
 
@@ -81,7 +81,7 @@ The getShaderModuleNames method.
 
 #### Defined in
 
-[Renderer/ShaderLibrary.ts:57](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/ShaderLibrary.ts#L57)
+[src/Renderer/ShaderLibrary.ts:58](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/ShaderLibrary.ts#L58)
 
 ___
 
@@ -95,7 +95,7 @@ The handleImport method -- takes the includeFile and if it exists, adds the pars
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `result` | `ShaderParseResult` | result object that stores the glsl, attribute, uniform |
+| `result` | [`ShaderParseResult`](types/Renderer_types_renderer.ShaderParseResult) | result object that stores the glsl, attribute, uniform |
 | `shaderName` | `string` | shaderName |
 | `includeFile` | `string` | file name of the shader snippet/module |
 | `includes` | `string`[] | keep track of what was included |
@@ -107,7 +107,7 @@ The handleImport method -- takes the includeFile and if it exists, adds the pars
 
 #### Defined in
 
-[Renderer/ShaderLibrary.ts:97](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/ShaderLibrary.ts#L97)
+[src/Renderer/ShaderLibrary.ts:98](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/ShaderLibrary.ts#L98)
 
 ___
 
@@ -123,7 +123,7 @@ The parseAttr
 | :------ | :------ | :------ |
 | `parts` | `string`[] | parts |
 | `instanced` | `boolean` | instanced |
-| `result` | `ShaderParseResult` | result object to store parsed data |
+| `result` | [`ShaderParseResult`](types/Renderer_types_renderer.ShaderParseResult) | result object to store parsed data |
 | `line` | `string` | - |
 
 #### Returns
@@ -132,13 +132,13 @@ The parseAttr
 
 #### Defined in
 
-[Renderer/ShaderLibrary.ts:70](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/ShaderLibrary.ts#L70)
+[src/Renderer/ShaderLibrary.ts:71](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/ShaderLibrary.ts#L71)
 
 ___
 
 ### parseShader
 
-▸ **parseShader**(`shaderName`, `glsl`): `ShaderParseResult`
+▸ **parseShader**(`shaderName`, `glsl`): [`ShaderParseResult`](types/Renderer_types_renderer.ShaderParseResult)
 
 The parseShader method.
 
@@ -151,19 +151,19 @@ The parseShader method.
 
 #### Returns
 
-`ShaderParseResult`
+[`ShaderParseResult`](types/Renderer_types_renderer.ShaderParseResult)
 
 - returns the 'result' object
 
 #### Defined in
 
-[Renderer/ShaderLibrary.ts:138](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/ShaderLibrary.ts#L138)
+[src/Renderer/ShaderLibrary.ts:139](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/ShaderLibrary.ts#L139)
 
 ___
 
 ### parseShaderHelper
 
-▸ **parseShaderHelper**(`shaderName`, `glsl`, `includes`, `lineNumber`): `ShaderParseResult`
+▸ **parseShaderHelper**(`shaderName`, `glsl`, `includes`, `lineNumber`): [`ShaderParseResult`](types/Renderer_types_renderer.ShaderParseResult)
 
 The parseShader recursive helper method
 
@@ -178,13 +178,13 @@ The parseShader recursive helper method
 
 #### Returns
 
-`ShaderParseResult`
+[`ShaderParseResult`](types/Renderer_types_renderer.ShaderParseResult)
 
 - The return value.
 
 #### Defined in
 
-[Renderer/ShaderLibrary.ts:150](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/ShaderLibrary.ts#L150)
+[src/Renderer/ShaderLibrary.ts:151](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/ShaderLibrary.ts#L151)
 
 ___
 
@@ -207,5 +207,5 @@ The setShaderModule method. Shader must be set before parsing.
 
 #### Defined in
 
-[Renderer/ShaderLibrary.ts:35](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/ShaderLibrary.ts#L35)
+[src/Renderer/ShaderLibrary.ts:36](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/ShaderLibrary.ts#L36)
 

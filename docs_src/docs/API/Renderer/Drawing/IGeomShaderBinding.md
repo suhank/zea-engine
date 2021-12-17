@@ -23,7 +23,7 @@ custom_edit_url: null
 
 | Name | Type |
 | :------ | :------ |
-| `renderstate` | `RenderState` |
+
 
 #### Returns
 
@@ -31,7 +31,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[Renderer/Drawing/GeomShaderBinding.ts:83](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/Drawing/GeomShaderBinding.ts#L83)
+[src/Renderer/Drawing/GeomShaderBinding.ts:86](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/Drawing/GeomShaderBinding.ts#L86)
 
 ___
 
@@ -45,7 +45,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GeomShaderBinding.ts:85](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/Drawing/GeomShaderBinding.ts#L85)
+[src/Renderer/Drawing/GeomShaderBinding.ts:88](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/Drawing/GeomShaderBinding.ts#L88)
 
 ___
 
@@ -59,5 +59,5 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GeomShaderBinding.ts:84](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/Drawing/GeomShaderBinding.ts#L84)
+[src/Renderer/Drawing/GeomShaderBinding.ts:87](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/Drawing/GeomShaderBinding.ts#L87)
 

@@ -28,7 +28,7 @@ Create a RGBA.
 
 #### Defined in
 
-[Math/RGBA.ts:16](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Math/RGBA.ts#L16)
+[src/Math/RGBA.ts:16](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Math/RGBA.ts#L16)
 
 ## Properties
 
@@ -38,7 +38,7 @@ Create a RGBA.
 
 #### Defined in
 
-[Math/RGBA.ts:8](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Math/RGBA.ts#L8)
+[src/Math/RGBA.ts:8](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Math/RGBA.ts#L8)
 
 ## Accessors
 
@@ -56,7 +56,7 @@ Getter for alpha channel.
 
 #### Defined in
 
-[Math/RGBA.ts:99](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Math/RGBA.ts#L99)
+[src/Math/RGBA.ts:99](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Math/RGBA.ts#L99)
 
 • `set` **a**(`val`): `void`
 
@@ -76,7 +76,7 @@ Setter for alpha value.
 
 #### Defined in
 
-[Math/RGBA.ts:107](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Math/RGBA.ts#L107)
+[src/Math/RGBA.ts:107](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Math/RGBA.ts#L107)
 
 ___
 
@@ -94,7 +94,7 @@ Getter for blue channel.
 
 #### Defined in
 
-[Math/RGBA.ts:81](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Math/RGBA.ts#L81)
+[src/Math/RGBA.ts:81](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Math/RGBA.ts#L81)
 
 • `set` **b**(`val`): `void`
 
@@ -114,7 +114,7 @@ Setter for blue channel.
 
 #### Defined in
 
-[Math/RGBA.ts:90](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Math/RGBA.ts#L90)
+[src/Math/RGBA.ts:90](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Math/RGBA.ts#L90)
 
 ___
 
@@ -132,7 +132,7 @@ Getter for green channel.
 
 #### Defined in
 
-[Math/RGBA.ts:63](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Math/RGBA.ts#L63)
+[src/Math/RGBA.ts:63](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Math/RGBA.ts#L63)
 
 • `set` **g**(`val`): `void`
 
@@ -152,7 +152,7 @@ Setter for green channel.
 
 #### Defined in
 
-[Math/RGBA.ts:72](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Math/RGBA.ts#L72)
+[src/Math/RGBA.ts:72](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Math/RGBA.ts#L72)
 
 ___
 
@@ -170,7 +170,7 @@ Getter for red channel.
 
 #### Defined in
 
-[Math/RGBA.ts:45](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Math/RGBA.ts#L45)
+[src/Math/RGBA.ts:45](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Math/RGBA.ts#L45)
 
 • `set` **r**(`val`): `void`
 
@@ -190,7 +190,7 @@ Setter for red channel.
 
 #### Defined in
 
-[Math/RGBA.ts:54](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Math/RGBA.ts#L54)
+[src/Math/RGBA.ts:54](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Math/RGBA.ts#L54)
 
 ## Methods
 
@@ -214,7 +214,7 @@ Returns a new RGBA color which is this RGBA color added to other.
 
 #### Defined in
 
-[Math/RGBA.ts:392](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Math/RGBA.ts#L392)
+[src/Math/RGBA.ts:392](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Math/RGBA.ts#L392)
 
 ___
 
@@ -236,7 +236,7 @@ Apply gamma correction to this RGBA color.
 
 #### Defined in
 
-[Math/RGBA.ts:433](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Math/RGBA.ts#L433)
+[src/Math/RGBA.ts:433](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Math/RGBA.ts#L433)
 
 ___
 
@@ -261,7 +261,7 @@ Returns true if this RGBA color is approximately the same as other.
 
 #### Defined in
 
-[Math/RGBA.ts:377](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Math/RGBA.ts#L377)
+[src/Math/RGBA.ts:377](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Math/RGBA.ts#L377)
 
 ___
 
@@ -279,7 +279,7 @@ Returns the type as a 3 component array. Often used to pass types to the GPU.
 
 #### Defined in
 
-[Math/RGBA.ts:530](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Math/RGBA.ts#L530)
+[src/Math/RGBA.ts:530](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Math/RGBA.ts#L530)
 
 ___
 
@@ -297,7 +297,7 @@ Returns the type as an array. Often used to pass types to the GPU.
 
 #### Defined in
 
-[Math/RGBA.ts:521](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Math/RGBA.ts#L521)
+[src/Math/RGBA.ts:521](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Math/RGBA.ts#L521)
 
 ___
 
@@ -315,7 +315,7 @@ Clones this RGBA color and returns a new RGBA color.
 
 #### Defined in
 
-[Math/RGBA.ts:512](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Math/RGBA.ts#L512)
+[src/Math/RGBA.ts:512](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Math/RGBA.ts#L512)
 
 ___
 
@@ -339,7 +339,7 @@ Returns true if this RGBA color is exactly the same as other.
 
 #### Defined in
 
-[Math/RGBA.ts:356](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Math/RGBA.ts#L356)
+[src/Math/RGBA.ts:356](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Math/RGBA.ts#L356)
 
 ___
 
@@ -361,7 +361,7 @@ The fromJSON method decodes a json object for this type.
 
 #### Defined in
 
-[Math/RGBA.ts:556](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Math/RGBA.ts#L556)
+[src/Math/RGBA.ts:556](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Math/RGBA.ts#L556)
 
 ___
 
@@ -386,7 +386,7 @@ Performs a linear interpolation between this RGBA color and other.
 
 #### Defined in
 
-[Math/RGBA.ts:472](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Math/RGBA.ts#L472)
+[src/Math/RGBA.ts:472](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Math/RGBA.ts#L472)
 
 ___
 
@@ -404,7 +404,7 @@ Calculates and returns the relative luminance of the linear RGB component.
 
 #### Defined in
 
-[Math/RGBA.ts:461](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Math/RGBA.ts#L461)
+[src/Math/RGBA.ts:461](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Math/RGBA.ts#L461)
 
 ___
 
@@ -428,7 +428,7 @@ Returns true if this RGBA color is NOT exactly the same as other.
 
 #### Defined in
 
-[Math/RGBA.ts:366](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Math/RGBA.ts#L366)
+[src/Math/RGBA.ts:366](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Math/RGBA.ts#L366)
 
 ___
 
@@ -452,7 +452,7 @@ Returns a new RGBA color which is this vector scaled by scalar.
 
 #### Defined in
 
-[Math/RGBA.ts:412](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Math/RGBA.ts#L412)
+[src/Math/RGBA.ts:412](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Math/RGBA.ts#L412)
 
 ___
 
@@ -474,7 +474,7 @@ Scales this RGBA color by scalar.
 
 #### Defined in
 
-[Math/RGBA.ts:421](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Math/RGBA.ts#L421)
+[src/Math/RGBA.ts:421](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Math/RGBA.ts#L421)
 
 ___
 
@@ -499,7 +499,7 @@ Setter from scalar components.
 
 #### Defined in
 
-[Math/RGBA.ts:119](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Math/RGBA.ts#L119)
+[src/Math/RGBA.ts:119](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Math/RGBA.ts#L119)
 
 ___
 
@@ -521,7 +521,7 @@ Setter from a scalar array.
 
 #### Defined in
 
-[Math/RGBA.ts:143](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Math/RGBA.ts#L143)
+[src/Math/RGBA.ts:143](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Math/RGBA.ts#L143)
 
 ___
 
@@ -544,7 +544,7 @@ E.g. "red"
 
 #### Defined in
 
-[Math/RGBA.ts:181](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Math/RGBA.ts#L181)
+[src/Math/RGBA.ts:181](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Math/RGBA.ts#L181)
 
 ___
 
@@ -567,7 +567,7 @@ E.g. #ff0000
 
 #### Defined in
 
-[Math/RGBA.ts:156](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Math/RGBA.ts#L156)
+[src/Math/RGBA.ts:156](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Math/RGBA.ts#L156)
 
 ___
 
@@ -589,7 +589,7 @@ Setter from another RGBA color.
 
 #### Defined in
 
-[Math/RGBA.ts:131](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Math/RGBA.ts#L131)
+[src/Math/RGBA.ts:131](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Math/RGBA.ts#L131)
 
 ___
 
@@ -613,7 +613,7 @@ Returns a new RGBA color which is this RGBA color subtracted from other.
 
 #### Defined in
 
-[Math/RGBA.ts:402](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Math/RGBA.ts#L402)
+[src/Math/RGBA.ts:402](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Math/RGBA.ts#L402)
 
 ___
 
@@ -631,7 +631,7 @@ Returns the CSS rgba string.
 
 #### Defined in
 
-[Math/RGBA.ts:568](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Math/RGBA.ts#L568)
+[src/Math/RGBA.ts:568](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Math/RGBA.ts#L568)
 
 ___
 
@@ -655,7 +655,7 @@ Converts to gamma color space and returns a new RGBA color.
 
 #### Defined in
 
-[Math/RGBA.ts:452](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Math/RGBA.ts#L452)
+[src/Math/RGBA.ts:452](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Math/RGBA.ts#L452)
 
 ___
 
@@ -673,7 +673,7 @@ Returns the hexadecimal value of this RGBA color.
 
 #### Defined in
 
-[Math/RGBA.ts:342](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Math/RGBA.ts#L342)
+[src/Math/RGBA.ts:342](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Math/RGBA.ts#L342)
 
 ___
 
@@ -691,7 +691,7 @@ The toJSON method encodes this type as a json object for persistence.
 
 #### Defined in
 
-[Math/RGBA.ts:542](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Math/RGBA.ts#L542)
+[src/Math/RGBA.ts:542](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Math/RGBA.ts#L542)
 
 ___
 
@@ -715,7 +715,7 @@ Converts to linear color space and returns a new color.
 
 #### Defined in
 
-[Math/RGBA.ts:442](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Math/RGBA.ts#L442)
+[src/Math/RGBA.ts:442](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Math/RGBA.ts#L442)
 
 ___
 
@@ -740,5 +740,5 @@ Creates a random RGBA.
 
 #### Defined in
 
-[Math/RGBA.ts:487](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Math/RGBA.ts#L487)
+[src/Math/RGBA.ts:487](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Math/RGBA.ts#L487)
 

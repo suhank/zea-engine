@@ -68,7 +68,7 @@ Creates a tree item with the specified name.
 
 #### Defined in
 
-[SceneTree/TreeItem.ts:92](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/TreeItem.ts#L92)
+[src/SceneTree/TreeItem.ts:92](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/TreeItem.ts#L92)
 
 ## Properties
 
@@ -78,7 +78,7 @@ Creates a tree item with the specified name.
 
 #### Defined in
 
-[SceneTree/TreeItem.ts:49](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/TreeItem.ts#L49)
+[src/SceneTree/TreeItem.ts:49](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/TreeItem.ts#L49)
 
 ___
 
@@ -88,7 +88,7 @@ ___
 
 #### Defined in
 
-[SceneTree/TreeItem.ts:50](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/TreeItem.ts#L50)
+[src/SceneTree/TreeItem.ts:50](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/TreeItem.ts#L50)
 
 ___
 
@@ -98,7 +98,7 @@ ___
 
 #### Defined in
 
-[SceneTree/TreeItem.ts:51](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/TreeItem.ts#L51)
+[src/SceneTree/TreeItem.ts:51](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/TreeItem.ts#L51)
 
 ___
 
@@ -108,7 +108,7 @@ ___
 
 #### Defined in
 
-[SceneTree/TreeItem.ts:76](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/TreeItem.ts#L76)
+[src/SceneTree/TreeItem.ts:76](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/TreeItem.ts#L76)
 
 ___
 
@@ -118,7 +118,7 @@ ___
 
 #### Defined in
 
-[SceneTree/TreeItem.ts:77](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/TreeItem.ts#L77)
+[src/SceneTree/TreeItem.ts:77](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/TreeItem.ts#L77)
 
 ___
 
@@ -132,7 +132,7 @@ ___
 
 #### Defined in
 
-[Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/BaseClass.ts#L11)
+[src/Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/BaseClass.ts#L11)
 
 ___
 
@@ -146,7 +146,7 @@ ___
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:39](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/BaseItem.ts#L39)
+[src/SceneTree/BaseItem.ts:40](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/BaseItem.ts#L40)
 
 ___
 
@@ -160,7 +160,7 @@ ___
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:34](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/BaseItem.ts#L34)
+[src/SceneTree/BaseItem.ts:35](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/BaseItem.ts#L35)
 
 ___
 
@@ -174,7 +174,7 @@ ___
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:35](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/BaseItem.ts#L35)
+[src/SceneTree/BaseItem.ts:36](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/BaseItem.ts#L36)
 
 ___
 
@@ -188,7 +188,7 @@ ___
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:36](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/BaseItem.ts#L36)
+[src/SceneTree/BaseItem.ts:37](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/BaseItem.ts#L37)
 
 ___
 
@@ -202,7 +202,7 @@ ___
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:37](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/BaseItem.ts#L37)
+[src/SceneTree/BaseItem.ts:38](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/BaseItem.ts#L38)
 
 ___
 
@@ -216,7 +216,7 @@ ___
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:38](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/BaseItem.ts#L38)
+[src/SceneTree/BaseItem.ts:39](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/BaseItem.ts#L39)
 
 ___
 
@@ -226,7 +226,7 @@ ___
 
 #### Defined in
 
-[SceneTree/TreeItem.ts:79](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/TreeItem.ts#L79)
+[src/SceneTree/TreeItem.ts:79](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/TreeItem.ts#L79)
 
 ___
 
@@ -236,7 +236,7 @@ ___
 
 #### Defined in
 
-[SceneTree/TreeItem.ts:80](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/TreeItem.ts#L80)
+[src/SceneTree/TreeItem.ts:80](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/TreeItem.ts#L80)
 
 ___
 
@@ -248,7 +248,7 @@ ___
 
 #### Defined in
 
-[SceneTree/TreeItem.ts:68](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/TreeItem.ts#L68)
+[src/SceneTree/TreeItem.ts:68](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/TreeItem.ts#L68)
 
 ___
 
@@ -262,7 +262,7 @@ ___
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:23](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/ParameterOwner.ts#L23)
+[src/SceneTree/ParameterOwner.ts:24](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/ParameterOwner.ts#L24)
 
 ___
 
@@ -272,7 +272,7 @@ ___
 
 #### Defined in
 
-[SceneTree/TreeItem.ts:47](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/TreeItem.ts#L47)
+[src/SceneTree/TreeItem.ts:47](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/TreeItem.ts#L47)
 
 ___
 
@@ -282,7 +282,7 @@ ___
 
 #### Defined in
 
-[SceneTree/TreeItem.ts:82](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/TreeItem.ts#L82)
+[src/SceneTree/TreeItem.ts:82](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/TreeItem.ts#L82)
 
 ___
 
@@ -295,7 +295,7 @@ global xfos are calculated from the localXfo and parentXfo.
 
 #### Defined in
 
-[SceneTree/TreeItem.ts:57](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/TreeItem.ts#L57)
+[src/SceneTree/TreeItem.ts:57](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/TreeItem.ts#L57)
 
 ___
 
@@ -309,7 +309,7 @@ ___
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/EventEmitter.ts#L26)
+[src/Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/EventEmitter.ts#L26)
 
 ___
 
@@ -322,7 +322,7 @@ local Xfos are the offset from the parent's coordinate frame.
 
 #### Defined in
 
-[SceneTree/TreeItem.ts:63](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/TreeItem.ts#L63)
+[src/SceneTree/TreeItem.ts:63](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/TreeItem.ts#L63)
 
 ___
 
@@ -336,7 +336,7 @@ ___
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:20](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/ParameterOwner.ts#L20)
+[src/SceneTree/ParameterOwner.ts:21](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/ParameterOwner.ts#L21)
 
 ___
 
@@ -350,7 +350,7 @@ ___
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:21](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/ParameterOwner.ts#L21)
+[src/SceneTree/ParameterOwner.ts:22](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/ParameterOwner.ts#L22)
 
 ___
 
@@ -364,7 +364,7 @@ ___
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:22](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/ParameterOwner.ts#L22)
+[src/SceneTree/ParameterOwner.ts:23](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/ParameterOwner.ts#L23)
 
 ___
 
@@ -377,7 +377,7 @@ Any given tree item is also is affected by parent's visibility.
 
 #### Defined in
 
-[SceneTree/TreeItem.ts:74](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/TreeItem.ts#L74)
+[src/SceneTree/TreeItem.ts:74](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/TreeItem.ts#L74)
 
 ## Methods
 
@@ -401,7 +401,7 @@ The _cleanBoundingBox method.
 
 #### Defined in
 
-[SceneTree/TreeItem.ts:339](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/TreeItem.ts#L339)
+[src/SceneTree/TreeItem.ts:339](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/TreeItem.ts#L339)
 
 ___
 
@@ -427,7 +427,7 @@ childItem - The child TreeItem that was added.
 
 #### Defined in
 
-[SceneTree/TreeItem.ts:535](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/TreeItem.ts#L535)
+[src/SceneTree/TreeItem.ts:535](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/TreeItem.ts#L535)
 
 ___
 
@@ -451,7 +451,7 @@ Adds a highlight to the tree item.
 
 #### Defined in
 
-[SceneTree/TreeItem.ts:243](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/TreeItem.ts#L243)
+[src/SceneTree/TreeItem.ts:243](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/TreeItem.ts#L243)
 
 ___
 
@@ -481,7 +481,7 @@ Adds `Parameter` object to the owner's parameter list.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:133](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/ParameterOwner.ts#L133)
+[src/SceneTree/ParameterOwner.ts:134](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/ParameterOwner.ts#L134)
 
 ___
 
@@ -511,7 +511,7 @@ This is used to handle migrating parameters to new names.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:90](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/ParameterOwner.ts#L90)
+[src/SceneTree/ParameterOwner.ts:91](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/ParameterOwner.ts#L91)
 
 ___
 
@@ -527,7 +527,7 @@ The _childBBoxChanged method.
 
 #### Defined in
 
-[SceneTree/TreeItem.ts:356](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/TreeItem.ts#L356)
+[src/SceneTree/TreeItem.ts:356](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/TreeItem.ts#L356)
 
 ___
 
@@ -549,7 +549,7 @@ When a child's name changed, we update our acceleration structure.
 
 #### Defined in
 
-[SceneTree/TreeItem.ts:461](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/TreeItem.ts#L461)
+[src/SceneTree/TreeItem.ts:461](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/TreeItem.ts#L461)
 
 ___
 
@@ -578,7 +578,7 @@ from this item and returns it.
 
 #### Defined in
 
-[SceneTree/TreeItem.ts:1064](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/TreeItem.ts#L1064)
+[src/SceneTree/TreeItem.ts:1064](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/TreeItem.ts#L1064)
 
 ___
 
@@ -605,7 +605,7 @@ Copies current TreeItem with all its children.
 
 #### Defined in
 
-[SceneTree/TreeItem.ts:1076](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/TreeItem.ts#L1076)
+[src/SceneTree/TreeItem.ts:1076](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/TreeItem.ts#L1076)
 
 ___
 
@@ -631,7 +631,7 @@ Removes metadata for a given key.
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:261](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/BaseItem.ts#L261)
+[src/SceneTree/BaseItem.ts:262](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/BaseItem.ts#L262)
 
 ___
 
@@ -658,7 +658,7 @@ Triggers all listener functions in an event.
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/EventEmitter.ts#L154)
+[src/Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/EventEmitter.ts#L154)
 
 ___
 
@@ -686,7 +686,7 @@ The fromJSON method takes a JSON and deserializes into an instance of this type.
 
 #### Defined in
 
-[SceneTree/TreeItem.ts:908](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/TreeItem.ts#L908)
+[src/SceneTree/TreeItem.ts:908](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/TreeItem.ts#L908)
 
 ___
 
@@ -711,7 +711,7 @@ If there's one, modifiers are applied to the name and returned.
 
 #### Defined in
 
-[SceneTree/TreeItem.ts:409](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/TreeItem.ts#L409)
+[src/SceneTree/TreeItem.ts:409](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/TreeItem.ts#L409)
 
 ___
 
@@ -735,7 +735,7 @@ Returns child element in the specified index.
 
 #### Defined in
 
-[SceneTree/TreeItem.ts:547](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/TreeItem.ts#L547)
+[src/SceneTree/TreeItem.ts:547](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/TreeItem.ts#L547)
 
 ___
 
@@ -759,7 +759,7 @@ Returns child element with the specified name.
 
 #### Defined in
 
-[SceneTree/TreeItem.ts:557](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/TreeItem.ts#L557)
+[src/SceneTree/TreeItem.ts:557](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/TreeItem.ts#L557)
 
 ___
 
@@ -783,7 +783,7 @@ Returns index position of the specified item.
 
 #### Defined in
 
-[SceneTree/TreeItem.ts:659](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/TreeItem.ts#L659)
+[src/SceneTree/TreeItem.ts:659](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/TreeItem.ts#L659)
 
 ___
 
@@ -801,7 +801,7 @@ Returns children names as an array of strings.
 
 #### Defined in
 
-[SceneTree/TreeItem.ts:570](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/TreeItem.ts#L570)
+[src/SceneTree/TreeItem.ts:570](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/TreeItem.ts#L570)
 
 ___
 
@@ -822,7 +822,7 @@ i.e. **BaseImage**
 
 #### Defined in
 
-[SceneTree/TreeItem.ts:389](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/TreeItem.ts#L389)
+[src/SceneTree/TreeItem.ts:389](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/TreeItem.ts#L389)
 
 ___
 
@@ -844,7 +844,7 @@ Returns the unmangled name of the class.
 
 #### Defined in
 
-[Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/BaseClass.ts#L33)
+[src/Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/BaseClass.ts#L33)
 
 ___
 
@@ -862,7 +862,7 @@ Returns the color of the current highlight.
 
 #### Defined in
 
-[SceneTree/TreeItem.ts:313](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/TreeItem.ts#L313)
+[src/SceneTree/TreeItem.ts:313](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/TreeItem.ts#L313)
 
 ___
 
@@ -886,7 +886,7 @@ Returns the unique id of the object.
 
 #### Defined in
 
-[Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/BaseClass.ts#L25)
+[src/Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/BaseClass.ts#L25)
 
 ___
 
@@ -914,7 +914,7 @@ Gets Item's meta-data value by passing the `key` string.
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:232](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/BaseItem.ts#L232)
+[src/SceneTree/BaseItem.ts:233](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/BaseItem.ts#L233)
 
 ___
 
@@ -936,7 +936,7 @@ Returns the name of the base item.
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:74](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/BaseItem.ts#L74)
+[src/SceneTree/BaseItem.ts:75](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/BaseItem.ts#L75)
 
 ___
 
@@ -954,7 +954,7 @@ Returns the number of child elements current `TreeItem` has.
 
 #### Defined in
 
-[SceneTree/TreeItem.ts:398](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/TreeItem.ts#L398)
+[src/SceneTree/TreeItem.ts:398](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/TreeItem.ts#L398)
 
 ___
 
@@ -976,7 +976,7 @@ Returns the number of parameters current object has.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:39](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/ParameterOwner.ts#L39)
+[src/SceneTree/ParameterOwner.ts:40](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/ParameterOwner.ts#L40)
 
 ___
 
@@ -999,7 +999,7 @@ The item is a child of the current owner.
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:154](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/BaseItem.ts#L154)
+[src/SceneTree/BaseItem.ts:155](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/BaseItem.ts#L155)
 
 ___
 
@@ -1027,7 +1027,7 @@ Returns `Parameter` object using the given name
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:100](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/ParameterOwner.ts#L100)
+[src/SceneTree/ParameterOwner.ts:101](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/ParameterOwner.ts#L101)
 
 ___
 
@@ -1055,7 +1055,7 @@ Returns `Parameter` object in a given index
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:68](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/ParameterOwner.ts#L68)
+[src/SceneTree/ParameterOwner.ts:69](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/ParameterOwner.ts#L69)
 
 ___
 
@@ -1083,7 +1083,7 @@ Returns the index of a parameter in parameter list.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:58](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/ParameterOwner.ts#L58)
+[src/SceneTree/ParameterOwner.ts:59](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/ParameterOwner.ts#L59)
 
 ___
 
@@ -1105,7 +1105,7 @@ Returns all the parameters of the object.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:48](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/ParameterOwner.ts#L48)
+[src/SceneTree/ParameterOwner.ts:49](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/ParameterOwner.ts#L49)
 
 ___
 
@@ -1123,7 +1123,7 @@ Returns the parent of current TreeItem.
 
 #### Defined in
 
-[SceneTree/TreeItem.ts:163](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/TreeItem.ts#L163)
+[src/SceneTree/TreeItem.ts:163](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/TreeItem.ts#L163)
 
 ___
 
@@ -1145,7 +1145,7 @@ Returns the current path of the item in the tree as an array of names.
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:111](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/BaseItem.ts#L111)
+[src/SceneTree/BaseItem.ts:112](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/BaseItem.ts#L112)
 
 ___
 
@@ -1173,7 +1173,7 @@ Checks to see if there is metadata for a given key.
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:242](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/BaseItem.ts#L242)
+[src/SceneTree/BaseItem.ts:243](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/BaseItem.ts#L243)
 
 ___
 
@@ -1201,7 +1201,7 @@ Validates if the specified parameter exists in the object.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:78](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/ParameterOwner.ts#L78)
+[src/SceneTree/ParameterOwner.ts:79](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/ParameterOwner.ts#L79)
 
 ___
 
@@ -1228,7 +1228,7 @@ Inserts a child. It accepts all kind of `TreeItem`, not only `TreeItem`.
 
 #### Defined in
 
-[SceneTree/TreeItem.ts:478](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/TreeItem.ts#L478)
+[src/SceneTree/TreeItem.ts:478](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/TreeItem.ts#L478)
 
 ___
 
@@ -1260,7 +1260,7 @@ It replaces the event in the specified index.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:147](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/ParameterOwner.ts#L147)
+[src/SceneTree/ParameterOwner.ts:148](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/ParameterOwner.ts#L148)
 
 ___
 
@@ -1278,7 +1278,7 @@ Returns `true` if this items has a highlight color assigned.
 
 #### Defined in
 
-[SceneTree/TreeItem.ts:326](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/TreeItem.ts#L326)
+[src/SceneTree/TreeItem.ts:326](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/TreeItem.ts#L326)
 
 ___
 
@@ -1300,7 +1300,7 @@ Returns a boolean indicating if this item is selectable.
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:183](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/BaseItem.ts#L183)
+[src/SceneTree/BaseItem.ts:184](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/BaseItem.ts#L184)
 
 ___
 
@@ -1322,7 +1322,7 @@ The isSelected method.
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:207](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/BaseItem.ts#L207)
+[src/SceneTree/BaseItem.ts:208](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/BaseItem.ts#L208)
 
 ___
 
@@ -1340,7 +1340,7 @@ Returns visible parameter value for current TreeItem.
 
 #### Defined in
 
-[SceneTree/TreeItem.ts:184](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/TreeItem.ts#L184)
+[src/SceneTree/TreeItem.ts:184](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/TreeItem.ts#L184)
 
 ___
 
@@ -1367,7 +1367,7 @@ Removes a listener function from the specified event, using either the function 
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/EventEmitter.ts#L97)
+[src/Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/EventEmitter.ts#L97)
 
 ___
 
@@ -1396,7 +1396,7 @@ Adds a listener function for a given event name.
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/EventEmitter.ts#L44)
+[src/Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/EventEmitter.ts#L44)
 
 ___
 
@@ -1422,7 +1422,7 @@ propagates it up to the TreeItem's owner.
 
 #### Defined in
 
-[SceneTree/TreeItem.ts:762](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/TreeItem.ts#L762)
+[src/SceneTree/TreeItem.ts:762](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/TreeItem.ts#L762)
 
 ___
 
@@ -1448,7 +1448,7 @@ propagates it up to the TreeItem's owner.
 
 #### Defined in
 
-[SceneTree/TreeItem.ts:813](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/TreeItem.ts#L813)
+[src/SceneTree/TreeItem.ts:813](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/TreeItem.ts#L813)
 
 ___
 
@@ -1474,7 +1474,7 @@ propagates it up to the TreeItem's owner.
 
 #### Defined in
 
-[SceneTree/TreeItem.ts:830](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/TreeItem.ts#L830)
+[src/SceneTree/TreeItem.ts:830](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/TreeItem.ts#L830)
 
 ___
 
@@ -1500,7 +1500,7 @@ propagates it up to the TreeItem's owner.
 
 #### Defined in
 
-[SceneTree/TreeItem.ts:796](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/TreeItem.ts#L796)
+[src/SceneTree/TreeItem.ts:796](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/TreeItem.ts#L796)
 
 ___
 
@@ -1526,7 +1526,7 @@ propagates it up to the TreeItem's owner.
 
 #### Defined in
 
-[SceneTree/TreeItem.ts:779](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/TreeItem.ts#L779)
+[src/SceneTree/TreeItem.ts:779](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/TreeItem.ts#L779)
 
 ___
 
@@ -1549,7 +1549,7 @@ Emits the ZeaTouchEvent with the key 'touchCancel', and Propagates is up to the 
 
 #### Defined in
 
-[SceneTree/TreeItem.ts:858](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/TreeItem.ts#L858)
+[src/SceneTree/TreeItem.ts:858](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/TreeItem.ts#L858)
 
 ___
 
@@ -1572,7 +1572,7 @@ Emits the ZeaWheelEvent with the key 'mouseWheel', and Propagates is up to the T
 
 #### Defined in
 
-[SceneTree/TreeItem.ts:844](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/TreeItem.ts#L844)
+[src/SceneTree/TreeItem.ts:844](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/TreeItem.ts#L844)
 
 ___
 
@@ -1610,7 +1610,7 @@ asset.once('loaded', () => {
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/EventEmitter.ts#L82)
+[src/Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/EventEmitter.ts#L82)
 
 ___
 
@@ -1637,7 +1637,7 @@ to perform general updates (see GLPass or BaseItem).
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:122](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/ParameterOwner.ts#L122)
+[src/SceneTree/ParameterOwner.ts:123](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/ParameterOwner.ts#L123)
 
 ___
 
@@ -1659,7 +1659,7 @@ Updates current TreeItem visible state and propagates its value to children elem
 
 #### Defined in
 
-[SceneTree/TreeItem.ts:203](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/TreeItem.ts#L203)
+[src/SceneTree/TreeItem.ts:203](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/TreeItem.ts#L203)
 
 ___
 
@@ -1674,7 +1674,7 @@ Sets state of current Item(Including parameters & children) using a binary reade
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `reader` | [`BinReader`](SceneTree_BinReader.BinReader) | The reader value. |
-| `context` | `Record`<`string`, `any`\> | The context value. |
+| `context` | [`AssetLoadContext`](SceneTree_AssetLoadContext.AssetLoadContext) | The context value. |
 
 #### Returns
 
@@ -1686,7 +1686,7 @@ Sets state of current Item(Including parameters & children) using a binary reade
 
 #### Defined in
 
-[SceneTree/TreeItem.ts:998](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/TreeItem.ts#L998)
+[src/SceneTree/TreeItem.ts:998](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/TreeItem.ts#L998)
 
 ___
 
@@ -1702,7 +1702,7 @@ Removes all children Items.
 
 #### Defined in
 
-[SceneTree/TreeItem.ts:645](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/TreeItem.ts#L645)
+[src/SceneTree/TreeItem.ts:645](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/TreeItem.ts#L645)
 
 ___
 
@@ -1724,7 +1724,7 @@ Removes a child TreeItem by specifying its index.
 
 #### Defined in
 
-[SceneTree/TreeItem.ts:607](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/TreeItem.ts#L607)
+[src/SceneTree/TreeItem.ts:607](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/TreeItem.ts#L607)
 
 ___
 
@@ -1747,7 +1747,7 @@ An exception is thrown if the item is not a child of this tree item.
 
 #### Defined in
 
-[SceneTree/TreeItem.ts:636](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/TreeItem.ts#L636)
+[src/SceneTree/TreeItem.ts:636](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/TreeItem.ts#L636)
 
 ___
 
@@ -1771,7 +1771,7 @@ Removes a child TreeItem by specifying its name.
 
 #### Defined in
 
-[SceneTree/TreeItem.ts:623](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/TreeItem.ts#L623)
+[src/SceneTree/TreeItem.ts:623](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/TreeItem.ts#L623)
 
 ___
 
@@ -1794,7 +1794,7 @@ Removes a highlight to the tree item.
 
 #### Defined in
 
-[SceneTree/TreeItem.ts:279](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/TreeItem.ts#L279)
+[src/SceneTree/TreeItem.ts:279](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/TreeItem.ts#L279)
 
 ___
 
@@ -1821,7 +1821,7 @@ remove listener by ID returned from #on
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/EventEmitter.ts#L134)
+[src/Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/EventEmitter.ts#L134)
 
 ___
 
@@ -1849,7 +1849,7 @@ Removes `Parameter` from owner, by using parameter's name.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:174](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/ParameterOwner.ts#L174)
+[src/SceneTree/ParameterOwner.ts:175](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/ParameterOwner.ts#L175)
 
 ___
 
@@ -1877,7 +1877,7 @@ Replaces old `Parameter` by passing a new one with the same name.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:196](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/ParameterOwner.ts#L196)
+[src/SceneTree/ParameterOwner.ts:197](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/ParameterOwner.ts#L197)
 
 ___
 
@@ -1909,7 +1909,7 @@ end of the path.
 
 #### Defined in
 
-[SceneTree/TreeItem.ts:679](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/TreeItem.ts#L679)
+[src/SceneTree/TreeItem.ts:679](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/TreeItem.ts#L679)
 
 ___
 
@@ -1925,7 +1925,7 @@ The setBoundingBoxDirty method.
 
 #### Defined in
 
-[SceneTree/TreeItem.ts:364](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/TreeItem.ts#L364)
+[src/SceneTree/TreeItem.ts:364](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/TreeItem.ts#L364)
 
 ___
 
@@ -1952,7 +1952,7 @@ Assigns metadata to a given key.
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:252](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/BaseItem.ts#L252)
+[src/SceneTree/BaseItem.ts:253](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/BaseItem.ts#L253)
 
 ___
 
@@ -1980,7 +1980,7 @@ Sets the name of the base item(Updates path).
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:84](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/BaseItem.ts#L84)
+[src/SceneTree/BaseItem.ts:85](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/BaseItem.ts#L85)
 
 ___
 
@@ -2006,7 +2006,7 @@ Sets the owner (another TreeItem) of the current TreeItem.
 
 #### Defined in
 
-[SceneTree/TreeItem.ts:120](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/TreeItem.ts#L120)
+[src/SceneTree/TreeItem.ts:120](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/TreeItem.ts#L120)
 
 ___
 
@@ -2028,7 +2028,7 @@ Sets the parent of current TreeItem.
 
 #### Defined in
 
-[SceneTree/TreeItem.ts:172](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/TreeItem.ts#L172)
+[src/SceneTree/TreeItem.ts:172](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/TreeItem.ts#L172)
 
 ___
 
@@ -2056,7 +2056,7 @@ Modifies the selectability of this item.
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:193](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/BaseItem.ts#L193)
+[src/SceneTree/BaseItem.ts:194](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/BaseItem.ts#L194)
 
 ___
 
@@ -2084,7 +2084,7 @@ Changes the current state of the selection of this item.
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:217](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/BaseItem.ts#L217)
+[src/SceneTree/BaseItem.ts:218](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/BaseItem.ts#L218)
 
 ___
 
@@ -2106,7 +2106,7 @@ Sets visible parameter value.
 
 #### Defined in
 
-[SceneTree/TreeItem.ts:194](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/TreeItem.ts#L194)
+[src/SceneTree/TreeItem.ts:194](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/TreeItem.ts#L194)
 
 ___
 
@@ -2135,7 +2135,7 @@ It can be used for persistence, data transfer, etc.
 
 #### Defined in
 
-[SceneTree/TreeItem.ts:876](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/TreeItem.ts#L876)
+[src/SceneTree/TreeItem.ts:876](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/TreeItem.ts#L876)
 
 ___
 
@@ -2163,7 +2163,7 @@ Converts object's JSON value and converts it to a string.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:301](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/ParameterOwner.ts#L301)
+[src/SceneTree/ParameterOwner.ts:302](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/ParameterOwner.ts#L302)
 
 ___
 
@@ -2188,7 +2188,7 @@ Note: Depth only used by selection sets for now.
 
 #### Defined in
 
-[SceneTree/TreeItem.ts:731](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/TreeItem.ts#L731)
+[src/SceneTree/TreeItem.ts:731](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/TreeItem.ts#L731)
 
 ___
 
@@ -2212,7 +2212,7 @@ automatically when an item is removed from the group.
 
 #### Defined in
 
-[SceneTree/TreeItem.ts:586](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/TreeItem.ts#L586)
+[src/SceneTree/TreeItem.ts:586](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/TreeItem.ts#L586)
 
 ___
 
@@ -2234,7 +2234,7 @@ Updates the internal acceleration structure that speeds up looking up children b
 
 #### Defined in
 
-[SceneTree/TreeItem.ts:448](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/TreeItem.ts#L448)
+[src/SceneTree/TreeItem.ts:448](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/TreeItem.ts#L448)
 
 ___
 
@@ -2254,7 +2254,7 @@ The updatePath method.
 
 #### Defined in
 
-[SceneTree/TreeItem.ts:151](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/TreeItem.ts#L151)
+[src/SceneTree/TreeItem.ts:151](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/TreeItem.ts#L151)
 
 ___
 
@@ -2272,7 +2272,7 @@ The updateVisibility method.
 
 #### Defined in
 
-[SceneTree/TreeItem.ts:213](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/TreeItem.ts#L213)
+[src/SceneTree/TreeItem.ts:213](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/TreeItem.ts#L213)
 
 ___
 
@@ -2295,5 +2295,5 @@ This method is used in debugging memory consumption.
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:62](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/SceneTree/BaseItem.ts#L62)
+[src/SceneTree/BaseItem.ts:63](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/SceneTree/BaseItem.ts#L63)
 

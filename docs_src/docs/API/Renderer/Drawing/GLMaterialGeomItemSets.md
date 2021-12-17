@@ -36,17 +36,17 @@ Create a GL material geom item set.
 
 #### Defined in
 
-[Renderer/Drawing/GLMaterialGeomItemSets.ts:23](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/Drawing/GLMaterialGeomItemSets.ts#L23)
+[src/Renderer/Drawing/GLMaterialGeomItemSets.ts:25](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/Drawing/GLMaterialGeomItemSets.ts#L25)
 
 ## Properties
 
 ### \_\_gl
 
-• `Protected` **\_\_gl**: `WebGL12RenderingContext`
+• `Protected` **\_\_gl**: [`WebGL12RenderingContext`](../types/Renderer_types_webgl.WebGL12RenderingContext)
 
 #### Defined in
 
-[Renderer/Drawing/GLMaterialGeomItemSets.ts:14](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/Drawing/GLMaterialGeomItemSets.ts#L14)
+[src/Renderer/Drawing/GLMaterialGeomItemSets.ts:16](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/Drawing/GLMaterialGeomItemSets.ts#L16)
 
 ___
 
@@ -60,7 +60,7 @@ ___
 
 #### Defined in
 
-[Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/BaseClass.ts#L11)
+[src/Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/BaseClass.ts#L11)
 
 ___
 
@@ -70,7 +70,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLMaterialGeomItemSets.ts:17](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/Drawing/GLMaterialGeomItemSets.ts#L17)
+[src/Renderer/Drawing/GLMaterialGeomItemSets.ts:19](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/Drawing/GLMaterialGeomItemSets.ts#L19)
 
 ___
 
@@ -80,7 +80,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLMaterialGeomItemSets.ts:16](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/Drawing/GLMaterialGeomItemSets.ts#L16)
+[src/Renderer/Drawing/GLMaterialGeomItemSets.ts:18](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/Drawing/GLMaterialGeomItemSets.ts#L18)
 
 ___
 
@@ -90,7 +90,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLMaterialGeomItemSets.ts:15](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/Drawing/GLMaterialGeomItemSets.ts#L15)
+[src/Renderer/Drawing/GLMaterialGeomItemSets.ts:17](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/Drawing/GLMaterialGeomItemSets.ts#L17)
 
 ___
 
@@ -104,7 +104,7 @@ ___
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/EventEmitter.ts#L26)
+[src/Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/EventEmitter.ts#L26)
 
 ___
 
@@ -114,7 +114,7 @@ ___
 
 #### Defined in
 
-[Renderer/Drawing/GLMaterialGeomItemSets.ts:13](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/Drawing/GLMaterialGeomItemSets.ts#L13)
+[src/Renderer/Drawing/GLMaterialGeomItemSets.ts:15](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/Drawing/GLMaterialGeomItemSets.ts#L15)
 
 ## Methods
 
@@ -130,7 +130,7 @@ The __materialChanged method.
 
 #### Defined in
 
-[Renderer/Drawing/GLMaterialGeomItemSets.ts:84](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/Drawing/GLMaterialGeomItemSets.ts#L84)
+[src/Renderer/Drawing/GLMaterialGeomItemSets.ts:86](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/Drawing/GLMaterialGeomItemSets.ts#L86)
 
 ___
 
@@ -153,7 +153,7 @@ The addGLGeomItem method.
 
 #### Defined in
 
-[Renderer/Drawing/GLMaterialGeomItemSets.ts:60](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/Drawing/GLMaterialGeomItemSets.ts#L60)
+[src/Renderer/Drawing/GLMaterialGeomItemSets.ts:62](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/Drawing/GLMaterialGeomItemSets.ts#L62)
 
 ___
 
@@ -175,7 +175,7 @@ The addGeomItemSet method.
 
 #### Defined in
 
-[Renderer/Drawing/GLMaterialGeomItemSets.ts:102](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/Drawing/GLMaterialGeomItemSets.ts#L102)
+[src/Renderer/Drawing/GLMaterialGeomItemSets.ts:104](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/Drawing/GLMaterialGeomItemSets.ts#L104)
 
 ___
 
@@ -189,7 +189,7 @@ Draws all elements, binding the shader and continuing into the GLGeomItemSet
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `renderstate` | `RenderState` | The render state for the current draw traversal |
+
 
 #### Returns
 
@@ -197,7 +197,7 @@ Draws all elements, binding the shader and continuing into the GLGeomItemSet
 
 #### Defined in
 
-[Renderer/Drawing/GLMaterialGeomItemSets.ts:132](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/Drawing/GLMaterialGeomItemSets.ts#L132)
+[src/Renderer/Drawing/GLMaterialGeomItemSets.ts:134](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/Drawing/GLMaterialGeomItemSets.ts#L134)
 
 ___
 
@@ -219,7 +219,7 @@ The drawCountChanged method.
 
 #### Defined in
 
-[Renderer/Drawing/GLMaterialGeomItemSets.ts:75](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/Drawing/GLMaterialGeomItemSets.ts#L75)
+[src/Renderer/Drawing/GLMaterialGeomItemSets.ts:77](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/Drawing/GLMaterialGeomItemSets.ts#L77)
 
 ___
 
@@ -233,7 +233,7 @@ The drawHighlightedGeoms method.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `renderstate` | `GeomDataRenderState` | The object tracking the current state of the renderer |
+| `renderstate` | [`GeomDataRenderState`](../types/Renderer_types_renderer.GeomDataRenderState) | The object tracking the current state of the renderer |
 
 #### Returns
 
@@ -241,7 +241,7 @@ The drawHighlightedGeoms method.
 
 #### Defined in
 
-[Renderer/Drawing/GLMaterialGeomItemSets.ts:158](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/Drawing/GLMaterialGeomItemSets.ts#L158)
+[src/Renderer/Drawing/GLMaterialGeomItemSets.ts:162](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/Drawing/GLMaterialGeomItemSets.ts#L162)
 
 ___
 
@@ -255,7 +255,7 @@ The drawHighlighted method.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `renderstate` | `RenderState` | The object tracking the current state of the renderer |
+
 
 #### Returns
 
@@ -263,7 +263,7 @@ The drawHighlighted method.
 
 #### Defined in
 
-[Renderer/Drawing/GLMaterialGeomItemSets.ts:146](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/Drawing/GLMaterialGeomItemSets.ts#L146)
+[src/Renderer/Drawing/GLMaterialGeomItemSets.ts:149](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/Drawing/GLMaterialGeomItemSets.ts#L149)
 
 ___
 
@@ -290,7 +290,7 @@ Triggers all listener functions in an event.
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/EventEmitter.ts#L154)
+[src/Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/EventEmitter.ts#L154)
 
 ___
 
@@ -312,7 +312,7 @@ Returns the unmangled name of the class.
 
 #### Defined in
 
-[Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/BaseClass.ts#L33)
+[src/Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/BaseClass.ts#L33)
 
 ___
 
@@ -330,7 +330,7 @@ The getGLMaterial method.
 
 #### Defined in
 
-[Renderer/Drawing/GLMaterialGeomItemSets.ts:50](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/Drawing/GLMaterialGeomItemSets.ts#L50)
+[src/Renderer/Drawing/GLMaterialGeomItemSets.ts:52](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/Drawing/GLMaterialGeomItemSets.ts#L52)
 
 ___
 
@@ -354,7 +354,7 @@ Returns the unique id of the object.
 
 #### Defined in
 
-[Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/BaseClass.ts#L25)
+[src/Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/BaseClass.ts#L25)
 
 ___
 
@@ -381,7 +381,7 @@ Removes a listener function from the specified event, using either the function 
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/EventEmitter.ts#L97)
+[src/Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/EventEmitter.ts#L97)
 
 ___
 
@@ -410,7 +410,7 @@ Adds a listener function for a given event name.
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/EventEmitter.ts#L44)
+[src/Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/EventEmitter.ts#L44)
 
 ___
 
@@ -448,7 +448,7 @@ asset.once('loaded', () => {
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/EventEmitter.ts#L82)
+[src/Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/EventEmitter.ts#L82)
 
 ___
 
@@ -475,5 +475,5 @@ remove listener by ID returned from #on
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/EventEmitter.ts#L134)
+[src/Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/EventEmitter.ts#L134)
 

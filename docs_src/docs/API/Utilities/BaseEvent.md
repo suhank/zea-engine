@@ -17,6 +17,8 @@ Class representing a BaseEvent.
 
   ↳ [`AudioSourceCreatedEvent`](Events/Utilities_Events_AudioSourceCreatedEvent.AudioSourceCreatedEvent)
 
+  ↳ [`ChildAddedEvent`](Events/Utilities_Events_ChildAddedEvent.ChildAddedEvent)
+
   ↳ [`ControllerAddedEvent`](Events/Utilities_Events_ControllerAddedEvent.ControllerAddedEvent)
 
   ↳ [`CountChangedEvent`](Events/Utilities_Events_CountChangedEvent.CountChangedEvent)
@@ -69,5 +71,5 @@ Create an BaseEvent.
 
 #### Defined in
 
-[Utilities/BaseEvent.ts:6](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/BaseEvent.ts#L6)
+[src/Utilities/BaseEvent.ts:6](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/BaseEvent.ts#L6)
 

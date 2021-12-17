@@ -36,7 +36,7 @@ Create a GL env map.
 
 #### Defined in
 
-[Renderer/GLEnvMap.ts:25](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/GLEnvMap.ts#L25)
+[src/Renderer/GLEnvMap.ts:26](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/GLEnvMap.ts#L26)
 
 ## Properties
 
@@ -46,7 +46,7 @@ Create a GL env map.
 
 #### Defined in
 
-[Renderer/GLEnvMap.ts:15](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/GLEnvMap.ts#L15)
+[src/Renderer/GLEnvMap.ts:16](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/GLEnvMap.ts#L16)
 
 ___
 
@@ -60,7 +60,7 @@ ___
 
 #### Defined in
 
-[Renderer/GLProbe.ts:17](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/GLProbe.ts#L17)
+[src/Renderer/GLProbe.ts:19](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/GLProbe.ts#L19)
 
 ___
 
@@ -70,7 +70,7 @@ ___
 
 #### Defined in
 
-[Renderer/GLEnvMap.ts:14](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/GLEnvMap.ts#L14)
+[src/Renderer/GLEnvMap.ts:15](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/GLEnvMap.ts#L15)
 
 ___
 
@@ -80,7 +80,7 @@ ___
 
 #### Defined in
 
-[Renderer/GLEnvMap.ts:17](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/GLEnvMap.ts#L17)
+[src/Renderer/GLEnvMap.ts:18](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/GLEnvMap.ts#L18)
 
 ___
 
@@ -90,7 +90,7 @@ ___
 
 #### Defined in
 
-[Renderer/GLEnvMap.ts:18](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/GLEnvMap.ts#L18)
+[src/Renderer/GLEnvMap.ts:19](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/GLEnvMap.ts#L19)
 
 ___
 
@@ -104,13 +104,13 @@ ___
 
 #### Defined in
 
-[Renderer/GLProbe.ts:18](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/GLProbe.ts#L18)
+[src/Renderer/GLProbe.ts:20](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/GLProbe.ts#L20)
 
 ___
 
 ### \_\_gl
 
-• `Protected` **\_\_gl**: `WebGL12RenderingContext`
+• `Protected` **\_\_gl**: [`WebGL12RenderingContext`](types/Renderer_types_webgl.WebGL12RenderingContext)
 
 #### Inherited from
 
@@ -118,7 +118,7 @@ ___
 
 #### Defined in
 
-[Renderer/GLProbe.ts:13](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/GLProbe.ts#L13)
+[src/Renderer/GLProbe.ts:15](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/GLProbe.ts#L15)
 
 ___
 
@@ -132,7 +132,7 @@ ___
 
 #### Defined in
 
-[Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/BaseClass.ts#L11)
+[src/Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/BaseClass.ts#L11)
 
 ___
 
@@ -142,7 +142,7 @@ ___
 
 #### Defined in
 
-[Renderer/GLEnvMap.ts:19](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/GLEnvMap.ts#L19)
+[src/Renderer/GLEnvMap.ts:20](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/GLEnvMap.ts#L20)
 
 ___
 
@@ -152,7 +152,7 @@ ___
 
 #### Defined in
 
-[Renderer/GLEnvMap.ts:13](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/GLEnvMap.ts#L13)
+[src/Renderer/GLEnvMap.ts:14](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/GLEnvMap.ts#L14)
 
 ___
 
@@ -162,7 +162,7 @@ ___
 
 #### Defined in
 
-[Renderer/GLEnvMap.ts:16](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/GLEnvMap.ts#L16)
+[src/Renderer/GLEnvMap.ts:17](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/GLEnvMap.ts#L17)
 
 ___
 
@@ -176,7 +176,7 @@ ___
 
 #### Defined in
 
-[Renderer/GLProbe.ts:19](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/GLProbe.ts#L19)
+[src/Renderer/GLProbe.ts:21](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/GLProbe.ts#L21)
 
 ___
 
@@ -190,7 +190,7 @@ ___
 
 #### Defined in
 
-[Renderer/GLProbe.ts:20](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/GLProbe.ts#L20)
+[src/Renderer/GLProbe.ts:22](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/GLProbe.ts#L22)
 
 ___
 
@@ -204,7 +204,7 @@ ___
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/EventEmitter.ts#L26)
+[src/Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/EventEmitter.ts#L26)
 
 ___
 
@@ -218,7 +218,7 @@ ___
 
 #### Defined in
 
-[Renderer/GLProbe.ts:14](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/GLProbe.ts#L14)
+[src/Renderer/GLProbe.ts:16](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/GLProbe.ts#L16)
 
 ___
 
@@ -232,7 +232,7 @@ ___
 
 #### Defined in
 
-[Renderer/GLProbe.ts:21](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/GLProbe.ts#L21)
+[src/Renderer/GLProbe.ts:23](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/GLProbe.ts#L23)
 
 ___
 
@@ -246,7 +246,7 @@ ___
 
 #### Defined in
 
-[Renderer/GLProbe.ts:16](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/GLProbe.ts#L16)
+[src/Renderer/GLProbe.ts:18](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/GLProbe.ts#L18)
 
 ___
 
@@ -260,7 +260,7 @@ ___
 
 #### Defined in
 
-[Renderer/GLProbe.ts:15](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/GLProbe.ts#L15)
+[src/Renderer/GLProbe.ts:17](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/GLProbe.ts#L17)
 
 ## Methods
 
@@ -274,7 +274,7 @@ The bind method.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `renderstate` | `RenderState` | The object tracking the current state of the renderer |
+
 
 #### Returns
 
@@ -288,7 +288,7 @@ The bind method.
 
 #### Defined in
 
-[Renderer/GLProbe.ts:238](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/GLProbe.ts#L238)
+[src/Renderer/GLProbe.ts:240](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/GLProbe.ts#L240)
 
 ___
 
@@ -314,7 +314,7 @@ The convolveProbe method.
 
 #### Defined in
 
-[Renderer/GLProbe.ts:48](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/GLProbe.ts#L48)
+[src/Renderer/GLProbe.ts:50](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/GLProbe.ts#L50)
 
 ___
 
@@ -335,7 +335,7 @@ Users should never need to call this method directly.
 
 #### Defined in
 
-[Renderer/GLEnvMap.ts:159](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/GLEnvMap.ts#L159)
+[src/Renderer/GLEnvMap.ts:160](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/GLEnvMap.ts#L160)
 
 ___
 
@@ -349,7 +349,7 @@ The draw method.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `renderstate` | `ColorRenderState` | The object tracking the current state of the renderer |
+| `renderstate` | [`ColorRenderState`](types/Renderer_types_renderer.ColorRenderState) | The object tracking the current state of the renderer |
 
 #### Returns
 
@@ -357,7 +357,7 @@ The draw method.
 
 #### Defined in
 
-[Renderer/GLEnvMap.ts:108](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/GLEnvMap.ts#L108)
+[src/Renderer/GLEnvMap.ts:109](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/GLEnvMap.ts#L109)
 
 ___
 
@@ -384,7 +384,7 @@ Triggers all listener functions in an event.
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/EventEmitter.ts#L154)
+[src/Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/EventEmitter.ts#L154)
 
 ___
 
@@ -402,7 +402,7 @@ The getBackgroundFocus method.
 
 #### Defined in
 
-[Renderer/GLEnvMap.ts:91](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/GLEnvMap.ts#L91)
+[src/Renderer/GLEnvMap.ts:92](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/GLEnvMap.ts#L92)
 
 ___
 
@@ -424,7 +424,7 @@ Returns the unmangled name of the class.
 
 #### Defined in
 
-[Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/BaseClass.ts#L33)
+[src/Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/BaseClass.ts#L33)
 
 ___
 
@@ -442,7 +442,7 @@ The getEnvMap method.
 
 #### Defined in
 
-[Renderer/GLEnvMap.ts:83](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/GLEnvMap.ts#L83)
+[src/Renderer/GLEnvMap.ts:84](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/GLEnvMap.ts#L84)
 
 ___
 
@@ -466,7 +466,7 @@ Returns the unique id of the object.
 
 #### Defined in
 
-[Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/BaseClass.ts#L25)
+[src/Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/BaseClass.ts#L25)
 
 ___
 
@@ -480,7 +480,7 @@ ___
 
 #### Defined in
 
-[Renderer/GLEnvMap.ts:43](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/GLEnvMap.ts#L43)
+[src/Renderer/GLEnvMap.ts:44](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/GLEnvMap.ts#L44)
 
 ___
 
@@ -507,7 +507,7 @@ Removes a listener function from the specified event, using either the function 
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/EventEmitter.ts#L97)
+[src/Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/EventEmitter.ts#L97)
 
 ___
 
@@ -536,7 +536,7 @@ Adds a listener function for a given event name.
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/EventEmitter.ts#L44)
+[src/Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/EventEmitter.ts#L44)
 
 ___
 
@@ -574,7 +574,7 @@ asset.once('loaded', () => {
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/EventEmitter.ts#L82)
+[src/Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/EventEmitter.ts#L82)
 
 ___
 
@@ -601,7 +601,7 @@ remove listener by ID returned from #on
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/EventEmitter.ts#L134)
+[src/Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/EventEmitter.ts#L134)
 
 ___
 
@@ -623,5 +623,5 @@ The setBackgroundFocus method.
 
 #### Defined in
 
-[Renderer/GLEnvMap.ts:99](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Renderer/GLEnvMap.ts#L99)
+[src/Renderer/GLEnvMap.ts:100](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/GLEnvMap.ts#L100)
 

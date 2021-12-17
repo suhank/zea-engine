@@ -89,7 +89,7 @@ which implies that it doesn't allow multiple events with the same name.
 
 #### Defined in
 
-[Utilities/GrowingPacker.ts:67](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/GrowingPacker.ts#L67)
+[src/Utilities/GrowingPacker.ts:67](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/GrowingPacker.ts#L67)
 
 ## Properties
 
@@ -103,7 +103,7 @@ which implies that it doesn't allow multiple events with the same name.
 
 #### Defined in
 
-[Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/BaseClass.ts#L11)
+[src/Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/BaseClass.ts#L11)
 
 ___
 
@@ -117,7 +117,7 @@ ___
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/EventEmitter.ts#L26)
+[src/Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/EventEmitter.ts#L26)
 
 ___
 
@@ -127,7 +127,7 @@ ___
 
 #### Defined in
 
-[Utilities/GrowingPacker.ts:66](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/GrowingPacker.ts#L66)
+[src/Utilities/GrowingPacker.ts:66](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/GrowingPacker.ts#L66)
 
 ## Methods
 
@@ -147,7 +147,7 @@ ___
 
 #### Defined in
 
-[Utilities/GrowingPacker.ts:99](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/GrowingPacker.ts#L99)
+[src/Utilities/GrowingPacker.ts:99](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/GrowingPacker.ts#L99)
 
 ___
 
@@ -167,7 +167,7 @@ ___
 
 #### Defined in
 
-[Utilities/GrowingPacker.ts:105](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/GrowingPacker.ts#L105)
+[src/Utilities/GrowingPacker.ts:105](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/GrowingPacker.ts#L105)
 
 ___
 
@@ -194,7 +194,7 @@ Triggers all listener functions in an event.
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/EventEmitter.ts#L154)
+[src/Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/EventEmitter.ts#L154)
 
 ___
 
@@ -216,7 +216,7 @@ ___
 
 #### Defined in
 
-[Utilities/GrowingPacker.ts:124](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/GrowingPacker.ts#L124)
+[src/Utilities/GrowingPacker.ts:124](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/GrowingPacker.ts#L124)
 
 ___
 
@@ -236,7 +236,7 @@ ___
 
 #### Defined in
 
-[Utilities/GrowingPacker.ts:77](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/GrowingPacker.ts#L77)
+[src/Utilities/GrowingPacker.ts:77](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/GrowingPacker.ts#L77)
 
 ___
 
@@ -258,7 +258,7 @@ Returns the unmangled name of the class.
 
 #### Defined in
 
-[Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/BaseClass.ts#L33)
+[src/Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/BaseClass.ts#L33)
 
 ___
 
@@ -282,7 +282,7 @@ Returns the unique id of the object.
 
 #### Defined in
 
-[Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/BaseClass.ts#L25)
+[src/Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/BaseClass.ts#L25)
 
 ___
 
@@ -303,7 +303,7 @@ ___
 
 #### Defined in
 
-[Utilities/GrowingPacker.ts:184](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/GrowingPacker.ts#L184)
+[src/Utilities/GrowingPacker.ts:184](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/GrowingPacker.ts#L184)
 
 ___
 
@@ -324,7 +324,7 @@ ___
 
 #### Defined in
 
-[Utilities/GrowingPacker.ts:147](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/GrowingPacker.ts#L147)
+[src/Utilities/GrowingPacker.ts:147](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/GrowingPacker.ts#L147)
 
 ___
 
@@ -345,7 +345,7 @@ ___
 
 #### Defined in
 
-[Utilities/GrowingPacker.ts:161](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/GrowingPacker.ts#L161)
+[src/Utilities/GrowingPacker.ts:161](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/GrowingPacker.ts#L161)
 
 ___
 
@@ -372,7 +372,7 @@ Removes a listener function from the specified event, using either the function 
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/EventEmitter.ts#L97)
+[src/Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/EventEmitter.ts#L97)
 
 ___
 
@@ -401,7 +401,7 @@ Adds a listener function for a given event name.
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/EventEmitter.ts#L44)
+[src/Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/EventEmitter.ts#L44)
 
 ___
 
@@ -439,7 +439,7 @@ asset.once('loaded', () => {
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/EventEmitter.ts#L82)
+[src/Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/EventEmitter.ts#L82)
 
 ___
 
@@ -466,7 +466,7 @@ remove listener by ID returned from #on
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/EventEmitter.ts#L134)
+[src/Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/EventEmitter.ts#L134)
 
 ___
 
@@ -488,5 +488,5 @@ ___
 
 #### Defined in
 
-[Utilities/GrowingPacker.ts:130](https://github.com/ZeaInc/zea-engine/blob/999d3f1c8/src/Utilities/GrowingPacker.ts#L130)
+[src/Utilities/GrowingPacker.ts:130](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/GrowingPacker.ts#L130)
 
