@@ -6,7 +6,7 @@ import { ICloneable } from '../../Utilities/ICloneable'
 import { ISerializable } from '../../Utilities/ISerializable'
 import { OperatorOutputMode } from './OperatorOutputMode'
 import { BinReader } from '../BinReader'
-import { OperatorInput } from '..'
+import { AssetLoadContext, OperatorInput } from '..'
 /**
  * Represents a reactive type of attribute that can be owned by a `ParameterOwner` class.
  *
@@ -434,7 +434,7 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
    * @param reader - The reader value.
    * @param context - The context value.
    */
-  readBinary(reader: BinReader, context?: Record<string, unknown>) {
+  readBinary(reader: BinReader, context?: AssetLoadContext) {
     console.warn(`TODO: Parameter: ${this.constructor.name} with name: ${this.name} does not implement readBinary`)
   }
 

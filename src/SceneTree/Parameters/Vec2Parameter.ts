@@ -5,6 +5,7 @@ import { Vec2 } from '../../Math/index'
 import { Parameter } from './Parameter'
 import { IBinaryReader } from '../../Utilities/IBinaryReader'
 import { BinReader } from '../../SceneTree/BinReader'
+import { AssetLoadContext } from '../AssetLoadContext'
 /**
  * Represents a specific type of parameter, that only stores Vec2(two-dimensional coordinate) values.
  *
@@ -63,7 +64,7 @@ class Vec2Parameter extends Parameter<Vec2> implements IBinaryReader {
    * @param reader - The reader value.
    * @param context - The context value.
    */
-  readBinary(reader: BinReader, context?: Record<string, unknown>): void {
+  readBinary(reader: BinReader, context?: AssetLoadContext): void {
     this.__value?.readBinary(reader)
   }
 

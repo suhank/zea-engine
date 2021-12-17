@@ -1,5 +1,6 @@
 import { ImageParams } from '..'
 import { Registry } from '../../Registry'
+import { AssetLoadContext } from '../AssetLoadContext'
 import { BaseImage } from '../BaseImage'
 import { BinReader } from '../BinReader'
 
@@ -149,7 +150,7 @@ class FileImage extends BaseImage {
    * @param reader - The reader param.
    * @param context - The context param.
    */
-  readBinary(reader: BinReader, context: Record<string, any>) {
+  readBinary(reader: BinReader, context: AssetLoadContext) {
     // super.readBinary(reader, context);
     this.setName(reader.loadStr())
 

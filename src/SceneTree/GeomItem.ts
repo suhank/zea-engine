@@ -11,7 +11,7 @@ import { BaseGeom } from './Geometry'
 import { Material } from './Material'
 import { BinReader } from './BinReader'
 import { Vec3Attribute } from './Geometry/Vec3Attribute'
-import { AssetItem } from '.'
+import { AssetItem, AssetLoadContext } from '.'
 import { RangeLoadedEvent } from '../Utilities/Events/RangeLoadedEvent'
 
 let calculatePreciseBoundingBoxes = false
@@ -191,7 +191,7 @@ class GeomItem extends BaseGeomItem {
    * @param reader - The reader value.
    * @param context - The context value.
    */
-  readBinary(reader: BinReader, context: Record<string, any>) {
+  readBinary(reader: BinReader, context: AssetLoadContext) {
     super.readBinary(reader, context)
 
     context.numGeomItems++
@@ -205,13 +205,13 @@ class GeomItem extends BaseGeomItem {
 
     const geom = geomLibrary.getGeom(geomIndex)
     if (geom) {
-      this.geomParam.loadValue(geom)
+      this.geomParam.loadValue(<BaseGeom>geom)
     } else {
       const onGeomLoaded = (event: Record<string, any>) => {
         const { range } = event
         if (geomIndex >= range[0] && geomIndex < range[1]) {
           const geom = geomLibrary.getGeom(geomIndex)
-          if (geom) this.geomParam.value = geom
+          if (geom) this.geomParam.value = <BaseGeom>geom
           else console.warn('Geom not loaded:', this.getName())
           geomLibrary.removeListenerById('rangeLoaded', onGeomLoadedListenerID)
         }

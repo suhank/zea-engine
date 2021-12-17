@@ -4,6 +4,9 @@ import { Xfo } from '../Math/index'
 import { TreeItem } from './TreeItem'
 import { Registry } from '../Registry'
 import { BinReader } from './BinReader'
+import { AssetLoadContext } from './AssetLoadContext'
+import { BaseItem } from './BaseItem'
+import { Parameter } from './Parameters/Parameter'
 import { ChildAddedEvent } from '..'
 import { BaseEvent } from '../Utilities/BaseEvent'
 
@@ -53,7 +56,7 @@ class InstanceItem extends TreeItem {
    * @param reader - The reader value.
    * @param context - The context value.
    */
-  readBinary(reader: BinReader, context: Record<string, any> = {}) {
+  readBinary(reader: BinReader, context: AssetLoadContext) {
     super.readBinary(reader, context)
 
     // console.log("numTreeItems:", context.numTreeItems, " numGeomItems:", context.numGeomItems)
@@ -62,8 +65,8 @@ class InstanceItem extends TreeItem {
       try {
         context.resolvePath(
           this.srcTreePath,
-          (treeItem: TreeItem) => {
-            this.setSrcTree(treeItem, context)
+          (treeItem: BaseItem | Parameter<any>) => {
+            this.setSrcTree(<TreeItem>treeItem, context)
           },
           (error: Error) => {
             console.warn(

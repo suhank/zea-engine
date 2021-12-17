@@ -15,7 +15,7 @@ import { ShaderNameChangedEvent } from '../Utilities/Events/ShaderNameChangedEve
 import { TransparencyChangedEvent } from '../Utilities/Events/TransparencyChangedEvent'
 import { TexturedChangedEvent } from '../Utilities/Events/TexturedChangedEvent'
 import { GLShader } from '../Renderer'
-import { ColorParameter, NumberParameter } from '..'
+import { AssetLoadContext, ColorParameter, NumberParameter } from '..'
 
 /**
  * Represents a type of `BaseItem` class that holds material configuration.
@@ -271,7 +271,7 @@ class Material extends BaseItem {
    * @param reader - The reader value.
    * @param context - The context value.
    */
-  readBinary(reader: BinReader, context: Record<string, any>): void {
+  readBinary(reader: BinReader, context: AssetLoadContext): void {
     let shaderName = reader.loadStr()
 
     if (shaderName == 'StandardMaterial') {
@@ -315,9 +315,9 @@ class Material extends BaseItem {
           // )
         }
         if (textureName != '' && param.setImage) {
-          if (context.materialLibrary.hasImage(textureName)) {
+          if (context.assetItem.materialLibrary.hasImage(textureName)) {
             // console.log(paramName +":" + textureName + ":" + context.materialLibrary[textureName].resourcePath);
-            param.setImage(context.materialLibrary.getImage(textureName))
+            param.setImage(context.assetItem.materialLibrary.getImage(textureName))
           } else {
             console.warn('Missing Texture:' + textureName)
           }

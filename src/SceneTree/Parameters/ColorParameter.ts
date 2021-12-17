@@ -5,6 +5,7 @@ import { Color } from '../../Math/index'
 import { Parameter } from './Parameter'
 import { BinReader } from '../BinReader'
 import { IBinaryReader } from '../../Utilities/IBinaryReader'
+import { AssetLoadContext } from '../AssetLoadContext'
 /**
  * Represents a specific type of parameter, that only stores `Color` values.
  *
@@ -34,7 +35,7 @@ class ColorParameter extends Parameter<Color> implements IBinaryReader {
    * @param reader - The reader value.
    * @param context - The context value.
    */
-  readBinary(reader: BinReader, context?: Record<string, unknown>): void {
+  readBinary(reader: BinReader, context?: AssetLoadContext): void {
     const value = reader.loadRGBAFloat32Color()
     // If the value is in linear space, then we should convert it to gamma space.
     // Note: !! this should always be done in preprocessing...

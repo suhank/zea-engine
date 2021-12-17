@@ -9,6 +9,7 @@ import { BinReader } from './BinReader'
 import { ParameterAddedEvent } from '../Utilities/Events/ParameterAddedEvent'
 import { ParameterRemovedEvent } from '../Utilities/Events/ParameterRemovedEvent'
 import { Parameter } from './Parameters/Parameter'
+import { AssetLoadContext } from './AssetLoadContext'
 
 /**
  * Class that allows other classes to be parameterized by `Parameter` type of objects.
@@ -271,7 +272,7 @@ class ParameterOwner extends EventEmitter {
    * @param reader - The reader value.
    * @param context - The context value.
    */
-  readBinary(reader: BinReader, context: Record<string, any>): void {
+  readBinary(reader: BinReader, context: AssetLoadContext): void {
     // TODO: make this work
     if (context?.versions['zea-engine'].compare([0, 0, 3]) >= 0) {
       const numProps = reader.loadUInt32()

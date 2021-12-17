@@ -16,6 +16,7 @@ import { ZeaPointerEvent } from '../Utilities/Events/ZeaPointerEvent'
 import { ZeaWheelEvent } from '../Utilities/Events/ZeaWheelEvent'
 import { BaseEvent } from '../Utilities/BaseEvent'
 import { ZeaTouchEvent } from '../Utilities/Events/ZeaTouchEvent'
+import { AssetLoadContext } from './AssetLoadContext'
 import { ChildAddedEvent } from '../Utilities/Events/ChildAddedEvent'
 
 /**
@@ -994,7 +995,7 @@ class TreeItem extends BaseItem {
    * @param reader - The reader value.
    * @param context - The context value.
    */
-  readBinary(reader: BinReader, context: Record<string, any>): void {
+  readBinary(reader: BinReader, context: AssetLoadContext): void {
     super.readBinary(reader, context)
 
     context.numTreeItems++
