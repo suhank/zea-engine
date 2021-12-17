@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html class="h-full">
+  <head>
+    <title>Zea Engine</title>
+    <link rel="stylesheet" href="styles/tailwind.min.css" />
+  </head>
+  <style>
+    .main-wrapper {
+      grid-template-areas:
+        'header header header'
+        'nav main right'
+        'footer footer footer';
+      grid-template-columns: 20% 1fr 20%;
+      grid-template-rows: 50px 1fr 50px;
+    }
+
+    header {
+      grid-area: header;
+    }
+
+    footer {
+      grid-area: footer;
+    }
+  </style>
+  <body class="bg-blue-100 h-full">
+    <div class="main-wrapper grid h-screen">
+      <header class="border border-blue-400 flex justify-center items-center">header</header>
+      <nav class="border border-blue-400 flex justify-center items-center">nav</nav>
+      <main>  
+        <div style="position: relative">
+        <svg id="svg_canvas" style="position: absolute; left: 0px; top: 0px; z-index: 2; pointer-events: none">
+          <circle
+            id="svg_circle"
+            cx="500"
+            cy="700"
+            r="40"
+            stroke="green"
+            stroke-width="4"
+            fill="yellow"
+            fill-opacity="0.5"
+          />
+        </svg>
+      </div>
+        <canvas id="viewport"></canvas>
+      </main>
+      <aside class="border border-blue-400 flex justify-center items-center">aside</aside>
+      <footer class="border border-blue-400 flex justify-center items-center">footer</footer>
+    </div>
+  </body>
+
+  <script src="../dist/index.umd.js"></script>
+
+  <script type="module">
+    const {
+      GLRenderer,
+      Scene,
+      Vec3,
+      Color,
+      Sphere,
+      Plane,
+      SimpleSurfaceMaterial,
+      GeomItem,
+      GLBoundingBoxPass,
+      Circle,
+      ScreenSpaceMaterial,
+      Xfo,
+    } = zeaEngine
+
+    const scene = new Scene()
+    const domElement = document.getElementById('viewport')
+    const renderer = new GLRenderer(domElement, { antialias: false })
+    renderer.setScene(scene)
+    scene.setupGrid(5, 10)
+
+    const standardMaterial = new SimpleSurfaceMaterial('surfaces')
+    standardMaterial.baseColorParam.value = new Color(89 / 255, 182 / 255, 92 / 255)
+
+    const material = new ScreenSpaceMaterial('surfaces')
+    material.baseColorParam.value = new Color(255 / 255, 182 / 255, 92 / 255)
+
+    /*
+        3D world point to 2D screen position
+      */
+
+    const worldPoint = new Vec3(0, 0, 0)
+
+    const sphere = new Sphere(1.5, 6, 3)
+    const geomItem = new GeomItem('Sphere', sphere, standardMaterial, new Xfo(worldPoint))
+    scene.getRoot().addChild(geomItem)
+
+    renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, 2.7), new Vec3(0, 0, 0.4))
+    renderer.frameAll()
+
+    renderer.on('redrawOccurred', () => {
+      const screenPoint = renderer.getViewport().calcScreenPosFromWorldPos(worldPoint)
+      var svg_circle = document.getElementById('svg_circle')
+      svg_circle.setAttribute('cx', screenPoint.x)
+      svg_circle.setAttribute('cy', screenPoint.y)
+      //svg_circle.setAttribute('r', radius for depth);
+    })
+
+    renderer.on('resized', () => {
+      var width = domElement.width
+      var height = domElement.height
+
+      var svg_canvas = document.getElementById('svg_canvas')
+      svg_canvas.setAttribute('width', width)
+      svg_canvas.setAttribute('height', height)
+    })
+    window.postMessage('done-loading')
+
+    // {{{ Messages handler.
+    const handleMessage = (event) => {
+      const { data } = event
+
+      if (data === 'variant-01') {
+        sphere.radiusParam.value = 2.5
+        window.postMessage(`done-${data}`)
+      } else if (data === 'variant-02') {
+        sphere.loopsParam.value = 25
+        sphere.sidesParam.value = 15
+        window.postMessage(`done-${data}`)
+      }
+    }
+
+    window.addEventListener('message', handleMessage, false)
+    // }}}
+  </script>
+</html>
