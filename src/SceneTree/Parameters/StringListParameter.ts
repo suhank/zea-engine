@@ -2,6 +2,7 @@ import { Parameter } from './Parameter'
 import { BinReader } from '../BinReader'
 import { IBinaryReader } from '../../Utilities/IBinaryReader'
 import { Registry } from '../../Registry'
+import { AssetLoadContext } from '../AssetLoadContext'
 
 /**
  * A parameter for storing an array of string values.
@@ -24,7 +25,7 @@ class StringListParameter extends Parameter<Array<string>> implements IBinaryRea
    * @param {BinReader} reader - The reader value.
    * @param {object} context - The context value.
    */
-  readBinary(reader: BinReader, context?: Record<string, unknown>): void {
+  readBinary(reader: BinReader, context?: AssetLoadContext): void {
     this.__value = reader.loadStrArray()
   }
 

@@ -5,6 +5,7 @@ import { Mat3 } from '../../Math/index'
 import { Parameter } from './Parameter'
 import { IBinaryReader } from '../../Utilities/IBinaryReader'
 import { BinReader } from '../../SceneTree/BinReader'
+import { AssetLoadContext } from '../AssetLoadContext'
 /**
  * Represents a specific type of parameter, that only stores Mat3(3x3 matrix) values.
  *
@@ -34,7 +35,7 @@ class Mat3Parameter extends Parameter<Mat3> implements IBinaryReader {
    * @param reader - The reader value.
    * @param context - The context value.
    */
-  readBinary(reader: BinReader, context?: Record<string, unknown>): void {
+  readBinary(reader: BinReader, context?: AssetLoadContext): void {
     this.__value?.readBinary(reader)
   }
 

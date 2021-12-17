@@ -4,6 +4,7 @@ import { resourceLoader } from '../resourceLoader'
 import { BooleanParameter, NumberParameter } from '../Parameters/index'
 
 import { FileImage } from './FileImage'
+import { ImageParams } from '..'
 
 /**
  * Class representing a LDR (low dynamic range) video.
@@ -150,7 +151,7 @@ class LDRVideo extends FileImage {
    * The getParams method.
    * @return - The return value.
    */
-  getParams() {
+  getParams(): ImageParams {
     const params = super.getParams()
     if (this.loaded) {
       params['data'] = this.videoElem

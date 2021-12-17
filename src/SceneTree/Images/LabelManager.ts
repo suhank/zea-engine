@@ -1,6 +1,12 @@
 import { EventEmitter } from '../../Utilities/index'
 import { loadTextfile, loadBinfile } from '../Utils'
 
+declare global {
+  interface Window {
+    XLSX: any
+  }
+}
+
 // eslint-disable-next-line require-jsdoc
 function getLanguage() {
   if (!globalThis.navigator) return 'en'

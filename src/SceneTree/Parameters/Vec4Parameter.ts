@@ -5,6 +5,7 @@ import { Vec4 } from '../../Math/index'
 import { Parameter } from './Parameter'
 import { BinReader } from '../../SceneTree/BinReader'
 import { IBinaryReader } from '../../Utilities/IBinaryReader'
+import { AssetLoadContext } from '../AssetLoadContext'
 
 /**
  * Represents a specific type of parameter, that only stores Vec4(four-dimensional coordinate) values.
@@ -38,7 +39,7 @@ class Vec4Parameter extends Parameter<Vec4> implements IBinaryReader {
    * @param reader - The reader value.
    * @param context - The context value.
    */
-  readBinary(reader: BinReader, context?: Record<string, unknown>): void {
+  readBinary(reader: BinReader, context?: AssetLoadContext): void {
     this.__value?.readBinary(reader)
   }
 

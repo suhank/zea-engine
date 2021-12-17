@@ -5,6 +5,8 @@ import { Points, Lines, Mesh, PointsProxy, LinesProxy, MeshProxy, BaseGeom } fro
 import { GLPoints, GLLines, GLMesh, GLGeom } from './index'
 import { GLBaseRenderer } from '../GLBaseRenderer'
 import { IndexEvent } from '../../Utilities/Events/IndexEvent'
+import { RenderState } from '../types/renderer'
+import { WebGL12RenderingContext } from '../types/webgl'
 
 const resizeIntArray = (intArray: Int32Array, newSize: number) => {
   const newArray = new Int32Array(newSize)

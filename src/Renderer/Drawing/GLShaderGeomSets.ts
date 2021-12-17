@@ -7,6 +7,8 @@ import { GLMeshItemSet } from './GLMeshItemSet'
 import { GLStandardGeomsPass } from '../Passes'
 import { GLGeomItem } from './GLGeomItem'
 import { Vec3 } from '../../Math/Vec3'
+import { RenderState, GeomDataRenderState } from '../types/renderer'
+import { WebGL12RenderingContext } from '../types/webgl'
 
 /** Class representing GL shader materials.
  * @private

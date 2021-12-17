@@ -11,6 +11,9 @@ import GLGeomItemLibraryCullingWorker from 'web-worker:./GLGeomItemLibraryCullin
 import { GeomItem } from '../../SceneTree/GeomItem'
 import { GLBaseRenderer } from '../GLBaseRenderer'
 import { Material } from '../../SceneTree/Material'
+import { RenderState } from '../types/renderer'
+import { StateChangedEvent } from '../../Utilities/Events/StateChangedEvent'
+import { XrViewportEvent } from '../../Utilities/Events'
 
 const pixelsPerItem = 6 // The number of RGBA pixels per draw item.
 
@@ -26,9 +29,11 @@ class GLGeomItemLibrary extends EventEmitter {
   protected dirtyItemIndices: number[]
   protected dirtyWorkerItemIndices: Set<number> = new Set()
   protected removedItemIndices: number[]
-  protected worker: typeof GLGeomItemLibraryCullingWorker
   protected glGeomItemsTexture: GLTexture2D | null = null
-  protected enableFrustumCulling: any
+  protected enableFrustumCulling: boolean
+
+  private worker: GLGeomItemLibraryCullingWorker
+
   /**
    * Create a GLGeomItemLibrary.
    * @param renderer - The renderer instance
@@ -118,9 +123,9 @@ class GLGeomItemLibrary extends EventEmitter {
     })
     viewportChanged()
 
-    renderer.once('xrViewportSetup', (event: Record<string, any>) => {
+    renderer.once('xrViewportSetup', (event: XrViewportEvent) => {
       const xrvp = event.xrViewport
-      xrvp.on('presentingChanged', (event: Record<string, any>) => {
+      xrvp.on('presentingChanged', (event: StateChangedEvent) => {
         if (event.state) {
           cullFreq = 10
           // Note: We approximate the culling viewport to be
@@ -142,6 +147,8 @@ class GLGeomItemLibrary extends EventEmitter {
         } else {
           cullFreq = 5
           viewportChanged()
+          // push the camera xfo to the worker.
+          forceViewChanged()
         }
       })
     })

@@ -9,6 +9,7 @@ import { BaseEvent } from '../Utilities/BaseEvent'
 import { Parameter } from './Parameters/Parameter'
 import { SelectabilityChangedEvent } from '../Utilities/Events/SelectabilityChangedEvent'
 import { SelectedEvent } from '../Utilities/Events/SelectedEvent'
+import { AssetLoadContext } from './AssetLoadContext'
 
 let numBaseItems = 0
 
@@ -295,7 +296,7 @@ class BaseItem extends ParameterOwner implements Owner {
    * @param reader - The reader value.
    * @param context - The context value.
    */
-  readBinary(reader: BinReader, context: Record<string, any>): void {
+  readBinary(reader: BinReader, context: AssetLoadContext): void {
     // read the type, but don't use it. This line must not be removed.
     // as the binary pointer is incremented.
     /*const type = */ reader.loadStr()
@@ -333,6 +334,8 @@ class BaseItem extends ParameterOwner implements Owner {
   copyFrom(src: BaseItem, context?: Record<string, any>): void {
     super.copyFrom(src, context)
     this.setName(src.getName())
+
+    this.setSelectable(src.isSelectable())
   }
 }
 

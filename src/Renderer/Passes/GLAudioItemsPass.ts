@@ -3,6 +3,13 @@ import { GLPass, PassType } from './GLPass'
 import { GeomItem, TreeItem, MaterialColorParam, LDRVideo } from '../../SceneTree/index'
 import { GLBaseRenderer } from '../GLBaseRenderer'
 import { AudioItem } from '../../SceneTree/AudioItem'
+import { RenderState } from '../types/renderer'
+
+declare global {
+  interface Window {
+    ZeaAudioaudioCtx: any
+  }
+}
 
 const AudioContext =
   window.navigator &&

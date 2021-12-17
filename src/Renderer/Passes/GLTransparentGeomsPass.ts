@@ -5,6 +5,8 @@ import { GLStandardGeomsPass } from './GLStandardGeomsPass'
 import { GLRenderer } from '../GLRenderer'
 import { GLShaderGeomSets } from '../Drawing/GLShaderGeomSets'
 import { GLBaseRenderer } from '../GLBaseRenderer'
+import { RenderState, GeomDataRenderState } from '../types/renderer'
+import { GLViewport } from '..'
 
 /** Class representing a GL transparent geoms pass.
  * @extends GLStandardGeomsPass
@@ -356,7 +358,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
       } else if (renderstate.viewport) {
         // Adapt the sort tolerance to the focal distance.
         // In a tiny scene, we want to sort more frequently.
-        const camera = renderstate.viewport.getCamera()
+        const camera = (renderstate.viewport as GLViewport).getCamera() // TODO: check if this cast is correct.
         this.sortCameraMovementDistance = camera.getFocalDistance() * 0.3
       }
     }

@@ -10,6 +10,7 @@ import { MathFunctions } from '../../Utilities/MathFunctions'
 import { GLBaseRenderer } from '../GLBaseRenderer'
 import { GLShader } from '../GLShader'
 import { GeomItemAndDist } from '../../Utilities/IntersectionData'
+import { RenderState, GeomDataRenderState } from '../types/renderer'
 
 const pixelsPerItem = 7 // The number of pixels per draw item.
 

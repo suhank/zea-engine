@@ -2,6 +2,8 @@ import { BaseImage, RefCounted } from '../SceneTree/index'
 import { ResizedEvent } from '../Utilities/Events/ResizedEvent'
 import { MathFunctions } from '../Utilities/MathFunctions'
 import { processTextureParams } from './processTextureParams'
+import { Uniform, Uniforms, RenderState } from './types/renderer'
+import { WebGL12RenderingContext } from './types/webgl'
 
 /**
  * Represents a texture that contains 2-dimensional images.

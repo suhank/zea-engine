@@ -2,6 +2,8 @@ import '../../SceneTree/GeomItem'
 import { CountChangedEvent } from '../../Utilities/Events/CountChangedEvent'
 
 import { EventEmitter } from '../../Utilities/index'
+import { RenderState } from '../types/renderer'
+import { WebGL12RenderingContext } from '../types/webgl'
 import { GLGeom } from './GLGeom'
 import { GLGeomItem } from './GLGeomItem'
 

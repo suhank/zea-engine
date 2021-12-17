@@ -1,5 +1,22 @@
 import { BaseItem } from './BaseItem'
 
+interface ImageParams {
+  type: string
+  format: string
+  width: number
+  height: number
+
+  wrapS?: string
+  wrapT?: string
+  minFilter?: string
+  magFilter?: string
+  mipMapped?: boolean
+
+  data?: HTMLImageElement | HTMLVideoElement | Uint8Array | Float32Array | HTMLCanvasElement | ImageData | Record<string, any>
+  exposure?: number
+
+  flipY?: boolean
+}
 /**
  * Represents a 2D image item, containing width and height.
  *
@@ -13,28 +30,19 @@ class BaseImage extends BaseItem {
   height: number = 0
   format: string = 'RGB'
   type: string = 'UNSIGNED_BYTE'
-  mipMapped: boolean = true
-
-  protected wrapS: string = 'REPEAT'
-  protected wrapT: string = 'REPEAT'
-  protected minFilter: string = 'LINEAR'
-  protected magFilter: string = 'LINEAR'
   loaded: boolean = false
+  mipMapped: boolean = true
+  wrapS: string = 'REPEAT'
+  wrapT: string = 'REPEAT'
+  minFilter: string = 'LINEAR'
+  magFilter: string = 'LINEAR'
+
   /**
    * Creates an instance of BaseImage.
    * @param name - name of the item
    */
   constructor(name?: string) {
     super(name)
-    this.width = 0
-    this.height = 0
-    this.format = 'RGB'
-    this.type = 'UNSIGNED_BYTE'
-    this.wrapS = 'CLAMP_TO_EDGE'
-    this.wrapT = 'CLAMP_TO_EDGE'
-    this.minFilter = 'LINEAR'
-    this.magFilter = 'LINEAR'
-
     this.on('parameterValueChanged', () => {
       this.emit('updated')
     })
@@ -54,7 +62,7 @@ class BaseImage extends BaseItem {
    *
    * @return - The return value.
    */
-  getParams(): Record<string, any> {
+  getParams(): ImageParams {
     return {
       type: this.type,
       format: this.format,
@@ -69,4 +77,4 @@ class BaseImage extends BaseItem {
   }
 }
 
-export { BaseImage }
+export { BaseImage, ImageParams }

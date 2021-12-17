@@ -7,7 +7,7 @@ import { Registry } from '../Registry'
 import { GeomItem } from './GeomItem'
 import { BinReader } from './BinReader'
 import { AssetLoadContext } from './AssetLoadContext'
-import { BaseItem, Parameter } from '.'
+import { BaseGeomItem, BaseItem, Parameter } from '.'
 
 /**
  * Given a units string, load returns a factor relative to meters
@@ -161,7 +161,7 @@ class AssetItem extends TreeItem {
 
     let layerRoot: TreeItem
     const layers: Record<string, any> = {}
-    context.addGeomToLayer = (geomItem: GeomItem, layer: string) => {
+    context.addGeomToLayer = (geomItem: BaseGeomItem, layer: string) => {
       if (!layers[layer]) {
         if (!layerRoot) {
           layerRoot = new TreeItem('Layers')

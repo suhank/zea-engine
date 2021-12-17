@@ -10,6 +10,7 @@ import './GLSL/index'
 import vert from './Lines.vert'
 // @ts-ignore
 import frag from './Lines.frag'
+import { WebGL12RenderingContext } from '../types/webgl'
 
 class LinesShader extends GLShader {
   /**

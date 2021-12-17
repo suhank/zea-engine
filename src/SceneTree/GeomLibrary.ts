@@ -1,7 +1,7 @@
 /* eslint-disable require-jsdoc */
 import { SystemDesc } from '../SystemDesc'
 import { BinReader } from './BinReader'
-import { PointsProxy, LinesProxy, MeshProxy } from './Geometry/GeomProxies'
+import { BaseProxy, PointsProxy, LinesProxy, MeshProxy } from './Geometry/GeomProxies'
 import { EventEmitter } from '../Utilities/index'
 import { resourceLoader } from './resourceLoader'
 
@@ -84,7 +84,7 @@ class GeomLibrary extends EventEmitter {
   protected queue: any[]
   protected loadContext?: AssetLoadContext
   protected __numGeoms: number = -1
-  protected geoms: BaseGeom[] = []
+  protected geoms: Array<BaseProxy | BaseGeom> = []
   protected basePath: string = ''
   protected __loadedCount: number = 0
   /**

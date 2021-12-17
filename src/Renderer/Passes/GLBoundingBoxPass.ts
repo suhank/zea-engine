@@ -8,6 +8,8 @@ import { MathFunctions } from '../../Utilities/MathFunctions'
 import { GLBaseRenderer } from '../GLBaseRenderer'
 import { GLGeom } from '../Drawing'
 import { GLShader } from '../GLShader'
+import { RenderState } from '../types/renderer'
+import { ChildAddedEvent } from '../../Utilities/Events/ChildAddedEvent'
 
 const pixelsPerItem = 6 // The number of pixels per draw item.
 
@@ -116,7 +118,7 @@ class GLBoundingBoxPass extends GLPass {
         if (childItem) this.addTreeItem(<TreeItem>childItem)
       }
 
-      treeItem.on('childAdded', (event) => {
+      treeItem.on('childAdded', (event: ChildAddedEvent) => {
         this.addTreeItem(event.childItem)
       })
       treeItem.on('childRemoved', (event) => {

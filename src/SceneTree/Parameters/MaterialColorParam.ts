@@ -3,6 +3,7 @@ import { ColorParameter } from './ColorParameter'
 import { BaseImage } from '../BaseImage'
 import { Color } from '../../Math/Color'
 import { BinReader } from '../../SceneTree/BinReader'
+import { AssetLoadContext } from '../AssetLoadContext'
 
 /**
  * Represents a specific type of parameter, that stores `Color` and `BaseImage` texture values.
@@ -132,12 +133,12 @@ class MaterialColorParam extends ColorParameter {
    * @param reader - The reader value.
    * @param context - The context value.
    */
-  readBinary(reader: BinReader, context: Record<string, any>): void {
+  readBinary(reader: BinReader, context: AssetLoadContext): void {
     super.readBinary(reader, context)
 
     const textureName = reader.loadStr()
     if (textureName != '') {
-      this.setImage(context.materialLibrary.getImage(textureName))
+      this.setImage(context.assetItem.materialLibrary.getImage(textureName))
     }
   }
 

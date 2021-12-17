@@ -15,6 +15,7 @@ import { ZeaWheelEvent } from '../Utilities/Events/ZeaWheelEvent'
 import { ZeaTouchEvent } from '../Utilities/Events/ZeaTouchEvent'
 import { ZeaMouseEvent } from '../Utilities/Events/ZeaMouseEvent'
 import { ZeaUIEvent } from '../Utilities/Events/ZeaUIEvent'
+import { GeomDataRenderState, RenderState, ColorRenderState } from './types/renderer'
 
 let activeViewport: GLViewport = null
 /**
@@ -420,7 +421,7 @@ class GLViewport extends GLBaseViewport {
       // const x = Math.floor(screenPos.x / this.__geomDataBufferSizeFactor)
       // const y = Math.floor(screenPos.y / this.__geomDataBufferSizeFactor)
       let passId
-      let geomData
+      let geomData: Float32Array | Uint8Array
       if (this.__renderer.floatGeomBuffer) {
         geomData = new Float32Array(4)
         gl.readPixels(x, bufferHeight - y - 1, 1, 1, gl.RGBA, gl.FLOAT, geomData)
@@ -598,16 +599,19 @@ class GLViewport extends GLBaseViewport {
 
     if (event.getCapture()) {
       event.getCapture().onPointerDown(event)
-      return
+      // events are now always sent to the capture item first,
+      // but can continue propagating to other items if no call
+      // to event.stopPropagation() was made.
+      if (!event.propagating) return
     }
 
     if (event.intersectionData != undefined) {
       event.intersectionData.geomItem.onPointerDown(event)
-      if (!event.propagating || event.getCapture()) return
+      if (!event.propagating) return
     }
 
     this.emit('pointerDown', event)
-    if (!event.propagating || event.getCapture()) return
+    if (!event.propagating) return
 
     if (this.manipulator) {
       this.manipulator.onPointerDown(event)
@@ -641,6 +645,9 @@ class GLViewport extends GLBaseViewport {
 
     if (event.getCapture()) {
       event.getCapture().onPointerUp(event)
+      // events are now always sent to the capture item first,
+      // but can continue propagating to other items if no call
+      // to event.stopPropagation() was made.
       if (!event.propagating) return
     }
 
@@ -688,6 +695,9 @@ class GLViewport extends GLBaseViewport {
     // the geom under the pointer. e.g. the CameraManipulator during a drag.
     if (event.getCapture()) {
       event.getCapture().onPointerMove(event)
+      // events are now always sent to the capture item first,
+      // but can continue propagating to other items if no call
+      // to event.stopPropagation() was made.
       if (!event.propagating) return
     }
 
@@ -701,6 +711,7 @@ class GLViewport extends GLBaseViewport {
           if (event.propagating) this.emit('pointerLeaveGeom', event)
         }
 
+        event.propagating = true
         this.pointerOverItem = event.intersectionData.geomItem
         this.pointerOverItem.onPointerEnter(event)
 
@@ -709,8 +720,9 @@ class GLViewport extends GLBaseViewport {
         this.emit('pointerOverGeom', event)
       }
 
+      event.propagating = true
       event.intersectionData.geomItem.onPointerMove(event)
-      if (!event.propagating || event.getCapture()) return
+      if (!event.propagating) return
     } else if (this.pointerOverItem) {
       event.leftGeometry = this.pointerOverItem
       this.pointerOverItem.onPointerLeave(event)
@@ -819,13 +831,16 @@ class GLViewport extends GLBaseViewport {
     this.prepareUIEvent(event)
 
     if (event.getCapture()) {
+      // events are now always sent to the capture item first,
+      // but can continue propagating to other items if no call
+      // to event.stopPropagation() was made.
       event.getCapture().onTouchCancel(event)
-      return
+      if (!event.propagating) return
     }
 
     if (this.manipulator) {
       this.manipulator.onTouchCancel(event)
-      return
+      if (!event.propagating) return
     }
     this.emit('touchCancel', event)
   }
@@ -870,11 +885,17 @@ class GLViewport extends GLBaseViewport {
     // Turn this on to debug the geom data buffer.
     if (this.debugGeomShader) {
       this.renderGeomDataFbo()
+      // Note: renderGeomDataFbo would have bound other shaders.
+      // and the renderstate used above is no blonger valid. Reset.
+      const renderstate: ColorRenderState = <ColorRenderState>{}
       const screenQuad = this.__renderer.screenQuad!
       screenQuad.bindShader(renderstate)
       screenQuad.draw(renderstate, this.__geomDataBuffer, new Vec2(0, 0), new Vec2(1, 1))
     }
     if (this.debugHighlightedGeomsBuffer) {
+      // Note: renderGeomDataFbo would have bound other shaders.
+      // and the renderstate used above is no blonger valid. Reset.
+      const renderstate: ColorRenderState = <ColorRenderState>{}
       const screenQuad = this.__renderer.screenQuad!
       screenQuad.bindShader(renderstate)
       screenQuad.draw(renderstate, this.highlightedGeomsBuffer, new Vec2(0, 0), new Vec2(1, 1))

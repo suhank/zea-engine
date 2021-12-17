@@ -8,6 +8,7 @@ import { Attribute } from './Attribute'
 import { Registry } from '../../Registry'
 import { Vec3Attribute } from './Vec3Attribute'
 import { BinReader } from '../BinReader'
+import { AttrBuffer } from '../../Renderer/types/renderer'
 
 /**
  * The Mesh class provides a flexible and fast polygon mesh representation. It supports polygons of arbitrary complexity,

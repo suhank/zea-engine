@@ -1,4 +1,6 @@
 /* eslint-disable guard-for-in */
+// @ts-ignore
+
 import throttle from 'lodash-es/throttle'
 import { TreeItem, GeomItem, ParameterOwner, Scene } from '../SceneTree/index'
 import { SystemDesc } from '../SystemDesc'
@@ -6,7 +8,7 @@ import { create3DContext } from './GLContext'
 import { GLScreenQuad } from './GLScreenQuad'
 import { GLViewport } from './GLViewport'
 import { Registry } from '../Registry'
-import { VRViewport } from './VR/VRViewport'
+import { VRViewport } from './VR/XRViewport'
 import { GLMaterialLibrary } from './Drawing/GLMaterialLibrary'
 import { GLGeomLibrary } from './Drawing/GLGeomLibrary'
 import { GLGeomItemLibrary } from './Drawing/GLGeomItemLibrary'
@@ -22,6 +24,10 @@ import { ZeaTouchEvent } from '../Utilities/Events/ZeaTouchEvent'
 import { KeyboardEvent } from '../Utilities/Events/KeyboardEvent'
 
 import { GLShader } from './GLShader'
+import { WebGL12RenderingContext } from './types/webgl'
+import { RenderState, Uniforms, GeomDataRenderState } from './types/renderer'
+import { StateChangedEvent } from '../Utilities/Events/StateChangedEvent'
+import { ChildAddedEvent } from '../Utilities/Events/ChildAddedEvent'
 
 let activeGLRenderer: GLBaseRenderer | undefined
 let pointerIsDown = false
@@ -370,7 +376,7 @@ class GLBaseRenderer extends ParameterOwner {
       if (childItem) this.addTreeItem(<TreeItem>childItem)
     }
 
-    listenerIDs['childAdded'] = treeItem.on('childAdded', (event) => {
+    listenerIDs['childAdded'] = treeItem.on('childAdded', (event: ChildAddedEvent) => {
       this.addTreeItem(event.childItem)
     })
     listenerIDs['childRemoved'] = treeItem.on('childRemoved', (event) => {
@@ -565,28 +571,43 @@ class GLBaseRenderer extends ParameterOwner {
 
     this.__glcanvas.style['touch-action'] = 'none'
     this.__glcanvas.parentElement.style.position = 'relative'
+    // Now scrollbars can appear causing the content size to change,
+    // causing an infinite loop of resizing.
+    this.__glcanvas.parentElement.style.overflow = 'hidden'
     this.__glcanvas.style.position = 'absolute'
 
     // Rapid resizing of the canvas would cause issues with WebGL.
     // FrameBuffer objects would end up all black. So here we throttle
     // the resizing of the canvas to ensure 2 resize commands are not
     // closer than 100ms appart.
-    const throttledResize = throttle((entries) => {
+    const throttledResize = throttle((entries: any) => {
+      if (!Array.isArray(entries) || !entries.length) return
       for (const entry of entries) {
-        if (!Array.isArray(entries) || !entries.length || !entry.contentRect) {
-          return
-        }
-
+        if (!entry.contentRect) return
         const displayWidth = Math.round(entry.contentRect.width)
         const displayHeight = Math.round(entry.contentRect.height)
         this.handleResize(displayWidth, displayHeight)
       }
     }, 500)
 
-    const resizeObserver = new ResizeObserver(throttledResize)
+    window.addEventListener('resize', () => {
+      // The ResizeObserver below will miss zoom changes, while this
+      // resize event catches them. Both may be triggered by window
+      // resizes, but the throttle function ensures we don't resize
+      // needlessly.
+      const entries = [
+        {
+          contentRect: {
+            width: this.__glcanvas.parentElement.clientWidth,
+            height: this.__glcanvas.parentElement.clientHeight,
+          },
+        },
+      ]
+      throttledResize(entries)
+    })
 
-    this.handleResize(this.__glcanvas.parentElement.clientWidth, this.__glcanvas.parentElement.clientHeight)
     // https://webglfundamentals.org/webgl/lessons/webgl-resizing-the-canvas.html
+    const resizeObserver = new ResizeObserver(throttledResize)
     try {
       // only call us of the number of device pixels changed
       // @ts-ignore
@@ -596,6 +617,8 @@ class GLBaseRenderer extends ParameterOwner {
       // @ts-ignore
       resizeObserver.observe(this.__glcanvas.parentNode, { box: 'content-box' })
     }
+
+    this.handleResize(this.__glcanvas.parentElement.clientWidth, this.__glcanvas.parentElement.clientHeight)
 
     webglOptions.preserveDrawingBuffer = true
     webglOptions.antialias = webglOptions.antialias != undefined ? webglOptions.antialias : true
@@ -958,12 +981,16 @@ class GLBaseRenderer extends ParameterOwner {
     // Always get the last display. Additional displays are added at the end.(e.g. [Polyfill, HMD])
     const xrvp = new VRViewport(this)
 
-    const emitViewChanged = (event: Record<string, any>) => {
+    const emitViewChanged = (event: ViewChangedEvent) => {
       this.emit('viewChanged', event)
     }
 
-    xrvp.on('presentingChanged', (event: any) => {
+    xrvp.on('presentingChanged', (event: StateChangedEvent) => {
       const state = event.state
+
+      // Note: the WebXREmulator does a double emit and this causes issues.
+      if (this.__xrViewportPresenting == state) return
+
       this.__xrViewportPresenting = state
       if (state) {
         // Let the passes know that VR is starting.

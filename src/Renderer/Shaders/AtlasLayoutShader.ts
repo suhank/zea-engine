@@ -6,6 +6,7 @@ import './GLSL/index'
 import vert from './AtlasLayout.vert'
 // @ts-ignore
 import frag from './AtlasLayout.frag'
+import { WebGL12RenderingContext } from '../types/webgl'
 // eslint-disable-next-line require-jsdoc
 class AtlasLayoutShader extends GLShader {
   /**
