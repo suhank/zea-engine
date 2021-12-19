@@ -11,9 +11,9 @@ uniform mat4 projectionMatrix;
 import 'drawItemTexture.glsl'
 import 'modelMatrix.glsl'
 
-uniform int drawItemId;
-int getDrawItemId() {
-  return drawItemId;
+uniform int geomItemId;
+int getGeomItemId() {
+  return geomItemId;
 }
 
 
@@ -29,7 +29,7 @@ varying vec3 v_viewPos;
 varying vec3 v_viewNormal;
 varying vec2 v_texCoord;
 
-varying float v_drawItemId;
+varying float v_geomItemId;
 varying vec4 v_geomItemData;
 varying float v_drawItemID;
 varying vec3 v_worldPos;
@@ -38,13 +38,13 @@ varying vec3 v_worldPos;
 void main(void) {
 
 
-  int drawItemId = getDrawItemId();
-  v_drawItemId = float(drawItemId);
-  v_geomItemData = getInstanceData(drawItemId);
+  int geomItemId = getGeomItemId();
+  v_geomItemId = float(geomItemId);
+  v_geomItemData = getInstanceData(geomItemId);
 
   int vertexID = int(vertexIDs);
 
-  mat4 modelMatrix = getModelMatrix(drawItemId);
+  mat4 modelMatrix = getModelMatrix(geomItemId);
   mat4 modelViewMatrix = viewMatrix * modelMatrix;
   vec3 pos;
 
@@ -54,7 +54,7 @@ void main(void) {
     vec3  viewNormal;
     vec2  texCoord;
     v_viewPos       = calcFatLinesViewPos(vertexID, modelViewMatrix, viewNormal, texCoord, pos);
-    v_drawItemID = float(getDrawItemId());
+    v_drawItemID = float(getGeomItemId());
     v_worldPos      = (modelMatrix * vec4(pos, 1.0)).xyz;
   #endif
 

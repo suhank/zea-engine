@@ -47,7 +47,7 @@ vec4 getHighlightColor() {
 
 
 /* VS Outputs */
-varying float v_drawItemId;
+varying float v_geomItemId;
 varying vec4 v_geomItemData;
 varying vec3 v_viewPos;
 varying vec3 v_worldPos;
@@ -62,13 +62,13 @@ void main(void) {
   vec4 fragColor;
 #endif
 
-  int drawItemId = int(v_drawItemId + 0.5);
+  int geomItemId = int(v_geomItemId + 0.5);
   int flags = int(v_geomItemData.r + 0.5);
 
   // Cutaways
   if (testFlag(flags, GEOMITEM_FLAG_CUTAWAY)) 
   {
-    vec4 cutAwayData   = getCutaway(drawItemId);
+    vec4 cutAwayData   = getCutaway(geomItemId);
     vec3 planeNormal = cutAwayData.xyz;
     float planeDist = cutAwayData.w;
     if (cutaway(v_worldPos, planeNormal, planeDist)) {
@@ -133,7 +133,7 @@ void main(void) {
 
   if (floatGeomBuffer != 0) {
     fragColor.r = float(passId); 
-    fragColor.g = float(v_drawItemId);
+    fragColor.g = float(v_geomItemId);
     // Note: to make lines visually stand out from triangles
     // this value is 0.0 in the surface shaders.
     fragColor.b = 1.0;// TODO: store segment-id or something.
@@ -141,8 +141,8 @@ void main(void) {
   } else {
     ///////////////////////////////////
     // UInt8 buffer
-    fragColor.r = mod(v_drawItemId, 256.) / 256.;
-    fragColor.g = (floor(v_drawItemId / 256.) + (float(passId) * 64.)) / 256.;
+    fragColor.r = mod(v_geomItemId, 256.) / 256.;
+    fragColor.g = (floor(v_geomItemId / 256.) + (float(passId) * 64.)) / 256.;
 
     // encode the dist as a 16 bit float
     vec2 float16bits = encode16BitFloatInto2xUInt8(viewDist);
@@ -154,7 +154,7 @@ void main(void) {
   // Highlight
 #elif defined(DRAW_HIGHLIGHT)
   
-  fragColor = getHighlightColor(drawItemId);
+  fragColor = getHighlightColor(geomItemId);
 
 #endif // DRAW_HIGHLIGHT
 

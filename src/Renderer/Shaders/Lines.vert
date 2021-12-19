@@ -5,7 +5,7 @@ attribute vec3 positions;
 attribute vec3 positionsNext;
 
 import 'GLSLUtils.glsl'
-import 'drawItemId.glsl'
+import 'geomItemId.glsl'
 import 'drawItemTexture.glsl'
 import 'modelMatrix.glsl'
 
@@ -19,18 +19,18 @@ uniform float Overlay;
 #endif
 
 /* VS Outputs */
-varying float v_drawItemId;
+varying float v_geomItemId;
 varying vec4 v_geomItemData;
 varying vec3 v_viewPos;
 varying vec3 v_worldPos;
 varying vec3 v_nextVertexDist;
 
 void main(void) {
-  int drawItemId = getDrawItemId();
-  v_drawItemId = float(drawItemId);
-  v_geomItemData  = getInstanceData(drawItemId);
+  int geomItemId = getGeomItemId();
+  v_geomItemId = float(geomItemId);
+  v_geomItemData  = getInstanceData(geomItemId);
 
-  mat4 modelMatrix = getModelMatrix(drawItemId);
+  mat4 modelMatrix = getModelMatrix(geomItemId);
   mat4 modelViewMatrix = viewMatrix * modelMatrix;
   vec4 viewPos = modelViewMatrix * vec4(positions, 1.0);
   vec4 viewPosNext = modelViewMatrix * vec4(positionsNext, 1.0);

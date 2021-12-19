@@ -2,71 +2,71 @@
 
 #ifdef ENABLE_MULTI_DRAW
 
-uniform sampler2D drawIdsTexture;
-
 #ifdef EMULATE_MULTI_DRAW
 
-uniform int drawId;
-int getDrawItemId() {
-  return drawId;
+uniform int geomItemId;
+int getGeomItemId() {
+  return geomItemId;
 }
 
-vec3 getDrawItemIds() {
-  return vec3(drawId, 0, -1);
+vec4 getDrawItemIds() {
+  return vec4(float(geomItemId), 0.0, -1.0, -1.0);
 }
 
 #else // EMULATE_MULTI_DRAW
 
-int getDrawItemId() {
+uniform sampler2D drawIdsTexture;
+
+int getGeomItemId() {
   ivec2 drawIdsTextureSize = textureSize(drawIdsTexture, 0);
   ivec2 drawIdsArrayCoords = ivec2(gl_DrawID % drawIdsTextureSize.x, gl_DrawID / drawIdsTextureSize.x);
   return int(texelFetch(drawIdsTexture, drawIdsArrayCoords, 0).r + 0.5);
 }
 
-vec3 getDrawItemIds() {
+vec4 getDrawItemIds() {
   ivec2 drawIdsTextureSize = textureSize(drawIdsTexture, 0);
   ivec2 drawIdsArrayCoords = ivec2(gl_DrawID % drawIdsTextureSize.x, gl_DrawID / drawIdsTextureSize.x);
   vec4 color = texelFetch(drawIdsTexture, drawIdsArrayCoords, 0);
-  return vec3(int(color.r + 0.5), int(color.g + 0.5), int(color.b));
+  return vec4(int(color.r + 0.5), int(color.g + 0.5), int(color.b + 0.5), int(color.a + 0.5));
 }
 
 #endif // EMULATE_MULTI_DRAW
 
 #else // ENABLE_MULTI_DRAW
 
-uniform int drawItemId;
+uniform int geomItemId;
 
 #ifdef ENABLE_FLOAT_TEXTURES
 
 attribute float instancedIds;    // instanced attribute..
 uniform int instancedDraw;
 
-int getDrawItemId() {
+int getGeomItemId() {
   if (instancedDraw == 0) {
-    return drawItemId;
+    return geomItemId;
   }
   else {
     return int(instancedIds);
   }
 }
 
-vec3 getDrawItemIds() {
+vec4 getDrawItemIds() {
   if (instancedDraw == 0) {
-    return vec3(drawItemId, 0, -1);
+    return vec4(float(geomItemId), 0.0, -1.0, -1.0);
   }
   else {
-    return vec3(instancedIds, 0, -1);
+    return vec4(float(instancedIds), 0.0, -1.0, -1.0);
   }
 }
 
 #else
 
-int getDrawItemId() {
-  return drawItemId;
+int getGeomItemId() {
+  return geomItemId;
 }
 
-vec3 getDrawItemIds() {
-  return vec3(drawItemId, 0, -1);
+vec4 getDrawItemIds() {
+    return vec4(float(geomItemId), 0.0, -1.0, -1.0);
 }
 
 #endif // ENABLE_FLOAT_TEXTURES

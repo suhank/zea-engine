@@ -208,7 +208,7 @@ class GLGeomItemSet extends EventEmitter {
       // Note: the draw count can be less than the number of instances
       // we re-use the same buffer and simply invoke fewer draw calls.
       this.visibleItems.forEach((index, tgtIndex) => {
-        this.drawIdsArray![tgtIndex] = this.glGeomItems[index]!.getDrawItemId()
+        this.drawIdsArray![tgtIndex] = this.glGeomItems[index]!.getGeomItemId()
       })
 
       this.drawIdsBufferDirty = false
@@ -255,7 +255,7 @@ class GLGeomItemSet extends EventEmitter {
       // Note: the draw count can be less than the number of instances
       // we re-use the same buffer and simply invoke fewer draw calls.
       this.highlightedItems.forEach((index, tgtIndex) => {
-        this.highlightedIdsArray![tgtIndex] = this.glGeomItems[index]!.getDrawItemId()
+        this.highlightedIdsArray![tgtIndex] = this.glGeomItems[index]!.getGeomItemId()
       })
 
       this.highlightedIdsBufferDirty = false

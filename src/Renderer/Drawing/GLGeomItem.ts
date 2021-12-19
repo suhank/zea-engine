@@ -33,7 +33,7 @@ class GLGeomItem extends EventEmitter {
 
   protected gl: WebGL12RenderingContext
   geomItem: GeomItem
-  drawItemId: number
+  geomItemId: number
   geomId: number
   materialId: number
   protected supportInstancing: boolean
@@ -53,7 +53,7 @@ class GLGeomItem extends EventEmitter {
    * Create a GL geom item.
    * @param gl - The gl value.
    * @param geomItem - The geomItem value.
-   * @param drawItemId - The drawItemId value.
+   * @param geomItemId - The geomItemId value.
    * @param geomId - The geomId value.
    * @param materialId - The materialId value.
    * @param supportInstancing - a boolean to disable instancing support on some mobile platforms
@@ -61,7 +61,7 @@ class GLGeomItem extends EventEmitter {
   constructor(
     gl: WebGL12RenderingContext,
     geomItem: GeomItem,
-    drawItemId: number,
+    geomItemId: number,
     geomId: number,
     materialId: number,
     supportInstancing = false
@@ -69,7 +69,7 @@ class GLGeomItem extends EventEmitter {
     super()
     this.gl = gl
     this.geomItem = geomItem
-    this.drawItemId = drawItemId
+    this.geomItemId = geomItemId
     this.geomId = geomId
     this.materialId = materialId
     this.supportInstancing = supportInstancing
@@ -129,8 +129,8 @@ class GLGeomItem extends EventEmitter {
    * The getId method.
    * @return - The return value.
    */
-  getDrawItemId() {
-    return this.drawItemId
+  getGeomItemId() {
+    return this.geomItemId
   }
 
   /**
@@ -195,9 +195,9 @@ class GLGeomItem extends EventEmitter {
       }
     }
 
-    const unif = unifs.drawItemId
+    const unif = unifs.geomItemId
     if (unif) {
-      gl.uniform1i(unif.location, this.drawItemId)
+      gl.uniform1i(unif.location, this.geomItemId)
     }
     return true
   }

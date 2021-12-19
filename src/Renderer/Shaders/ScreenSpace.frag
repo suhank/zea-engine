@@ -26,7 +26,7 @@ import 'materialparams.glsl'
 
 
 /* VS Outputs */
-varying float v_drawItemId;
+varying float v_geomItemId;
 varying vec4 v_geomItemData;
 #ifdef ENABLE_TEXTURES
 varying vec2 v_textureCoord;
@@ -79,9 +79,9 @@ void main(void) {
   //////////////////////////////////////////////
   // GeomData
 #elif defined(DRAW_GEOMDATA)
-  fragColor = setFragColor_geomData(vec3(0,0,0), floatGeomBuffer, passId, v_drawItemId, 0.0, isOrthographic);
+  fragColor = setFragColor_geomData(vec3(0,0,0), floatGeomBuffer, passId, v_geomItemId, 0.0, isOrthographic);
 #elif defined(DRAW_HIGHLIGHT)
-  fragColor = setFragColor_highlight(v_drawItemId);
+  fragColor = setFragColor_highlight(v_geomItemId);
 #endif // DRAW_HIGHLIGHT
 
 

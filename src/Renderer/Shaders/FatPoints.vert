@@ -12,9 +12,9 @@ import 'drawItemTexture.glsl'
 import 'modelMatrix.glsl'
 import 'quadVertexFromID.glsl'
 
-uniform int drawItemId;
-int getDrawItemId() {
-  return drawItemId;
+uniform int geomItemId;
+int getGeomItemId() {
+  return geomItemId;
 }
 
 uniform float PointSize;
@@ -23,14 +23,14 @@ uniform float Overlay;
 /* VS Outputs */
 varying vec2 v_texCoord;
 varying vec3 v_viewPos;
-varying float v_drawItemId;
+varying float v_geomItemId;
 
 void main(void) {
-  int drawItemId = getDrawItemId();
+  int geomItemId = getGeomItemId();
   vec2 quadPointPos = getQuadVertexPositionFromID();
   v_texCoord = quadPointPos + 0.5;
 
-  mat4 modelMatrix = getModelMatrix(drawItemId);
+  mat4 modelMatrix = getModelMatrix(geomItemId);
   mat4 modelViewMatrix = viewMatrix * modelMatrix;
   
   vec4 viewPos = modelViewMatrix * vec4(positions, 1.);
@@ -48,7 +48,7 @@ void main(void) {
   // a surface. (else they get fully clipped)
   viewPos.z += 0.5 * PointSize;
 
-  v_drawItemId = float(getDrawItemId());
+  v_geomItemId = float(getGeomItemId());
   v_viewPos = -viewPos.xyz;
   
   gl_Position = projectionMatrix * viewPos;

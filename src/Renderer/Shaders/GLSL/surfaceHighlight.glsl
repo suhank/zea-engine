@@ -16,9 +16,9 @@ vec4 getHighlightColor(int id) {
 #endif
 
 
-vec4 setFragColor_highlight(float v_drawItemId){
+vec4 setFragColor_highlight(float v_geomItemId){
   vec4 fragColor; 
-  int drawItemId = int(v_drawItemId + 0.5);
-  fragColor = getHighlightColor(drawItemId);
+  int geomItemId = int(v_geomItemId + 0.5);
+  fragColor = getHighlightColor(geomItemId);
   return fragColor;
 }

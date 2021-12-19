@@ -13,12 +13,12 @@ uniform mat4 projectionMatrix;
 import 'GLSLUtils.glsl'
 import 'transpose.glsl'
 import 'inverse.glsl'
-import 'drawItemId.glsl'
+import 'geomItemId.glsl'
 import 'drawItemTexture.glsl'
 import 'modelMatrix.glsl'
 
 /* VS Outputs */
-varying vec3 v_drawItemIds;
+varying vec4 v_drawItemIds;
 varying vec4 v_geomItemData;
 varying vec3 v_viewPos;
 varying vec3 v_viewNormal;
@@ -29,10 +29,10 @@ varying vec3 v_worldPos;
 
 void main(void) {
   v_drawItemIds = getDrawItemIds();
-  int drawItemId = int(v_drawItemIds.x);
-  v_geomItemData  = getInstanceData(drawItemId);
+  int geomItemId = int(v_drawItemIds.x + 0.5);
+  v_geomItemData  = getInstanceData(geomItemId);
 
-  mat4 modelMatrix = getModelMatrix(drawItemId);
+  mat4 modelMatrix = getModelMatrix(geomItemId);
   mat4 modelViewMatrix = viewMatrix * modelMatrix;
 
   vec4 pos = vec4(positions, 1.);

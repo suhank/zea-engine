@@ -38,7 +38,7 @@ vec4 getHighlightColor() {
 #endif // DRAW_HIGHLIGHT
 
 /* VS Outputs */
-varying float v_drawItemId;
+varying float v_geomItemId;
 varying vec4 v_geomItemData;
 varying vec3 v_viewPos;
 /* VS Outputs */
@@ -81,15 +81,15 @@ void main(void) {
 
   if (floatGeomBuffer != 0) {
     fragColor.r = float(passId); 
-    fragColor.g = float(v_drawItemId);
+    fragColor.g = float(v_geomItemId);
     fragColor.b = 0.0;// TODO: store poly-id or something.
     fragColor.a = viewDist;
   }
   else {
     ///////////////////////////////////
     // UInt8 buffer
-    fragColor.r = mod(v_drawItemId, 256.) / 256.;
-    fragColor.g = (floor(v_drawItemId / 256.) + (float(passId) * 64.)) / 256.;
+    fragColor.r = mod(v_geomItemId, 256.) / 256.;
+    fragColor.g = (floor(v_geomItemId / 256.) + (float(passId) * 64.)) / 256.;
 
 
     // encode the dist as a 16 bit float
@@ -102,8 +102,8 @@ void main(void) {
   // Highlight
 #elif defined(DRAW_HIGHLIGHT)
   
-  int drawItemId = int(v_drawItemId + 0.5);
-  fragColor = getHighlightColor(drawItemId);
+  int geomItemId = int(v_geomItemId + 0.5);
+  fragColor = getHighlightColor(geomItemId);
 
 #endif // DRAW_HIGHLIGHT
 

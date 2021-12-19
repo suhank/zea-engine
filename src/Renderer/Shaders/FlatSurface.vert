@@ -11,12 +11,12 @@ uniform mat4 projectionMatrix;
 
 import 'GLSLUtils.glsl'
 
-import 'drawItemId.glsl'
+import 'geomItemId.glsl'
 import 'drawItemTexture.glsl'
 import 'modelMatrix.glsl'
 
 /* VS Outputs */
-varying float v_drawItemId;
+varying vec4 v_drawItemIds;
 varying vec4 v_geomItemData;
 varying vec3 v_viewPos;
 #ifdef ENABLE_TEXTURES
@@ -26,11 +26,11 @@ varying vec3 v_worldPos;
 
 
 void main(void) {
-  int drawItemId = getDrawItemId();
-  v_drawItemId = float(drawItemId);
-  v_geomItemData  = getInstanceData(drawItemId);
+  v_drawItemIds = getDrawItemIds();
+  int geomItemId = int(v_drawItemIds.x + 0.5);
+  v_geomItemData  = getInstanceData(geomItemId);
 
-  mat4 modelMatrix = getModelMatrix(drawItemId);
+  mat4 modelMatrix = getModelMatrix(geomItemId);
   mat4 modelViewMatrix = viewMatrix * modelMatrix;
 
   vec4 pos = vec4(positions, 1.);

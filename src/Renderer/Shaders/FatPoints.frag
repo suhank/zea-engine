@@ -11,7 +11,7 @@ uniform float BorderWidth;
 /* VS Outputs */
 varying vec2 v_texCoord;
 varying vec3 v_viewPos;
-varying float v_drawItemId;
+varying float v_geomItemId;
 
 #ifdef ENABLE_ES3
 out vec4 fragColor;
@@ -47,9 +47,9 @@ if (dist > 0.5)
   }
 
 #elif defined(DRAW_GEOMDATA)
-  fragColor = setFragColor_geomData(v_viewPos, floatGeomBuffer, passId, v_drawItemId, 0.0, isOrthographic);
+  fragColor = setFragColor_geomData(v_viewPos, floatGeomBuffer, passId, v_geomItemId, 0.0, isOrthographic);
 #elif defined(DRAW_HIGHLIGHT)
-  fragColor = setFragColor_highlight(v_drawItemId);
+  fragColor = setFragColor_highlight(v_geomItemId);
 #endif // DRAW_HIGHLIGHT
 
 

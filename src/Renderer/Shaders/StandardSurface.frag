@@ -9,7 +9,7 @@ import 'GLSLBits.glsl'
 
 
 /* VS Outputs */
-varying float v_drawItemId;
+varying vec4 v_drawItemIds;
 varying vec4 v_geomItemData;
 varying vec3 v_viewPos;
 varying vec3 v_viewNormal;
@@ -125,11 +125,15 @@ void main(void) {
   #ifndef ENABLE_ES3
     vec4 fragColor;
   #endif
+  
+  int geomItemId = int(v_drawItemIds.x + 0.5);
+  int elemId = int(v_drawItemIds.y + 0.5);
+  int perFaceMaterialId = int(v_drawItemIds.z);
+  int flags = int(v_geomItemData.r + 0.5);
 
-  int drawItemId = int(v_drawItemId + 0.5);
   int flags = int(v_geomItemData.r + 0.5);
   if (testFlag(flags, GEOMITEM_FLAG_CUTAWAY)) {
-    vec4 cutAwayData   = getCutaway(drawItemId);
+    vec4 cutAwayData   = getCutaway(geomItemId);
     vec3 planeNormal = cutAwayData.xyz;
     float planeDist = cutAwayData.w;
     if (cutaway(v_worldPos, planeNormal, planeDist)) {
@@ -297,10 +301,10 @@ void main(void) {
     return;
   }
   
-  fragColor = setFragColor_geomData(v_viewPos, floatGeomBuffer, passId, v_drawItemId, 0.0, isOrthographic);
+  fragColor = setFragColor_geomData(v_viewPos, floatGeomBuffer, passId, v_geomItemId, 0.0, isOrthographic);
    
 #elif defined(DRAW_HIGHLIGHT)
-  fragColor = getHighlightColor(drawItemId);
+  fragColor = getHighlightColor(geomItemId);
 #endif // DRAW_HIGHLIGHT
 
 #ifndef ENABLE_ES3

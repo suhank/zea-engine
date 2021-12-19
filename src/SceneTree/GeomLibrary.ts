@@ -13,7 +13,7 @@ import { parseGeomsBinary } from './Geometry/parseGeomsBinary'
 
 // @ts-ignore
 import GeomParserWorker from 'web-worker:./Geometry/GeomParser-worker.js'
-const workerParsing = true
+const workerParsing = false
 
 import { StreamFileParsedEvent } from '../Utilities/Events/StreamFileParsedEvent'
 import { RangeLoadedEvent } from '../Utilities/Events/RangeLoadedEvent'

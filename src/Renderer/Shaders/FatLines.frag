@@ -14,7 +14,7 @@ uniform mat4 cameraMatrix;
 varying vec3 v_viewPos;
 varying vec3 v_viewNormal;
 varying vec2 v_texCoord;
-varying float v_drawItemId;
+varying float v_geomItemId;
 varying vec4 v_geomItemData;
 varying float v_drawItemID;
 varying vec3 v_worldPos;
@@ -56,11 +56,11 @@ void main(void) {
     fragColor = vec4(v_texCoord.x, 0.0, 0.0, 1.0);
   }
 #elif defined(DRAW_GEOMDATA)
-  int drawItemId = int(v_drawItemId + 0.5);
+  int geomItemId = int(v_geomItemId + 0.5);
   int flags = int(v_geomItemData.r + 0.5);
  // Cutaways
   if (testFlag(flags, GEOMITEM_FLAG_CUTAWAY)) {
-    vec4 cutAwayData  = getCutaway(drawItemId);
+    vec4 cutAwayData  = getCutaway(geomItemId);
     vec3 planeNormal = cutAwayData.xyz;
     float planeDist = cutAwayData.w;
     if (cutaway(v_worldPos, planeNormal, planeDist)) {
@@ -82,7 +82,7 @@ void main(void) {
     fragColor.a = dist;
   }
 #elif defined(DRAW_HIGHLIGHT)
-  fragColor = setFragColor_highlight(v_drawItemId);
+  fragColor = setFragColor_highlight(v_geomItemId);
 #endif
 
 

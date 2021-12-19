@@ -16,7 +16,7 @@ import 'debugColors.glsl'
 #endif
 
 /* VS Outputs */
-varying vec3 v_drawItemIds;
+varying vec4 v_drawItemIds;
 varying vec4 v_geomItemData;
 varying vec3 v_viewPos;
 varying vec3 v_viewNormal;
@@ -64,14 +64,14 @@ void main(void) {
 #ifndef ENABLE_ES3
   vec4 fragColor;
 #endif
-  int drawItemId = int(v_drawItemIds.x + 0.5);
+  int geomItemId = int(v_drawItemIds.x + 0.5);
   int elemId = int(v_drawItemIds.y + 0.5);
   int perFaceMaterialId = int(v_drawItemIds.z);
   int flags = int(v_geomItemData.r + 0.5);
   // Cutaways
   if (testFlag(flags, GEOMITEM_FLAG_CUTAWAY)) 
   {
-    vec4 cutAwayData   = getCutaway(drawItemId);
+    vec4 cutAwayData   = getCutaway(geomItemId);
     vec3 planeNormal = cutAwayData.xyz;
     float planeDist = cutAwayData.w;
     if (cutaway(v_worldPos, planeNormal, planeDist)) {

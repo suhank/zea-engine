@@ -16,9 +16,9 @@ varying vec3 v_worldDir;
  
 void main()
 {
-  int drawItemId = getDrawItemId();
+  int geomItemId = getGeomItemId();
   vec4 pos = vec4(positions, 1.);
-  mat4 modelMatrix = getModelMatrix(drawItemId);
+  mat4 modelMatrix = getModelMatrix(geomItemId);
   mat4 modelViewProjectionMatrix = projectionMatrix * viewMatrix * modelMatrix;
 
   gl_Position = modelViewProjectionMatrix * pos;

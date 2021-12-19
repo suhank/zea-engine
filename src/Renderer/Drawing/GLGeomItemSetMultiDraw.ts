@@ -189,7 +189,7 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
         const offsetAndCount = this.renderer.glGeomLibrary.getGeomOffsetAndCount(glGeomItem.geomId)
         this.drawElementOffsets[index] = offsetAndCount[0]
         this.drawElementCounts[index] = offsetAndCount[1]
-        this.drawIdsArray[index] = glGeomItem.drawItemId
+        this.drawIdsArray[index] = glGeomItem.geomItemId
       })
     }
 
@@ -271,7 +271,7 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
       // Note: the draw count can be less than the number of instances
       // we re-use the same buffer and simply invoke fewer draw calls.
       this.highlightedItems.forEach((glGeomItem, index) => {
-        this.highlightedIdsArray[index] = glGeomItem.drawItemId
+        this.highlightedIdsArray[index] = glGeomItem.geomItemId
         const offsetAndCount = this.renderer.glGeomLibrary.getGeomOffsetAndCount(glGeomItem.geomId)
         this.highlightElementOffsets[index] = offsetAndCount[0]
         this.highlightElementCounts[index] = offsetAndCount[1]
@@ -467,7 +467,7 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
       visibleItems[srcIndex] = this.visibleItems[tgtIndex]
       drawElementCounts[srcIndex] = this.drawElementCounts[tgtIndex]
       drawElementOffsets[srcIndex] = this.drawElementOffsets[tgtIndex]
-      this.drawIdsArray[srcIndex] = this.visibleItems[tgtIndex].drawItemId
+      this.drawIdsArray[srcIndex] = this.visibleItems[tgtIndex].geomItemId
     })
     this.visibleItems = visibleItems
     this.drawElementCounts = drawElementCounts
