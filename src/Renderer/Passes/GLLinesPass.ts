@@ -8,6 +8,7 @@ import { Plane } from '../../SceneTree/index'
 import { GLMesh } from '../Drawing/GLMesh'
 import { GLBaseRenderer } from '../GLBaseRenderer'
 import { RenderState, GeomDataRenderState } from '../types/renderer'
+import { checkFramebuffer } from '../GLFbo'
 
 /** Class representing a GL opaque geoms pass.
  * @extends GLOpaqueGeomsPass
@@ -47,42 +48,6 @@ class GLLinesPass extends GLOpaqueGeomsPass {
   }
 
   /**
-   * The __checkFramebuffer method.
-   * @private
-   */
-  __checkFramebuffer(width: number, height: number) {
-    const gl = this.__gl!
-
-    let check
-    if (gl.name == 'webgl2') check = gl.checkFramebufferStatus(gl.DRAW_FRAMEBUFFER)
-    else check = gl.checkFramebufferStatus(gl.FRAMEBUFFER)
-    if (check !== gl.FRAMEBUFFER_COMPLETE) {
-      gl.bindTexture(gl.TEXTURE_2D, null)
-      if (gl.name == 'webgl2') gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null)
-      else gl.bindFramebuffer(gl.FRAMEBUFFER, null)
-      console.warn('Error creating Fbo width:', width, ', height:', height)
-      switch (check) {
-        case gl.FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
-          throw new Error(
-            'The attachment types are mismatched or not all framebuffer attachment points are framebuffer attachment complete.'
-          )
-        case gl.FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
-          throw new Error('There is no attachment.')
-        case gl.FRAMEBUFFER_INCOMPLETE_DIMENSIONS:
-          throw new Error('Height and width of the attachment are not the same.')
-        case gl.FRAMEBUFFER_INCOMPLETE_DIMENSIONS:
-          throw new Error(
-            'The format of the attachment is not supported or if depth and stencil attachments are not the same renderbuffer.'
-          )
-        case 36061: // gl.GL_FRAMEBUFFER_UNSUPPORTED:
-          throw new Error('The framebuffer is unsupported')
-        default:
-          throw new Error('Incomplete Frambuffer')
-      }
-    }
-  }
-
-  /**
    * The draw method.
    * @param renderstate - The object tracking the current state of the renderer
    */
@@ -100,6 +65,7 @@ class GLLinesPass extends GLOpaqueGeomsPass {
 
     gl.disable(gl.BLEND)
   }
+
   /**
    * The drawGeomData method.
    * @param renderstate - The object tracking the current state of the renderer
@@ -145,7 +111,7 @@ class GLLinesPass extends GLOpaqueGeomsPass {
           gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, colorTex, 0)
           gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.TEXTURE_2D, depthBuffer, 0)
         }
-        this.__checkFramebuffer(width, height)
+        checkFramebuffer(gl, width, height)
       } else {
         if (gl.name == 'webgl2') gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, this.fbo)
         else gl.bindFramebuffer(gl.FRAMEBUFFER, this.fbo)

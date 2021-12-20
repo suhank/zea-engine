@@ -19,7 +19,7 @@ import { GLMeshItemSet } from './GLMeshItemSet'
 import { GLStandardGeomsPass } from '../Passes'
 import { GLGeomItem } from './GLGeomItem'
 import { Vec3 } from '../../Math/Vec3'
-import { RenderState, GeomDataRenderState } from '../types/renderer'
+import { RenderState, GeomDataRenderState, ColorRenderState } from '../types/renderer'
 import { WebGL12RenderingContext } from '../types/webgl'
 
 /** Class representing GL shader materials.
@@ -165,7 +165,7 @@ class GLShaderGeomSets extends EventEmitter {
    * Draws all elements, binding the shader and continuing into the GLGLGeomSetGeomItemSets
    * @param renderstate - The render state for the current draw traversal
    */
-  draw(renderstate: RenderState) {
+  draw(renderstate: ColorRenderState) {
     this.bindShader(this.glShader, renderstate, this.glShaderKey)
 
     for (const elementType in this.glGeomItemSets) {
@@ -206,7 +206,7 @@ class GLShaderGeomSets extends EventEmitter {
     }
 
     for (const elementType in this.glGeomItemSets) {
-      this.glGeomItemSets[elementType].draw(renderstate)
+      this.glGeomItemSets[elementType].drawGeomData(renderstate)
     }
 
     this.glGeomDataShader.unbind(renderstate)

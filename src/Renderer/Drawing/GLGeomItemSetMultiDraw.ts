@@ -4,7 +4,7 @@ import '../../SceneTree/GeomItem'
 import { EventEmitter, MathFunctions } from '../../Utilities/index'
 import { GLBaseRenderer } from '../GLBaseRenderer'
 import { GLTexture2D } from '../GLTexture2D'
-import { RenderState } from '../types/renderer'
+import { ColorRenderState, GeomDataRenderState, RenderState } from '../types/renderer'
 import { WebGL12RenderingContext } from '../types/webgl'
 import { GLGeomItem } from './GLGeomItem'
 
@@ -351,7 +351,7 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
    * The draw method.
    * @param renderstate - The object tracking the current state of the renderer
    */
-  draw(renderstate: RenderState) {
+  draw(renderstate: ColorRenderState) {
     if (this.drawIdsBufferDirty) {
       this.updateDrawIDsBuffer(renderstate)
     }
@@ -396,6 +396,33 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
       this.highlightElementCounts,
       this.highlightElementOffsets,
       this.highlightedItems.length
+    )
+  }
+
+  /**
+   * The drawGeomData method.
+   * @param renderstate - The object tracking the current state of the renderer
+   */
+  drawGeomData(renderstate: GeomDataRenderState) {
+    if (this.drawIdsBufferDirty) {
+      this.updateDrawIDsBuffer(renderstate)
+    }
+    // Note: updateDrawIDsBuffer first, as this avoids a case where the buffers stay dirty
+    // because the last item was removed.
+    if (this.visibleItems.length == 0) {
+      return
+    }
+    if (this.drawIdsTexture) {
+      const { drawIdsTexture } = renderstate.unifs
+      this.drawIdsTexture.bindToUniform(renderstate, drawIdsTexture)
+    }
+
+    this.bindAndRender(
+      renderstate,
+      this.drawIdsArray,
+      this.drawElementCounts,
+      this.drawElementOffsets,
+      this.visibleItems.length
     )
   }
 

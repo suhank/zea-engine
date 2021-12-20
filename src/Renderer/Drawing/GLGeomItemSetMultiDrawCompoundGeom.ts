@@ -44,6 +44,11 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
   protected dirtyHighlightedGeomItems: Set<number> = new Set()
   protected highlightedIdsBufferDirty: boolean = true
 
+  protected linesGeomDataBuffer: GLTexture2D | null = null
+  protected fattenLinesShader: FattenLinesShader | null = null
+  protected quad: GLMesh | null = null
+  protected fbo: WebGLFramebuffer | null = null
+
   /**
    * Create a GL geom item set.
    * @param {GLBaseRenderer} renderer - The renderer object.
@@ -621,6 +626,145 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
       this.drawIdsTextures,
       this.drawIdsArraysAllocators
     )
+  }
+
+  /**
+   * The drawGeomData method.
+   * @param renderstate - The object tracking the current state of the renderer
+   */
+  drawGeomData(renderstate: GeomDataRenderState) {
+    const gl = this.renderer.gl
+    const unifs = renderstate.unifs
+
+    gl.depthFunc(gl.LEQUAL)
+
+    const { drawIdsTexture } = unifs
+    this.renderer.glGeomLibrary.bind(renderstate)
+
+    const { geomType } = unifs
+
+    const counts: Record<string, Int32Array> = this.drawElementCounts
+    const offsets: Record<string, Int32Array> = this.drawElementOffsets
+    const drawIdsTextures: Record<string, GLTexture2D> = this.drawIdsTextures
+    const allocators: Record<string, Allocator1D> = this.drawIdsArraysAllocators
+    const drawIdsArray: Record<string, Float32Array> = this.drawIdsArrays
+
+    renderstate.bindViewports(unifs, () => {
+      if (drawIdsArray['TRIANGLES'] && allocators['TRIANGLES'].allocatedSpace > 0) {
+        drawIdsTextures['TRIANGLES'].bindToUniform(renderstate, drawIdsTexture)
+
+        if (geomType) gl.uniform1i(geomType.location, 2)
+
+        this.multiDrawMeshes(
+          renderstate,
+          drawIdsArray['TRIANGLES'],
+          counts['TRIANGLES'],
+          offsets['TRIANGLES'],
+          allocators['TRIANGLES'].allocatedSpace
+        )
+      }
+    })
+
+    //  Note: lines in VR are not fattened...
+    if (renderstate.geomDataFbo) {
+      if (!this.linesGeomDataBuffer) {
+        this.linesGeomDataBuffer = new GLTexture2D(gl, {
+          type: this.renderer.floatGeomBuffer ? 'FLOAT' : 'UNSIGNED_BYTE',
+          format: 'RGBA',
+          filter: 'NEAREST',
+          width: 1,
+          height: 2,
+        })
+        this.fattenLinesShader = new FattenLinesShader(gl)
+        this.quad = new GLMesh(gl, new Plane(1, 1))
+      }
+
+      const geomDataFbo = renderstate.geomDataFbo
+      const width = geomDataFbo.width
+      const height = geomDataFbo.height
+
+      if (this.linesGeomDataBuffer.width != width || this.linesGeomDataBuffer.height != height) {
+        if (this.fbo) {
+          gl.deleteFramebuffer(this.fbo)
+          this.fbo = null
+        }
+
+        this.linesGeomDataBuffer.resize(width, height)
+
+        this.fbo = gl.createFramebuffer()
+
+        const colorTex = this.linesGeomDataBuffer.glTex
+        const depthBuffer = geomDataFbo.__depthTexture // Share the existing depth buffer.
+        if (gl.name == 'webgl2') {
+          gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, this.fbo)
+          gl.framebufferTexture2D(gl.DRAW_FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, colorTex, 0)
+          gl.framebufferTexture2D(gl.DRAW_FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.TEXTURE_2D, depthBuffer, 0)
+        } else {
+          gl.bindFramebuffer(gl.FRAMEBUFFER, this.fbo)
+          gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, colorTex, 0)
+          gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.TEXTURE_2D, depthBuffer, 0)
+        }
+        checkFramebuffer(gl, width, height)
+      } else {
+        if (gl.name == 'webgl2') gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, this.fbo)
+        else gl.bindFramebuffer(gl.FRAMEBUFFER, this.fbo)
+      }
+
+      gl.colorMask(true, true, true, true)
+      gl.clearColor(0, 0, 0, 0)
+      gl.clear(gl.COLOR_BUFFER_BIT)
+    }
+
+    // this.bindAndRender(
+    //   renderstate,
+    //   this.drawIdsArrays,
+    //   this.drawElementCounts,
+    //   this.drawElementOffsets,
+    //   this.drawIdsTextures,
+    //   this.drawIdsArraysAllocators
+    // )
+    renderstate.bindViewports(unifs, () => {
+      if (drawIdsArray['LINES'] && allocators['LINES'].allocatedSpace > 0) {
+        drawIdsTextures['LINES'].bindToUniform(renderstate, drawIdsTexture)
+
+        if (geomType) gl.uniform1i(geomType.location, 1)
+
+        this.multiDrawLines(
+          renderstate,
+          drawIdsArray['LINES'],
+          counts['LINES'],
+          offsets['LINES'],
+          allocators['LINES'].allocatedSpace
+        )
+      }
+      if (drawIdsArray['POINTS'] && allocators['POINTS'].allocatedSpace > 0) {
+        drawIdsTextures['POINTS'].bindToUniform(renderstate, drawIdsTexture)
+
+        if (geomType) gl.uniform1i(geomType.location, 0)
+
+        this.multiDrawPoints(
+          renderstate,
+          drawIdsArray['POINTS'],
+          counts['POINTS'],
+          offsets['POINTS'],
+          allocators['POINTS'].allocatedSpace
+        )
+      }
+    })
+
+    if (renderstate.geomDataFbo) {
+      renderstate.geomDataFbo.bindForWriting(renderstate)
+
+      this.fattenLinesShader!.bind(renderstate)
+
+      const { colorTexture, screenSize } = renderstate.unifs
+      this.linesGeomDataBuffer!.bindToUniform(renderstate, colorTexture)
+
+      const geomDataFbo = renderstate.geomDataFbo
+      gl.uniform2f(screenSize.location, geomDataFbo.width, geomDataFbo.height)
+
+      this.quad!.bindAndDraw(renderstate)
+    }
   }
 
   /**

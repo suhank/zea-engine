@@ -2,7 +2,7 @@ import '../../SceneTree/GeomItem'
 import { CountChangedEvent } from '../../Utilities/Events/CountChangedEvent'
 
 import { EventEmitter } from '../../Utilities/index'
-import { RenderState } from '../types/renderer'
+import { ColorRenderState, GeomDataRenderState, RenderState } from '../types/renderer'
 import { WebGL12RenderingContext } from '../types/webgl'
 import { GLGeom } from './GLGeom'
 import { GLGeomItem } from './GLGeomItem'
@@ -270,7 +270,7 @@ class GLGeomItemSet extends EventEmitter {
    * The draw method.
    * @param renderstate - The object tracking the current state of the renderer
    */
-  draw(renderstate: RenderState) {
+  draw(renderstate: ColorRenderState) {
     if (this.visibleItems.length == 0) {
       return
     }
@@ -294,6 +294,21 @@ class GLGeomItemSet extends EventEmitter {
     }
 
     this.__bindAndRender(renderstate, this.highlightedItems, this.highlightedIdsBuffer)
+  }
+
+  /**
+   * The drawGeomData method.
+   * @param renderstate - The object tracking the current state of the renderer
+   */
+  drawGeomData(renderstate: GeomDataRenderState) {
+    if (this.visibleItems.length == 0) {
+      return
+    }
+    if (this.drawIdsBufferDirty) {
+      this.updateDrawIDsBuffer()
+    }
+
+    this.__bindAndRender(renderstate, this.visibleItems, this.drawIdsBuffer)
   }
 
   /**

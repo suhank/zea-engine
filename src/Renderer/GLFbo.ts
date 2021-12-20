@@ -265,7 +265,7 @@ class GLFbo {
       }
     }
 
-    this.__checkFramebuffer()
+    checkFramebuffer(gl, this.width, this.height)
 
     if (gl.name == 'webgl2') gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null)
     else gl.bindFramebuffer(gl.FRAMEBUFFER, null)
@@ -321,50 +321,8 @@ class GLFbo {
         )
       }
     }
-    this.__checkFramebuffer()
-  }
 
-  /**
-   * The __checkFramebuffer method.
-   * @private
-   */
-  __checkFramebuffer(): void {
-    const gl = this.__gl
-
-    let check
-    if (gl.name == 'webgl2') check = gl.checkFramebufferStatus(gl.DRAW_FRAMEBUFFER)
-    else check = gl.checkFramebufferStatus(gl.FRAMEBUFFER)
-    if (check !== gl.FRAMEBUFFER_COMPLETE) {
-      gl.bindTexture(gl.TEXTURE_2D, null)
-      if (gl.name == 'webgl2') gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null)
-      else gl.bindFramebuffer(gl.FRAMEBUFFER, null)
-      console.warn(
-        'Error creating Fbo width:',
-        this.width,
-        ', height:',
-        this.height,
-        ' Texture Type:',
-        this.__colorTexture.getType()
-      )
-      switch (check) {
-        case gl.FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
-          throw new Error(
-            'The attachment types are mismatched or not all framebuffer attachment points are framebuffer attachment complete.'
-          )
-        case gl.FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
-          throw new Error('There is no attachment.')
-        case gl.FRAMEBUFFER_INCOMPLETE_DIMENSIONS:
-          throw new Error('Height and width of the attachment are not the same.')
-        case gl.FRAMEBUFFER_INCOMPLETE_DIMENSIONS:
-          throw new Error(
-            'The format of the attachment is not supported or if depth and stencil attachments are not the same renderbuffer.'
-          )
-        case 36061: // gl.GL_FRAMEBUFFER_UNSUPPORTED:
-          throw new Error('The framebuffer is unsupported')
-        default:
-          throw new Error('Incomplete Frambuffer')
-      }
-    }
+    checkFramebuffer(gl, this.width, this.height)
   }
 
   /**
@@ -478,4 +436,34 @@ class GLFbo {
   }
 }
 
-export { GLFbo }
+function checkFramebuffer(gl: WebGL12RenderingContext, width: number, height: number) {
+  let check
+  if (gl.name == 'webgl2') check = gl.checkFramebufferStatus(gl.DRAW_FRAMEBUFFER)
+  else check = gl.checkFramebufferStatus(gl.FRAMEBUFFER)
+  if (check !== gl.FRAMEBUFFER_COMPLETE) {
+    gl.bindTexture(gl.TEXTURE_2D, null)
+    if (gl.name == 'webgl2') gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null)
+    else gl.bindFramebuffer(gl.FRAMEBUFFER, null)
+    console.warn('Error creating Fbo width:', width, ', height:', height)
+    switch (check) {
+      case gl.FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
+        throw new Error(
+          'The attachment types are mismatched or not all framebuffer attachment points are framebuffer attachment complete.'
+        )
+      case gl.FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
+        throw new Error('There is no attachment.')
+      case gl.FRAMEBUFFER_INCOMPLETE_DIMENSIONS:
+        throw new Error('Height and width of the attachment are not the same.')
+      case gl.FRAMEBUFFER_INCOMPLETE_DIMENSIONS:
+        throw new Error(
+          'The format of the attachment is not supported or if depth and stencil attachments are not the same renderbuffer.'
+        )
+      case 36061: // gl.GL_FRAMEBUFFER_UNSUPPORTED:
+        throw new Error('The framebuffer is unsupported')
+      default:
+        throw new Error('Incomplete Frambuffer')
+    }
+  }
+}
+
+export { GLFbo, checkFramebuffer }
