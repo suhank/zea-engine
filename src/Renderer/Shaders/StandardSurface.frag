@@ -131,7 +131,6 @@ void main(void) {
   int perFaceMaterialId = int(v_drawItemIds.z);
   int flags = int(v_geomItemData.r + 0.5);
 
-  int flags = int(v_geomItemData.r + 0.5);
   if (testFlag(flags, GEOMITEM_FLAG_CUTAWAY)) {
     vec4 cutAwayData   = getCutaway(geomItemId);
     vec3 planeNormal = cutAwayData.xyz;
@@ -301,7 +300,7 @@ void main(void) {
     return;
   }
   
-  fragColor = setFragColor_geomData(v_viewPos, floatGeomBuffer, passId, v_geomItemId, 0.0, isOrthographic);
+  fragColor = setFragColor_geomData(v_viewPos, floatGeomBuffer, passId, v_drawItemIds.x, 0.0, isOrthographic);
    
 #elif defined(DRAW_HIGHLIGHT)
   fragColor = getHighlightColor(geomItemId);
