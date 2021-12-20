@@ -74,7 +74,7 @@ class GLRenderer extends GLBaseRenderer {
     const gl = <WebGL12RenderingContext>this.__gl
     this.highlightsShader = new HighlightsShader(gl)
     this.silhouetteShader = new SilhouetteShader(gl)
-    this.highlightOutlineThickness = 1.5
+    this.highlightOutlineThickness = 1
     this.outlineThickness = 0
     this.outlineColor = new Color(0.15, 0.15, 0.15, 1)
     this.outlineSensitivity = 2
