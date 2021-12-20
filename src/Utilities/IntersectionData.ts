@@ -13,6 +13,7 @@ class IntersectionData {
   intersectionPos: Vec3
   geomData: Float32Array | Uint8Array
   geomItem: TreeItem
+  componentId: number
   dist: number
   constructor(
     screenPos: Vec2,
@@ -26,6 +27,7 @@ class IntersectionData {
     this.intersectionPos = intersectionPos
     this.geomData = geomData
     this.geomItem = geomItemAndDist.geomItem
+    this.componentId = geomItemAndDist.componentId
     this.dist = geomItemAndDist.dist
   }
 }

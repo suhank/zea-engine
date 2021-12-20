@@ -300,7 +300,7 @@ void main(void) {
     return;
   }
   
-  fragColor = setFragColor_geomData(v_viewPos, floatGeomBuffer, passId, v_drawItemIds.x, 0.0, isOrthographic);
+  fragColor = setFragColor_geomData(v_viewPos, floatGeomBuffer, passId, v_drawItemIds.x, v_drawItemIds.y, isOrthographic);
    
 #elif defined(DRAW_HIGHLIGHT)
   fragColor = getHighlightColor(geomItemId);
