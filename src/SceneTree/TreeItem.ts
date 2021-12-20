@@ -311,11 +311,22 @@ class TreeItem extends BaseItem {
    * @return - The color value.
    */
   getHighlight(): Color {
-    const check = this.__highlights.length > 0
-    if (!check) {
-      throw Error('highlight length > 0')
+    if (this.__highlights.length == 0) {
+      return null
     }
     return this.__highlightMapping[this.__highlights[this.__highlights.length - 1]]
+  }
+
+  /**
+   * Returns the name of the current highlight.
+   *
+   * @return - The color value.
+   */
+  getHighlightName(): string {
+    if (this.__highlights.length == 0) {
+      return null
+    }
+    return this.__highlights[this.__highlights.length - 1]
   }
 
   /**
