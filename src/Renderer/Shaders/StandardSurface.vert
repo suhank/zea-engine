@@ -64,11 +64,11 @@ void main(void) {
   // This ensures that lines drawn over surfaces are solid and not clipped
   // at all by the surface.
   if (geomType == 1) { // start 'LINES'
-    float overlay = 0.000001;
+    float overlay = 0.00001;
     gl_Position.z = mix(gl_Position.z, -gl_Position.w, overlay);
   } // end 'LINES'
   else if (geomType == 0) { // start 'POINTS'
-    float overlay = 0.000003;
+    float overlay = 0.00003;
     gl_Position.z = mix(gl_Position.z, -gl_Position.w, overlay);
   }  // end 'POINTS'
 
