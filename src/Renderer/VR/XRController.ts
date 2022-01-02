@@ -5,6 +5,7 @@ import { IntersectionData } from '../../Utilities/IntersectionData'
 import { XRViewport } from '.'
 import { XRPoseEvent } from '../../Utilities/Events/XRPoseEvent'
 import { XRControllerEvent } from '../../Utilities/Events/XRControllerEvent'
+import { EventEmitter } from '../..'
 
 // const line = new Lines()
 // line.setNumVertices(2)
@@ -15,12 +16,64 @@ import { XRControllerEvent } from '../../Utilities/Events/XRControllerEvent'
 // positions.getValueRef(1).set(0.0, 0.0, -1.0)
 // line.setBoundingBoxDirty()
 
-/** Class representing a VR controller. */
-class XRController {
+/** Class representing a VR controller.
+ *
+ * The XRController class wraps the XRInputSource provided by the WebXR API.
+ *
+ * https://developer.mozilla.org/en-US/docs/Web/API/XRInputSource
+ *
+ * The XRController provides a tree item that can be used to attach geometries to represenet
+ * the controllers or tools that the user may have in thier hands.
+ * ```javascript
+ * renderer.getXRViewport().then((xrvp) => {
+ *   xrvp.on('controllerAdded', (event) => {
+ *     const controller = event.controller
+ *
+ *     // Configure the distance of the ray cast performed by the controller into the scene.
+ *     // Note: setting to 0 disables ray casting.
+ *     controller.raycastDist = 20.0
+ *
+ *     // Remove the green ball added by the VRViewManipulator.
+ *     controller.tipItem.removeAllChildren()
+ *
+ *     // Add a visual indication of the ray.
+ *     const pointerItem = new GeomItem('PointerRay', line, pointermat)
+ *     pointerItem.setSelectable(false)
+ *     const pointerXfo = new Xfo()
+ *     pointerXfo.sc.set(1, 1, controller.raycastDist)
+ *     pointerItem.localXfoParam.value = pointerXfo
+ *     controller.tipItem.addChild(pointerItem, false)
+ *
+ *     // The tip items needs to be rotated down a little to make it
+ *     // point in the right direction.
+ *     const tipItemXfo = controller.tipItem.localXfoParam.value
+ *     tipItemXfo.ori.setFromAxisAndAngle(new Vec3(1, 0, 0), -0.8)
+ *     controller.tipItem.localXfoParam.value = tipItemXfo
+ *
+ *     controller.on('buttonPressed', (event) => {
+ *       console.log('buttonPressed', event)
+ *     })
+ *     controller.on('buttonReleased', (event) => {
+ *       console.log('buttonReleased', event)
+ *     })
+ *   })
+ * })
+ * ```
+ *
+ * **Events**
+ * * **buttonPressed:** Emitted when the user presses any of the buttons aside from the trigger button.
+ * * **buttonReleased:** Emitted when the user release any of the buttons aside from the trigger button.
+ *
+ *
+ * @extends EventEmitter
+ */
+
+class XRController extends EventEmitter {
   id: number
   buttonPressed: boolean
   private xrvp: XRViewport
   private inputSource: any
+  private pressedButtons: Array<boolean> = []
   private mat4: Mat4
   private xfo: Xfo
   private treeItem: TreeItem
@@ -50,10 +103,16 @@ class XRController {
    * @param id - The id value.
    */
   constructor(xrvp: any, inputSource: any, id: number) {
+    super()
     this.xrvp = xrvp
     this.inputSource = inputSource
     this.id = id
     this.buttonPressed = false
+
+    this.inputSource.gamepad.buttons.forEach((button: any, index: number) => {
+      if (index == 0) return
+      this.pressedButtons[index] = button.pressed
+    })
 
     // /////////////////////////////////
     // Xfo
@@ -273,7 +332,7 @@ class XRController {
     if (this.raycastTick > 0 && this.tick % this.raycastTick == 0) {
       const intersectionData = this.getGeomItemAtTip()
       if (intersectionData != undefined) {
-        const event = new XRControllerEvent(this.xrvp, this, this.buttonPressed ? 1 : 0)
+        const event = new XRControllerEvent(this.xrvp, this, 0, this.buttonPressed ? 1 : 0)
         event.intersectionData = intersectionData
         event.pointerRay = this.pointerRay
         if (intersectionData.geomItem != this.pointerOverItem) {
@@ -291,13 +350,29 @@ class XRController {
         // emit the pointer move event directly to the item.
         intersectionData.geomItem.onPointerMove(event)
       } else if (this.pointerOverItem) {
-        const event = new XRControllerEvent(this.xrvp, this, this.buttonPressed ? 1 : 0)
+        const event = new XRControllerEvent(this.xrvp, this, 0, this.buttonPressed ? 1 : 0)
         event.pointerRay = this.pointerRay
         event.leftGeometry = this.pointerOverItem
         this.pointerOverItem.onPointerLeave(event)
         this.pointerOverItem = null
       }
     }
+
+    this.inputSource.gamepad.buttons.forEach((button: any, index: number) => {
+      if (index == 0) return
+      if (button.pressed && !this.pressedButtons[index]) {
+        this.pressedButtons[index] = true
+        const event = new XRControllerEvent(this.xrvp, this, index, 1)
+        event.intersectionData = this.getGeomItemAtTip()
+        event.pointerRay = this.pointerRay
+        this.emit('buttonPressed', event)
+      } else if (!button.pressed && this.pressedButtons[index]) {
+        this.pressedButtons[index] = false
+        const event = new XRControllerEvent(this.xrvp, this, index, 0)
+        this.emit('buttonReleased', event)
+      }
+    })
+
     this.tick++
   }
 
