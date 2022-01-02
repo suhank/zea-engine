@@ -81,7 +81,7 @@ class XRController extends EventEmitter {
 
   // The frequency of raycasting into the scene for this controller
   raycastTick: number = 5
-  raycastArea: number = 0.04
+  raycastArea: number = 0.005
   raycastDist: number = 0.04
   pointerRay: Ray = new Ray()
   private raycastAreaCache: number = 0
@@ -329,7 +329,7 @@ class XRController extends EventEmitter {
     // /////////////////////////////////
     // Simulate Pointer Enter/Leave Events.
     // Check for pointer over every Nth frame (at 90fps this should be fine.)
-    if (this.raycastTick > 0 && this.tick % this.raycastTick == 0) {
+    if (this.raycastDist > 0.0 && this.raycastTick > 0 && this.tick % this.raycastTick == 0) {
       const intersectionData = this.getGeomItemAtTip()
       if (intersectionData != undefined) {
         const event = new XRControllerEvent(this.xrvp, this, 0, this.buttonPressed ? 1 : 0)
@@ -386,12 +386,15 @@ class XRController extends EventEmitter {
     if (this.hitTested) return this.intersectionData
     this.hitTested = true
 
+    if (this.raycastDist == 0) return null
+
     const renderer = this.xrvp.getRenderer()
-    const xfo = this.tipItem.globalXfoParam.value
+    const xfo = this.tipItem.globalXfoParam.value.clone()
+    xfo.sc.set(1, 1, 1)
     this.pointerRay.start = xfo.tr
     this.pointerRay.dir = xfo.ori.getZaxis().negate()
-    const dist = this.raycastDist / this.xrvp.stageScale
-    const area = this.raycastArea / this.xrvp.stageScale
+    const dist = this.raycastDist * this.xrvp.stageScale
+    const area = this.raycastArea * this.xrvp.stageScale
     if (dist != this.raycastDistCache || area != this.raycastAreaCache) {
       this.rayCastRenderTargetProjMatrix.setOrthographicMatrix(
         area * -0.5,
@@ -406,7 +409,6 @@ class XRController extends EventEmitter {
     }
 
     this.intersectionData = renderer.raycastWithProjection(xfo, this.rayCastRenderTargetProjMatrix, this.pointerRay)
-    if (this.intersectionData) this.intersectionData.dist *= this.xrvp.stageScale
     return this.intersectionData
   }
 }
