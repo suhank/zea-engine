@@ -6,12 +6,13 @@ import { BaseTool, TreeItem } from '../../SceneTree'
 class XRControllerEvent extends ZeaPointerEvent {
   controller: XRController
   button: number
-  buttonPressed: boolean
-  constructor(viewport: XRViewport, controller: XRController, button: number) {
+  buttonPressed: number = 0
+  constructor(viewport: XRViewport, controller: XRController, button: number, buttonPressed: number) {
     super(POINTER_TYPES.xr)
     this.viewport = viewport
     this.controller = controller
     this.button = button
+    this.buttonPressed = buttonPressed
   }
 
   stopPropagation() {
