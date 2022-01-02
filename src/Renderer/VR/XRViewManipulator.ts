@@ -108,7 +108,7 @@ class XRViewManipulator extends BaseTool {
    * @return The return value.
    */
   onVRControllerButtonDown(event: XRControllerEvent) {
-    if (event.button != 1) return
+    if (event.button != 0) return
     const index = this.__controllerTriggersHeld.indexOf(event.controller)
     if (index == -1) {
       this.__controllerTriggersHeld.push(event.controller)
@@ -123,7 +123,7 @@ class XRViewManipulator extends BaseTool {
    * @return The return value.
    */
   onVRControllerButtonUp(event: XRControllerEvent) {
-    if (event.button != 1) return
+    if (event.button != 0) return
     const index = this.__controllerTriggersHeld.indexOf(event.controller)
     if (index != -1) {
       this.__controllerTriggersHeld.splice(index, 1)
