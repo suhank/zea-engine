@@ -1,6 +1,8 @@
 import { GLShader } from '../GLShader';
 import './GLSL/index';
 import { Material } from '../../SceneTree/Material';
+import { RenderState } from '../types/renderer';
+import { WebGL12RenderingContext } from '../types/webgl';
 /** Shader for drawing Fat lines
  * @extends GLShader
  * @private

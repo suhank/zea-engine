@@ -2,6 +2,7 @@ import { Xfo } from '../../Math/index';
 import { Parameter } from './Parameter';
 import { BinReader } from '../BinReader';
 import { IBinaryReader } from '../../Utilities/IBinaryReader';
+import { AssetLoadContext } from '../AssetLoadContext';
 /**
  * Represents a specific type of parameter, that only stores `Xfo` transform values.
  *
@@ -27,7 +28,7 @@ declare class XfoParameter extends Parameter<Xfo> implements IBinaryReader {
      * @param reader - The reader value.
      * @param context - The context value.
      */
-    readBinary(reader: BinReader, context?: Record<string, unknown>): void;
+    readBinary(reader: BinReader, context?: AssetLoadContext): void;
     toJSON(context?: Record<string, unknown>): Record<string, unknown>;
     fromJSON(j: Record<string, unknown>, context?: Record<string, unknown>): void;
     /**

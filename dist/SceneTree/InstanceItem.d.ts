@@ -1,11 +1,13 @@
 import { TreeItem } from './TreeItem';
 import { BinReader } from './BinReader';
+import { AssetLoadContext } from './AssetLoadContext';
 /**
  * TreeItem type of class designed for making duplications of parts of the tree.
  *
  * @extends {TreeItem}
  */
 declare class InstanceItem extends TreeItem {
+    protected srcTreePath: Array<string>;
     protected srcTree: TreeItem | null;
     /**
      * Create an instance item.
@@ -30,7 +32,7 @@ declare class InstanceItem extends TreeItem {
      * @param reader - The reader value.
      * @param context - The context value.
      */
-    readBinary(reader: BinReader, context?: Record<string, any>): void;
+    readBinary(reader: BinReader, context: AssetLoadContext): void;
     /**
      * The toJSON method encodes this type as a json object for persistence.
      *
@@ -55,5 +57,12 @@ declare class InstanceItem extends TreeItem {
      * @return - Returns a new cloned geom item.
      */
     clone(context?: Record<string, any>): InstanceItem;
+    /**
+     * Copies current TreeItem with all its children.
+     *
+     * @param src - The tree item to copy from.
+     * @param context - The context value.
+     */
+    copyFrom(src: TreeItem, context?: Record<string, any>): void;
 }
 export { InstanceItem };

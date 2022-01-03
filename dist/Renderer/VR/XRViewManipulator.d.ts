@@ -4,12 +4,12 @@ import { BaseTool } from '../../SceneTree/Manipulators/BaseTool';
 import { ZeaPointerEvent } from '../../Utilities/Events/ZeaPointerEvent';
 import { XRControllerEvent } from '../../Utilities/Events/XRControllerEvent';
 import { XRPoseEvent } from '../../Utilities/Events/XRPoseEvent';
-import { VRController } from './VRController';
+import { XRController } from './XRController';
 /**
  * Class representing a view tool
  * @extends BaseTool
  */
-declare class VRViewManipulator extends BaseTool {
+declare class XRViewManipulator extends BaseTool {
     protected listenerIDs: Record<string, number>;
     protected __controllerTriggersHeld: any[];
     protected xrvp: any;
@@ -29,7 +29,7 @@ declare class VRViewManipulator extends BaseTool {
      * @param event
      * @private
      */
-    addIconToController(controller: VRController): void;
+    addIconToController(controller: XRController): void;
     /**
      * The activateTool method.
      */
@@ -86,4 +86,4 @@ declare class VRViewManipulator extends BaseTool {
      */
     onPointerDoublePress(event: ZeaPointerEvent): void;
 }
-export { VRViewManipulator };
+export { XRViewManipulator };

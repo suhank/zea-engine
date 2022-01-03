@@ -1,5 +1,6 @@
 import { BaseGeom } from './BaseGeom';
 import { BinReader } from '../BinReader';
+import { AssetLoadContext } from '../AssetLoadContext';
 /**
  * Class representing a point primitive drawing type, every vertex specified is a point.
  *
@@ -33,6 +34,6 @@ declare class Points extends BaseGeom {
      * @param reader - The reader value.
      * @param context - The context value.
      */
-    readBinary(reader: BinReader, context: Record<string, unknown>): void;
+    readBinary(reader: BinReader, context: AssetLoadContext): void;
 }
 export { Points };

@@ -4,6 +4,7 @@ import { GeomItem } from '../../SceneTree/index';
 import { FattenLinesShader } from '../Shaders/FattenLinesShader';
 import { GLMesh } from '../Drawing/GLMesh';
 import { GLBaseRenderer } from '../GLBaseRenderer';
+import { RenderState, GeomDataRenderState } from '../types/renderer';
 /** Class representing a GL opaque geoms pass.
  * @extends GLOpaqueGeomsPass
  * @private

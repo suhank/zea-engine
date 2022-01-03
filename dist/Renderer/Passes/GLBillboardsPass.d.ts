@@ -7,6 +7,7 @@ import { IGeomShaderBinding } from '../Drawing/index';
 import { GLBaseRenderer } from '../GLBaseRenderer';
 import { GLShader } from '../GLShader';
 import { GeomItemAndDist } from '../../Utilities/IntersectionData';
+import { RenderState, GeomDataRenderState } from '../types/renderer';
 /** Class representing a GL billboards pass.
  * @extends GLPass
  * @private

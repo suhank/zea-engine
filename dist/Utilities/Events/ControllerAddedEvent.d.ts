@@ -1,7 +1,7 @@
-import { VRController } from '../../Renderer/VR/VRController';
+import { XRController } from '../../Renderer/VR/XRController';
 import { BaseEvent } from '../BaseEvent';
 declare class ControllerAddedEvent extends BaseEvent {
-    controller: VRController;
-    constructor(controller: VRController);
+    controller: XRController;
+    constructor(controller: XRController);
 }
 export { ControllerAddedEvent };

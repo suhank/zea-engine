@@ -331,14 +331,24 @@ class CameraManipulator extends BaseTool {
         const { pointerPos } = event;
         event.setCapture(this);
         this.__pointerDown = true;
-        const { viewport } = event;
+        const viewport = event.viewport;
         const camera = viewport.getCamera();
         const xfo = camera.globalXfoParam.value;
         const orbitAroundCursor = this.orbitAroundCursor.value;
-        if (event.intersectionData != undefined && orbitAroundCursor) {
-            this.__orbitTarget = event.intersectionData.intersectionPos;
-            const vec = xfo.inverse().transformVec3(event.intersectionData.intersectionPos);
-            camera.setFocalDistance(-vec.z);
+        if (orbitAroundCursor) {
+            if (event.intersectionData != undefined && orbitAroundCursor) {
+                this.__orbitTarget = event.intersectionData.intersectionPos;
+                const vec = xfo.inverse().transformVec3(event.intersectionData.intersectionPos);
+                camera.setFocalDistance(-vec.z);
+            }
+            else {
+                if (event.pointerRay) {
+                    this.__orbitTarget = event.pointerRay.pointAtDist(camera.getFocalDistance());
+                }
+                else {
+                    this.__orbitTarget = xfo.tr.add(xfo.ori.getZaxis().scale(-camera.getFocalDistance()));
+                }
+            }
         }
         else {
             this.__orbitTarget = xfo.tr.add(xfo.ori.getZaxis().scale(-camera.getFocalDistance()));
@@ -436,6 +446,7 @@ class CameraManipulator extends BaseTool {
             camera.globalXfoParam.value = globalXfo;
             i++;
             if (i <= count) {
+                // @ts-ignore
                 this.__focusIntervalId = setTimeout(applyMovement, 20);
             }
             else {
@@ -477,6 +488,7 @@ class CameraManipulator extends BaseTool {
             camera.setPositionAndTarget(pos, targetPos);
             i++;
             if (i <= count) {
+                // @ts-ignore
                 this.__focusIntervalId = setTimeout(applyMovement, 20);
             }
             else {
@@ -788,7 +800,9 @@ class CameraManipulator extends BaseTool {
                 camera.setFocalDistance(-viewVec.z);
             }
             else {
-                dir = xfo.ori.getZaxis();
+                const point = event.pointerRay.pointAtDist(camera.getFocalDistance());
+                dir = xfo.tr.subtract(point);
+                dir.normalizeInPlace();
             }
         }
         // To normalize mouse wheel speed across vendors and OSs, it is recommended to simply convert scroll value to -1 or 1

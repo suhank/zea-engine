@@ -2,6 +2,7 @@ import { Vec2, Vec3 } from '../../Math/index';
 import { BaseTool } from './BaseTool';
 import { NumberParameter, BooleanParameter } from '../Parameters/index';
 import { Camera } from '../Camera';
+import { ZeaUIEvent } from '../..';
 import { ZeaPointerEvent } from '../../Utilities/Events/ZeaPointerEvent';
 import { ZeaMouseEvent } from '../../Utilities/Events/ZeaMouseEvent';
 import { ZeaWheelEvent } from '../../Utilities/Events/ZeaWheelEvent';
@@ -79,21 +80,21 @@ interface OngoingTouch {
 declare class CameraManipulator extends BaseTool {
     protected appData: Record<string, any>;
     protected __defaultManipulationState: number;
-    protected __manipulationState: any;
+    protected __manipulationState: number;
     protected __pointerDown: boolean;
     protected __dragging: number;
     protected aimFocusOnTouchTap: number;
     protected aimFocusOnMouseClick: number;
     protected enabledWASDWalkMode: boolean;
     protected __keyboardMovement: boolean;
-    protected __keysPressed: any[];
+    protected __keysPressed: string[];
     protected __velocity: Vec3;
     protected __prevVelocityIntegrationTime: number;
     protected __ongoingTouches: Record<string, OngoingTouch>;
-    protected __orbitTarget: any;
+    protected __orbitTarget: Vec3;
     protected prevCursor: any;
-    protected __prevPointerPos: any;
-    protected __focusIntervalId: any;
+    protected __prevPointerPos: Vec2;
+    protected __focusIntervalId: number;
     __mouseWheelMovementDist: number;
     protected __mouseWheelZoomCount: number;
     protected __mouseWheelZoomId: number;
@@ -140,7 +141,7 @@ declare class CameraManipulator extends BaseTool {
      *
      * @param manipulationMode - The manipulation mode value.
      */
-    setDefaultManipulationMode(manipulationMode: string): void;
+    setDefaultManipulationMode(manipulationMode: string | number): void;
     /**
      * The look method.
      * @param event - The event value.
@@ -187,7 +188,7 @@ declare class CameraManipulator extends BaseTool {
      * @private
      * @param event - The event value.
      */
-    initDrag(event: Record<string, any>): void;
+    initDrag(event: ZeaUIEvent): void;
     /**
      * The initDrag method.
      *

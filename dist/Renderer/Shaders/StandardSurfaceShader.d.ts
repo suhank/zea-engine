@@ -1,6 +1,8 @@
 import { GLShader } from '../GLShader';
 import './GLSL/index';
 import { Material } from '../../SceneTree/Material';
+import { WebGL12RenderingContext } from '../types/webgl';
+import { RenderState } from '../types/renderer';
 /** A standard shader handling Opaque and transparent items and PBR rendering.
  * @extends GLShader
  * @private

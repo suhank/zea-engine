@@ -275,6 +275,7 @@ class GeomItem extends BaseGeomItem {
                     const geom = geomLibrary.getGeom(this.geomIndex);
                     // Note: we need the 'valueChanged' event to be received by the
                     // renderer to then load the geometry into the GPU.
+                    // @ts-ignore
                     if (geom)
                         this.geomParam.value = geom;
                     else

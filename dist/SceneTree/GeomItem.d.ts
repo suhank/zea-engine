@@ -6,7 +6,7 @@ import { Operator } from './Operators/Operator';
 import { BaseGeom } from './Geometry';
 import { Material } from './Material';
 import { BinReader } from './BinReader';
-import { AssetItem } from '.';
+import { AssetItem, AssetLoadContext } from '.';
 /**
  * Class representing a geometry item in a scene tree.
  *
@@ -72,7 +72,7 @@ declare class GeomItem extends BaseGeomItem {
      * @param reader - The reader value.
      * @param context - The context value.
      */
-    readBinary(reader: BinReader, context: Record<string, any>): void;
+    readBinary(reader: BinReader, context: AssetLoadContext): void;
     /**
      * Returns string representation of current object's state.
      * @param context

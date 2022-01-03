@@ -1,12 +1,13 @@
 /* eslint-disable guard-for-in */
-import throttle from 'lodash/throttle';
+// @ts-ignore
+import throttle from 'lodash-es/throttle';
 import { TreeItem, GeomItem, ParameterOwner } from '../SceneTree/index';
 import { SystemDesc } from '../SystemDesc';
 import { create3DContext } from './GLContext';
 import { GLScreenQuad } from './GLScreenQuad';
 import { GLViewport } from './GLViewport';
 import { Registry } from '../Registry';
-import { VRViewport } from './VR/VRViewport';
+import { XRViewport } from './VR/XRViewport';
 import { GLMaterialLibrary } from './Drawing/GLMaterialLibrary';
 import { GLGeomLibrary } from './Drawing/GLGeomLibrary';
 import { GLGeomItemLibrary } from './Drawing/GLGeomItemLibrary';
@@ -493,24 +494,42 @@ class GLBaseRenderer extends ParameterOwner {
         }
         this.__glcanvas.style['touch-action'] = 'none';
         this.__glcanvas.parentElement.style.position = 'relative';
+        // Now scrollbars can appear causing the content size to change,
+        // causing an infinite loop of resizing.
+        this.__glcanvas.parentElement.style.overflow = 'hidden';
         this.__glcanvas.style.position = 'absolute';
         // Rapid resizing of the canvas would cause issues with WebGL.
         // FrameBuffer objects would end up all black. So here we throttle
         // the resizing of the canvas to ensure 2 resize commands are not
         // closer than 100ms appart.
         const throttledResize = throttle((entries) => {
+            if (!Array.isArray(entries) || !entries.length)
+                return;
             for (const entry of entries) {
-                if (!Array.isArray(entries) || !entries.length || !entry.contentRect) {
+                if (!entry.contentRect)
                     return;
-                }
                 const displayWidth = Math.round(entry.contentRect.width);
                 const displayHeight = Math.round(entry.contentRect.height);
                 this.handleResize(displayWidth, displayHeight);
             }
         }, 500);
-        const resizeObserver = new ResizeObserver(throttledResize);
-        this.handleResize(this.__glcanvas.parentElement.clientWidth, this.__glcanvas.parentElement.clientHeight);
+        window.addEventListener('resize', () => {
+            // The ResizeObserver below will miss zoom changes, while this
+            // resize event catches them. Both may be triggered by window
+            // resizes, but the throttle function ensures we don't resize
+            // needlessly.
+            const entries = [
+                {
+                    contentRect: {
+                        width: this.__glcanvas.parentElement.clientWidth,
+                        height: this.__glcanvas.parentElement.clientHeight,
+                    },
+                },
+            ];
+            throttledResize(entries);
+        });
         // https://webglfundamentals.org/webgl/lessons/webgl-resizing-the-canvas.html
+        const resizeObserver = new ResizeObserver(throttledResize);
         try {
             // only call us of the number of device pixels changed
             // @ts-ignore
@@ -521,6 +540,7 @@ class GLBaseRenderer extends ParameterOwner {
             // @ts-ignore
             resizeObserver.observe(this.__glcanvas.parentNode, { box: 'content-box' });
         }
+        this.handleResize(this.__glcanvas.parentElement.clientWidth, this.__glcanvas.parentElement.clientHeight);
         webglOptions.preserveDrawingBuffer = true;
         webglOptions.antialias = webglOptions.antialias != undefined ? webglOptions.antialias : true;
         webglOptions.depth = true;
@@ -835,12 +855,15 @@ class GLBaseRenderer extends ParameterOwner {
      */
     __setupXRViewport() {
         // Always get the last display. Additional displays are added at the end.(e.g. [Polyfill, HMD])
-        const xrvp = new VRViewport(this);
+        const xrvp = new XRViewport(this);
         const emitViewChanged = (event) => {
             this.emit('viewChanged', event);
         };
         xrvp.on('presentingChanged', (event) => {
             const state = event.state;
+            // Note: the WebXREmulator does a double emit and this causes issues.
+            if (this.__xrViewportPresenting == state)
+                return;
             this.__xrViewportPresenting = state;
             if (state) {
                 // Let the passes know that VR is starting.

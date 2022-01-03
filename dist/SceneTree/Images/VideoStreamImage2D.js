@@ -10,7 +10,6 @@ class VideoStreamImage2D extends BaseImage {
      */
     constructor() {
         super('');
-        this.loaded = false;
     }
     /**
      * The connectWebcam method.
@@ -120,6 +119,7 @@ class VideoStreamImage2D extends BaseImage {
      * The start method.
      */
     start() {
+        // @ts-ignore
         this.__intervalId = setInterval(() => {
             this.emit('updated');
         }, 20); // Sample at 50fps.

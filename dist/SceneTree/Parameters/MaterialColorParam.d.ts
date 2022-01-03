@@ -2,6 +2,7 @@ import { ColorParameter } from './ColorParameter';
 import { BaseImage } from '../BaseImage';
 import { Color } from '../../Math/Color';
 import { BinReader } from '../../SceneTree/BinReader';
+import { AssetLoadContext } from '../AssetLoadContext';
 /**
  * Represents a specific type of parameter, that stores `Color` and `BaseImage` texture values.
  *
@@ -62,7 +63,7 @@ declare class MaterialColorParam extends ColorParameter {
      * @param reader - The reader value.
      * @param context - The context value.
      */
-    readBinary(reader: BinReader, context: Record<string, any>): void;
+    readBinary(reader: BinReader, context: AssetLoadContext): void;
     /**
      * The clone method constructs a new material color parameter,
      * copies its values from this parameter and returns it.

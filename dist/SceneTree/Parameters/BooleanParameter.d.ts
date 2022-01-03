@@ -1,6 +1,7 @@
 import { Parameter } from './Parameter';
 import { BinReader } from '../BinReader';
 import { IBinaryReader } from '../../Utilities/IBinaryReader';
+import { AssetLoadContext } from '../AssetLoadContext';
 /**
  * Represents a specific type of parameter, that only stores `boolean` values.
  *
@@ -27,7 +28,7 @@ declare class BooleanParameter extends Parameter<boolean> implements IBinaryRead
      * @param reader - The reader value.
      * @param context - The context value.
      */
-    readBinary(reader: BinReader, context?: Record<string, unknown>): void;
+    readBinary(reader: BinReader, context?: AssetLoadContext): void;
     /**
      * The toJSON method serializes this instance as a JSON.
      * It can be used for persistence, data transfer, etc.

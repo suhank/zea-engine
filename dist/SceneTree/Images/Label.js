@@ -204,8 +204,8 @@ class Label extends DataImage {
         const onLoaded = () => {
             this.requestedReRender = false;
             this.needsRender = true;
-            if (!this.__loaded) {
-                this.__loaded = true;
+            if (!this.loaded) {
+                this.loaded = true;
                 this.emit('loaded');
             }
             else {

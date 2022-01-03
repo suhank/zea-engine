@@ -1,5 +1,7 @@
 import { EventEmitter } from '../../Utilities/index';
 import { GLOpaqueGeomsPass } from '../Passes';
+import { RenderState, GeomDataRenderState } from '../types/renderer';
+import { WebGL12RenderingContext } from '../types/webgl';
 import { GLGeom } from './GLGeom';
 import { GLGeomItem } from './GLGeomItem';
 import { GLMaterial } from './GLMaterial';

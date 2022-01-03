@@ -1,5 +1,7 @@
 import { EventEmitter } from '../Utilities/index';
 import { GLTexture2D } from './GLTexture2D';
+import { RenderState } from './types/renderer';
+import { WebGL12RenderingContext } from './types/webgl';
 /** Class representing a GL probe.
  * @private
  */

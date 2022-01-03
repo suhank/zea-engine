@@ -8,9 +8,9 @@ declare class IntersectionData {
     screenPos?: Vec2;
     pointerRay: Ray;
     intersectionPos: Vec3;
-    geomData: Float32Array;
+    geomData: Float32Array | Uint8Array;
     geomItem: TreeItem;
     dist: number;
-    constructor(screenPos: Vec2, pointerRay: Ray, intersectionPos: Vec3, geomData: Float32Array, geomItemAndDist: GeomItemAndDist);
+    constructor(screenPos: Vec2, pointerRay: Ray, intersectionPos: Vec3, geomData: Float32Array | Uint8Array, geomItemAndDist: GeomItemAndDist);
 }
 export { IntersectionData, GeomItemAndDist };

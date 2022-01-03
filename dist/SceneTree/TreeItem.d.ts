@@ -9,6 +9,7 @@ import { Parameter } from './Parameters';
 import { ZeaPointerEvent } from '../Utilities/Events/ZeaPointerEvent';
 import { ZeaWheelEvent } from '../Utilities/Events/ZeaWheelEvent';
 import { ZeaTouchEvent } from '../Utilities/Events/ZeaTouchEvent';
+import { AssetLoadContext } from './AssetLoadContext';
 /**
  * Class representing an Item in the scene tree with hierarchy capabilities (has children).
  * It has the capability to add and remove children.
@@ -385,7 +386,7 @@ declare class TreeItem extends BaseItem {
      * @param reader - The reader value.
      * @param context - The context value.
      */
-    readBinary(reader: BinReader, context: Record<string, any>): void;
+    readBinary(reader: BinReader, context: AssetLoadContext): void;
     /**
      * The clone method constructs a new tree item, copies its values
      * from this item and returns it.

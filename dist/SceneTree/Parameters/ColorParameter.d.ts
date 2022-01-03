@@ -2,6 +2,7 @@ import { Color } from '../../Math/index';
 import { Parameter } from './Parameter';
 import { BinReader } from '../BinReader';
 import { IBinaryReader } from '../../Utilities/IBinaryReader';
+import { AssetLoadContext } from '../AssetLoadContext';
 /**
  * Represents a specific type of parameter, that only stores `Color` values.
  *
@@ -28,7 +29,7 @@ declare class ColorParameter extends Parameter<Color> implements IBinaryReader {
      * @param reader - The reader value.
      * @param context - The context value.
      */
-    readBinary(reader: BinReader, context?: Record<string, unknown>): void;
+    readBinary(reader: BinReader, context?: AssetLoadContext): void;
     toJSON(context?: Record<string, unknown>): Record<string, any>;
     fromJSON(j: Record<string, any>, context?: Record<string, unknown>): void;
     /**

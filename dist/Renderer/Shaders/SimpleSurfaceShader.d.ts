@@ -1,6 +1,7 @@
 import { GLShader } from '../GLShader';
 import { Material } from '../../SceneTree/Material';
 import './GLSL/index';
+import { WebGL12RenderingContext } from '../types/webgl';
 /** A simple shader with no support for PBR or textures
  * @ignore
  */

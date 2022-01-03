@@ -2,6 +2,8 @@ import '../Math/index';
 import { GLTexture2D } from './GLTexture2D';
 import { BaseEvent } from '../Utilities/BaseEvent';
 import { Color } from '../Math/index';
+import { RenderState } from './types/renderer';
+import { WebGL12RenderingContext } from './types/webgl';
 /**
  * This class abstracts the rendering of a collection of geometries to screen.
  */
@@ -11,7 +13,7 @@ declare class GLFbo {
     protected __colorTexture: GLTexture2D;
     protected __createDepthTexture: boolean;
     protected __clearColor: Color;
-    protected __depthTexture: WebGLTexture | null;
+    __depthTexture: WebGLTexture | null;
     protected __fbo: WebGLFramebuffer | null;
     protected __prevBoundFbo: WebGLFramebuffer | null;
     /**

@@ -1,10 +1,9 @@
 import { Mat4, Xfo } from '../../Math/index';
 import { TreeItem, VLAAsset } from '../../SceneTree/index';
 import { GLBaseViewport } from '../GLBaseViewport';
-import { VRHead } from './VRHead';
-import { VRController } from './VRController';
+import { XRHead } from './XRHead';
+import { XRController } from './XRController';
 import { XRControllerEvent } from '../../Utilities/Events/XRControllerEvent';
-import { XRPoseEvent } from '../../Utilities/Events/XRPoseEvent';
 /** This Viewport class is used for rendering stereoscopic views to VR controllers using the WebXR api.
  *  When the GLRenderer class detects a valid WebXF capable device is plugged in, this class is automatically
  *  instantiated ready for XR sessions
@@ -19,15 +18,16 @@ import { XRPoseEvent } from '../../Utilities/Events/XRPoseEvent';
  *
  * @extends GLBaseViewport
  */
-declare class VRViewport extends GLBaseViewport {
+declare class XRViewport extends GLBaseViewport {
     protected __projectionMatricesUpdated: boolean;
     protected __stageTreeItem: TreeItem;
-    protected __vrhead: VRHead;
-    protected controllersMap: Record<string, VRController>;
-    protected controllers: VRController[];
+    protected __xrhead: XRHead;
+    protected controllersMap: Record<string, XRController>;
+    protected controllers: XRController[];
     protected controllerPointerDownTime: number[];
     protected spectatorMode: boolean;
     protected tick: number;
+    stageScale: number;
     protected __leftViewMatrix: Mat4;
     protected __leftProjectionMatrix: Mat4;
     protected __rightViewMatrix: Mat4;
@@ -35,20 +35,14 @@ declare class VRViewport extends GLBaseViewport {
     protected __vrAsset?: VLAAsset;
     protected __stageXfo: Xfo;
     protected __stageMatrix: Mat4;
-    protected __stageScale: any;
     protected session: any;
-    protected __canPresent: any;
     protected __hmd: string;
     protected __hmdAssetPromise?: Promise<VLAAsset | null>;
-    protected __region: any;
+    protected __region: Array<number>;
     protected __refSpace: any;
-    protected capturedItem: any;
-    protected stroke: any;
-    protected capturedElement?: TreeItem;
     protected __projectionMatrices: Array<Mat4>;
-    protected __hmdCanvasSize: any;
-    protected __viewMatrices: any;
-    protected __cameraMatrices: any;
+    protected __viewMatrices: Array<Mat4>;
+    protected __cameraMatrices: Array<Mat4>;
     /**
      * Create a VR viewport.
      * @param renderer - The renderer value.
@@ -69,7 +63,7 @@ declare class VRViewport extends GLBaseViewport {
      * The getVRHead method.
      * @return - The return value.
      */
-    getVRHead(): VRHead;
+    getVRHead(): XRHead;
     /**
      * The getXfo method.
      * @return - The return value.
@@ -84,17 +78,12 @@ declare class VRViewport extends GLBaseViewport {
      * The getControllers method.
      * @return - The return value.
      */
-    getControllers(): VRController[];
-    /**
-     * The canPresent method.
-     * @return - The return value.
-     */
-    canPresent(): any;
+    getControllers(): XRController[];
     /**
      * The isPresenting method.
      * @return - The return value.
      */
-    isPresenting(): any;
+    isPresenting(): boolean;
     /**
      * Turns on and off the spectator mode.
      * Note: specator mode renders the scene an extra time to our regular viewport.
@@ -124,16 +113,11 @@ declare class VRViewport extends GLBaseViewport {
      */
     togglePresenting(): void;
     /**
-     * The getHMDCanvasSize method.
-     * @return - The return value.
-     */
-    getHMDCanvasSize(): any;
-    /**
      * The updateControllers method.
      * @param xrFrame - The xrFrame value.
      * @param event - The pose changed event object that will be emitted for observers such as collab.
      */
-    updateControllers(xrFrame: any, event: XRPoseEvent): void;
+    updateControllers(xrFrame: any): void;
     /**
      * The drawXRFrame method.
      * @param xrFrame - The xrFrame value.
@@ -152,4 +136,4 @@ declare class VRViewport extends GLBaseViewport {
      */
     onPointerUp(event: XRControllerEvent): void;
 }
-export { VRViewport };
+export { XRViewport };

@@ -8,6 +8,7 @@ import { XfoParameter } from './Parameters/XfoParameter';
 import { BaseItem } from './BaseItem';
 import { CalcGlobalXfoOperator } from './Operators/CalcGlobalXfoOperator';
 import { BoundingBoxParameter } from './Parameters/BoundingBoxParameter';
+import { ChildAddedEvent } from '../Utilities/Events/ChildAddedEvent';
 /**
  * Class representing an Item in the scene tree with hierarchy capabilities (has children).
  * It has the capability to add and remove children.
@@ -458,7 +459,7 @@ class TreeItem extends BaseItem {
         this.__childItemsMapping[childItem.getName()] = index;
         this.updateChildNameMapping(index);
         childItem.setOwner(this);
-        this.emit('childAdded', { childItem, index });
+        this.emit('childAdded', new ChildAddedEvent(index, childItem));
         return childItem;
     }
     /**

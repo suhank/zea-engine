@@ -1,6 +1,7 @@
 import { BinReader } from '../../SceneTree/BinReader';
 import { Parameter } from './Parameter';
 import { IBinaryReader } from '../../Utilities/IBinaryReader';
+import { AssetLoadContext } from '..';
 /**
  * Represents a specific type of parameter, that only stores numeric values.
  *
@@ -68,7 +69,7 @@ declare class NumberParameter extends Parameter<number> implements IBinaryReader
      * @param reader - The reader value.
      * @param context - The context value.
      */
-    readBinary(reader: BinReader, context?: Record<string, unknown>): void;
+    readBinary(reader: BinReader, context?: AssetLoadContext): void;
     /**
      * The clone method constructs a new number parameter, copies its values
      * from this parameter and returns it.

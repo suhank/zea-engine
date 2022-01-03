@@ -3,6 +3,8 @@ import { GLTexture2D } from './GLTexture2D';
 import { GLRenderTarget } from './GLRenderTarget';
 import { IGeomShaderBinding } from './Drawing/GeomShaderBinding';
 import { GLShader } from './GLShader';
+import { LayoutItem, RenderState, Uniform } from './types/renderer';
+import { WebGL12RenderingContext } from './types/webgl';
 /**
  * An Image Atlas lays out multiple smaller images within a larger image atlas, and tracks their positions.
  * @private

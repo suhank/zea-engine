@@ -245,9 +245,8 @@ class Xfo {
         const j = {
             tr: this.tr.toJSON(),
             ori: this.ori.toJSON(),
+            sc: this.sc.toJSON(),
         };
-        if (!this.sc.is111())
-            j.sc = this.sc.toJSON();
         return j;
     }
     /**

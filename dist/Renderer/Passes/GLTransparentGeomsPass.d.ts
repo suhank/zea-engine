@@ -2,6 +2,7 @@ import { Vec3 } from '../../Math/Vec3';
 import { GeomItem } from '../../SceneTree/index';
 import { GLStandardGeomsPass } from './GLStandardGeomsPass';
 import { GLBaseRenderer } from '../GLBaseRenderer';
+import { RenderState, GeomDataRenderState } from '../types/renderer';
 /** Class representing a GL transparent geoms pass.
  * @extends GLStandardGeomsPass
  * @private

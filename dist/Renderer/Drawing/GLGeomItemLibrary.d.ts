@@ -1,10 +1,10 @@
 import { EventEmitter } from '../../Utilities/index';
 import { GLGeomItem } from './GLGeomItem';
 import { GLTexture2D } from '../GLTexture2D';
-import GLGeomItemLibraryCullingWorker from 'web-worker:./GLGeomItemLibraryCulling-worker.js';
 import { GeomItem } from '../../SceneTree/GeomItem';
 import { GLBaseRenderer } from '../GLBaseRenderer';
 import { Material } from '../../SceneTree/Material';
+import { RenderState } from '../types/renderer';
 /** Class for managing all the GeomItems discovered in the SceneTree.
  * @private
  */
@@ -17,9 +17,9 @@ declare class GLGeomItemLibrary extends EventEmitter {
     protected dirtyItemIndices: number[];
     protected dirtyWorkerItemIndices: Set<number>;
     protected removedItemIndices: number[];
-    protected worker: typeof GLGeomItemLibraryCullingWorker;
     protected glGeomItemsTexture: GLTexture2D | null;
-    protected enableFrustumCulling: any;
+    protected enableFrustumCulling: boolean;
+    private worker;
     /**
      * Create a GLGeomItemLibrary.
      * @param renderer - The renderer instance

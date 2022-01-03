@@ -1,8 +1,17 @@
 import { SystemDesc } from '../../SystemDesc';
-import { Vec3, Xfo, Mat4 } from '../../Math/index';
+import { Vec3, Xfo, Mat4, Ray } from '../../Math/index';
 import { TreeItem } from '../../SceneTree/index';
+import { XRControllerEvent } from '../../Utilities/Events/XRControllerEvent';
+// const line = new Lines()
+// line.setNumVertices(2)
+// line.setNumSegments(1)
+// line.setSegmentVertexIndices(0, 0, 1)
+// const positions = <Vec3Attribute>line.getVertexAttribute('positions')
+// positions.getValueRef(0).set(0.0, 0.0, 0.0)
+// positions.getValueRef(1).set(0.0, 0.0, -1.0)
+// line.setBoundingBoxDirty()
 /** Class representing a VR controller. */
-class VRController {
+class XRController {
     /**
      * Create a VR controller.
      * @param xrvp - The Vr viewport.
@@ -10,7 +19,16 @@ class VRController {
      * @param id - The id value.
      */
     constructor(xrvp, inputSource, id) {
-        this.activeVolumeSize = 0.04;
+        // The frequency of raycasting into the scene for this controller
+        this.raycastTick = 5;
+        this.raycastArea = 0.04;
+        this.raycastDist = 0.04;
+        this.pointerRay = new Ray();
+        this.raycastAreaCache = 0;
+        this.raycastDistCache = 0;
+        this.rayCastRenderTargetProjMatrix = new Mat4();
+        // Each XRController has a separate capture item.
+        this.capturedItem = null;
         this.xrvp = xrvp;
         this.inputSource = inputSource;
         this.id = id;
@@ -20,7 +38,7 @@ class VRController {
         this.mat4 = new Mat4();
         this.xfo = new Xfo();
         // this.setVisible(true);
-        this.treeItem = new TreeItem('VRController:' + inputSource.handedness + id);
+        this.treeItem = new TreeItem('XRController:' + inputSource.handedness + id);
         // Controller coordinate system
         // X = Horizontal.
         // Y = Up.
@@ -41,6 +59,15 @@ class VRController {
             this.tipItem.localXfoParam.value = tipXfo;
             this.treeItem.addChild(this.tipItem, false);
             xrvp.getTreeItem().addChild(this.treeItem);
+            // const pointermat = new Material('pointermat', 'LinesShader')
+            // pointermat.setSelectable(false)
+            // pointermat.getParameter('BaseColor').value = new Color(1.2, 0, 0)
+            // const pointerItem = new GeomItem('PointerRay', line, pointermat)
+            // pointerItem.setSelectable(false)
+            // const pointerXfo = new Xfo()
+            // pointerXfo.sc.set(1, 1, this.raycastDist)
+            // pointerItem.localXfoParam.value = pointerXfo
+            // this.tipItem.addChild(pointerItem, false)
             if (inputSource.targetRayMode == 'tracked-pointer') {
                 // Once we have an input profile, we can determine the XR Device in use.
                 switch (inputSource.profiles[0]) {
@@ -175,9 +202,8 @@ class VRController {
      * @param refSpace - The refSpace value.
      * @param xrFrame - The xrFrame value.
      * @param inputSource - The inputSource value.
-     * @param event - The event object.
      */
-    updatePose(refSpace, xrFrame, inputSource, event) {
+    updatePose(refSpace, xrFrame, inputSource) {
         const inputPose = xrFrame.getPose(inputSource.gripSpace, refSpace);
         // We may not get a inputPose back in cases where the input source has lost
         // tracking or does not know where it is relative to the given frame
@@ -198,22 +224,31 @@ class VRController {
         // /////////////////////////////////
         // Simulate Pointer Enter/Leave Events.
         // Check for pointer over every Nth frame (at 90fps this should be fine.)
-        if (this.tick % 5 == 0 && !event.getCapture()) {
+        if (this.raycastTick > 0 && this.tick % this.raycastTick == 0) {
             const intersectionData = this.getGeomItemAtTip();
             if (intersectionData != undefined) {
+                const event = new XRControllerEvent(this.xrvp, this, this.buttonPressed ? 1 : 0);
                 event.intersectionData = intersectionData;
+                event.pointerRay = this.pointerRay;
                 if (intersectionData.geomItem != this.pointerOverItem) {
                     if (this.pointerOverItem) {
+                        event.leftGeometry = this.pointerOverItem;
                         this.pointerOverItem.onPointerLeave(event);
+                        if (event.propagating)
+                            this.xrvp.emit('pointerLeaveGeom', event);
                     }
+                    event.propagating = true;
                     this.pointerOverItem = intersectionData.geomItem;
-                    event.intersectionData = intersectionData;
                     this.pointerOverItem.onPointerEnter(event);
+                    if (event.propagating)
+                        this.xrvp.emit('pointerOverGeom', event);
                 }
                 // emit the pointer move event directly to the item.
                 intersectionData.geomItem.onPointerMove(event);
             }
             else if (this.pointerOverItem) {
+                const event = new XRControllerEvent(this.xrvp, this, this.buttonPressed ? 1 : 0);
+                event.pointerRay = this.pointerRay;
                 event.leftGeometry = this.pointerOverItem;
                 this.pointerOverItem.onPointerLeave(event);
                 this.pointerOverItem = null;
@@ -232,10 +267,20 @@ class VRController {
         this.hitTested = true;
         const renderer = this.xrvp.getRenderer();
         const xfo = this.tipItem.globalXfoParam.value;
-        const vol = this.activeVolumeSize;
-        this.intersectionData = renderer.raycastWithXfo(xfo, vol, vol);
+        this.pointerRay.start = xfo.tr;
+        this.pointerRay.dir = xfo.ori.getZaxis().negate();
+        const dist = this.raycastDist / this.xrvp.stageScale;
+        const area = this.raycastArea / this.xrvp.stageScale;
+        if (dist != this.raycastDistCache || area != this.raycastAreaCache) {
+            this.rayCastRenderTargetProjMatrix.setOrthographicMatrix(area * -0.5, area * 0.5, area * -0.5, area * 0.5, 0.0, dist);
+            this.raycastDistCache = dist;
+            this.raycastAreaCache = area;
+        }
+        this.intersectionData = renderer.raycastWithProjection(xfo, this.rayCastRenderTargetProjMatrix, this.pointerRay);
+        if (this.intersectionData)
+            this.intersectionData.dist *= this.xrvp.stageScale;
         return this.intersectionData;
     }
 }
-export { VRController };
-//# sourceMappingURL=VRController.js.map
+export { XRController };
+//# sourceMappingURL=XRController.js.map

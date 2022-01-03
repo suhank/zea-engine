@@ -3,7 +3,7 @@ import { TreeItem } from '../../SceneTree/index';
 /** Class representing a VR head.
  * @private
  */
-declare class VRHead {
+declare class XRHead {
     protected __xrvp: any;
     protected __treeItem: TreeItem;
     protected __mat4: Mat4;
@@ -36,4 +36,4 @@ declare class VRHead {
      */
     getXfo(): Xfo;
 }
-export { VRHead };
+export { XRHead };

@@ -2,6 +2,8 @@ import { EventEmitter, Allocator1D } from '../../Utilities/index';
 import { BaseGeom } from '../../SceneTree/index';
 import { GLGeom } from './index';
 import { GLBaseRenderer } from '../GLBaseRenderer';
+import { RenderState } from '../types/renderer';
+import { WebGL12RenderingContext } from '../types/webgl';
 declare const resizeIntArray: (intArray: Int32Array, newSize: number) => Int32Array;
 /** Class representing a GL geom.
  * @private

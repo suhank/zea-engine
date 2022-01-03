@@ -1,5 +1,5 @@
 import { Vec3 } from '../../Math/index';
-import { VLHImage } from './VLHImage';
+import { HDRImage } from './HDRImage';
 import { BooleanParameter } from '../Parameters/BooleanParameter';
 /**
  * An EnvMap can load High Dynamic Range environment map images, necessary for high quality PBR lighting.
@@ -9,9 +9,9 @@ import { BooleanParameter } from '../Parameters/BooleanParameter';
  * * **HeadLightMode(`BooleanParameter`):** Enables Headlight mode so that the environment lighting is aligned with the camera.
  * With Headlight mode on, the top of the env map is aligned with the direction of the camera, so a the view is generally well lit.
  *
- * @extends VLHImage
+ * @extends HDRImage
  */
-declare class EnvMap extends VLHImage {
+declare class EnvMap extends HDRImage {
     protected utf8decoder: TextDecoder;
     protected shCoeffs: any[];
     protected luminanceData: any;

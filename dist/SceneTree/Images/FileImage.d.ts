@@ -1,3 +1,5 @@
+import { ImageParams } from '..';
+import { AssetLoadContext } from '../AssetLoadContext';
 import { BaseImage } from '../BaseImage';
 import { BinReader } from '../BinReader';
 /** Class representing a file image.
@@ -52,7 +54,7 @@ declare class FileImage extends BaseImage {
      * The getParams method.
      * @return - The return value.
      */
-    getParams(): Record<string, any>;
+    getParams(): ImageParams;
     /**
      * The toJSON method encodes this type as a json object for persistence.
      * @param context - The context value.
@@ -69,7 +71,7 @@ declare class FileImage extends BaseImage {
      * @param reader - The reader param.
      * @param context - The context param.
      */
-    readBinary(reader: BinReader, context: Record<string, any>): void;
+    readBinary(reader: BinReader, context: AssetLoadContext): void;
 }
 /** Class representing a 2D file image.
  * @extends FileImage

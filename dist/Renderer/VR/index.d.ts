@@ -1,1 +1,1 @@
-export * from './VRViewport';
+export * from './XRViewport';

@@ -1,4 +1,9 @@
 import { EventEmitter } from '../../Utilities/index';
+declare global {
+    interface Window {
+        XLSX: any;
+    }
+}
 /** Class representing a label manager.
  * @private
  */

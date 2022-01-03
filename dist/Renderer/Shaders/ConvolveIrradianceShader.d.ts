@@ -1,5 +1,6 @@
 import { GLShader } from '../GLShader';
 import './GLSL/index';
+import { WebGL12RenderingContext } from '../types/webgl';
 /** Shader for convolving Environment maps.
  * @extends GLShader
  * @private

@@ -1,6 +1,8 @@
 import { EventEmitter } from '../../Utilities/index';
 import '../../SceneTree/GeomItem';
 import { GeomItem } from '../../SceneTree/GeomItem';
+import { RenderState } from '../types/renderer';
+import { WebGL12RenderingContext } from '../types/webgl';
 declare const GLGeomItemChangeType: {
     GEOMITEM_CHANGED: number;
     GEOM_CHANGED: number;

@@ -1,5 +1,6 @@
 import { BooleanParameter, NumberParameter } from '../Parameters/index';
 import { FileImage } from './FileImage';
+import { ImageParams } from '..';
 /**
  * Class representing a LDR (low dynamic range) video.
  *
@@ -57,6 +58,6 @@ declare class LDRVideo extends FileImage {
      * The getParams method.
      * @return - The return value.
      */
-    getParams(): Record<string, any>;
+    getParams(): ImageParams;
 }
 export { LDRVideo };

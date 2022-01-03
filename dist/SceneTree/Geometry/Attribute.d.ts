@@ -114,7 +114,7 @@ declare class Attribute extends BaseClass {
      * @param splitCount - The splitCount value.
      * @return - The return value.
      */
-    generateSplitValues(splitIndices: Record<number, Record<number, number>>, splitCount: number): TypedArray;
+    generateSplitValues(splitIndices: Record<number, Record<number, number>>, splitCount: number): Float32Array;
     /**
      * The toJSON method encodes this type as a json object for persistence.
      *

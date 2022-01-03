@@ -122,6 +122,8 @@ class GLGeomItemLibrary extends EventEmitter {
                 else {
                     cullFreq = 5;
                     viewportChanged();
+                    // push the camera xfo to the worker.
+                    forceViewChanged();
                 }
             });
         });

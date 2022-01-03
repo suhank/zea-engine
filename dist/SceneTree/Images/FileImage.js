@@ -17,7 +17,6 @@ class FileImage extends BaseImage {
         this.__data = null;
         this.type = 'UNSIGNED_BYTE';
         this.crossOrigin = 'anonymous';
-        this.loaded = false;
         if (filePath && filePath != '')
             this.load(filePath);
     }

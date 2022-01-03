@@ -1,9 +1,22 @@
 import { ZeaPointerEvent, POINTER_TYPES } from './ZeaPointerEvent';
 class XRControllerEvent extends ZeaPointerEvent {
-    constructor(button, controller) {
+    constructor(viewport, controller, button) {
         super(POINTER_TYPES.xr);
-        this.button = button;
+        this.viewport = viewport;
         this.controller = controller;
+        this.button = button;
+    }
+    stopPropagation() {
+        this.propagating = false;
+    }
+    setCapture(item) {
+        this.controller.capturedItem = item;
+    }
+    getCapture() {
+        return this.controller.capturedItem;
+    }
+    releaseCapture() {
+        this.controller.capturedItem = null;
     }
 }
 export { XRControllerEvent };

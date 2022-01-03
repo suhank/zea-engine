@@ -1,5 +1,6 @@
 import { BooleanParameter, NumberParameter, ColorParameter, StringParameter } from '../Parameters/index';
 import { DataImage } from './DataImage';
+import { ImageParams } from '../BaseImage';
 /**
  * Represents a 2D label item the scene.
  * Since displaying text in the scene is not an easy task,
@@ -115,7 +116,7 @@ declare class Label extends DataImage {
      *
      * @return - The return value.
      */
-    getParams(): Record<string, any>;
+    getParams(): ImageParams;
     /**
      * The toJSON method encodes this type as a json object for persistence.
      *

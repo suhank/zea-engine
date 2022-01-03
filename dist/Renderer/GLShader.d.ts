@@ -1,4 +1,6 @@
 import { BaseItem, Material } from '../SceneTree';
+import { ShaderParseResult, Shaderopts, RenderState } from './types/renderer';
+import { WebGL12RenderingContext } from './types/webgl';
 /** Class representing a GL shader.
  * @extends BaseItem
  * @private

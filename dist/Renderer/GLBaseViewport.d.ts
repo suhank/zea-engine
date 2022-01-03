@@ -6,6 +6,8 @@ import { GLFbo } from './GLFbo';
 import { GLMesh } from './Drawing/GLMesh';
 import { ZeaPointerEvent } from '../Utilities/Events/ZeaPointerEvent';
 import { KeyboardEvent } from '../Utilities/Events/KeyboardEvent';
+import { ColorRenderState, RenderState } from './types/renderer';
+import { WebGL12RenderingContext } from './types/webgl';
 declare const FRAMEBUFFER: {
     MSAA_RENDERBUFFER: number;
     COLORBUFFER: number;

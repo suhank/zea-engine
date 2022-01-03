@@ -1,3 +1,4 @@
+import { BaseProxy } from './Geometry/GeomProxies';
 import { EventEmitter } from '../Utilities/index';
 import { BaseGeom } from './Geometry/BaseGeom';
 import { AssetLoadContext } from './AssetLoadContext';
@@ -15,7 +16,7 @@ declare class GeomLibrary extends EventEmitter {
     protected queue: any[];
     protected loadContext?: AssetLoadContext;
     protected __numGeoms: number;
-    protected geoms: BaseGeom[];
+    protected geoms: Array<BaseProxy | BaseGeom>;
     protected basePath: string;
     protected __loadedCount: number;
     /**
@@ -69,7 +70,7 @@ declare class GeomLibrary extends EventEmitter {
      * @param index - The index value.
      * @return - The stored geometry
      */
-    getGeom(index: number): BaseGeom;
+    getGeom(index: number): BaseGeom | BaseProxy;
     /**
      * The readBinaryBuffer method.
      * @param geomFileID - The key value.

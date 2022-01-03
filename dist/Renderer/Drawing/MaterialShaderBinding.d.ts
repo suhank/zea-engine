@@ -1,4 +1,6 @@
 import { BaseClass } from '../../Utilities/BaseClass';
+import { Uniform, RenderState, Uniforms } from '../types/renderer';
+import { WebGL12RenderingContext } from '../types/webgl';
 declare class ParamUniformBinding extends BaseClass {
     protected unif: Uniform;
     protected dirty: boolean;

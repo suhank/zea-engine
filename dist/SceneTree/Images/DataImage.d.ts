@@ -1,4 +1,4 @@
-import { BaseImage } from '../BaseImage';
+import { BaseImage, ImageParams } from '../BaseImage';
 /**
  * Represents a BaseImage with the ability to load data.
  *
@@ -8,7 +8,6 @@ import { BaseImage } from '../BaseImage';
  * @extends BaseImage
  */
 declare class DataImage extends BaseImage {
-    protected __loaded: boolean;
     protected __data: Uint8Array | ImageData;
     /**
      * Create a data image.
@@ -39,6 +38,6 @@ declare class DataImage extends BaseImage {
      *
      * @return - The return value.
      */
-    getParams(): Record<string, any>;
+    getParams(): ImageParams;
 }
 export { DataImage };

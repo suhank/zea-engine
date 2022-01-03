@@ -1,5 +1,10 @@
 import { BooleanParameter, NumberParameter } from './Parameters/index';
 import { TreeItem } from './TreeItem';
+declare global {
+    interface Window {
+        ZeaAudioaudioCtx: any;
+    }
+}
 /**
  * A special type of `TreeItem` that let you handle audio files.
  * **Parameters**

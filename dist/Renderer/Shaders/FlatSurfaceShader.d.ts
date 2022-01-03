@@ -1,6 +1,8 @@
 import { GLShader } from '../GLShader';
 import { Material } from '../../SceneTree';
 import './GLSL/index';
+import { RenderState } from '../types/renderer';
+import { WebGL12RenderingContext } from '../types/webgl';
 declare class FlatSurfaceShader extends GLShader {
     /**
      * Create a GL shader.

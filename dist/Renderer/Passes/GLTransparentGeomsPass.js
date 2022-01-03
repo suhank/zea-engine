@@ -315,7 +315,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
             else if (renderstate.viewport) {
                 // Adapt the sort tolerance to the focal distance.
                 // In a tiny scene, we want to sort more frequently.
-                const camera = renderstate.viewport.getCamera();
+                const camera = renderstate.viewport.getCamera(); // TODO: check if this cast is correct.
                 this.sortCameraMovementDistance = camera.getFocalDistance() * 0.3;
             }
         }

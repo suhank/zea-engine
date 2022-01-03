@@ -1,4 +1,6 @@
 import { GLGeom } from './GLGeom';
+import { WebGL12RenderingContext } from '../types/webgl';
+import { RenderState } from '../types/renderer';
 /** Class representing GL points.
  * @extends GLGeom
  * @private

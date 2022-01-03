@@ -32,13 +32,32 @@ const processTextureParams = function (gl, params) {
     processParam('type', gl.UNSIGNED_BYTE);
     processParam('minFilter', params.filter ? params.filter : gl.LINEAR);
     processParam('magFilter', params.filter ? params.filter : gl.LINEAR);
-    processParam('wrapS', params.wrap ? params.wrap : gl.CLAMP_TO_EDGE);
-    processParam('wrapT', params.wrap ? params.wrap : gl.CLAMP_TO_EDGE);
+    processParam('wrapS', params.wrapS ? params.wrapS : gl.CLAMP_TO_EDGE);
+    processParam('wrapT', params.wrapT ? params.wrapT : gl.CLAMP_TO_EDGE);
     processParam('flipY', false);
     processParam('mipMapped', false);
     processParam('depthInternalFormat');
     processParam('depthFormat');
     processParam('depthType');
+    if (params.createDepthTexture) {
+        if (gl.name != 'webgl2' && !gl.__ext_WEBGL_depth_texture) {
+            result['depthType'] = gl.UNSIGNED_SHORT;
+        }
+        else {
+            if (gl.name == 'webgl2') {
+                // the proper texture format combination can be found here
+                // https://www.khronos.org/registry/OpenGL-Refpages/es3.0/html/glTexImage2D.xhtml
+                // https://github.com/WebGLSamples/WebGL2Samples/blob/master/samples/fbo_rtt_depth_texture.html
+                // gl.texImage2D(gl.TEXTURE_2D, 0, gl.DEPTH_COMPONENT16, this.width, this.height, 0, gl.DEPTH_COMPONENT, gl.UNSIGNED_SHORT, null);
+                result['depthFormat'] = gl.DEPTH_COMPONENT;
+                result['depthType'] = gl.UNSIGNED_INT;
+            }
+            else {
+                result['depthFormat'] = gl.DEPTH_COMPONENT;
+                result['depthType'] = gl.UNSIGNED_INT;
+            }
+        }
+    }
     // https://www.khronos.org/registry/OpenGL-Refpages/es3.0/html/glTexImage2D.xhtml
     if (result.format == gl.FLOAT) {
         if (gl.name == 'webgl2') {
@@ -144,7 +163,7 @@ const processTextureParams = function (gl, params) {
                 result.depthInternalFormat = gl.DEPTH_COMPONENT16;
             }
             else if (result.depthType == gl.UNSIGNED_INT) {
-                result.depthInternalFormat = gl.UNSIGNED_INT;
+                result.depthInternalFormat = gl.DEPTH_COMPONENT24;
             }
         }
         else {

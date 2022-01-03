@@ -1,4 +1,5 @@
 import { GLShader } from '../GLShader';
+import { WebGL12RenderingContext } from '../types/webgl';
 import './GLSL/index';
 declare class PostProcessing extends GLShader {
     /**

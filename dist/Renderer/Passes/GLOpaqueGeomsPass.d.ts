@@ -3,6 +3,7 @@ import { GeomItem, Material } from '../../SceneTree/index';
 import { GLShaderMaterials } from '../Drawing/GLShaderMaterials';
 import { GLShaderGeomSets } from '../Drawing/GLShaderGeomSets';
 import { GLBaseRenderer } from '../GLBaseRenderer';
+import { RenderState, GeomDataRenderState } from '../types/renderer';
 /** Class representing a GL opaque geoms pass.
  * @extends GLStandardGeomsPass
  * @private

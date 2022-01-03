@@ -1,3 +1,4 @@
+import { AssetLoadContext } from '../SceneTree/AssetLoadContext';
 import { BinReader } from '../SceneTree/BinReader';
 export interface IBinaryReader {
     /**
@@ -6,5 +7,5 @@ export interface IBinaryReader {
      * @param reader - The reader value.
      * @param context - The context value.
      */
-    readBinary(reader: BinReader, context?: Record<string, unknown>): void;
+    readBinary(reader: BinReader, context?: AssetLoadContext): void;
 }

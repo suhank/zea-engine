@@ -1,2 +1,2 @@
-export * from './VRViewport';
+export * from './XRViewport';
 //# sourceMappingURL=index.js.map

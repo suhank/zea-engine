@@ -2,6 +2,7 @@ import { ParameterOwner } from './ParameterOwner';
 import { Owner } from './Owner';
 import { BinReader } from './BinReader';
 import { Parameter } from './Parameters/Parameter';
+import { AssetLoadContext } from './AssetLoadContext';
 /**
  * Base class for Items in the scene. It can be parameterized and can emit events.
  *
@@ -151,7 +152,7 @@ declare class BaseItem extends ParameterOwner implements Owner {
      * @param reader - The reader value.
      * @param context - The context value.
      */
-    readBinary(reader: BinReader, context: Record<string, any>): void;
+    readBinary(reader: BinReader, context: AssetLoadContext): void;
     /**
      * Clones this base item and returns a new base item.
      *

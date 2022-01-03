@@ -1,5 +1,6 @@
 import { GLShader } from '../GLShader';
 import './GLSL/index';
+import { WebGL12RenderingContext } from '../types/webgl';
 declare class EnvProjectionShader extends GLShader {
     /**
      * Create a GL shader.

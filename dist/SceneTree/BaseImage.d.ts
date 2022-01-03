@@ -1,4 +1,18 @@
 import { BaseItem } from './BaseItem';
+interface ImageParams {
+    type: string;
+    format: string;
+    width: number;
+    height: number;
+    wrapS?: string;
+    wrapT?: string;
+    minFilter?: string;
+    magFilter?: string;
+    mipMapped?: boolean;
+    data?: HTMLImageElement | HTMLVideoElement | Uint8Array | Float32Array | HTMLCanvasElement | ImageData | Record<string, any>;
+    exposure?: number;
+    flipY?: boolean;
+}
 /**
  * Represents a 2D image item, containing width and height.
  *
@@ -12,12 +26,12 @@ declare class BaseImage extends BaseItem {
     height: number;
     format: string;
     type: string;
-    mipMapped: boolean;
-    protected wrapS: string;
-    protected wrapT: string;
-    protected minFilter: string;
-    protected magFilter: string;
     loaded: boolean;
+    mipMapped: boolean;
+    wrapS: string;
+    wrapT: string;
+    minFilter: string;
+    magFilter: string;
     /**
      * Creates an instance of BaseImage.
      * @param name - name of the item
@@ -34,6 +48,6 @@ declare class BaseImage extends BaseItem {
      *
      * @return - The return value.
      */
-    getParams(): Record<string, any>;
+    getParams(): ImageParams;
 }
-export { BaseImage };
+export { BaseImage, ImageParams };

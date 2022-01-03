@@ -4,6 +4,7 @@ import { GLTexture2D } from '../GLTexture2D';
 import { GLBaseRenderer } from '../GLBaseRenderer';
 import { GLGeom } from '../Drawing';
 import { GLShader } from '../GLShader';
+import { RenderState } from '../types/renderer';
 /** Class representing a GL treeitems pass.
  * @extends GLPass
  * @private

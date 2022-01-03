@@ -1,4 +1,6 @@
 import { BaseImage, RefCounted } from '../SceneTree/index';
+import { Uniform, Uniforms, RenderState } from './types/renderer';
+import { WebGL12RenderingContext } from './types/webgl';
 /**
  * Represents a texture that contains 2-dimensional images.
  * Images have width and height, but no depth.

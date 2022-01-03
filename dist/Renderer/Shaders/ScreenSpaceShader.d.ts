@@ -1,5 +1,6 @@
 import { Material } from '../../SceneTree/Material';
 import { GLShader } from '../GLShader';
+import { WebGL12RenderingContext } from '../types/webgl';
 import './GLSL/index';
 declare class ScreenSpaceShader extends GLShader {
     /**

@@ -1,5 +1,7 @@
 import { Color } from '../Math/Color';
 import { EventEmitter } from '../Utilities/index';
+import { RenderState, Uniform } from './types/renderer';
+import { WebGL12RenderingContext } from './types/webgl';
 /** Class representing a GL render target. */
 declare class GLRenderTarget extends EventEmitter {
     protected __gl: WebGL12RenderingContext;

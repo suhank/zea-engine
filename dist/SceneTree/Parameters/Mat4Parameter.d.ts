@@ -2,6 +2,7 @@ import { Mat4 } from '../../Math/Mat4';
 import { Parameter } from './Parameter';
 import { IBinaryReader } from '../../Utilities/IBinaryReader';
 import { BinReader } from '../../SceneTree/BinReader';
+import { AssetLoadContext } from '../AssetLoadContext';
 /**
  * Represents a specific type of parameter, that only stores Mat4(4x4 matrix) values.
  *
@@ -29,7 +30,7 @@ declare class Mat4Parameter extends Parameter<Mat4> implements IBinaryReader {
      * @param reader - The reader value.
      * @param context - The context value.
      */
-    readBinary(reader: BinReader, context?: Record<string, unknown>): void;
+    readBinary(reader: BinReader, context?: AssetLoadContext): void;
     toJSON(context?: Record<string, unknown>): Record<string, unknown>;
     fromJSON(j: Record<string, unknown>, context?: Record<string, unknown>): void;
     /**

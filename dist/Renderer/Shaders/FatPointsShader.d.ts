@@ -1,6 +1,8 @@
 import { Material } from '../../SceneTree';
 import { GLShader } from '../GLShader';
 import './GLSL/index';
+import { RenderState } from '../types/renderer';
+import { WebGL12RenderingContext } from '../types/webgl';
 declare class FatPointsShader extends GLShader {
     /**
      * Create a GL shader.

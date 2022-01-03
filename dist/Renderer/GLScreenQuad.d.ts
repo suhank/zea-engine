@@ -1,6 +1,8 @@
 import { Vec2 } from '../Math/index';
 import { ScreenQuadShader } from './Shaders/ScreenQuadShader';
 import { GLTexture2D } from './GLTexture2D';
+import { RenderState } from './types/renderer';
+import { WebGL12RenderingContext } from './types/webgl';
 /** Class representing a GL screen quad.
  * @private
  */

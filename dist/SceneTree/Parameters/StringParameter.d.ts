@@ -1,6 +1,7 @@
 import { Parameter } from './Parameter';
 import { BinReader } from '../BinReader';
 import { IBinaryReader } from '../../Utilities/IBinaryReader';
+import { AssetLoadContext } from '../AssetLoadContext';
 /**
  * Represents a specific type of parameter, that only stores Mat4(4x4 matrix) values.
  *
@@ -40,7 +41,7 @@ declare class StringParameter extends Parameter<string> implements IBinaryReader
      * @param reader - The reader value.
      * @param context - The context value.
      */
-    readBinary(reader: BinReader, context?: Record<string, unknown>): void;
+    readBinary(reader: BinReader, context?: AssetLoadContext): void;
     /**
      * The toJSON method serializes this instance as a JSON.
      * It can be used for persistence, data transfer, etc.

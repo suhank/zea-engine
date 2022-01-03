@@ -1,7 +1,7 @@
 import { EventEmitter } from '../Utilities/index';
 import { Material } from './Material';
 import { BaseItem } from './BaseItem';
-import { BinReader } from '..';
+import { AssetLoadContext, BinReader } from '..';
 import { BaseImage } from './BaseImage';
 import { Parameter } from './Parameters/Parameter';
 import { Owner } from './Owner';
@@ -118,7 +118,7 @@ declare class MaterialLibrary extends EventEmitter implements Owner {
      * @param reader - The reader value.
      * @param context - The context value.
      */
-    readBinary(reader: BinReader, context?: Record<string, any>): void;
+    readBinary(reader: BinReader, context: AssetLoadContext): void;
     /**
      * The toString method.
      * @return - The return value.

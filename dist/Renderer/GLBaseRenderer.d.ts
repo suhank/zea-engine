@@ -1,12 +1,14 @@
 import { TreeItem, ParameterOwner, Scene } from '../SceneTree/index';
 import { GLScreenQuad } from './GLScreenQuad';
 import { GLViewport } from './GLViewport';
-import { VRViewport } from './VR/VRViewport';
+import { XRViewport } from './VR/XRViewport';
 import { GLMaterialLibrary } from './Drawing/GLMaterialLibrary';
 import { GLGeomLibrary } from './Drawing/GLGeomLibrary';
 import { GLGeomItemLibrary } from './Drawing/GLGeomItemLibrary';
 import { GLPass } from './Passes/GLPass';
 import { GLShader } from './GLShader';
+import { WebGL12RenderingContext } from './types/webgl';
+import { RenderState, GeomDataRenderState } from './types/renderer';
 /**
  * Class representing a GL base renderer.
  *
@@ -34,8 +36,8 @@ declare class GLBaseRenderer extends ParameterOwner {
     __xrViewportPresenting: boolean;
     floatGeomBuffer: boolean;
     protected __supportXR: boolean;
-    protected __xrViewport: VRViewport | undefined;
-    protected __xrViewportPromise: Promise<VRViewport>;
+    protected __xrViewport: XRViewport | undefined;
+    protected __xrViewportPromise: Promise<XRViewport>;
     glMaterialLibrary: GLMaterialLibrary;
     glGeomItemLibrary: GLGeomItemLibrary;
     glGeomLibrary: GLGeomLibrary;
@@ -224,17 +226,17 @@ declare class GLBaseRenderer extends ParameterOwner {
      * @return - The return value.
      * @private
      */
-    __setupXRViewport(): VRViewport;
+    __setupXRViewport(): XRViewport;
     /**
      * The getVRViewport method.
      * @return - The return value.
      */
-    getVRViewport(): VRViewport | undefined;
+    getVRViewport(): XRViewport | undefined;
     /**
      * The getXRViewport method.
      * @return - The return value.
      */
-    getXRViewport(): Promise<VRViewport>;
+    getXRViewport(): Promise<XRViewport>;
     /**
      * The isXRViewportPresenting method.
      * @return - The return value.

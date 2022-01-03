@@ -1,6 +1,7 @@
 import { EventEmitter } from '../Utilities/EventEmitter';
 import { BinReader } from './BinReader';
 import { Parameter } from './Parameters/Parameter';
+import { AssetLoadContext } from './AssetLoadContext';
 /**
  * Class that allows other classes to be parameterized by `Parameter` type of objects.
  * Not only hosting parameters, but their events.
@@ -130,7 +131,7 @@ declare class ParameterOwner extends EventEmitter {
      * @param reader - The reader value.
      * @param context - The context value.
      */
-    readBinary(reader: BinReader, context: Record<string, any>): void;
+    readBinary(reader: BinReader, context: AssetLoadContext): void;
     /**
      * Converts object's JSON value and converts it to a string.
      * @param context

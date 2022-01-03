@@ -9,6 +9,7 @@ import { KeyboardEvent } from '../Utilities/Events/KeyboardEvent';
 import { ZeaWheelEvent } from '../Utilities/Events/ZeaWheelEvent';
 import { ZeaTouchEvent } from '../Utilities/Events/ZeaTouchEvent';
 import { ZeaUIEvent } from '../Utilities/Events/ZeaUIEvent';
+import { RenderState } from './types/renderer';
 /**
  * Class representing a GL viewport.
  *

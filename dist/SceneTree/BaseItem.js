@@ -294,6 +294,7 @@ class BaseItem extends ParameterOwner {
     copyFrom(src, context) {
         super.copyFrom(src, context);
         this.setName(src.getName());
+        this.setSelectable(src.isSelectable());
     }
 }
 export { BaseItem };

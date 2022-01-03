@@ -2,6 +2,7 @@ import { Vec3 } from '../../Math/index';
 import { Parameter } from './Parameter';
 import { IBinaryReader } from '../../Utilities/IBinaryReader';
 import { BinReader } from '../../SceneTree/BinReader';
+import { AssetLoadContext } from '../AssetLoadContext';
 /**
  * Represents a specific type of parameter, that only stores Vec3(three-dimensional coordinate) values.
  *
@@ -30,7 +31,7 @@ declare class Vec3Parameter extends Parameter<Vec3> implements IBinaryReader {
      * @param reader - The reader value.
      * @param context - The context value.
      */
-    readBinary(reader: BinReader, context?: Record<string, unknown>): void;
+    readBinary(reader: BinReader, context?: AssetLoadContext): void;
     toJSON(context?: Record<string, unknown>): Record<string, unknown>;
     fromJSON(j: Record<string, unknown>, context?: Record<string, unknown>): void;
     /**

@@ -3,7 +3,7 @@ import { TreeItem } from '../../SceneTree/index';
 /** Class representing a VR head.
  * @private
  */
-class VRHead {
+class XRHead {
     /**
      * Create a VR head.
      * @param xrvp - The VR viewport.
@@ -11,7 +11,7 @@ class VRHead {
      */
     constructor(xrvp, stageTreeItem) {
         this.__xrvp = xrvp;
-        this.__treeItem = new TreeItem('VRHead');
+        this.__treeItem = new TreeItem('XRHead');
         stageTreeItem.addChild(this.__treeItem);
         this.__mat4 = new Mat4();
         this.__localXfo = new Xfo();
@@ -71,5 +71,5 @@ class VRHead {
         return this.__localXfo;
     }
 }
-export { VRHead };
-//# sourceMappingURL=VRHead.js.map
+export { XRHead };
+//# sourceMappingURL=XRHead.js.map

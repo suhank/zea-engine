@@ -2,7 +2,7 @@
 /* eslint-disable require-jsdoc */
 import { Color } from '../../Math/index';
 import { Registry } from '../../Registry';
-import { VLHImage } from './VLHImage';
+import { HDRImage } from './HDRImage';
 import { BooleanParameter } from '../Parameters/BooleanParameter';
 /**
  * An EnvMap can load High Dynamic Range environment map images, necessary for high quality PBR lighting.
@@ -12,9 +12,9 @@ import { BooleanParameter } from '../Parameters/BooleanParameter';
  * * **HeadLightMode(`BooleanParameter`):** Enables Headlight mode so that the environment lighting is aligned with the camera.
  * With Headlight mode on, the top of the env map is aligned with the direction of the camera, so a the view is generally well lit.
  *
- * @extends VLHImage
+ * @extends HDRImage
  */
-class EnvMap extends VLHImage {
+class EnvMap extends HDRImage {
     /**
      * Create an env map.
      * @param name - The name value.

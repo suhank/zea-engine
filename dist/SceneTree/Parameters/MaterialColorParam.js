@@ -126,7 +126,7 @@ class MaterialColorParam extends ColorParameter {
         super.readBinary(reader, context);
         const textureName = reader.loadStr();
         if (textureName != '') {
-            this.setImage(context.materialLibrary.getImage(textureName));
+            this.setImage(context.assetItem.materialLibrary.getImage(textureName));
         }
     }
     /**

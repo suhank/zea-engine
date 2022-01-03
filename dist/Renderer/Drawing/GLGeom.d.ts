@@ -1,4 +1,6 @@
 import { BaseGeom, Mesh, RefCounted } from '../../SceneTree/index';
+import { RenderState } from '../types/renderer';
+import { WebGL12RenderingContext } from '../types/webgl';
 /** Class representing a GL geom.
  * @private
  */

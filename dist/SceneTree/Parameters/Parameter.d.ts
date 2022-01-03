@@ -4,7 +4,7 @@ import { OperatorOutput } from '../Operators/OperatorOutput';
 import { ICloneable } from '../../Utilities/ICloneable';
 import { ISerializable } from '../../Utilities/ISerializable';
 import { BinReader } from '../BinReader';
-import { OperatorInput } from '..';
+import { AssetLoadContext, OperatorInput } from '..';
 /**
  * Represents a reactive type of attribute that can be owned by a `ParameterOwner` class.
  *
@@ -195,7 +195,7 @@ declare abstract class Parameter<T> extends EventEmitter implements ICloneable, 
      * @param reader - The reader value.
      * @param context - The context value.
      */
-    readBinary(reader: BinReader, context: Record<string, unknown>): void;
+    readBinary(reader: BinReader, context?: AssetLoadContext): void;
     /**
      * The readBinary method.
      *

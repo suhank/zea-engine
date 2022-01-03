@@ -1,9 +1,15 @@
-import { VRController } from '../../Renderer/VR/VRController';
+import { XRViewport } from '../../Renderer/VR/XRViewport';
+import { XRController } from '../../Renderer/VR/XRController';
 import { ZeaPointerEvent } from './ZeaPointerEvent';
+import { BaseTool, TreeItem } from '../../SceneTree';
 declare class XRControllerEvent extends ZeaPointerEvent {
-    controller: VRController;
+    controller: XRController;
     button: number;
     buttonPressed: boolean;
-    constructor(button: number, controller: VRController);
+    constructor(viewport: XRViewport, controller: XRController, button: number);
+    stopPropagation(): void;
+    setCapture(item: TreeItem | BaseTool): void;
+    getCapture(): TreeItem | BaseTool;
+    releaseCapture(): void;
 }
 export { XRControllerEvent };

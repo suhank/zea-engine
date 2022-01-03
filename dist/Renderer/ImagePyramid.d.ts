@@ -2,6 +2,7 @@ import { GLTexture2D } from './GLTexture2D';
 import { GLFbo } from './GLFbo';
 import { GLImageAtlas } from './GLImageAtlas';
 import { GLScreenQuad } from './GLScreenQuad';
+import { WebGL12RenderingContext } from './types/webgl';
 /** Class representing an image pyramid.
  * @extends GLImageAtlas
  * @private

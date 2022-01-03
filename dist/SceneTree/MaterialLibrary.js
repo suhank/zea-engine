@@ -205,12 +205,9 @@ class MaterialLibrary extends EventEmitter {
      * @param reader - The reader value.
      * @param context - The context value.
      */
-    readBinary(reader, context = {}) {
+    readBinary(reader, context) {
         // if (context.version == undefined) context.version = 0
         this.name = reader.loadStr();
-        // Specify the Lod to load the images in this library.
-        context.lod = this.lod;
-        context.materialLibrary = this;
         const numTextures = reader.loadUInt32();
         for (let i = 0; i < numTextures; i++) {
             const type = reader.loadStr();

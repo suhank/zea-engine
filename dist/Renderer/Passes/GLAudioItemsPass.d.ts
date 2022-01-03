@@ -1,6 +1,12 @@
 import { GLPass } from './GLPass';
 import { TreeItem } from '../../SceneTree/index';
 import { GLBaseRenderer } from '../GLBaseRenderer';
+import { RenderState } from '../types/renderer';
+declare global {
+    interface Window {
+        ZeaAudioaudioCtx: any;
+    }
+}
 declare let audioCtx: any;
 /** Class representing a GL audio items pass.
  * @extends GLPass

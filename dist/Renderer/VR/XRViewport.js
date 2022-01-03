@@ -2,12 +2,12 @@ import { SystemDesc } from '../../SystemDesc';
 import { Vec3, Mat4, Xfo } from '../../Math/index';
 import { TreeItem, VLAAsset } from '../../SceneTree/index';
 import { GLBaseViewport } from '../GLBaseViewport';
-import { VRHead } from './VRHead';
-import { VRController } from './VRController';
-import { VRViewManipulator } from './VRViewManipulator';
+import { XRHead } from './XRHead';
+import { XRController } from './XRController';
+import { XRViewManipulator } from './XRViewManipulator';
 import { resourceLoader } from '../../SceneTree/resourceLoader';
 // import { XRWebGLLayer } from 'webxr'
-import { VRViewChangedEvent } from '../../Utilities/Events/VRViewChangedEvent';
+import { XRViewChangedEvent } from '../../Utilities/Events/XRViewChangedEvent';
 import { ControllerAddedEvent } from '../../Utilities/Events/ControllerAddedEvent';
 import { StateChangedEvent } from '../../Utilities/Events/StateChangedEvent';
 import { XRControllerEvent } from '../../Utilities/Events/XRControllerEvent';
@@ -26,7 +26,7 @@ import { XRPoseEvent } from '../../Utilities/Events/XRPoseEvent';
  *
  * @extends GLBaseViewport
  */
-class VRViewport extends GLBaseViewport {
+class XRViewport extends GLBaseViewport {
     /**
      * Create a VR viewport.
      * @param renderer - The renderer value.
@@ -35,8 +35,12 @@ class VRViewport extends GLBaseViewport {
         super(renderer);
         this.__stageXfo = new Xfo();
         this.__stageMatrix = new Mat4();
+        this.session = null;
         this.__hmd = '';
+        this.__region = [];
         this.__projectionMatrices = [];
+        this.__viewMatrices = [];
+        this.__cameraMatrices = [];
         this.doubleClickTimeParam.value = 300;
         // ////////////////////////////////////////////
         // Viewport params
@@ -46,7 +50,7 @@ class VRViewport extends GLBaseViewport {
         this.__stageTreeItem = new TreeItem('VRStage');
         this.__stageTreeItem.setVisible(false);
         this.__renderer.addTreeItem(this.__stageTreeItem);
-        this.__vrhead = new VRHead(this, this.__stageTreeItem);
+        this.__xrhead = new XRHead(this, this.__stageTreeItem);
         this.controllersMap = {};
         this.controllers = [];
         this.controllerPointerDownTime = [];
@@ -62,7 +66,7 @@ class VRViewport extends GLBaseViewport {
         this.__leftProjectionMatrix = new Mat4();
         this.__rightViewMatrix = new Mat4();
         this.__rightProjectionMatrix = new Mat4();
-        this.setManipulator(new VRViewManipulator(this));
+        this.setManipulator(new XRViewManipulator(this));
     }
     getRenderer() {
         return this.renderer;
@@ -86,7 +90,7 @@ class VRViewport extends GLBaseViewport {
      * @return - The return value.
      */
     getVRHead() {
-        return this.__vrhead;
+        return this.__xrhead;
     }
     /**
      * The getXfo method.
@@ -104,7 +108,7 @@ class VRViewport extends GLBaseViewport {
         this.__stageTreeItem.globalXfoParam.value = xfo;
         this.__stageMatrix = xfo.inverse().toMat4();
         // this.__stageMatrix.multiplyInPlace(this.__sittingToStandingMatrix);
-        this.__stageScale = xfo.sc.x;
+        this.stageScale = xfo.sc.x;
     }
     /**
      * The getControllers method.
@@ -116,18 +120,11 @@ class VRViewport extends GLBaseViewport {
     // //////////////////////////
     // Presenting
     /**
-     * The canPresent method.
-     * @return - The return value.
-     */
-    canPresent() {
-        return this.__canPresent;
-    }
-    /**
      * The isPresenting method.
      * @return - The return value.
      */
     isPresenting() {
-        return this.session;
+        return this.session != null;
     }
     /**
      * Turns on and off the spectator mode.
@@ -243,7 +240,6 @@ class VRViewport extends GLBaseViewport {
                     requiredFeatures: ['local-floor'],
                     optionalFeatures: ['bounded-floor'],
                 }).then((session) => {
-                    this.__renderer.__xrViewportPresenting = true;
                     const viewport = this.__renderer.getViewport();
                     if (viewport) {
                         const camera = viewport.getCamera();
@@ -267,20 +263,20 @@ class VRViewport extends GLBaseViewport {
                         const controller = this.controllersMap[ev.inputSource.handedness];
                         if (controller) {
                             controller.buttonPressed = true;
-                            this.onPointerDown(new XRControllerEvent(1, controller));
+                            this.onPointerDown(new XRControllerEvent(this, controller, 1));
                         }
                     };
                     const onSelectEnd = (ev) => {
                         const controller = this.controllersMap[ev.inputSource.handedness];
                         if (controller) {
                             controller.buttonPressed = false;
-                            this.onPointerUp(new XRControllerEvent(1, controller));
+                            this.onPointerUp(new XRControllerEvent(this, controller, 1));
                         }
                     };
                     const createController = (inputSource) => {
                         console.log('creating controller:', inputSource.handedness, inputSource.profiles);
                         const id = this.controllers.length;
-                        const controller = new VRController(this, inputSource, id);
+                        const controller = new XRController(this, inputSource, id);
                         this.controllersMap[inputSource.handedness] = controller;
                         this.controllers[id] = controller;
                         const event = new ControllerAddedEvent(controller);
@@ -374,13 +370,6 @@ class VRViewport extends GLBaseViewport {
         else
             this.startPresenting();
     }
-    /**
-     * The getHMDCanvasSize method.
-     * @return - The return value.
-     */
-    getHMDCanvasSize() {
-        return this.__hmdCanvasSize;
-    }
     // //////////////////////////
     // Controllers
     /**
@@ -388,7 +377,7 @@ class VRViewport extends GLBaseViewport {
      * @param xrFrame - The xrFrame value.
      * @param event - The pose changed event object that will be emitted for observers such as collab.
      */
-    updateControllers(xrFrame, event) {
+    updateControllers(xrFrame) {
         const inputSources = this.session.inputSources;
         for (let i = 0; i < inputSources.length; i++) {
             const inputSource = inputSources[i];
@@ -402,7 +391,7 @@ class VRViewport extends GLBaseViewport {
                 continue;
                 // this.__createController(i, inputSource)
             }
-            this.controllers[i].updatePose(this.__refSpace, xrFrame, inputSource, event);
+            this.controllers[i].updatePose(this.__refSpace, xrFrame, inputSource);
         }
     }
     /**
@@ -418,8 +407,8 @@ class VRViewport extends GLBaseViewport {
             // Note: before the Headset is put on the pose is missing, or after it is taken off
             return;
         }
-        this.__vrhead.update(pose);
-        const viewXfo = this.__vrhead.getTreeItem().globalXfoParam.value;
+        this.__xrhead.update(pose);
+        const viewXfo = this.__xrhead.getTreeItem().globalXfoParam.value;
         const views = pose.views;
         if (!this.__projectionMatricesUpdated) {
             this.__projectionMatrices = [];
@@ -463,7 +452,7 @@ class VRViewport extends GLBaseViewport {
             });
         }
         renderstate.viewXfo = viewXfo;
-        renderstate.viewScale = 1.0 / this.__stageScale;
+        renderstate.viewScale = 1.0 / this.stageScale;
         renderstate.cameraMatrix = renderstate.viewXfo.toMat4();
         renderstate.region = this.__region;
         renderstate.vrPresenting = true; // Some rendering is adjusted slightly in VR. e.g. Billboards
@@ -471,16 +460,19 @@ class VRViewport extends GLBaseViewport {
         // ///////////////////////
         // Prepare the pointerMove event.
         const event = new XRPoseEvent(this, viewXfo, this.controllers);
-        this.updateControllers(xrFrame, event);
-        if (this.capturedElement && event.propagating) {
-            this.capturedElement.onPointerMove(event);
+        this.updateControllers(xrFrame);
+        if (event.getCapture()) {
+            event.getCapture().onPointerMove(event);
+            // events are now always sent to the capture item first,
+            // but can continue propagating to other items if no call
+            // to event.stopPropagation() was made.
         }
         if (this.manipulator && event.propagating) {
             this.manipulator.onPointerMove(event);
         }
         // ///////////////////////
         // Emit a signal for the shared session.
-        const viewChangedEvent = new VRViewChangedEvent(renderstate.viewXfo);
+        const viewChangedEvent = new XRViewChangedEvent(renderstate.viewXfo);
         // TODO: better solution than setting members individually?
         viewChangedEvent.hmd = this.__hmd;
         viewChangedEvent.controllers = this.controllers;
@@ -493,9 +485,9 @@ class VRViewport extends GLBaseViewport {
             const viewport = this.__renderer.getViewport();
             if (viewport) {
                 // display the head in spectator mode.
-                this.__vrhead.setVisible(true);
+                this.__xrhead.setVisible(true);
                 viewport.draw();
-                this.__vrhead.setVisible(false);
+                this.__xrhead.setVisible(false);
             }
         }
         this.tick++;
@@ -507,6 +499,7 @@ class VRViewport extends GLBaseViewport {
      */
     onPointerDown(event) {
         event.intersectionData = event.controller.getGeomItemAtTip();
+        event.pointerRay = event.controller.pointerRay;
         // //////////////////////////////////////
         // Double Tap
         // First check for double tap handlers.
@@ -525,17 +518,21 @@ class VRViewport extends GLBaseViewport {
         }
         this.controllerPointerDownTime[event.controller.id] = downTime;
         // //////////////////////////////////////
-        if (this.capturedItem) {
-            this.capturedItem.onPointerDown(event);
-            return;
+        if (event.getCapture()) {
+            event.getCapture().onPointerDown(event);
+            // events are now always sent to the capture item first,
+            // but can continue propagating to other items if no call
+            // to event.stopPropagation() was made.
+            if (!event.propagating)
+                return;
         }
         if (event.intersectionData != undefined) {
             event.intersectionData.geomItem.onPointerDown(event);
-            if (!event.propagating || this.capturedItem)
+            if (!event.propagating)
                 return;
         }
         this.emit('pointerDown', event);
-        if (!event.propagating || this.capturedItem)
+        if (!event.propagating)
             return;
         if (this.manipulator) {
             this.manipulator.onPointerDown(event);
@@ -548,9 +545,14 @@ class VRViewport extends GLBaseViewport {
      */
     onPointerUp(event) {
         this.controllerPointerDownTime[event.controller.id] = 0;
-        if (this.capturedItem) {
-            this.capturedItem.onPointerUp(event);
-            return;
+        event.pointerRay = event.controller.pointerRay;
+        if (event.getCapture()) {
+            event.getCapture().onPointerUp(event);
+            // events are now always sent to the capture item first,
+            // but can continue propagating to other items if no call
+            // to event.stopPropagation() was made.
+            if (!event.propagating)
+                return;
         }
         event.intersectionData = event.controller.getGeomItemAtTip();
         if (event.intersectionData != undefined) {
@@ -568,5 +570,5 @@ class VRViewport extends GLBaseViewport {
         }
     }
 }
-export { VRViewport };
-//# sourceMappingURL=VRViewport.js.map
+export { XRViewport };
+//# sourceMappingURL=XRViewport.js.map

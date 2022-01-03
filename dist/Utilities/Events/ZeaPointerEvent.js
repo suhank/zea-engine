@@ -5,6 +5,9 @@ const POINTER_TYPES = {
     xr: 'xr',
 };
 let capturedItem = null;
+/**
+ * ZeaPointerEvent are emitted from mouse or touch interactions or from WebXR controllers.
+ */
 class ZeaPointerEvent extends BaseEvent {
     constructor(pointerType) {
         super();

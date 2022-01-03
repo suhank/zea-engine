@@ -1,5 +1,6 @@
 import { GLShader } from '../GLShader';
 import './GLSL/index';
+import { WebGL12RenderingContext } from '../types/webgl';
 declare class AtlasLayoutShader extends GLShader {
     /**
      * Create an atlas layout shader.

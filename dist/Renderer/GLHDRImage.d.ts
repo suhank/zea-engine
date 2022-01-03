@@ -1,16 +1,18 @@
 import { GLTexture2D } from './GLTexture2D';
 import { GLFbo } from './GLFbo';
 import { IGeomShaderBinding } from './Drawing/GeomShaderBinding';
-import { VLHImage } from '../SceneTree/Images/VLHImage';
+import { HDRImage } from '../SceneTree/Images/HDRImage';
 import { BaseImage } from '../SceneTree/BaseImage';
 import { GLShader } from './GLShader';
+import { RenderState, Uniform } from './types/renderer';
+import { WebGL12RenderingContext } from './types/webgl';
 /** Class representing a GL high dynamic range (HDR) image.
  * @extends GLTexture2D
  * @private
  */
 declare class GLHDRImage extends GLTexture2D {
     protected listenerIDs: Record<string, number>;
-    protected hdrImage: VLHImage;
+    protected hdrImage: HDRImage;
     protected fbo: GLFbo | null;
     protected srcLDRTex: GLTexture2D | null;
     protected srcCDMTex: GLTexture2D | null;
@@ -21,7 +23,7 @@ declare class GLHDRImage extends GLTexture2D {
      * @param gl - The webgl rendering context.
      * @param hdrImage - The HDR image.
      */
-    constructor(gl: WebGL12RenderingContext, hdrImage: VLHImage);
+    constructor(gl: WebGL12RenderingContext, hdrImage: HDRImage);
     /**
      * Returns the `BaseImage` of the GL Texture
      *

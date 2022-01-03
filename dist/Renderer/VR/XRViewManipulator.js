@@ -8,7 +8,7 @@ import { POINTER_TYPES } from '../../Utilities/Events/ZeaPointerEvent';
  * Class representing a view tool
  * @extends BaseTool
  */
-class VRViewManipulator extends BaseTool {
+class XRViewManipulator extends BaseTool {
     /**
      */
     constructor(xrvp) {
@@ -57,7 +57,7 @@ class VRViewManipulator extends BaseTool {
         this.xrvp.removeListenerById('controllerAdded', this.listenerIDs['controllerAdded']);
     }
     // ///////////////////////////////////
-    // VRController events
+    // XRController events
     // eslint-disable-next-line require-jsdoc
     __initMoveStage() {
         if (this.__controllerTriggersHeld.length == 1) {
@@ -85,9 +85,12 @@ class VRViewManipulator extends BaseTool {
     onVRControllerButtonDown(event) {
         if (event.button != 1)
             return;
-        this.__controllerTriggersHeld.push(event.controller);
-        this.__initMoveStage();
-        event.stopPropagation();
+        const index = this.__controllerTriggersHeld.indexOf(event.controller);
+        if (index == -1) {
+            this.__controllerTriggersHeld.push(event.controller);
+            this.__initMoveStage();
+            event.stopPropagation();
+        }
     }
     /**
      * The onVRControllerButtonUp method.
@@ -98,9 +101,11 @@ class VRViewManipulator extends BaseTool {
         if (event.button != 1)
             return;
         const index = this.__controllerTriggersHeld.indexOf(event.controller);
-        this.__controllerTriggersHeld.splice(index, 1);
-        this.__initMoveStage();
-        event.stopPropagation();
+        if (index != -1) {
+            this.__controllerTriggersHeld.splice(index, 1);
+            this.__initMoveStage();
+            event.stopPropagation();
+        }
     }
     /**
      * The onVRControllerDoubleClicked method.
@@ -214,5 +219,5 @@ class VRViewManipulator extends BaseTool {
         }
     }
 }
-export { VRViewManipulator };
-//# sourceMappingURL=VRViewManipulator.js.map
+export { XRViewManipulator };
+//# sourceMappingURL=XRViewManipulator.js.map

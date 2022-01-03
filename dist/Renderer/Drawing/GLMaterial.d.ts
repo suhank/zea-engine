@@ -1,6 +1,8 @@
 import { Material } from '../../SceneTree/Material';
 import { EventEmitter } from '../../Utilities/EventEmitter';
 import { GLShader } from '../GLShader';
+import { RenderState } from '../types/renderer';
+import { WebGL12RenderingContext } from '../types/webgl';
 /** Class representing a GL material.
  * @extends EventEmitter
  * @private

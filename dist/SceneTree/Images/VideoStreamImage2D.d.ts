@@ -1,11 +1,11 @@
-import { BaseImage } from '../BaseImage';
+import { BaseImage, ImageParams } from '../BaseImage';
 /** Class representing a 2D video stream image.
  * @private
  * @extends BaseImage
  */
 declare class VideoStreamImage2D extends BaseImage {
-    __data: any;
-    __intervalId: any;
+    __data: HTMLVideoElement;
+    __intervalId: number;
     /**
      * Create a 2D video stream image.
      */
@@ -39,6 +39,6 @@ declare class VideoStreamImage2D extends BaseImage {
      * The getParams method.
      * @return - The return value.
      */
-    getParams(): Record<string, any>;
+    getParams(): ImageParams;
 }
 export { VideoStreamImage2D };

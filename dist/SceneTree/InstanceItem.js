@@ -15,6 +15,7 @@ class InstanceItem extends TreeItem {
      */
     constructor(name) {
         super(name);
+        this.srcTreePath = [];
         this.srcTree = null;
     }
     /**
@@ -44,21 +45,20 @@ class InstanceItem extends TreeItem {
      * @param reader - The reader value.
      * @param context - The context value.
      */
-    readBinary(reader, context = {}) {
+    readBinary(reader, context) {
         super.readBinary(reader, context);
         // console.log("numTreeItems:", context.numTreeItems, " numGeomItems:", context.numGeomItems)
-        const path = reader.loadStrArray();
-        if (path.length > 0) {
-            // console.log("InstanceItem of:", path)
+        this.srcTreePath = reader.loadStrArray();
+        if (this.srcTreePath.length > 0) {
             try {
-                context.resolvePath(path, (treeItem) => {
+                context.resolvePath(this.srcTreePath, (treeItem) => {
                     this.setSrcTree(treeItem, context);
                 }, (error) => {
-                    console.warn(`Error loading InstanceItem: ${this.getPath()}, unable to resolve: ${path}. ` + error.message);
+                    console.warn(`Error loading InstanceItem: ${this.getPath()}, unable to resolve: ${this.srcTreePath}. ` + error.message);
                 });
             }
             catch (error) {
-                console.warn(`Error loading InstanceItem: ${this.getPath()}: ` + error.message);
+                console.warn(`Error loading InstanceItem: ${this.getPath()}: ` + error);
             }
         }
     }
@@ -94,6 +94,23 @@ class InstanceItem extends TreeItem {
         const cloned = new InstanceItem();
         cloned.copyFrom(this, context);
         return cloned;
+    }
+    /**
+     * Copies current TreeItem with all its children.
+     *
+     * @param src - The tree item to copy from.
+     * @param context - The context value.
+     */
+    copyFrom(src, context) {
+        super.copyFrom(src, context);
+        this.srcTreePath = src.srcTreePath;
+        if (this.srcTreePath.length > 0 && this.getNumChildren() == 0) {
+            src.once('childAdded', (event) => {
+                const childAddedEvent = event;
+                const childItem = childAddedEvent.childItem;
+                this.setSrcTree(childItem, context);
+            });
+        }
     }
 }
 Registry.register('InstanceItem', InstanceItem);

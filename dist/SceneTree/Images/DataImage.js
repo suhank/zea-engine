@@ -17,12 +17,8 @@ class DataImage extends BaseImage {
     constructor(name) {
         super(name);
         this.__data = new Uint8Array(4);
-        if (name == undefined)
-            name = this.constructor.name;
-        this.__name = name;
         this.format = 'RGBA';
         this.type = 'UNSIGNED_BYTE';
-        this.__loaded = false;
         // this.__data = new Uint8Array(4);
         this.width = 1;
         this.height = 1;
@@ -32,7 +28,7 @@ class DataImage extends BaseImage {
      * @return - `true` if bytes data is fully loaded, `false` otherwise.
      */
     isLoaded() {
-        return this.__loaded;
+        return this.loaded;
     }
     // TODO: video / webcam will return true.
     /**
@@ -56,8 +52,8 @@ class DataImage extends BaseImage {
         this.width = width;
         this.height = height;
         this.__data = data;
-        if (!this.__loaded) {
-            this.__loaded = true;
+        if (!this.loaded) {
+            this.loaded = true;
             this.emit('loaded');
         }
         else

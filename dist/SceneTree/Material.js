@@ -298,9 +298,9 @@ class Material extends BaseItem {
                     // )
                 }
                 if (textureName != '' && param.setImage) {
-                    if (context.materialLibrary.hasImage(textureName)) {
+                    if (context.assetItem.materialLibrary.hasImage(textureName)) {
                         // console.log(paramName +":" + textureName + ":" + context.materialLibrary[textureName].resourcePath);
-                        param.setImage(context.materialLibrary.getImage(textureName));
+                        param.setImage(context.assetItem.materialLibrary.getImage(textureName));
                     }
                     else {
                         console.warn('Missing Texture:' + textureName);

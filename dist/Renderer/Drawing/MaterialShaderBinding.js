@@ -94,7 +94,11 @@ class SimpleUniformBinding extends ParamUniformBinding {
                 if (boundImage) {
                 }
                 else {
-                    this.val = param.value;
+                    if (typeof param.value == 'boolean') {
+                        this.val = param.value ? 1 : 0;
+                    }
+                    else
+                        this.val = param.value;
                 }
             }
             catch (e) { }

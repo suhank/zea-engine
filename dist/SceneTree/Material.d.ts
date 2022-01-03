@@ -1,6 +1,7 @@
 import { BaseItem } from './BaseItem';
 import { BinReader } from './BinReader';
 import { GLShader } from '../Renderer';
+import { AssetLoadContext } from '..';
 /**
  * Represents a type of `BaseItem` class that holds material configuration.
  * Use this to apply materials to your assets or item parts.
@@ -90,7 +91,7 @@ declare class Material extends BaseItem {
      * @param reader - The reader value.
      * @param context - The context value.
      */
-    readBinary(reader: BinReader, context: Record<string, any>): void;
+    readBinary(reader: BinReader, context: AssetLoadContext): void;
     /**
      * The clone method constructs a new material, copies its values
      * from this material and returns it.

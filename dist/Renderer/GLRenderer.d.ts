@@ -9,6 +9,7 @@ import { SilhouetteShader } from './Shaders/SilhouetteShader';
 import { IGeomShaderBinding } from './Drawing/GeomShaderBinding';
 import { GLViewport } from './GLViewport';
 import { IntersectionData } from '../Utilities/IntersectionData';
+import { ColorRenderState } from './types/renderer';
 /** Class representing a GL renderer.
  * @extends GLBaseRenderer
  */
@@ -114,7 +115,7 @@ declare class GLRenderer extends GLBaseRenderer {
      *
      * @private
      *
-     * @param xfo - The ray to use in the raycast.
+     * @param xfo - The xfo to use in the raycast.
      * @param ray - The ray to use in the raycast.
      * @param dist - The maximum distance to cast the ray
      * @param area - The area to use for the ray
@@ -122,6 +123,18 @@ declare class GLRenderer extends GLBaseRenderer {
      * @return - The object containing the ray cast results.
      */
     raycast(xfo: Xfo, ray: Ray, dist: number, area?: number, mask?: number): IntersectionData | null;
+    /**
+     * Ray casting is implemented by rendering a small image from the position of the ray, and capturing geometries detected in the resulting image.
+     *
+     * @private
+     *
+     * @param xfo - The xfo to use in the raycast.
+     * @param projectionMatrix - The projectionMatrix to use in the raycast.
+     * @param ray - The ray to use in the raycast.
+     * @param mask - The mask to filter our certain pass types. Can be PassType.OPAQUE | PassType.TRANSPARENT | PassType.OVERLAY
+     * @return - The object containing the ray cast results.
+     */
+    raycastWithProjection(xfo: Xfo, projectionMatrix: Mat4, ray: Ray, mask?: number): IntersectionData | null;
     /**
      *
      * @private

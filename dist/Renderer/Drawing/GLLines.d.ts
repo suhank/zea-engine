@@ -1,6 +1,8 @@
 import { GLGeom } from './GLGeom';
 import { GLTexture2D } from '../GLTexture2D';
 import { BaseGeom } from '../../SceneTree';
+import { RenderState } from '../types/renderer';
+import { WebGL12RenderingContext } from '../types/webgl';
 interface FatBuffers {
     drawCount: number;
     positionsTexture: GLTexture2D | null;

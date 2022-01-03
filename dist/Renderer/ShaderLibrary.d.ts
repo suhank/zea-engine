@@ -1,4 +1,5 @@
 import { Material } from '../SceneTree';
+import { ShaderParseResult } from './types/renderer';
 /** Class representing a shader library.
  * @private
  */

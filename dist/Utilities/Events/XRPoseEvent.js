@@ -4,8 +4,8 @@ import { ZeaPointerEvent, POINTER_TYPES } from './ZeaPointerEvent';
 // into this struct. Untill then, we will just put the whole
 // controller.
 // class XRControllerPose {
-//   controller: VRController
-//   constructor(controller: VRController) {
+//   controller: XRController
+//   constructor(controller: XRController) {
 //     this.controller = controller
 //   }
 // }

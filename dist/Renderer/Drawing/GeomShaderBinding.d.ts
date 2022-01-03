@@ -1,3 +1,5 @@
+import { RenderState } from "../types/renderer";
+import { WebGL12RenderingContext } from "../types/webgl";
 /**
  * Returns a descriptor for the provided geom attribute.
  * @private

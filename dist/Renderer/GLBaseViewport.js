@@ -4,7 +4,7 @@ import { GLHDRImage } from './GLHDRImage';
 import { GLTexture2D } from './GLTexture2D';
 import { GLFbo } from './GLFbo';
 import { GLMesh } from './Drawing/GLMesh';
-import { VLHImage } from '../SceneTree/Images/VLHImage';
+import { HDRImage } from '../SceneTree/Images/HDRImage';
 import { ResizedEvent } from '../Utilities/Events/ResizedEvent';
 const FRAMEBUFFER = {
     MSAA_RENDERBUFFER: 0,
@@ -89,7 +89,7 @@ class GLBaseViewport extends ParameterOwner {
         const processBGValue = () => {
             const value = this.backgroundColorParam.value;
             if (value instanceof BaseImage) {
-                if (value instanceof VLHImage) {
+                if (value instanceof HDRImage) {
                     this.__backgroundTexture = value;
                     this.__backgroundGLTexture = new GLHDRImage(gl, value);
                 }

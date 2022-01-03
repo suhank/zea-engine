@@ -1,0 +1,1 @@
+{"version":3,"file":"ChildAddedEvent.js","sourceRoot":"","sources":["../../../src/Utilities/Events/ChildAddedEvent.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,SAAS,EAAE,MAAM,cAAc,CAAA;AAExC,MAAM,eAAgB,SAAQ,SAAS;IAIrC,YAAY,KAAa,EAAE,SAAmB;QAC5C,KAAK,EAAE,CAAA;QACP,IAAI,CAAC,KAAK,GAAG,KAAK,CAAA;QAClB,IAAI,CAAC,SAAS,GAAG,SAAS,CAAA;IAC5B,CAAC;CACF;AACD,OAAO,EAAE,eAAe,EAAE,CAAA"}

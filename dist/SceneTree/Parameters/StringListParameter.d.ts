@@ -1,6 +1,7 @@
 import { Parameter } from './Parameter';
 import { BinReader } from '../BinReader';
 import { IBinaryReader } from '../../Utilities/IBinaryReader';
+import { AssetLoadContext } from '../AssetLoadContext';
 /**
  * A parameter for storing an array of string values.
  *
@@ -19,7 +20,7 @@ declare class StringListParameter extends Parameter<Array<string>> implements IB
      * @param {BinReader} reader - The reader value.
      * @param {object} context - The context value.
      */
-    readBinary(reader: BinReader, context?: Record<string, unknown>): void;
+    readBinary(reader: BinReader, context?: AssetLoadContext): void;
     /**
      * The toJSON method serializes this instance as a JSON.
      * It can be used for persistence, data transfer, etc.

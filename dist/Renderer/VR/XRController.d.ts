@@ -1,24 +1,29 @@
-import { Xfo, Mat4 } from '../../Math/index';
-import { TreeItem } from '../../SceneTree/index';
+import { Xfo, Ray } from '../../Math/index';
+import { BaseTool, TreeItem } from '../../SceneTree/index';
 import { IntersectionData } from '../../Utilities/IntersectionData';
-import { VRViewport } from '.';
-import { XRPoseEvent } from '../../Utilities/Events/XRPoseEvent';
 /** Class representing a VR controller. */
-declare class VRController {
+declare class XRController {
     id: number;
     buttonPressed: boolean;
-    protected xrvp: VRViewport;
-    protected inputSource: any;
-    protected mat4: Mat4;
-    protected xfo: Xfo;
-    protected treeItem: TreeItem;
-    protected tipItem: TreeItem;
-    protected activeVolumeSize: number;
-    protected tick: number;
-    protected touchpadValue: any;
-    protected hitTested: boolean;
-    protected pointerOverItem: any;
-    protected intersectionData: IntersectionData;
+    private xrvp;
+    private inputSource;
+    private mat4;
+    private xfo;
+    private treeItem;
+    private tipItem;
+    raycastTick: number;
+    raycastArea: number;
+    raycastDist: number;
+    pointerRay: Ray;
+    private raycastAreaCache;
+    private raycastDistCache;
+    private rayCastRenderTargetProjMatrix;
+    private tick;
+    private touchpadValue;
+    private hitTested;
+    private pointerOverItem;
+    private intersectionData;
+    capturedItem: TreeItem | BaseTool;
     /**
      * Create a VR controller.
      * @param xrvp - The Vr viewport.
@@ -76,13 +81,12 @@ declare class VRController {
      * @param refSpace - The refSpace value.
      * @param xrFrame - The xrFrame value.
      * @param inputSource - The inputSource value.
-     * @param event - The event object.
      */
-    updatePose(refSpace: any, xrFrame: any, inputSource: any, event: XRPoseEvent): void;
+    updatePose(refSpace: any, xrFrame: any, inputSource: any): void;
     /**
      * The getGeomItemAtTip method.
      * @return - The return value.
      */
     getGeomItemAtTip(): IntersectionData;
 }
-export { VRController };
+export { XRController };

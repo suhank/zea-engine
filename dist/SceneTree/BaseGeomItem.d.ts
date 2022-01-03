@@ -2,6 +2,7 @@ import { Vec3 } from '../Math/Vec3';
 import { TreeItem } from './TreeItem';
 import { BinReader } from './BinReader';
 import { MaterialParameter } from '../SceneTree/Parameters/MaterialParameter';
+import { AssetLoadContext } from './AssetLoadContext';
 /**
  * Base class that represents geometry items with layering, overlaying and cut away features.
  *
@@ -92,6 +93,6 @@ declare class BaseGeomItem extends TreeItem {
      * @param reader - The reader value.
      * @param context - The context value.
      */
-    readBinary(reader: BinReader, context: Record<string, any>): void;
+    readBinary(reader: BinReader, context: AssetLoadContext): void;
 }
 export { BaseGeomItem };

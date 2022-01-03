@@ -1,4 +1,5 @@
 import { GLShader } from '../GLShader';
+import { WebGL12RenderingContext } from '../types/webgl';
 import './GLSL/index';
 /** Shader for unpacking HDR images using Boost HDR algorithm.
  * @extends GLShader
