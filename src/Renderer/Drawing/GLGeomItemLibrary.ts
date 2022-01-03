@@ -56,6 +56,8 @@ class GLGeomItemLibrary extends EventEmitter {
   protected inFrustumDrawIdsBuffer: WebGLBuffer
   protected reductionDataArray: Uint8Array
 
+  private timer_query_ext: any = null
+
   /**
    * Create a GLGeomItemLibrary.
    * @param renderer - The renderer instance
@@ -84,6 +86,9 @@ class GLGeomItemLibrary extends EventEmitter {
     // - pass uniform values for the texture sizes.
     const gl = this.renderer.gl
     this.enableOcclusionCulling = options.enableOcclusionCulling && gl.name == 'webgl2'
+
+    // https://www.khronos.org/registry/webgl/extensions/EXT_disjoint_timer_query_webgl2/
+    this.timer_query_ext = gl.getExtension('EXT_disjoint_timer_query_webgl2')
 
     if (this.enableFrustumCulling) {
       this.setupCullingWorker(renderer)
@@ -276,7 +281,7 @@ class GLGeomItemLibrary extends EventEmitter {
             depthInternalFormat: gl.DEPTH_COMPONENT16,
           })
         }
-        ;+this.renderer.on('resized', (event) => {
+        this.renderer.on('resized', (event) => {
           this.occlusionDataBuffer.resize(
             Math.ceil(event.width * occlusionDataBufferSizeFactor),
             Math.ceil(event.height * occlusionDataBufferSizeFactor)
@@ -433,6 +438,8 @@ class GLGeomItemLibrary extends EventEmitter {
     } else {
       this.renderer.getViewport().initRenderState(renderstate)
     }
+    //
+    const ext = this.timer_query_ext
 
     gl.disable(gl.BLEND)
     gl.disable(gl.CULL_FACE)
@@ -462,7 +469,7 @@ class GLGeomItemLibrary extends EventEmitter {
     }
 
     // Now perform a reduction to calculate the indices of visible items.
-    const reduce = (renderstate, clear) => {
+    const reduce = (renderstate, clear, query) => {
       this.reductionDataBuffer.bindForWriting(renderstate, clear)
 
       this.reductionShader.bind(renderstate)
@@ -472,10 +479,14 @@ class GLGeomItemLibrary extends EventEmitter {
       if (reductionTextureWidth) gl.uniform1i(reductionTextureWidth.location, this.reductionDataBuffer.width)
       if (floatGeomBuffer) gl.uniform1i(floatGeomBuffer.location, 1)
 
+      gl.beginQuery(ext.TIME_ELAPSED_EXT, query)
+
       // Draw one point for each pixel in the occlusion buffer.
       // This point will color a single pixel in the reduction buffer.
       const numReductionPoints = this.occlusionDataBuffer.width * this.occlusionDataBuffer.height
       gl.drawArrays(gl.POINTS, 0, numReductionPoints)
+
+      gl.endQuery(ext.TIME_ELAPSED_EXT)
 
       this.reductionDataBuffer.unbindForWriting(renderstate)
     }
@@ -513,10 +524,39 @@ class GLGeomItemLibrary extends EventEmitter {
       })
     }
 
+    const queryDrawScene = gl.createQuery()
+    gl.beginQuery(ext.TIME_ELAPSED_EXT, queryDrawScene)
+
     drawSceneGeomData(renderstate)
-    reduce(renderstate, true)
+
+    gl.endQuery(ext.TIME_ELAPSED_EXT)
+    const queryReduce1 = gl.createQuery()
+
+    reduce(renderstate, true, queryReduce1)
+
+    const queryDrawCulledBBoxes = gl.createQuery()
+    gl.beginQuery(ext.TIME_ELAPSED_EXT, queryDrawCulledBBoxes)
     drawCulledBBoxes()
-    reduce(renderstate, false)
+
+    gl.endQuery(ext.TIME_ELAPSED_EXT)
+
+    const queryReduce2 = gl.createQuery()
+    reduce(renderstate, false, queryReduce2)
+
+    const queryResults = {}
+    const checkQuery = (name, query) => {
+      const available = gl.getQueryParameter(query, gl.QUERY_RESULT_AVAILABLE)
+      const disjoint = gl.getParameter(ext.GPU_DISJOINT_EXT)
+
+      if (available && !disjoint) {
+        // See how much time the rendering of the object took in nanoseconds.
+        const timeElapsed = gl.getQueryParameter(query, gl.QUERY_RESULT)
+        queryResults[name] = timeElapsed / 1000000
+
+        // Clean up the query object.
+        gl.deleteQuery(query)
+      }
+    }
 
     // //////////////////////////////////////////
     // Pull down the reduction values from the GPU for processing.
@@ -528,6 +568,15 @@ class GLGeomItemLibrary extends EventEmitter {
     this.reductionDataBuffer.bindForReading()
     readPixelsAsync(gl, 0, 0, w, h, format, type, this.reductionDataArray).then(() => {
       this.reductionDataBuffer.unbindForReading()
+
+      if (queryReduce1) {
+        checkQuery('queryDrawScene', queryDrawScene)
+        checkQuery('queryDrawCulledBBoxes', queryDrawCulledBBoxes)
+        checkQuery('queryReduce1', queryReduce1)
+        checkQuery('queryReduce2', queryReduce2)
+        console.log(queryResults)
+      }
+
       // console.log(this.reductionDataArray)
       // Now send the buffer to the worker, where it will determine what culling
       // needs to be applied on top of the frustum culling.
