@@ -50,9 +50,9 @@ class GLViewport extends GLBaseViewport {
   protected __geomDataBuffer: GLTexture2D
   protected __geomDataBufferSizeFactor: number = 1
   protected __geomDataBufferFbo: GLFbo
-  protected debugGeomShader: boolean = false
-  protected debugOcclusionBuffer: boolean = false
-  protected debugHighlightedGeomsBuffer: boolean = false
+  debugGeomDataBuffer: boolean = false
+  debugOcclusionBuffer: boolean = false
+  debugHighlightedGeomsBuffer: boolean = false
 
   protected __x: number = 0
   protected __y: number = 0
@@ -866,7 +866,7 @@ class GLViewport extends GLBaseViewport {
     super.draw(renderstate)
 
     // Turn this on to debug the geom data buffer.
-    if (this.debugGeomShader) {
+    if (this.debugGeomDataBuffer) {
       this.renderGeomDataFbo()
       const screenQuad = this.__renderer.screenQuad!
       screenQuad.bindShader(renderstate)

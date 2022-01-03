@@ -74,14 +74,6 @@ class GLImageAtlas extends GLRenderTarget {
   }
 
   /**
-   * The getMainImage method.
-   * @return - The return value.
-   */
-  getMainImage(): BaseImage {
-    return this.frameBuffer // TODO: is this correct?
-  }
-
-  /**
    * The addSubImage method.
    * @param subImage - The subImage value.
    * @return - The return value.

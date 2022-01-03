@@ -93,7 +93,7 @@ class GLBaseRenderer extends ParameterOwner {
     this.screenQuad = new GLScreenQuad(this.__gl, { directives: this.directives })
     this.bindEventHandlers()
     const mainViewport = this.addViewport('main')
-    mainViewport.debugGeomBuffer = options.debugGeomBuffer
+    mainViewport.debugGeomDataBuffer = options.debugGeomDataBuffer
     mainViewport.debugOcclusionBuffer = options.debugOcclusionBuffer
 
     this.glMaterialLibrary = new GLMaterialLibrary(this)
