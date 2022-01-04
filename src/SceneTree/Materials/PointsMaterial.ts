@@ -4,6 +4,7 @@ import { MaterialFloatParam } from '../Parameters/MaterialFloatParam'
 import { NumberParameter } from '../Parameters/NumberParameter'
 import { Color } from '../../Math/Color'
 import { Material } from '../Material'
+import { CloneContext } from '../CloneContext'
 
 export class PointsMaterial extends Material {
   baseColorParam: MaterialColorParam = new MaterialColorParam('BaseColor', new Color(1.0, 1, 0.5))
@@ -17,6 +18,19 @@ export class PointsMaterial extends Material {
     this.addParameter(this.baseColorParam)
     this.addParameter(this.pointSizeParam)
     this.addParameter(this.overlayParam)
+  }
+
+  /**
+   * The clone method constructs a new material, copies its values
+   * from this item and returns it.
+   *
+   * @param context - The context value.
+   * @return - Returns a new cloned material.
+   */
+  clone(context?: CloneContext) {
+    const cloned = new PointsMaterial()
+    cloned.copyFrom(this, context)
+    return cloned
   }
 }
 
