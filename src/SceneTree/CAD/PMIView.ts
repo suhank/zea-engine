@@ -1,6 +1,6 @@
 // import { BinReader, Registry, TreeItem, AssetLoadContext } from '@zeainc/zea-engine'
 import { TreeItem, BinReader, AssetLoadContext } from '..'
-import { Registry } from '../..'
+import { Registry } from '../../Registry'
 import { CloneContext } from '../CloneContext'
 import { PMIItem } from './PMIItem'
 

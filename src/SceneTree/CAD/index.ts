@@ -10,12 +10,12 @@
 //   )
 // }
 
-export * from './CADAsset.js'
-export * from './CADAssembly.js'
-export * from './CADPart.js'
-export * from './CADBody.js'
-export * from './CADPart.js'
-export * from './PMIItem.js'
-export * from './PMIView.js'
-export * from './XRef.js'
-export * from './GLCADPass.js'
+export * from './CADAsset'
+export * from './CADAssembly'
+export * from './CADPart'
+export * from './CADBody'
+export * from './CADPart'
+export * from './PMIItem'
+export * from './PMIView'
+export * from './XRef'
+export * from './GLCADPass'

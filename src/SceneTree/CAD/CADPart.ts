@@ -1,8 +1,10 @@
 // import { TreeItem, Registry, BinReader, AssetLoadContext } from '@zeainc/zea-engine'
 
-import { TreeItem, BinReader, AssetLoadContext } from ".."
-import { Registry } from "../.."
+import { Registry } from "../../Registry"
+import { AssetLoadContext } from "../AssetLoadContext"
+import { BinReader } from "../BinReader"
 import { CloneContext } from "../CloneContext"
+import { TreeItem } from "../TreeItem"
 
 /**
  * Represents a Part within a CAD assembly.

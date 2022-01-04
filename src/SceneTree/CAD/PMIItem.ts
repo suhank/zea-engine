@@ -1,8 +1,9 @@
 // import { TreeItem, Registry, Vec3Parameter, Color } from '@zeainc/zea-engine'
-
-import { Vec3Parameter, TreeItem } from ".."
-import { Registry, Color } from "../.."
+import { Color } from "../../Math/Color"
+import { Registry } from "../../Registry"
 import { CloneContext } from "../CloneContext"
+import { Vec3Parameter } from "../Parameters/Vec3Parameter"
+import { TreeItem } from "../TreeItem"
 
 Registry.register('Property_Vec3_32f', Vec3Parameter)
 

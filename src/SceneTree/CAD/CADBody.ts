@@ -1,7 +1,11 @@
 // import { Color, BaseGeomItem, Material, Registry, BinReader, AssetLoadContext } from '@zeainc/zea-engine'
-import { BaseGeomItem, BinReader, AssetLoadContext, Material } from '..'
-import { Color, Registry } from '../..'
+import { Color } from '../../Math/Color'
+import { Registry } from '../../Registry'
+import { AssetLoadContext } from '../AssetLoadContext'
+import { BaseGeomItem } from '../BaseGeomItem'
+import { BinReader } from '../BinReader'
 import { CloneContext } from '../CloneContext'
+import { Material } from '../Material'
 import { CADAsset } from './CADAsset'
 
 /**

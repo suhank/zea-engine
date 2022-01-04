@@ -10,10 +10,14 @@
 //   resourceLoader,
 // } 
 
-import { Version, BinReader, AssetLoadContext, resourceLoader } from ".."
-import { SystemDesc, Registry } from "../.."
+import { Registry } from "../../Registry"
+import { SystemDesc } from "../../SystemDesc"
 import { AssetItem } from "../AssetItem"
+import { AssetLoadContext } from "../AssetLoadContext"
+import { BinReader } from "../BinReader"
 import { CloneContext } from "../CloneContext"
+import { resourceLoader } from "../resourceLoader"
+import { Version } from "../Version"
 
 /**
  * Class representing a CAD asset.

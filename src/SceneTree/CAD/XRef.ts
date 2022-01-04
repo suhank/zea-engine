@@ -1,10 +1,10 @@
 // import { Registry, AssetLoadContext, Xfo, AssetItem, BinReader } 
-import { XfoParameter } from '..'
 import { Xfo } from '../../Math/Xfo'
 import { Registry } from '../../Registry'
 import { AssetLoadContext } from '../AssetLoadContext'
 import { BinReader } from '../BinReader'
 import { CloneContext } from '../CloneContext'
+import { XfoParameter } from '../Parameters/XfoParameter'
 import { CADAsset } from './CADAsset'
 
 /**

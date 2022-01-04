@@ -1,7 +1,8 @@
 ﻿// import { GLPass, TreeItem } from '@zeainc/zea-engine'
 
-import { TreeItem } from ".."
-import { GLPass } from "../.."
+import { GLPass } from "../../Renderer/Passes/GLPass"
+import { TreeItem } from "../TreeItem"
+
 
 /**
  * Class representing a GL CAD pass.
