@@ -16,6 +16,7 @@ import { ZeaPointerEvent } from '../Utilities/Events/ZeaPointerEvent'
 import { ZeaWheelEvent } from '../Utilities/Events/ZeaWheelEvent'
 import { BaseEvent } from '../Utilities/BaseEvent'
 import { ZeaTouchEvent } from '../Utilities/Events/ZeaTouchEvent'
+import { CloneContext } from './CloneContext'
 import { AssetLoadContext } from './AssetLoadContext'
 import { ChildAddedEvent } from '../Utilities/Events/ChildAddedEvent'
 
@@ -1061,7 +1062,7 @@ class TreeItem extends BaseItem {
    * @param context - The context value.
    * @return - Returns a new cloned tree item.
    */
-  clone(context?: Record<string, unknown>): TreeItem {
+  clone(context?: CloneContext): TreeItem {
     const cloned = new TreeItem('')
     cloned.copyFrom(this, context)
     return cloned
@@ -1073,7 +1074,7 @@ class TreeItem extends BaseItem {
    * @param src - The tree item to copy from.
    * @param context - The context value.
    */
-  copyFrom(src: TreeItem, context?: Record<string, any>): void {
+  copyFrom(src: TreeItem, context?: CloneContext): void {
     super.copyFrom(src, context)
 
     // Share a local Xfo

@@ -13,6 +13,7 @@ import { BinReader } from './BinReader'
 import { Vec3Attribute } from './Geometry/Vec3Attribute'
 import { AssetItem, AssetLoadContext } from '.'
 import { RangeLoadedEvent } from '../Utilities/Events/RangeLoadedEvent'
+import { CloneContext } from './CloneContext'
 
 let calculatePreciseBoundingBoxes = false
 
@@ -278,7 +279,7 @@ class GeomItem extends BaseGeomItem {
    * @param context - The context value.
    * @return - Returns a new cloned geom item.
    */
-  clone(context?: Record<string, any>) {
+  clone(context?: CloneContext) {
     const cloned = new GeomItem()
     cloned.copyFrom(this, context)
     return cloned
@@ -290,7 +291,7 @@ class GeomItem extends BaseGeomItem {
    * @param src - The geom item to copy from.
    * @param context - The context value.
    */
-  copyFrom(src: GeomItem, context?: Record<string, any>) {
+  copyFrom(src: GeomItem, context?: CloneContext) {
     super.copyFrom(src, context)
 
     if (!src.geomParam.value && src.geomIndex != -1) {

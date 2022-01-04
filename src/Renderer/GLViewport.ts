@@ -1,5 +1,5 @@
 /* eslint-disable guard-for-in */
-import { Vec2, Vec3, Ray, Mat4, Xfo, Color } from '../Math/index'
+import { Vec2, Vec3, Ray, Mat4, Xfo, Color, Vec4 } from '../Math/index'
 import { Camera, GeomItem, TreeItem } from '../SceneTree/index'
 import { GLBaseViewport } from './GLBaseViewport'
 import { GLFbo } from './GLFbo'
@@ -289,6 +289,20 @@ class GLViewport extends GLBaseViewport {
       // wait till the window is resized and try again.
       this.once('resized', () => this.frameView())
     }
+  }
+
+  /**
+   * Compute the screen space position of an item from a world space coordinate.
+   * @param screenPos - The screen position.
+   * @return - The return value.
+   */
+  calcScreenPosFromWorldPos(worldPos: Vec3): Vec2 {
+    const viewProjMatrix = this.__projectionMatrix.multiply(this.__viewMat)
+    const projSpacePos = viewProjMatrix.transformVec4(new Vec4(worldPos.x, worldPos.y, worldPos.z, 1))
+    // perspective divide
+    projSpacePos.x /= projSpacePos.w
+    projSpacePos.y /= projSpacePos.w
+    return new Vec2((projSpacePos.x * 0.5 + 0.5) * this.__width, (projSpacePos.y * -0.5 + 0.5) * this.__height)
   }
 
   /**
