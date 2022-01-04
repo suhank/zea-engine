@@ -47,3 +47,5 @@ export * from './ObjAsset'
 
 export * from './Operators/index'
 export * from './Manipulators/index'
+
+export * from './CAD/index'
