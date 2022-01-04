@@ -66,9 +66,10 @@ interface OngoingTouch {
  * This behavior can be configured using the 2 values.
  * e.g. to disable all focus gestures, set both values to zero.
  * ```
+ * // Make the aim focus occur after a single touch or click.
  * const cameraManipulator = renderer.getViewport().getManipulator()
- * cameraManipulator.aimFocusOnTouchTap = 0
- * cameraManipulator.aimFocusOnMouseClick = 0
+ * cameraManipulator.aimFocusOnTouchTap = 1
+ * cameraManipulator.aimFocusOnMouseClick = 1
  * ```
  *
  * **Parameters**
@@ -162,7 +163,7 @@ class CameraManipulator extends BaseTool {
     this.__pointerDown = false
     this.__dragging = 0
 
-    this.aimFocusOnTouchTap = 1
+    this.aimFocusOnTouchTap = 2
     this.aimFocusOnMouseClick = 2
     this.enabledWASDWalkMode = false
     this.__keyboardMovement = false
