@@ -3,6 +3,7 @@
 import { Xfo } from '../Math/index';
 import { TreeItem } from './TreeItem';
 import { Registry } from '../Registry';
+import { CloneContext } from './CloneContext';
 /**
  * TreeItem type of class designed for making duplications of parts of the tree.
  *
@@ -23,9 +24,10 @@ class InstanceItem extends TreeItem {
      *
      * @param treeItem - The treeItem value.
      */
-    setSrcTree(treeItem, context) {
+    setSrcTree(treeItem) {
         this.srcTree = treeItem;
-        const clonedTree = this.srcTree.clone(context);
+        const clonedContext = new CloneContext();
+        const clonedTree = this.srcTree.clone(clonedContext);
         clonedTree.localXfoParam.value = new Xfo();
         this.addChild(clonedTree, false);
     }
@@ -52,7 +54,7 @@ class InstanceItem extends TreeItem {
         if (this.srcTreePath.length > 0) {
             try {
                 context.resolvePath(this.srcTreePath, (treeItem) => {
-                    this.setSrcTree(treeItem, context);
+                    this.setSrcTree(treeItem);
                 }, (error) => {
                     console.warn(`Error loading InstanceItem: ${this.getPath()}, unable to resolve: ${this.srcTreePath}. ` + error.message);
                 });
@@ -108,7 +110,7 @@ class InstanceItem extends TreeItem {
             src.once('childAdded', (event) => {
                 const childAddedEvent = event;
                 const childItem = childAddedEvent.childItem;
-                this.setSrcTree(childItem, context);
+                this.setSrcTree(childItem);
             });
         }
     }

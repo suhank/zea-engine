@@ -3,6 +3,7 @@ import { BaseGroup } from './BaseGroup';
 import { TreeItem } from '../TreeItem';
 import { CuttingPlaneOperator } from '../Operators/CuttingPlaneOperator';
 import { BaseItem } from '../BaseItem';
+import { CloneContext } from '../CloneContext';
 /**
  * Groups are a special type of `BaseGroup` that allows you to gather/classify/organize/modify
  * multiple items contained within the group. Items can be added to the group directly, or using
@@ -54,6 +55,6 @@ declare class CuttingPlane extends BaseGroup {
      * @param context - The context value.
      * @return - Returns a new cloned group.
      */
-    clone(context: Record<string, any>): CuttingPlane;
+    clone(context: CloneContext): CuttingPlane;
 }
 export { CuttingPlane };

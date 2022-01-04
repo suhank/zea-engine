@@ -2,6 +2,7 @@ import { ParameterOwner } from './ParameterOwner';
 import { Owner } from './Owner';
 import { BinReader } from './BinReader';
 import { Parameter } from './Parameters/Parameter';
+import { CloneContext } from './CloneContext';
 import { AssetLoadContext } from './AssetLoadContext';
 /**
  * Base class for Items in the scene. It can be parameterized and can emit events.
@@ -159,7 +160,7 @@ declare class BaseItem extends ParameterOwner implements Owner {
      * **Note:** Each class should implement clone to be clonable.
      * @param context - The context value.
      */
-    clone(context?: Record<string, any>): BaseItem;
+    clone(context?: CloneContext): BaseItem;
     /**
      * When a BaseItem is cloned, initially the constructor is
      * called to generate a new instance. This instance then copies
@@ -172,6 +173,6 @@ declare class BaseItem extends ParameterOwner implements Owner {
      * @param src - The BaseItem to copy from.
      * @param context - The context value
      */
-    copyFrom(src: BaseItem, context?: Record<string, any>): void;
+    copyFrom(src: BaseItem, context?: CloneContext): void;
 }
 export { BaseItem };

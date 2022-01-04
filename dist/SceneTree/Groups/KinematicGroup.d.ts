@@ -2,6 +2,7 @@ import { XfoParameter, MultiChoiceParameter } from '../Parameters/index';
 import { BaseGroup } from './BaseGroup';
 import { TreeItem } from '../TreeItem';
 import { GroupTransformXfoOperator, GroupMemberXfoOperator } from '../Operators/GroupMemberXfoOperator';
+import { CloneContext } from '../CloneContext';
 /**
  * The KinematicGroup is used to control the transform of a collection of objects int eh scene.
  * Objects can be added to a kinematic group and then the group can be transformed, causing each
@@ -117,6 +118,6 @@ declare class KinematicGroup extends BaseGroup {
      * @param context - The context value.
      * @return - Returns a new cloned group.
      */
-    clone(context: Record<string, unknown>): KinematicGroup;
+    clone(context: CloneContext): KinematicGroup;
 }
 export { KinematicGroup };

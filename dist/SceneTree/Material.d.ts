@@ -1,6 +1,7 @@
 import { BaseItem } from './BaseItem';
 import { BinReader } from './BinReader';
 import { GLShader } from '../Renderer';
+import { CloneContext } from './CloneContext';
 import { AssetLoadContext } from '..';
 /**
  * Represents a type of `BaseItem` class that holds material configuration.
@@ -99,13 +100,13 @@ declare class Material extends BaseItem {
      * @param context - The context value.
      * @return - Returns a new cloned material.
      */
-    clone(context?: Record<string, any>): Material;
+    clone(context?: CloneContext): Material;
     /**
      * When a Material is copied, first runs `BaseItem` copyFrom method, then sets shader.
      *
      * @param src - The material to copy from.
      * @param context - The context value.
      */
-    copyFrom(src: Material, context?: Record<string, any>): void;
+    copyFrom(src: Material, context?: CloneContext): void;
 }
 export { Material };

@@ -1,5 +1,6 @@
 import { TreeItem } from './TreeItem';
 import { BinReader } from './BinReader';
+import { CloneContext } from './CloneContext';
 import { AssetLoadContext } from './AssetLoadContext';
 /**
  * TreeItem type of class designed for making duplications of parts of the tree.
@@ -19,7 +20,7 @@ declare class InstanceItem extends TreeItem {
      *
      * @param treeItem - The treeItem value.
      */
-    setSrcTree(treeItem: TreeItem, context: Record<string, any>): void;
+    setSrcTree(treeItem: TreeItem): void;
     /**
      * Returns the last `TreeItem` cloned.
      *
@@ -56,13 +57,13 @@ declare class InstanceItem extends TreeItem {
      * @param context - The context value.
      * @return - Returns a new cloned geom item.
      */
-    clone(context?: Record<string, any>): InstanceItem;
+    clone(context?: CloneContext): InstanceItem;
     /**
      * Copies current TreeItem with all its children.
      *
      * @param src - The tree item to copy from.
      * @param context - The context value.
      */
-    copyFrom(src: TreeItem, context?: Record<string, any>): void;
+    copyFrom(src: TreeItem, context?: CloneContext): void;
 }
 export { InstanceItem };

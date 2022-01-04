@@ -1,5 +1,6 @@
 import { TreeItem } from '../../SceneTree/TreeItem';
 import { Parameter } from './Parameter';
+import { CloneContext } from '../CloneContext';
 /**
  * Represents a specific type of parameter, that only stores `TreeItem` values.
  *
@@ -78,6 +79,6 @@ declare class TreeItemParameter extends Parameter<TreeItem | undefined> {
      *
      * @return - Returns a new tree item parameter.
      */
-    clone(context?: Record<string, unknown>): TreeItemParameter;
+    clone(context?: CloneContext): TreeItemParameter;
 }
 export { TreeItemParameter };

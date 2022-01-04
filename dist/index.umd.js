@@ -8374,11 +8374,13 @@
   }
 
   class XRControllerEvent extends ZeaPointerEvent {
-      constructor(viewport, controller, button) {
+      constructor(viewport, controller, button, buttonPressed) {
           super(POINTER_TYPES.xr);
+          this.buttonPressed = 0;
           this.viewport = viewport;
           this.controller = controller;
           this.button = button;
+          this.buttonPressed = buttonPressed;
       }
       stopPropagation() {
           this.propagating = false;
@@ -21745,6 +21747,23 @@
   }
   Registry.register('StandardSurfaceMaterial', StandardSurfaceMaterial);
 
+  /**
+   * Provides a context for loading assets. This context can provide the units of the loading scene.
+   * E.g. you can specify the scene units as 'millimeters' in the context object.
+   * To load external references, you can also provide a dictionary that maps filenames to URLs that are used
+   * to resolve the URL of an external reference that a given asset is expecting to find.
+   */
+  class CloneContext extends EventEmitter {
+      /**
+       * Create a AssetLoadContext
+       * @param context The source context to base this context on.
+       */
+      constructor() {
+          super();
+          this.assetItem = null;
+      }
+  }
+
   /* eslint-disable no-unused-vars */
   /**
    * TreeItem type of class designed for making duplications of parts of the tree.
@@ -21766,9 +21785,10 @@
        *
        * @param treeItem - The treeItem value.
        */
-      setSrcTree(treeItem, context) {
+      setSrcTree(treeItem) {
           this.srcTree = treeItem;
-          const clonedTree = this.srcTree.clone(context);
+          const clonedContext = new CloneContext();
+          const clonedTree = this.srcTree.clone(clonedContext);
           clonedTree.localXfoParam.value = new Xfo();
           this.addChild(clonedTree, false);
       }
@@ -21795,7 +21815,7 @@
           if (this.srcTreePath.length > 0) {
               try {
                   context.resolvePath(this.srcTreePath, (treeItem) => {
-                      this.setSrcTree(treeItem, context);
+                      this.setSrcTree(treeItem);
                   }, (error) => {
                       console.warn(`Error loading InstanceItem: ${this.getPath()}, unable to resolve: ${this.srcTreePath}. ` + error.message);
                   });
@@ -21851,7 +21871,7 @@
               src.once('childAdded', (event) => {
                   const childAddedEvent = event;
                   const childItem = childAddedEvent.childItem;
-                  this.setSrcTree(childItem, context);
+                  this.setSrcTree(childItem);
               });
           }
       }
@@ -23822,6 +23842,7 @@
    * **Events**
    * * **projectionParamChanged:** When on of the parameters above change, the camera emits this event. Note: the Viewport listens to this event and triggers re-rendering.
    * * **movementFinished:** Triggered at the conclusion of some action. E.g. when a zoom action is finished, or when the mouse is released after an orbit action. The viewport listens to this event and triggers a re-rendering of the selection buffers.
+   *
    * @extends TreeItem
    */
   class Camera extends TreeItem {
@@ -26987,6 +27008,817 @@
        */
       static get MANIPULATION_MODES() {
           return MANIPULATION_MODES;
+      }
+  }
+
+  /* eslint-disable no-unused-vars */
+  /**
+   * Class representing a CAD asset.
+   *
+   * **Events**
+   * * **loaded:** Triggered when the  asset is loaded
+   * @extends AssetItem
+   */
+  class CADAsset extends AssetItem {
+      /**
+       * Create a CAD asset.
+       * @param {string} name - The name value.
+       */
+      constructor(name) {
+          super(name);
+          this.cadfileVersion = new Version('0,0,0');
+      }
+      /**
+       * The clone method constructs a new XRef, copies its values
+       * from this item and returns it.
+       *
+       * @param {number} flags - The flags param.
+       * @return {XRef} - The return value.
+       */
+      clone(context) {
+          const cloned = new CADAsset();
+          cloned.copyFrom(this, context);
+          return cloned;
+      }
+      // ////////////////////////////////////////
+      // Persistence
+      /**
+       * Returns the versioon of the data loaded by thie CADAsset.
+       *
+       * @return {string} - The return value.
+       */
+      getVersion() {
+          return this.cadfileVersion;
+      }
+      /**
+       * Initializes CADAsset's asset, material, version and layers; adding current `CADAsset` Geometry Item toall the layers in reader
+       *
+       * @param {BinReader} reader - The reader param.
+       * @param {AssetLoadContext} context - The load context object that provides additional data such as the units of the scene we are loading into.
+       */
+      readRootLevelBinary(reader, context) {
+          this.numCADBodyItems = 0;
+          context.versions['zea-cad'] = new Version(reader.loadStr());
+          // @ts-ignore
+          context.sdk = reader.loadStr();
+          this.cadfileVersion = context.versions['zea-cad'];
+          // console.log('Loading CAD File version:', this.cadfileVersion, ' exported using SDK:', context.cadSDK)
+          super.readBinary(reader, context);
+      }
+      /**
+       * Loads all the geometries and metadata from the asset file.
+       * @param {string} url - The URL of the asset to load
+       * @param {AssetLoadContext} context - The load context object that provides additional data such as paths to external references.
+       * @return {Promise} - Returns a promise that resolves once the load of the tree is complete. Geometries, textures and other resources might still be loading.
+       */
+      load(url, context = new AssetLoadContext()) {
+          if (this.__loadPromise)
+              return this.__loadPromise;
+          this.__loadPromise = new Promise((resolve, reject) => {
+              const folder = url.lastIndexOf('/') > -1 ? url.substring(0, url.lastIndexOf('/')) + '/' : '';
+              const filename = url.lastIndexOf('/') > -1 ? url.substring(url.lastIndexOf('/') + 1) : '';
+              const stem = filename.substring(0, filename.lastIndexOf('.'));
+              this.url = url;
+              // These values are used by XRef to generate URLS.
+              context.assetItem = this;
+              context.url = url;
+              context.folder = folder;
+              // TODO: resources not accessible
+              // @ts-ignore
+              if (!context.resources)
+                  context.resources = {};
+              // TODO: xrefs doesn't exist on context
+              // @ts-ignore
+              context.xrefs = {};
+              context.on('done', () => {
+                  this.loaded = true;
+                  // @ts-ignore
+                  resolve();
+                  this.emit('loaded');
+              });
+              context.incrementAsync();
+              // Increment the resource loader counter to provided an update to the progress bar.
+              // preload in case we don't have embedded geoms.
+              // completed by geomLibrary.on('loaded' ..
+              resourceLoader.incrementWorkload(1);
+              this.geomLibrary.once('loaded', () => {
+                  // A chunk of geoms are now parsed, so update the resource loader.
+                  resourceLoader.incrementWorkDone(1);
+              });
+              resourceLoader.loadFile('archive', url).then((entries) => {
+                  // const desc = entries['desc.json']
+                  //   ? JSON.parse(new TextDecoder('utf-8').decode(entries['desc.json']))
+                  //   : { numGeomFiles: 0 }
+                  const treeReader = new BinReader((entries.tree2 || entries.tree).buffer, 0, SystemDesc.isMobileDevice);
+                  const name = this.getName();
+                  this.readRootLevelBinary(treeReader, context);
+                  // Maintain the name provided by the user before loading.
+                  if (name != '')
+                      this.setName(name);
+                  context.versions['zea-cad'] = this.getVersion();
+                  context.versions['zea-engine'] = this.getEngineDataVersion();
+                  if (entries.geoms) {
+                      this.geomLibrary.readBinaryBuffer(filename, entries.geoms.buffer, context);
+                  }
+                  else if (entries['geomLibrary.json']) {
+                      entries['desc.json'];
+                      const geomLibraryJSON = JSON.parse(new TextDecoder('utf-8').decode(entries['geomLibrary.json']));
+                      const basePath = folder + stem;
+                      this.geomLibrary.loadGeomFilesStream(geomLibraryJSON, basePath, context);
+                  }
+                  else {
+                      // No geoms in this file, so we won't wait for the 'done' event in the GeomLibrary.
+                      resourceLoader.incrementWorkDone(1);
+                  }
+                  // console.log(this.__name, " NumBaseItems:", this.getNumBaseItems(), " NumCADBodyItems:", this.numCADBodyItems)
+                  context.decrementAsync();
+              }, (error) => {
+                  resourceLoader.incrementWorkDone(1);
+                  this.emit('error', error);
+                  reject(error);
+              });
+          });
+          return this.__loadPromise;
+      }
+      // ////////////////////////////////////////
+      // Persistence
+      /**
+       * The toJSON method encodes this type as a json object for persistences.
+       *
+       * @param {object} context - The context param.
+       * @param {number} flags - The flags param.
+       * @return {object} - The return value.
+       */
+      toJSON(context) {
+          const j = super.toJSON(context);
+          return j;
+      }
+      /**
+       * The fromJSON method decodes a json object for this type.
+       *
+       * @param {object} j - The json object this item must decode.
+       * @param {object} context - The context param.
+       * @param {callback} onDone - The onDone param.
+       */
+      // TODO: can't pass in onDone
+      fromJSON(j, context) {
+          const loadAssetJSON = () => {
+              //const flags = TreeItem.LoadFlags.LOAD_FLAG_LOADING_BIN_TREE_VALUES
+              super.fromJSON(j, context); //, flags, onDone
+              context.decAsyncCount();
+              // If the asset is nested within a bigger asset, then
+              // this subtree can noow be flagged as loded(and added to the renderer);
+              if (!this.loaded) {
+                  this.emit('loaded');
+                  this.loaded = true;
+              }
+          };
+          if (j.params && j.params.DataFilePath) {
+              this.__datafileLoaded = loadAssetJSON;
+              context.incAsyncCount();
+              const filePathJSON = j.params.DataFilePath;
+              delete j.params.DataFilePath;
+              this.__datafileParam.fromJSON(filePathJSON, context);
+          }
+          else {
+              loadAssetJSON();
+          }
+      }
+  }
+  Registry.register('CADAsset', CADAsset);
+
+  // import { TreeItem, Registry } from '@zeainc/zea-engine'
+  /**
+   * Represents a Tree Item of an Assembly modeling. Brings together components to define a larger product.
+   *
+   * @extends TreeItem
+   */
+  class CADAssembly extends TreeItem {
+      /**
+       * Create a CAD assembly.
+       *
+       * @param {string} name - The name of the tree item.
+       */
+      constructor(name) {
+          super(name);
+      }
+      /**
+       * The clone method constructs a new CADAssembly item, copies its values
+       * from this item and returns it.
+       *
+       * @param {number} flags - The flags param.
+       * @return {CADAssembly} - The return value.
+       */
+      clone(context) {
+          const cloned = new CADAssembly();
+          cloned.copyFrom(this, context);
+          return cloned;
+      }
+      // ////////////////////////////////////////
+      // Persistence
+      /**
+       * The toJSON method encodes this type as a json object for persistences.
+       *
+       * @param {object} context - The context param.
+       * @param {number} flags - The flags param.
+       * @return {object} - Returns the json object.
+       */
+      toJSON(context) {
+          const j = super.toJSON(context);
+          return j;
+      }
+      /**
+       * The fromJSON method decodes a json object for this type.
+       *
+       * @param {object} j - The json object this item must decode.
+       * @param {object} context - The context param.
+       * @param {number} flags - The flags param.
+       */
+      fromJSON(j, context) {
+          super.fromJSON(j, context);
+      }
+  }
+  Registry.register('CADAssembly', CADAssembly);
+
+  // import { TreeItem, Registry, BinReader, AssetLoadContext } from '@zeainc/zea-engine'
+  /**
+   * Represents a Part within a CAD assembly.
+   *
+   * @extends TreeItem
+   */
+  class CADPart extends TreeItem {
+      /**
+       * Creates an instance of CADPart setting up the initial configuration for Material and Color parameters.
+       *
+       * @param {string} name - The name value.
+       */
+      constructor(name) {
+          super(name);
+      }
+      /**
+       * The clone method constructs a new CADPart, copies its values
+       * from this item and returns it.
+       *
+       * @param {number} flags - The flags param.
+       * @return {CADPart} - The return value.
+       */
+      clone(context) {
+          const cloned = new CADPart();
+          cloned.copyFrom(this, context);
+          return cloned;
+      }
+      /**
+       * The copyFrom method.
+       * @param {CADPart} src - The src param.
+       * @param {number} flags - The flags param.
+       * @private
+       */
+      copyFrom(src, context) {
+          super.copyFrom(src, context);
+      }
+      // ///////////////////////////
+      // Persistence
+      /**
+       * Initializes CADPart's asset, material, version and layers; adding current `CADPart` Geometry Item toall the layers in reader
+       *
+       * @param {BinReader} reader - The reader param.
+       * @param {object} context - The context param.
+       */
+      readBinary(reader, context) {
+          super.readBinary(reader, context);
+      }
+      /**
+       * The toJSON method encodes this type as a json object for persistences.
+       *
+       * @param {number} flags - The flags param.
+       * @return {object} - The return value.
+       */
+      toJSON(context) {
+          const j = super.toJSON(context);
+          return j;
+      }
+      /**
+       * The fromJSON method decodes a json object for this type.
+       *
+       * @param {object} j - The j param.
+       * @param {number} flags - The flags param.
+       */
+      fromJSON(j) {
+          super.fromJSON(j);
+      }
+  }
+  Registry.register('CADPart', CADPart);
+
+  // import { Color, BaseGeomItem, Material, Registry, BinReader, AssetLoadContext } from '@zeainc/zea-engine'
+  /**
+   * Represents a Body within a CAD Part. A Body is made up of either a single mesh or a collection of meshes, one for each surface.
+   * When a zcad file is produced, the tool can  optimize bodies to contain only one mesh to speed up loading of large models, and support bigger models being loaded.
+   *
+   * **Parameters**
+   * * **Material(`MaterialParameter`):** Specifies the material of the geometry item.
+   * * **Color(`ColorParameter`):** Specifies the color of the geometry item.
+   *
+   * @extends BaseGeomItem
+   */
+  class CADBody extends BaseGeomItem {
+      /**
+       * Creates an instance of CADBody setting up the initial configuration for Material and Color parameters.
+       *
+       * @param {string} name - The name value.
+       * @param {CADAsset} cadAsset - The cadAsset value.
+       */
+      constructor(name, cadAsset) {
+          super(name);
+          this.__cadAsset = cadAsset; // Note: used in testing scenes.
+      }
+      /**
+       * Returns the `CADAsset` object in current `CADBody`
+       *
+       * @return {CADAsset} - The return value.
+       */
+      getCADAsset() {
+          return this.__cadAsset;
+      }
+      /**
+       * The clone method constructs a new CADBody, copies its values
+       * from this item and returns it.
+       *
+       * @param {object} context - The context value.
+       * @return {CADBody} - The return value.
+       */
+      clone(context) {
+          const cloned = new CADBody();
+          cloned.copyFrom(this, context);
+          return cloned;
+      }
+      /**
+       * The copyFrom method.
+       * @param {CADBody} src - The src param.
+       * @param {object} context - The context value.
+       * @private
+       */
+      copyFrom(src, context) {
+          super.copyFrom(src, context);
+          this.__cadAsset = src.getCADAsset();
+      }
+      // ///////////////////////////
+      // Persistence
+      /**
+       * Initializes CADBody's asset, material, version and layers; adding current `CADBody` Geometry Item toall the layers in reader
+       *
+       * @param reader - The reader param.
+       * @param context - The context param.
+       */
+      readBinary(reader, context) {
+          super.readBinary(reader, context);
+          // Cache only in debug mode.
+          this.__cadAsset = context.assetItem;
+          // Note: the bodyDescId is now deprecated as it is part of the parametric surface evaluation code.
+          // The BinReader must read the value to continue loading others.
+          /* const bodyDescId = */ reader.loadSInt32();
+          if (context.versions['zea-cad'].compare([0, 0, 4]) < 0) {
+              const materialName = reader.loadStr();
+              // const materialName = 'Mat' + this.__bodyDescId;
+              const materialLibrary = context.assetItem.getMaterialLibrary();
+              let material = materialLibrary.getMaterial(materialName, false);
+              if (!material) {
+                  // console.warn("Body :'" + this.name + "' Material not found:" + materialName);
+                  // material = materialLibrary.getMaterial('DefaultMaterial');
+                  material = new Material(materialName, 'SimpleSurfaceShader');
+                  material.getParameter('BaseColor').setValue(Color.random(0.25));
+                  context.assetItem.getMaterialLibrary().addMaterial(material);
+              }
+              this.materialParam.setValue(material);
+          }
+          if (context.versions['zea-cad'].compare([0, 0, 2]) >= 0 && context.versions['zea-cad'].compare([0, 0, 4]) < 0) {
+              this.__layers = reader.loadStrArray();
+              // console.log("Layers:", this.__layers)
+              // Note: addGeomToLayer should take a 'BaseGeomItem'
+              // @ts-ignore
+              for (const layer of this.__layers)
+                  context.addGeomToLayer(this, layer);
+          }
+      }
+      /**
+       * The toJSON method encodes this type as a json object for persistences.
+       *
+       * @param {number} flags - The flags param.
+       * @return {object} - The return value.
+       */
+      toJSON(context) {
+          const j = super.toJSON();
+          return j;
+      }
+      /**
+       * The fromJSON method decodes a json object for this type.
+       *
+       * @param {object} j - The j param.
+       * @param {number} flags - The flags param.
+       */
+      fromJSON(j) {
+          super.fromJSON(j);
+      }
+  }
+  Registry.register('CADBody', CADBody);
+
+  Registry.register('Property_Vec3_32f', Vec3Parameter);
+  /**
+   * Represents a view of PMI data. within a CAD assembly.
+   *
+   * @extends TreeItem
+   */
+  class PMIItem extends TreeItem {
+      /**
+       * Creates an instance of PMIItem setting up the initial configuration for Material and Color parameters.
+       *
+       * @param {string} name - The name value.
+       */
+      constructor(name) {
+          super(name);
+      }
+      /**
+       * The clone method constructs a new PMIItem, copies its values
+       * from this item and returns it.
+       *
+       * @param {number} flags - The flags param.
+       * @return {PMIItem} - The return value.
+       */
+      clone(context) {
+          const cloned = new PMIItem();
+          cloned.copyFrom(this, context);
+          return cloned;
+      }
+      /**
+       * Changes the current state of the selection of this item.
+       * Note: the PMIItem also activates the PMI linking when selected.
+       *
+       * @emits `selectedChanged` with selected state
+       * @param sel - Boolean indicating the new selection state.
+       */
+      setSelected(sel) {
+          super.setSelected(sel);
+          if (sel)
+              this.activate();
+          else
+              this.deactivate();
+      }
+      /**
+       * Activates the PMIView, adjusting visibility of the PMI items and the camera Xfo
+       */
+      activate() { }
+      /**
+       * Deactivates the PMIItem
+       */
+      deactivate() { }
+      /**
+       * Adds a highlight to the tree item.
+       *
+       * @param {string} name - The name of the tree item.
+       * @param {Color} color - The color of the highlight.
+       * @param {boolean} propagateToChildren - A boolean indicating whether to propagate to children.
+       */
+      addHighlight(name, color, propagateToChildren = false) {
+          super.addHighlight(name, color, propagateToChildren);
+          const pmiContainer = this.getOwner().getOwner(); // TODO: check
+          const pmiOwner = pmiContainer.getOwner();
+          if (pmiOwner) {
+              const linkedEntitiesParam = this.getParameter('LinkedEntities');
+              if (linkedEntitiesParam) {
+                  const linkedEntityPaths = linkedEntitiesParam.getValue();
+                  linkedEntityPaths.forEach((pathStr) => {
+                      const path = pathStr.split(', ');
+                      try {
+                          const linkedEntity = pmiOwner.resolvePath(path);
+                          if (linkedEntity) {
+                              linkedEntity.addHighlight(name, color, true);
+                          }
+                          else {
+                              console.log('linkedEntity.addHighlight(name, color, true):failed');
+                          }
+                      }
+                      catch (e) {
+                          console.log(e.message);
+                      }
+                  });
+              }
+          }
+      }
+      /**
+       * Removes a highlight to the tree item.
+       *
+       * @param {string} name - The name of the tree item.
+       * @param {boolean} propagateToChildren - A boolean indicating whether to propagate to children.
+       */
+      removeHighlight(name, propagateToChildren = false) {
+          super.removeHighlight(name, propagateToChildren);
+          const pmiContainer = this.getOwner().getOwner();
+          const pmiOwner = pmiContainer.getOwner();
+          if (pmiOwner) {
+              const linkedEntitiesParam = this.getParameter('LinkedEntities');
+              if (linkedEntitiesParam) {
+                  const linkedEntityPaths = linkedEntitiesParam.getValue();
+                  linkedEntityPaths.forEach((pathStr) => {
+                      const path = pathStr.split(', ');
+                      try {
+                          const linkedEntity = pmiOwner.resolvePath(path);
+                          if (linkedEntity) {
+                              linkedEntity.removeHighlight(name, true);
+                          }
+                      }
+                      catch (e) { }
+                  });
+              }
+          }
+      }
+  }
+  Registry.register('PMIItem', PMIItem);
+
+  /**
+   * Represents a view of PMI data. within a CAD assembly.
+   *
+   * @extends PMIItem
+   */
+  class PMIView extends PMIItem {
+      /**
+       * Creates an instance of PMIView setting up the initial configuration for Material and Color parameters.
+       *
+       * @param {string} name - The name value.
+       */
+      constructor(name) {
+          super(name);
+          this.camera = null;
+      }
+      /**
+       * The clone method constructs a new PMIView, copies its values
+       * from this item and returns it.
+       *
+       * @param context - The clone context.
+       * @return - The return value.
+       */
+      clone(context) {
+          const cloned = new PMIView();
+          cloned.copyFrom(this, context);
+          return cloned;
+      }
+      /**
+       * Changes the current state of the selection of this item.
+       * Note: the PMIView also ajusts the camera when activated.
+       * The camera should have been provided in the AssetLoadContext when the CADAsset was loaded.
+       * ```
+       * const asset = new CADAsset()
+       * const context = new AssetLoadContext()
+       * context.camera = renderer.getViewport().getCamera()
+       * asset.load(zcad, context).then(() => {
+       *   console.log("Done")
+       * })
+       * ```
+       *
+       * @emits `selectedChanged` with selected state
+       * @param sel - Boolean indicating the new selection state.
+       */
+      setSelected(sel) {
+          super.setSelected(sel);
+          if (sel)
+              this.activate();
+          else
+              this.deactivate();
+      }
+      /**
+       * Activates the PMIView, adjusting visibility of the PMI items and the camera Xfo
+       */
+      activate() {
+          super.activate();
+          if (this.hasParameter('GraphicalElements')) {
+              const pmiContainer = this.getOwner().getOwner();
+              const pmiOwner = pmiContainer.getOwner();
+              if (pmiOwner) {
+                  const pmiItems = [];
+                  pmiContainer.traverse((item) => {
+                      if (item instanceof PMIView)
+                          return;
+                      if (item instanceof PMIItem)
+                          pmiItems.push(item);
+                  });
+                  const graphicalItems = this.getParameter('GraphicalElements').getValue();
+                  pmiItems.forEach((pmiItem) => {
+                      const visible = graphicalItems.includes(pmiItem.getName());
+                      pmiItem.setVisible(visible);
+                  });
+              }
+          }
+          if (this.camera) {
+              const cameraXfo = this.getParameter('GlobalXfo').getValue().clone();
+              const TargetPoint = this.getParameter('TargetPoint').getValue();
+              const CameraType = this.getParameter('CameraType').getValue();
+              if (CameraType == 'Camera_Orthographic') {
+                  this.camera.setIsOrthographic(1);
+              }
+              // const UpDirection = this.getParameter('UpDirection').getValue()
+              TargetPoint.scaleInPlace(cameraXfo.sc.z);
+              const dist = cameraXfo.tr.distanceTo(TargetPoint); // * cameraXfo.sc.z
+              cameraXfo.sc.set(1.0, 1.0, 1.0);
+              this.camera.getParameter('GlobalXfo').setValue(cameraXfo);
+              this.camera.setFocalDistance(dist);
+          }
+      }
+      /**
+       * Deactivates the PMIItem
+       */
+      deactivate() {
+          super.deactivate();
+          if (this.hasParameter('GraphicalElements')) {
+              const pmiContainer = this.getOwner().getOwner();
+              const pmiOwner = pmiContainer.getOwner();
+              if (pmiOwner) {
+                  const pmiItems = [];
+                  pmiContainer.traverse((item) => {
+                      if (item instanceof PMIView)
+                          return;
+                      if (item instanceof PMIItem)
+                          pmiItems.push(item);
+                  });
+                  pmiItems.forEach((pmiItem) => {
+                      pmiItem.setVisible(true);
+                  });
+              }
+          }
+          if (this.camera) {
+              this.camera.setIsOrthographic(0);
+          }
+      }
+      // ///////////////////////////
+      // Persistence
+      /**
+       * Load the binary data for this class
+       * @param reader - The reader param.
+       * @param context - The context param.
+       */
+      readBinary(reader, context) {
+          super.readBinary(reader, context);
+          // @ts-ignore
+          if (context.camera) {
+              // @ts-ignore
+              this.camera = context.camera;
+          }
+      }
+  }
+  Registry.register('PMIView', PMIView);
+
+  // import { Registry, AssetLoadContext, Xfo, AssetItem, BinReader } 
+  /**
+   * Represents a view of PMI data. within a CAD assembly.
+   *
+   * @extends TreeItem
+   */
+  class XRef extends CADAsset {
+      constructor(name) {
+          super(name);
+      }
+      /**
+       * The clone method constructs a new XRef, copies its values
+       * from this item and returns it.
+       *
+       * @param {number} flags - The flags param.
+       * @return {XRef} - The return value.
+       */
+      clone(context) {
+          const cloned = new XRef();
+          cloned.copyFrom(this, context);
+          return cloned;
+      }
+      /**
+       * Copies data from the source XRef onto this XRef.
+       *
+       * @param {XRef} src - The XRef to copy from.
+       * @param {object} context - The context value.
+       */
+      copyFrom(src, context) {
+          // Note: the XRef has a localXfo that positions it relative
+          // to the parent assembly. We need to avoid losing that values
+          // when cloning all the others.
+          const localXfo = this.localXfoParam.value;
+          super.copyFrom(src, context);
+          this.localXfoParam.loadValue(localXfo);
+      }
+      // ///////////////////////////
+      // Persistence
+      /**
+       * Initializes XRef's asset, material, version and layers; adding current `XRef` Geometry Item toall the layers in reader
+       *
+       * @paramreader - The reader param.
+       * @param context - The load context param.
+       */
+      readBinary(reader, context) {
+          reader.loadStr(); // read type
+          const name = reader.loadStr(); // read name
+          this.setName(name);
+          let relativePath = reader.loadStr();
+          if (context.versions['zea-cad'].compare([3, 6, 2]) > 0) {
+              const xfo = new Xfo();
+              xfo.tr = reader.loadFloat32Vec3();
+              xfo.ori = reader.loadFloat32Quat();
+              this.localXfoParam.loadValue(xfo);
+          }
+          else {
+              // Note: the SpatialBridge now encodes the 'ReferenceName' into the
+              // XRef, while CADEx didn't provide one. Use the name if it is provided.
+              if (name == '')
+                  this.setName(relativePath);
+          }
+          // @ts-ignore will be fixed in #579
+          if (!context.resources[relativePath]) {
+              // Generate a path based on the path of the parent CADAsset.
+              // const stem = relativePath.substring(0, relativePath.lastIndexOf('.'))
+              // context.resources[relativePath] = context.folder + stem + '.zcad'
+              if (relativePath.includes('/')) {
+                  relativePath = relativePath.slice(relativePath.lastIndexOf('/') + 1);
+              }
+              else if (relativePath.includes('\\')) {
+                  relativePath = relativePath.slice(relativePath.lastIndexOf('\\') + 1);
+              }
+              // @ts-ignore will be fixed in #579
+              if (!context.resources[relativePath]) {
+                  // @ts-ignore will be fixed in #579
+                  context.resources[relativePath] = context.folder + relativePath + '.zcad';
+              }
+          }
+          // @ts-ignore will be fixed in #579
+          if (context.resources[relativePath]) {
+              // @ts-ignore will be fixed in #579
+              console.log('resolving XRef:', relativePath, ' > ', context.resources[relativePath]);
+              // @ts-ignore will be fixed in #579
+              const url = context.resources[relativePath];
+              context.incrementAsync();
+              // @ts-ignore will be fixed in #579
+              if (context.assets[relativePath]) {
+                  // @ts-ignore will be fixed in #579
+                  const xref = context.assets[relativePath];
+                  if (!xref.isLoaded()) {
+                      xref.on('loaded', () => {
+                          this.copyFrom(xref);
+                          context.decrementAsync();
+                      });
+                  }
+                  else {
+                      this.copyFrom(xref);
+                      context.decrementAsync();
+                  }
+              }
+              else {
+                  // @ts-ignore will be fixed in #579
+                  context.assets[relativePath] = this;
+                  this.load(url, new AssetLoadContext(context)).then(() => {
+                      context.decrementAsync();
+                  }, () => {
+                      console.log(`While Loading ${this.getPath()} unable to resolve ${relativePath}`);
+                      context.decrementAsync();
+                  });
+              }
+              // }
+          }
+      }
+  }
+  Registry.register('XRef', XRef);
+
+  // import { GLPass, TreeItem } from '@zeainc/zea-engine'
+  /**
+   * Class representing a GL CAD pass.
+   *
+   * **Events**
+   * * **updated**
+   * @extends GLPass
+   */
+  class GLCADPass extends GLPass {
+      /**
+       * Create a GL CAD pass.
+       * @param {boolean} debugMode - If true, then puts the GLCADPass rendering into debug mode.
+       */
+      constructor(debugMode = false) {
+          super();
+          console.warn('GLCADPass is deprecated. No need to install this pass in the renderer.');
+      }
+      /**
+       * The itemAddedToScene method is called on each pass when a new item
+       * is added to the scene, and the renderer must decide how to render it.
+       * It allows Passes to select geometries to handle the drawing of.
+       * @param {TreeItem} treeItem - The treeItem value.
+       * @param {object} rargs - Extra return values are passed back in this object.
+       * The object contains a parameter 'continueInSubTree', which can be set to false,
+       * so the subtree of this node will not be traversed after this node is handled.
+       * @return {Boolean} - The return value.
+       */
+      itemAddedToScene(treeItem, rargs) {
+          return false;
+      }
+      /**
+       * The itemRemovedFromScene method is called on each pass when aa item
+       * is removed to the scene, and the pass must handle cleaning up any resources.
+       * @param {TreeItem} treeItem - The treeItem value.
+       * @param {object} rargs - Extra return values are passed back in this object.
+       * @return {Boolean} - The return value.
+       */
+      itemRemovedFromScene(treeItem, rargs) {
+          return false;
       }
   }
 
@@ -31787,6 +32619,19 @@
           }
       }
       /**
+       * Compute the screen space position of an item from a world space coordinate.
+       * @param screenPos - The screen position.
+       * @return - The return value.
+       */
+      calcScreenPosFromWorldPos(worldPos) {
+          const viewProjMatrix = this.__projectionMatrix.multiply(this.__viewMat);
+          const projSpacePos = viewProjMatrix.transformVec4(new Vec4(worldPos.x, worldPos.y, worldPos.z, 1));
+          // perspective divide
+          projSpacePos.x /= projSpacePos.w;
+          projSpacePos.y /= projSpacePos.w;
+          return new Vec2((projSpacePos.x * 0.5 + 0.5) * this.__width, (projSpacePos.y * -0.5 + 0.5) * this.__height);
+      }
+      /**
        * Compute a ray into the scene based on a mouse coordinate.
        * @param screenPos - The screen position.
        * @return - The return value.
@@ -32432,8 +33277,58 @@
   // positions.getValueRef(0).set(0.0, 0.0, 0.0)
   // positions.getValueRef(1).set(0.0, 0.0, -1.0)
   // line.setBoundingBoxDirty()
-  /** Class representing a VR controller. */
-  class XRController {
+  /** Class representing a VR controller.
+   *
+   * The XRController class wraps the XRInputSource provided by the WebXR API.
+   *
+   * https://developer.mozilla.org/en-US/docs/Web/API/XRInputSource
+   *
+   * The XRController provides a tree item that can be used to attach geometries to represenet
+   * the controllers or tools that the user may have in thier hands.
+   * ```javascript
+   * renderer.getXRViewport().then((xrvp) => {
+   *   xrvp.on('controllerAdded', (event) => {
+   *     const controller = event.controller
+   *
+   *     // Configure the distance of the ray cast performed by the controller into the scene.
+   *     // Note: setting to 0 disables ray casting.
+   *     controller.raycastDist = 20.0
+   *
+   *     // Remove the green ball added by the VRViewManipulator.
+   *     controller.tipItem.removeAllChildren()
+   *
+   *     // Add a visual indication of the ray.
+   *     const pointerItem = new GeomItem('PointerRay', line, pointermat)
+   *     pointerItem.setSelectable(false)
+   *     const pointerXfo = new Xfo()
+   *     pointerXfo.sc.set(1, 1, controller.raycastDist)
+   *     pointerItem.localXfoParam.value = pointerXfo
+   *     controller.tipItem.addChild(pointerItem, false)
+   *
+   *     // The tip items needs to be rotated down a little to make it
+   *     // point in the right direction.
+   *     const tipItemXfo = controller.tipItem.localXfoParam.value
+   *     tipItemXfo.ori.setFromAxisAndAngle(new Vec3(1, 0, 0), -0.8)
+   *     controller.tipItem.localXfoParam.value = tipItemXfo
+   *
+   *     controller.on('buttonPressed', (event) => {
+   *       console.log('buttonPressed', event)
+   *     })
+   *     controller.on('buttonReleased', (event) => {
+   *       console.log('buttonReleased', event)
+   *     })
+   *   })
+   * })
+   * ```
+   *
+   * **Events**
+   * * **buttonPressed:** Emitted when the user presses any of the buttons aside from the trigger button.
+   * * **buttonReleased:** Emitted when the user release any of the buttons aside from the trigger button.
+   *
+   *
+   * @extends EventEmitter
+   */
+  class XRController extends EventEmitter {
       /**
        * Create a VR controller.
        * @param xrvp - The Vr viewport.
@@ -32441,9 +33336,11 @@
        * @param id - The id value.
        */
       constructor(xrvp, inputSource, id) {
+          super();
+          this.pressedButtons = [];
           // The frequency of raycasting into the scene for this controller
           this.raycastTick = 5;
-          this.raycastArea = 0.04;
+          this.raycastArea = 0.005;
           this.raycastDist = 0.04;
           this.pointerRay = new Ray();
           this.raycastAreaCache = 0;
@@ -32455,6 +33352,11 @@
           this.inputSource = inputSource;
           this.id = id;
           this.buttonPressed = false;
+          this.inputSource.gamepad.buttons.forEach((button, index) => {
+              if (index == 0)
+                  return;
+              this.pressedButtons[index] = button.pressed;
+          });
           // /////////////////////////////////
           // Xfo
           this.mat4 = new Mat4();
@@ -32642,10 +33544,10 @@
           // /////////////////////////////////
           // Simulate Pointer Enter/Leave Events.
           // Check for pointer over every Nth frame (at 90fps this should be fine.)
-          if (this.raycastTick > 0 && this.tick % this.raycastTick == 0) {
+          if (this.raycastDist > 0.0 && this.raycastTick > 0 && this.tick % this.raycastTick == 0) {
               const intersectionData = this.getGeomItemAtTip();
               if (intersectionData != undefined) {
-                  const event = new XRControllerEvent(this.xrvp, this, this.buttonPressed ? 1 : 0);
+                  const event = new XRControllerEvent(this.xrvp, this, 0, this.buttonPressed ? 1 : 0);
                   event.intersectionData = intersectionData;
                   event.pointerRay = this.pointerRay;
                   if (intersectionData.geomItem != this.pointerOverItem) {
@@ -32665,13 +33567,29 @@
                   intersectionData.geomItem.onPointerMove(event);
               }
               else if (this.pointerOverItem) {
-                  const event = new XRControllerEvent(this.xrvp, this, this.buttonPressed ? 1 : 0);
+                  const event = new XRControllerEvent(this.xrvp, this, 0, this.buttonPressed ? 1 : 0);
                   event.pointerRay = this.pointerRay;
                   event.leftGeometry = this.pointerOverItem;
                   this.pointerOverItem.onPointerLeave(event);
                   this.pointerOverItem = null;
               }
           }
+          this.inputSource.gamepad.buttons.forEach((button, index) => {
+              if (index == 0)
+                  return;
+              if (button.pressed && !this.pressedButtons[index]) {
+                  this.pressedButtons[index] = true;
+                  const event = new XRControllerEvent(this.xrvp, this, index, 1);
+                  event.intersectionData = this.getGeomItemAtTip();
+                  event.pointerRay = this.pointerRay;
+                  this.emit('buttonPressed', event);
+              }
+              else if (!button.pressed && this.pressedButtons[index]) {
+                  this.pressedButtons[index] = false;
+                  const event = new XRControllerEvent(this.xrvp, this, index, 0);
+                  this.emit('buttonReleased', event);
+              }
+          });
           this.tick++;
       }
       // ////////////////////////////////
@@ -32683,20 +33601,21 @@
           if (this.hitTested)
               return this.intersectionData;
           this.hitTested = true;
+          if (this.raycastDist == 0)
+              return null;
           const renderer = this.xrvp.getRenderer();
-          const xfo = this.tipItem.globalXfoParam.value;
+          const xfo = this.tipItem.globalXfoParam.value.clone();
+          xfo.sc.set(1, 1, 1);
           this.pointerRay.start = xfo.tr;
           this.pointerRay.dir = xfo.ori.getZaxis().negate();
-          const dist = this.raycastDist / this.xrvp.stageScale;
-          const area = this.raycastArea / this.xrvp.stageScale;
+          const dist = this.raycastDist * this.xrvp.stageScale;
+          const area = this.raycastArea * this.xrvp.stageScale;
           if (dist != this.raycastDistCache || area != this.raycastAreaCache) {
               this.rayCastRenderTargetProjMatrix.setOrthographicMatrix(area * -0.5, area * 0.5, area * -0.5, area * 0.5, 0.0, dist);
               this.raycastDistCache = dist;
               this.raycastAreaCache = area;
           }
           this.intersectionData = renderer.raycastWithProjection(xfo, this.rayCastRenderTargetProjMatrix, this.pointerRay);
-          if (this.intersectionData)
-              this.intersectionData.dist *= this.xrvp.stageScale;
           return this.intersectionData;
       }
   }
@@ -32780,7 +33699,7 @@
        * @return The return value.
        */
       onVRControllerButtonDown(event) {
-          if (event.button != 1)
+          if (event.button != 0)
               return;
           const index = this.__controllerTriggersHeld.indexOf(event.controller);
           if (index == -1) {
@@ -32795,7 +33714,7 @@
        * @return The return value.
        */
       onVRControllerButtonUp(event) {
-          if (event.button != 1)
+          if (event.button != 0)
               return;
           const index = this.__controllerTriggersHeld.indexOf(event.controller);
           if (index != -1) {
@@ -33167,14 +34086,14 @@
                           const controller = this.controllersMap[ev.inputSource.handedness];
                           if (controller) {
                               controller.buttonPressed = true;
-                              this.onPointerDown(new XRControllerEvent(this, controller, 1));
+                              this.onPointerDown(new XRControllerEvent(this, controller, 0, 1));
                           }
                       };
                       const onSelectEnd = (ev) => {
                           const controller = this.controllersMap[ev.inputSource.handedness];
                           if (controller) {
                               controller.buttonPressed = false;
-                              this.onPointerUp(new XRControllerEvent(this, controller, 1));
+                              this.onPointerUp(new XRControllerEvent(this, controller, 0, 0));
                           }
                       };
                       const createController = (inputSource) => {
@@ -35365,6 +36284,7 @@
           for (const glMaterialGeomItemSet of this.glMaterialGeomItemSets) {
               glMaterialGeomItemSet.drawHighlighted(renderstate);
           }
+          this.glselectedshader.unbind(renderstate);
       }
       /**
        * The drawGeomData method.
@@ -35385,6 +36305,7 @@
           for (const glMaterialGeomItemSet of this.glMaterialGeomItemSets) {
               glMaterialGeomItemSet.drawGeomData(renderstate);
           }
+          this.glgeomdatashader.unbind(renderstate);
       }
   }
 
@@ -41609,6 +42530,10 @@
   exports.BooleanParameter = BooleanParameter;
   exports.Box2 = Box2;
   exports.Box3 = Box3;
+  exports.CADAssembly = CADAssembly;
+  exports.CADAsset = CADAsset;
+  exports.CADBody = CADBody;
+  exports.CADPart = CADPart;
   exports.Camera = Camera;
   exports.CameraManipulator = CameraManipulator;
   exports.ChildAddedEvent = ChildAddedEvent;
@@ -41649,6 +42574,7 @@
   exports.GLBaseViewport = GLBaseViewport;
   exports.GLBillboardsPass = GLBillboardsPass;
   exports.GLBoundingBoxPass = GLBoundingBoxPass;
+  exports.GLCADPass = GLCADPass;
   exports.GLFbo = GLFbo;
   exports.GLGeom = GLGeom;
   exports.GLGeomItem = GLGeomItem;
@@ -41725,6 +42651,8 @@
   exports.Operator = Operator;
   exports.OperatorInput = OperatorInput;
   exports.OperatorOutput = OperatorOutput;
+  exports.PMIItem = PMIItem;
+  exports.PMIView = PMIView;
   exports.POINTER_TYPES = POINTER_TYPES;
   exports.Parameter = Parameter;
   exports.ParameterAddedEvent = ParameterAddedEvent;
@@ -41813,6 +42741,7 @@
   exports.XRPoseEvent = XRPoseEvent;
   exports.XRViewChangedEvent = XRViewChangedEvent;
   exports.XRViewport = XRViewport;
+  exports.XRef = XRef;
   exports.Xfo = Xfo;
   exports.XfoOperatorInput = XfoOperatorInput;
   exports.XfoOperatorOutput = XfoOperatorOutput;

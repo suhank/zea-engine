@@ -9,6 +9,7 @@ import { Parameter } from './Parameters';
 import { ZeaPointerEvent } from '../Utilities/Events/ZeaPointerEvent';
 import { ZeaWheelEvent } from '../Utilities/Events/ZeaWheelEvent';
 import { ZeaTouchEvent } from '../Utilities/Events/ZeaTouchEvent';
+import { CloneContext } from './CloneContext';
 import { AssetLoadContext } from './AssetLoadContext';
 /**
  * Class representing an Item in the scene tree with hierarchy capabilities (has children).
@@ -394,13 +395,13 @@ declare class TreeItem extends BaseItem {
      * @param context - The context value.
      * @return - Returns a new cloned tree item.
      */
-    clone(context?: Record<string, unknown>): TreeItem;
+    clone(context?: CloneContext): TreeItem;
     /**
      * Copies current TreeItem with all its children.
      *
      * @param src - The tree item to copy from.
      * @param context - The context value.
      */
-    copyFrom(src: TreeItem, context?: Record<string, any>): void;
+    copyFrom(src: TreeItem, context?: CloneContext): void;
 }
 export { TreeItem };

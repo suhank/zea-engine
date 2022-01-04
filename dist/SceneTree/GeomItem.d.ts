@@ -7,6 +7,7 @@ import { BaseGeom } from './Geometry';
 import { Material } from './Material';
 import { BinReader } from './BinReader';
 import { AssetItem, AssetLoadContext } from '.';
+import { CloneContext } from './CloneContext';
 /**
  * Class representing a geometry item in a scene tree.
  *
@@ -86,14 +87,14 @@ declare class GeomItem extends BaseGeomItem {
      * @param context - The context value.
      * @return - Returns a new cloned geom item.
      */
-    clone(context?: Record<string, any>): GeomItem;
+    clone(context?: CloneContext): GeomItem;
     /**
      * Copies current GeomItem with all its children.
      *
      * @param src - The geom item to copy from.
      * @param context - The context value.
      */
-    copyFrom(src: GeomItem, context?: Record<string, any>): void;
+    copyFrom(src: GeomItem, context?: CloneContext): void;
     /**
      * Sets the global boolean that controls if GeomItems calculate precise bounding boxes
      * or use the approximate bounding boxes that are much faster to generate.

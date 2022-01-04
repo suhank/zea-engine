@@ -1,6 +1,7 @@
 import { EventEmitter } from '../Utilities/EventEmitter';
 import { BinReader } from './BinReader';
 import { Parameter } from './Parameters/Parameter';
+import { CloneContext } from './CloneContext';
 import { AssetLoadContext } from './AssetLoadContext';
 /**
  * Class that allows other classes to be parameterized by `Parameter` type of objects.
@@ -144,6 +145,6 @@ declare class ParameterOwner extends EventEmitter {
      * @param src - The ParameterOwner copy from.
      * @param context - The context value
      */
-    copyFrom(src: ParameterOwner, context?: Record<string, any>): void;
+    copyFrom(src: ParameterOwner, context?: CloneContext): void;
 }
 export { ParameterOwner };

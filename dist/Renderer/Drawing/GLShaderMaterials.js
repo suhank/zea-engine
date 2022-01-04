@@ -106,6 +106,7 @@ class GLShaderMaterials extends EventEmitter {
         for (const glMaterialGeomItemSet of this.glMaterialGeomItemSets) {
             glMaterialGeomItemSet.drawHighlighted(renderstate);
         }
+        this.glselectedshader.unbind(renderstate);
     }
     /**
      * The drawGeomData method.
@@ -126,6 +127,7 @@ class GLShaderMaterials extends EventEmitter {
         for (const glMaterialGeomItemSet of this.glMaterialGeomItemSets) {
             glMaterialGeomItemSet.drawGeomData(renderstate);
         }
+        this.glgeomdatashader.unbind(renderstate);
     }
 }
 export { GLShaderMaterials };

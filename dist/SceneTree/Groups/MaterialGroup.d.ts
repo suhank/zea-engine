@@ -1,6 +1,7 @@
 import { BaseGroup } from './BaseGroup';
 import { MaterialParameter } from '../Parameters/MaterialParameter';
 import { BaseItem } from '../BaseItem';
+import { CloneContext } from '../CloneContext';
 /**
  *
  * **Parameters**
@@ -67,6 +68,6 @@ declare class MaterialGroup extends BaseGroup {
      * @param context - The context value.
      * @return - Returns a new cloned group.
      */
-    clone(context: Record<string, unknown>): MaterialGroup;
+    clone(context: CloneContext): MaterialGroup;
 }
 export { MaterialGroup };

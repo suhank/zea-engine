@@ -1,5 +1,6 @@
 export * from './RefCounted';
 export * from './ParameterOwner';
+export * from './Owner';
 export * from './BaseItem';
 export * from './Utils';
 export * from './resourceLoader';
@@ -33,3 +34,4 @@ export * from './VLAAsset';
 export * from './ObjAsset';
 export * from './Operators/index';
 export * from './Manipulators/index';
+export * from './CAD/index';

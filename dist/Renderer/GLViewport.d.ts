@@ -1,4 +1,4 @@
-import { Vec2, Ray, Mat4, Xfo } from '../Math/index';
+import { Vec2, Vec3, Ray, Mat4, Xfo } from '../Math/index';
 import { Camera, TreeItem } from '../SceneTree/index';
 import { GLBaseViewport } from './GLBaseViewport';
 import { GLFbo } from './GLFbo';
@@ -136,6 +136,12 @@ declare class GLViewport extends GLBaseViewport {
      * @param treeItems - The array of TreeItem.
      */
     frameView(treeItems?: TreeItem[]): void;
+    /**
+     * Compute the screen space position of an item from a world space coordinate.
+     * @param screenPos - The screen position.
+     * @return - The return value.
+     */
+    calcScreenPosFromWorldPos(worldPos: Vec3): Vec2;
     /**
      * Compute a ray into the scene based on a mouse coordinate.
      * @param screenPos - The screen position.

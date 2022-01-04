@@ -4,6 +4,7 @@ import { GeomLibrary } from './GeomLibrary';
 import { MaterialLibrary } from './MaterialLibrary';
 import { BinReader } from './BinReader';
 import { AssetLoadContext } from './AssetLoadContext';
+import { CloneContext } from './CloneContext';
 /**
  * Represents a TreeItem with rendering and material capabilities.
  *
@@ -83,13 +84,13 @@ declare class AssetItem extends TreeItem {
      * @param context - The context value.
      * @return - Returns a new cloned tree item.
      */
-    clone(context?: Record<string, unknown>): TreeItem;
+    clone(context?: CloneContext): TreeItem;
     /**
      * Copies current TreeItem with all its children.
      *
      * @param src - The tree item to copy from.
      * @param context - The context value.
      */
-    copyFrom(src: AssetItem, context?: Record<string, any>): void;
+    copyFrom(src: AssetItem, context?: CloneContext): void;
 }
 export { AssetItem };

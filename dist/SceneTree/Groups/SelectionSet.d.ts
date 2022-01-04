@@ -1,6 +1,7 @@
 import { BooleanParameter, NumberParameter, ColorParameter } from '../Parameters/index';
 import { BaseGroup } from './BaseGroup';
 import { BaseItem } from '../BaseItem';
+import { CloneContext } from '../CloneContext';
 /**
  *
  * **Parameters**
@@ -72,6 +73,6 @@ declare class SelectionSet extends BaseGroup {
      * @param context - The context value.
      * @return - Returns a new cloned group.
      */
-    clone(context: Record<string, any>): SelectionSet;
+    clone(context: CloneContext): SelectionSet;
 }
 export { SelectionSet };

@@ -1,12 +1,64 @@
 import { Xfo, Ray } from '../../Math/index';
 import { BaseTool, TreeItem } from '../../SceneTree/index';
 import { IntersectionData } from '../../Utilities/IntersectionData';
-/** Class representing a VR controller. */
-declare class XRController {
+import { EventEmitter } from '../..';
+/** Class representing a VR controller.
+ *
+ * The XRController class wraps the XRInputSource provided by the WebXR API.
+ *
+ * https://developer.mozilla.org/en-US/docs/Web/API/XRInputSource
+ *
+ * The XRController provides a tree item that can be used to attach geometries to represenet
+ * the controllers or tools that the user may have in thier hands.
+ * ```javascript
+ * renderer.getXRViewport().then((xrvp) => {
+ *   xrvp.on('controllerAdded', (event) => {
+ *     const controller = event.controller
+ *
+ *     // Configure the distance of the ray cast performed by the controller into the scene.
+ *     // Note: setting to 0 disables ray casting.
+ *     controller.raycastDist = 20.0
+ *
+ *     // Remove the green ball added by the VRViewManipulator.
+ *     controller.tipItem.removeAllChildren()
+ *
+ *     // Add a visual indication of the ray.
+ *     const pointerItem = new GeomItem('PointerRay', line, pointermat)
+ *     pointerItem.setSelectable(false)
+ *     const pointerXfo = new Xfo()
+ *     pointerXfo.sc.set(1, 1, controller.raycastDist)
+ *     pointerItem.localXfoParam.value = pointerXfo
+ *     controller.tipItem.addChild(pointerItem, false)
+ *
+ *     // The tip items needs to be rotated down a little to make it
+ *     // point in the right direction.
+ *     const tipItemXfo = controller.tipItem.localXfoParam.value
+ *     tipItemXfo.ori.setFromAxisAndAngle(new Vec3(1, 0, 0), -0.8)
+ *     controller.tipItem.localXfoParam.value = tipItemXfo
+ *
+ *     controller.on('buttonPressed', (event) => {
+ *       console.log('buttonPressed', event)
+ *     })
+ *     controller.on('buttonReleased', (event) => {
+ *       console.log('buttonReleased', event)
+ *     })
+ *   })
+ * })
+ * ```
+ *
+ * **Events**
+ * * **buttonPressed:** Emitted when the user presses any of the buttons aside from the trigger button.
+ * * **buttonReleased:** Emitted when the user release any of the buttons aside from the trigger button.
+ *
+ *
+ * @extends EventEmitter
+ */
+declare class XRController extends EventEmitter {
     id: number;
     buttonPressed: boolean;
     private xrvp;
     private inputSource;
+    private pressedButtons;
     private mat4;
     private xfo;
     private treeItem;

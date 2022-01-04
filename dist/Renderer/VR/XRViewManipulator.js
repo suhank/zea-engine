@@ -83,7 +83,7 @@ class XRViewManipulator extends BaseTool {
      * @return The return value.
      */
     onVRControllerButtonDown(event) {
-        if (event.button != 1)
+        if (event.button != 0)
             return;
         const index = this.__controllerTriggersHeld.indexOf(event.controller);
         if (index == -1) {
@@ -98,7 +98,7 @@ class XRViewManipulator extends BaseTool {
      * @return The return value.
      */
     onVRControllerButtonUp(event) {
-        if (event.button != 1)
+        if (event.button != 0)
             return;
         const index = this.__controllerTriggersHeld.indexOf(event.controller);
         if (index != -1) {
