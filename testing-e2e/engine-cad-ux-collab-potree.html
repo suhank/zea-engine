@@ -44,7 +44,6 @@
     <script src="https://www.gstatic.com/draco/v1/decoders/draco_decoder_gltf.js"></script> -->
     <script type="module">
       import '../dist/index.umd.js'
-      import '../node_modules/@zeainc/zea-cad/dist/index.umd.js'
       // import '../node_modules/@zeainc/zea-ux/dist/index.umd.js'
       // import '../node_modules/@zeainc/zea-potree/dist/index.umd.js'
 
@@ -68,6 +67,7 @@
         CameraManipulator,
         GLBoundingBoxPass,
         AssetLoadContext,
+        CADAsset, CADBody
       } = zeaEngine
 
       const canvas = document.getElementById('viewport')
@@ -230,7 +230,6 @@
       /** TOOL MANAGER END */
 
       /** LOAD ASSETS START */
-      const { CADAsset, CADBody } = window.zeaCad
 
       const loadZCADAsset = (url, filename) => {
         const asset = new CADAsset()
