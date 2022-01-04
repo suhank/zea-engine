@@ -42,7 +42,6 @@
     </style>
     <script type="module">
       import '../dist/index.umd.js'
-      import '../node_modules/@zeainc/zea-cad/dist/index.umd.js'
       import '../node_modules/@zeainc/zea-ux/dist/index.umd.js'
       const urlParams = new URLSearchParams(window.location.search)
 
@@ -58,7 +57,7 @@
         CameraManipulator,
         GLBoundingBoxPass,
         GeomLibrary,
-        resourceLoader,
+        resourceLoader, CADAsset, CADBody
       } = zeaEngine
 
       const canvas = document.getElementById('viewport')
@@ -74,7 +73,7 @@
 
       renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(40, 90, 3))
 
-      const { CADAsset, CADBody } = window.zeaCad
+   
 
       const loadZCADAsset = (url, filename) => {
         const asset = new CADAsset()

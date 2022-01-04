@@ -76,7 +76,6 @@
     "@types/semver": "^7.3.8",
     "@zeainc/gltf-loader": "^3.2.2",
     "@zeainc/jsdocs2md": "^0.0.8",
-    "@zeainc/zea-cad": "^4.0.0",
     "@zeainc/zea-collab": "^5.2.0",
     "@zeainc/zea-potree": "^3.2.1",
     "@zeainc/zea-ux": "^3.2.0",
