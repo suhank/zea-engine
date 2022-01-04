@@ -1,4 +1,3 @@
-// import { Registry, AssetLoadContext, Xfo, AssetItem, BinReader } 
 import { Xfo } from '../../Math/Xfo'
 import { Registry } from '../../Registry'
 import { AssetLoadContext } from '../AssetLoadContext'

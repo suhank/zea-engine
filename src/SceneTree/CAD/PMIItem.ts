@@ -1,4 +1,3 @@
-// import { TreeItem, Registry, Vec3Parameter, Color } from '@zeainc/zea-engine'
 import { Color } from "../../Math/Color"
 import { Registry } from "../../Registry"
 import { CloneContext } from "../CloneContext"

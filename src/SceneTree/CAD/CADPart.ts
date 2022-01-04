@@ -1,5 +1,3 @@
-// import { TreeItem, Registry, BinReader, AssetLoadContext } from '@zeainc/zea-engine'
-
 import { Registry } from "../../Registry"
 import { AssetLoadContext } from "../AssetLoadContext"
 import { BinReader } from "../BinReader"

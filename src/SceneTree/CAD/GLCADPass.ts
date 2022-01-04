@@ -1,6 +1,4 @@
-﻿// import { GLPass, TreeItem } from '@zeainc/zea-engine'
-
-import { GLPass } from "../../Renderer/Passes/GLPass"
+﻿import { GLPass } from "../../Renderer/Passes/GLPass"
 import { TreeItem } from "../TreeItem"
 
 

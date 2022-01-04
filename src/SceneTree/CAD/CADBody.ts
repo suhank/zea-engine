@@ -1,4 +1,3 @@
-// import { Color, BaseGeomItem, Material, Registry, BinReader, AssetLoadContext } from '@zeainc/zea-engine'
 import { Color } from '../../Math/Color'
 import { Registry } from '../../Registry'
 import { AssetLoadContext } from '../AssetLoadContext'

@@ -1,15 +1,4 @@
 /* eslint-disable no-unused-vars */
-// import {
-//   Version,
-//   BinReader,
-//   SystemDesc,
-//   AssetItem,
-//   AssetLoadContext,
-//   TreeItem,
-//   Registry,
-//   resourceLoader,
-// } 
-
 import { Registry } from "../../Registry"
 import { SystemDesc } from "../../SystemDesc"
 import { AssetItem } from "../AssetItem"

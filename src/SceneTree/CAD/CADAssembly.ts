@@ -1,5 +1,3 @@
-// import { TreeItem, Registry } from '@zeainc/zea-engine'
-
 import { Registry } from "../../Registry"
 import { CloneContext } from "../CloneContext"
 import { TreeItem } from "../TreeItem"
