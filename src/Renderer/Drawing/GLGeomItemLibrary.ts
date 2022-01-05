@@ -27,11 +27,11 @@ import { XrViewportEvent } from '../../Utilities/Events/XrViewportEvent'
  */
 class GLGeomItemLibrary extends EventEmitter {
   protected renderer: GLBaseRenderer
-  protected glGeomItems: Array<GLGeomItem | null>
-  protected glGeomItemEventHandlers: any[]
-  protected glGeomItemsMap: Record<number, number>
-  protected glGeomItemsIndexFreeList: number[]
-  protected dirtyItemIndices: number[]
+  protected glGeomItems: Array<GLGeomItem | null> = [null] // Note: item 0 is always null.
+  protected glGeomItemEventHandlers: any[] = []
+  protected glGeomItemsMap: Record<number, number> = {}
+  protected glGeomItemsIndexFreeList: number[] = []
+  protected dirtyItemIndices: number[] = []
   protected dirtyWorkerItemIndices: Set<number> = new Set()
   protected removedItemIndices: number[]
   protected worker: typeof GLGeomItemLibraryCullingWorker
@@ -67,11 +67,6 @@ class GLGeomItemLibrary extends EventEmitter {
     super()
 
     this.renderer = renderer
-    this.glGeomItems = []
-    this.glGeomItemEventHandlers = []
-    this.glGeomItemsMap = {}
-    this.glGeomItemsIndexFreeList = []
-    this.dirtyItemIndices = []
 
     // Items that have transform or bounding box changes and need to be updated in the worker.
     this.dirtyWorkerItemIndices = new Set()
@@ -414,6 +409,8 @@ class GLGeomItemLibrary extends EventEmitter {
     const renderstate: GeomDataRenderState = <GeomDataRenderState>{ shaderopts: {} }
     renderstate.directives = [...this.renderer.directives, '#define DRAW_GEOMDATA']
     renderstate.shaderopts.directives = renderstate.directives
+    renderstate.floatGeomBuffer = true
+
     this.renderer.bindGLBaseRenderer(renderstate)
     if (this.xrPresenting) {
       /*if (!this.xrViewport.viewXfo) {
