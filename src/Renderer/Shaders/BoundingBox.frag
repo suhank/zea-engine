@@ -21,7 +21,8 @@ void main(void) {
     // see e2e-test: occlusion-culling2
     int x = drawItemId + int(gl_FragCoord.x * 1000.0);
     int y = drawItemId + int(gl_FragCoord.y * 1000.0);
-    if (x % 3 != 0 || y % 7 != 0) discard;
+    // if (x % 3 != 0 || y % 7 != 0) discard;
+    if (x % 7 != 0 || y % 13 != 0) discard;
   }
 
   fragColor = v_color;
