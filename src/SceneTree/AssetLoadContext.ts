@@ -4,6 +4,7 @@ import { BaseItem } from './BaseItem'
 import { Parameter } from './Parameters/Parameter'
 import { AssetItem } from './AssetItem'
 import { GeomItem } from './GeomItem'
+import { BaseGeomItem } from './BaseGeomItem'
 
 /**
  * Provides a context for loading assets. This context can provide the units of the loading scene.
@@ -25,8 +26,8 @@ export class AssetLoadContext extends EventEmitter {
   protected postLoadCallbacks: Array<() => void>
   protected asyncCount: number
 
-  addGeomToLayer: (geomItem: GeomItem, layer: string) => void
 
+  addGeomToLayer: (geomItem: BaseGeomItem, layer: string) => void
   /**
    * Create a AssetLoadContext
    * @param context The source context to base this context on.

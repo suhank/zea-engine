@@ -5,7 +5,7 @@ import { NumberParameter, BooleanParameter, Parameter } from '../Parameters/inde
 import { SystemDesc } from '../../SystemDesc'
 import { PassType } from '../../Renderer/Passes/GLPass'
 import { Camera } from '../Camera'
-import { GLViewport } from '../..'
+import { GLViewport, ZeaUIEvent } from '../..'
 import { ZeaPointerEvent, POINTER_TYPES } from '../../Utilities/Events/ZeaPointerEvent'
 import { ZeaMouseEvent } from '../../Utilities/Events/ZeaMouseEvent'
 import { ZeaWheelEvent } from '../../Utilities/Events/ZeaWheelEvent'
@@ -66,9 +66,10 @@ interface OngoingTouch {
  * This behavior can be configured using the 2 values.
  * e.g. to disable all focus gestures, set both values to zero.
  * ```
+ * // Make the aim focus occur after a single touch or click.
  * const cameraManipulator = renderer.getViewport().getManipulator()
- * cameraManipulator.aimFocusOnTouchTap = 0
- * cameraManipulator.aimFocusOnMouseClick = 0
+ * cameraManipulator.aimFocusOnTouchTap = 1
+ * cameraManipulator.aimFocusOnMouseClick = 1
  * ```
  *
  * **Parameters**
@@ -96,22 +97,22 @@ interface OngoingTouch {
 class CameraManipulator extends BaseTool {
   protected appData: Record<string, any>
   protected __defaultManipulationState: number
-  protected __manipulationState: any
+  protected __manipulationState: number
   protected __pointerDown: boolean
   protected __dragging: number
   protected aimFocusOnTouchTap: number
   protected aimFocusOnMouseClick: number
   protected enabledWASDWalkMode: boolean
   protected __keyboardMovement: boolean
-  protected __keysPressed: any[]
+  protected __keysPressed: string[]
   protected __velocity: Vec3
   protected __prevVelocityIntegrationTime: number
   protected __ongoingTouches: Record<string, OngoingTouch>
 
-  protected __orbitTarget: any
+  protected __orbitTarget: Vec3
   protected prevCursor: any
-  protected __prevPointerPos: any
-  protected __focusIntervalId: any
+  protected __prevPointerPos: Vec2
+  protected __focusIntervalId: number
 
   __mouseWheelMovementDist: number = 0
 
@@ -162,7 +163,7 @@ class CameraManipulator extends BaseTool {
     this.__pointerDown = false
     this.__dragging = 0
 
-    this.aimFocusOnTouchTap = 1
+    this.aimFocusOnTouchTap = 2
     this.aimFocusOnMouseClick = 2
     this.enabledWASDWalkMode = false
     this.__keyboardMovement = false
@@ -206,7 +207,7 @@ class CameraManipulator extends BaseTool {
    *
    * @param manipulationMode - The manipulation mode value.
    */
-  setDefaultManipulationMode(manipulationMode: string) {
+  setDefaultManipulationMode(manipulationMode: string | number) {
     if (typeof manipulationMode == 'string') {
       this.__defaultManipulationState = MANIPULATION_MODES[manipulationMode]
     } else this.__defaultManipulationState = manipulationMode
@@ -408,20 +409,28 @@ class CameraManipulator extends BaseTool {
    * @private
    * @param event - The event value.
    */
-  initDrag(event: Record<string, any>) {
+  initDrag(event: ZeaUIEvent) {
     const { pointerPos } = event
     event.setCapture(this)
 
     this.__pointerDown = true
 
-    const { viewport } = event
+    const viewport = <GLViewport>event.viewport
     const camera = viewport.getCamera()
     const xfo = camera.globalXfoParam.value
     const orbitAroundCursor = this.orbitAroundCursor.value
-    if (event.intersectionData != undefined && orbitAroundCursor) {
-      this.__orbitTarget = event.intersectionData.intersectionPos
-      const vec = xfo.inverse().transformVec3(event.intersectionData.intersectionPos)
-      camera.setFocalDistance(-vec.z)
+    if (orbitAroundCursor) {
+      if (event.intersectionData != undefined && orbitAroundCursor) {
+        this.__orbitTarget = event.intersectionData.intersectionPos
+        const vec = xfo.inverse().transformVec3(event.intersectionData.intersectionPos)
+        camera.setFocalDistance(-vec.z)
+      } else {
+        if (event.pointerRay) {
+          this.__orbitTarget = event.pointerRay.pointAtDist(camera.getFocalDistance())
+        } else {
+          this.__orbitTarget = xfo.tr.add(xfo.ori.getZaxis().scale(-camera.getFocalDistance()))
+        }
+      }
     } else {
       this.__orbitTarget = xfo.tr.add(xfo.ori.getZaxis().scale(-camera.getFocalDistance()))
     }
@@ -528,6 +537,7 @@ class CameraManipulator extends BaseTool {
 
       i++
       if (i <= count) {
+        // @ts-ignore
         this.__focusIntervalId = setTimeout(applyMovement, 20)
       } else {
         this.__focusIntervalId = undefined
@@ -575,6 +585,7 @@ class CameraManipulator extends BaseTool {
 
       i++
       if (i <= count) {
+        // @ts-ignore
         this.__focusIntervalId = setTimeout(applyMovement, 20)
       } else {
         this.__focusIntervalId = undefined
@@ -593,7 +604,7 @@ class CameraManipulator extends BaseTool {
    * @memberof CameraManipulator
    */
   onPointerDoublePress(event: ZeaPointerEvent) {
-    const aimFocus = (pointerRay) => {
+    const aimFocus = (pointerRay: Ray) => {
       const viewport = <GLViewport>event.viewport
       const camera = viewport.getCamera()
       const cameraGlobalXfo = camera.globalXfoParam.value
@@ -632,7 +643,7 @@ class CameraManipulator extends BaseTool {
         this.endDrag(event)
       }
 
-      this.initDrag(event)
+      this.initDrag(<ZeaUIEvent>event)
 
       const mouseEvent = <ZeaMouseEvent>event
       if (mouseEvent.button == 2) {
@@ -912,7 +923,9 @@ class CameraManipulator extends BaseTool {
         const viewVec = xfo.inverse().transformVec3(event.intersectionData.intersectionPos)
         camera.setFocalDistance(-viewVec.z)
       } else {
-        dir = xfo.ori.getZaxis()
+        const point = event.pointerRay.pointAtDist(camera.getFocalDistance())
+        dir = xfo.tr.subtract(point)
+        dir.normalizeInPlace()
       }
     }
 

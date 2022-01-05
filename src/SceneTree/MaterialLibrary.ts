@@ -4,7 +4,7 @@ import { Registry } from '../Registry'
 import { Material } from './Material'
 import { FileImage } from './Images/index'
 import { BaseItem } from './BaseItem'
-import { BinReader } from '..'
+import { AssetLoadContext, BinReader } from '..'
 import { BaseImage } from './BaseImage'
 import { Parameter } from './Parameters/Parameter'
 import { Owner } from './Owner'
@@ -230,14 +230,10 @@ class MaterialLibrary extends EventEmitter implements Owner {
    * @param reader - The reader value.
    * @param context - The context value.
    */
-  readBinary(reader: BinReader, context: Record<string, any> = {}) {
+  readBinary(reader: BinReader, context: AssetLoadContext) {
     // if (context.version == undefined) context.version = 0
 
     this.name = reader.loadStr()
-
-    // Specify the Lod to load the images in this library.
-    context.lod = this.lod
-    context.materialLibrary = this
 
     const numTextures = reader.loadUInt32()
     for (let i = 0; i < numTextures; i++) {

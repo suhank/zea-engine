@@ -265,7 +265,7 @@ class Attribute extends BaseClass {
    * @param splitCount - The splitCount value.
    * @return - The return value.
    */
-  generateSplitValues(splitIndices: Record<number, Record<number, number>>, splitCount: number): TypedArray {
+  generateSplitValues(splitIndices: Record<number, Record<number, number>>, splitCount: number): Float32Array {
     if (splitCount == 0) return this.data
 
     const numUnSplitValues = this.getCount()

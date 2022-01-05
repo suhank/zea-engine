@@ -6,16 +6,28 @@ describe('Xfo', () => {
   it('has initial values', () => {
     const xfo = new Xfo()
 
-    expect(xfo.toJSON()).toEqual({ ori: { w: 1, x: 0, y: 0, z: 0 }, tr: { x: 0, y: 0, z: 0 } })
+    expect(xfo.toJSON()).toEqual({
+      ori: { w: 1, x: 0, y: 0, z: 0 },
+      tr: { x: 0, y: 0, z: 0 },
+      sc: { x: 1, y: 1, z: 1 },
+    })
   })
 
   it('sets value on instantiation', () => {
     const xfoFromVec3 = new Xfo(new Vec3(1, 2, 3))
 
-    expect(xfoFromVec3.toJSON()).toEqual({ ori: { w: 1, x: 0, y: 0, z: 0 }, tr: { x: 1, y: 2, z: 3 } })
+    expect(xfoFromVec3.toJSON()).toEqual({
+      ori: { w: 1, x: 0, y: 0, z: 0 },
+      tr: { x: 1, y: 2, z: 3 },
+      sc: { x: 1, y: 1, z: 1 },
+    })
 
     const xfoFromQuat = new Xfo(new Quat(0, 1, 0, 0))
-    expect(xfoFromQuat.toJSON()).toEqual({ ori: { w: 0, x: 0, y: 1, z: 0 }, tr: { x: 0, y: 0, z: 0 } })
+    expect(xfoFromQuat.toJSON()).toEqual({
+      ori: { w: 0, x: 0, y: 1, z: 0 },
+      tr: { x: 0, y: 0, z: 0 },
+      sc: { x: 1, y: 1, z: 1 },
+    })
 
     // Float32Array can't be tested in jest like everything else due to some ArrayBuffer regression in node.
     // There's a workaround but adds complexity to the testing. Although this works in the browser.

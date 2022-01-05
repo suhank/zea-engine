@@ -3,8 +3,7 @@ import { TreeItem } from './TreeItem'
 import { ResourceLoader, resourceLoader } from './resourceLoader'
 import { GridTreeItem } from './GridTreeItem'
 import { EnvMap } from './Images/EnvMap'
-import { BooleanParameter, NumberParameter, ImageParameter, Parameter } from './Parameters/index'
-import { BaseItem } from '.'
+import { BooleanParameter, NumberParameter, ImageParameter } from './Parameters/index'
 
 const defaultGridColor = new Color('#DCDCDC')
 

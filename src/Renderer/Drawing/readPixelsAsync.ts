@@ -1,7 +1,9 @@
 // https://forum.babylonjs.com/t/speeding-up-readpixels/12739
 
-function clientWaitAsync(gl, sync, flags, interval_ms) {
-  return new Promise((resolve, reject) => {
+import { WebGL12RenderingContext } from '../types/webgl'
+
+function clientWaitAsync(gl: WebGL12RenderingContext, sync: WebGLSync, flags: number, interval_ms: number) {
+  return new Promise<void>((resolve, reject) => {
     function test() {
       const res = gl.clientWaitSync(sync, flags, 0)
       if (res == gl.WAIT_FAILED) {
@@ -19,13 +21,13 @@ function clientWaitAsync(gl, sync, flags, interval_ms) {
 }
 
 async function getBufferSubDataAsync(
-  gl,
-  target,
-  buffer,
-  srcByteOffset,
-  dstBuffer,
-  /* optional */ dstOffset,
-  /* optional */ length
+  gl: WebGL12RenderingContext,
+  target: number,
+  buffer: WebGLBuffer,
+  srcByteOffset: number,
+  dstBuffer: ArrayBufferView,
+  /* optional */ dstOffset: number = 0,
+  /* optional */ length: number = 0
 ) {
   const sync = gl.fenceSync(gl.SYNC_GPU_COMMANDS_COMPLETE, 0)
   gl.flush()
@@ -40,7 +42,16 @@ async function getBufferSubDataAsync(
   return dstBuffer
 }
 
-async function readPixelsAsync(gl, x, y, w, h, format, type, dest) {
+async function readPixelsAsync(
+  gl: WebGL12RenderingContext,
+  x: number,
+  y: number,
+  w: number,
+  h: number,
+  format: number,
+  type: number,
+  dest: ArrayBufferView
+) {
   const buf = gl.createBuffer()
   gl.bindBuffer(gl.PIXEL_PACK_BUFFER, buf)
   gl.bufferData(gl.PIXEL_PACK_BUFFER, dest.byteLength, gl.STREAM_READ)

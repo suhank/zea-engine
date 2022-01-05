@@ -1,13 +1,14 @@
 import { GLShader } from '../GLShader.js'
+import { WebGL12RenderingContext } from '../types/webgl'
 
 // eslint-disable-next-line require-jsdoc
 export class ReductionShader extends GLShader {
   /**
    * Create an atlas layout shader.
-   * @param {WebGLRenderingContext} gl - The webgl rendering context.
+   * @param gl - The webgl rendering context.
    */
-  constructor(gl) {
-    super(gl)
+  constructor(gl: WebGL12RenderingContext) {
+    super(gl, 'ReductionShader')
     this.setShaderStage(
       'VERTEX_SHADER',
       `

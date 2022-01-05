@@ -2,24 +2,26 @@
 import { EventEmitter } from '../../Utilities/index'
 import { Mat4, Vec4 } from '../../Math/index'
 import { Cuboid } from '../../SceneTree/index'
-import { GLMesh } from './GLMesh.js'
+import { GLMesh } from './GLMesh'
 import { GLGeomItemFlags, GLGeomItem } from './GLGeomItem'
 import { MathFunctions } from '../../Utilities/MathFunctions'
 import { GLTexture2D } from '../GLTexture2D'
-import { GLRenderTarget } from '../GLRenderTarget.js'
-import { ReductionShader } from '../Shaders/ReductionShader.js'
-import { BoundingBoxShader } from '../Shaders/BoundingBoxShader.js'
+import { GLRenderTarget } from '../GLRenderTarget'
+import { ReductionShader } from '../Shaders/ReductionShader'
+import { BoundingBoxShader } from '../Shaders/BoundingBoxShader'
 
 // import { handleMessage } from './GLGeomItemLibraryCullingWorker'
 // @ts-ignore
-import GLGeomItemLibraryCullingWorker from 'web-worker:./GLGeomItemLibraryCulling-worker.js'
+import GLGeomItemLibraryCullingWorker from 'web-worker:./GLGeomItemLibraryCulling-worker'
 import { GeomItem } from '../../SceneTree/GeomItem'
 import { GLBaseRenderer } from '../GLBaseRenderer'
 import { Material } from '../../SceneTree/Material'
+import { GeomDataRenderState, RenderState } from '../types/renderer'
+import { StateChangedEvent } from '../../Utilities/Events/StateChangedEvent'
 
-import { pixelsPerItem } from '../GLSLConstants.js'
+import { pixelsPerItem } from '../GLSLConstants'
 import { readPixelsAsync } from './readPixelsAsync.js'
-import { VRViewport } from '..'
+import { XRViewport } from '../VR/XRViewport'
 import { XrViewportEvent } from '../../Utilities/Events/XrViewportEvent'
 
 /** Class for managing all the GeomItems discovered in the SceneTree.
@@ -34,12 +36,11 @@ class GLGeomItemLibrary extends EventEmitter {
   protected dirtyItemIndices: number[] = []
   protected dirtyWorkerItemIndices: Set<number> = new Set()
   protected removedItemIndices: number[]
-  protected worker: typeof GLGeomItemLibraryCullingWorker
   protected glGeomItemsTexture: GLTexture2D | null = null
   protected enableFrustumCulling: boolean
   protected enableOcclusionCulling: boolean
 
-  protected xrViewport?: VRViewport
+  protected xrViewport?: XRViewport
   protected xrPresenting: boolean = false
   protected xrFovY: number = 0.0
   protected xrProjectionMatrix = new Mat4()
@@ -57,6 +58,8 @@ class GLGeomItemLibrary extends EventEmitter {
   protected reductionDataArray: Uint8Array
 
   private timer_query_ext: any = null
+
+  private worker: GLGeomItemLibraryCullingWorker
 
   /**
    * Create a GLGeomItemLibrary.
@@ -166,10 +169,9 @@ class GLGeomItemLibrary extends EventEmitter {
     })
     viewportChanged()
 
-    renderer.once('xrViewportSetup', (event: Record<string, any>) => {
-      this.xrViewport = event.xrViewport
+    renderer.once('xrViewportSetup', (event: XrViewportEvent) => {
       const xrvp = event.xrViewport
-      xrvp.on('presentingChanged', (event: Record<string, any>) => {
+      xrvp.on('presentingChanged', (event: StateChangedEvent) => {
         if (event.state) {
           cullFreq = 10
           // Note: We approximate the culling viewport to be
@@ -184,7 +186,10 @@ class GLGeomItemLibrary extends EventEmitter {
 
           this.xrFovY = frustumHalfAngleY * 2.0
           const aspect = 62 / 50
+
+          // @ts-ignore
           const near = xrvp.depthRange[0]
+          // @ts-ignore
           const far = xrvp.depthRange[1]
           this.xrProjectionMatrix.setPerspectiveMatrix(this.xrFovY, aspect, near, far)
 
@@ -198,6 +203,8 @@ class GLGeomItemLibrary extends EventEmitter {
         } else {
           cullFreq = 5
           viewportChanged()
+          // push the camera xfo to the worker.
+          forceViewChanged()
         }
       })
     })
@@ -270,7 +277,7 @@ class GLGeomItemLibrary extends EventEmitter {
         })
         renderer.once('xrViewportSetup', (event: XrViewportEvent) => {
           const xrvp = event.xrViewport
-          xrvp.on('presentingChanged', (event) => {
+          xrvp.on('presentingChanged', (event: StateChangedEvent) => {
             if (event.state) {
               occlusionDataBufferSizeFactor = 0.2
               this.occlusionDataBuffer.resize(
@@ -348,7 +355,7 @@ class GLGeomItemLibrary extends EventEmitter {
    * to render bounding boxes for these items if they do not show up in the initial GPU buffer.
    * @param {Float32Array} inFrustumIndices - The array of indices of items we know are in the frustum.
    */
-  updateCulledDrawIDsBuffer(inFrustumIndices) {
+  updateCulledDrawIDsBuffer(inFrustumIndices: Float32Array) {
     const gl = this.renderer.gl
     if (!gl.floatTexturesSupported) {
       this.drawIdsBufferDirty = false
@@ -379,9 +386,9 @@ class GLGeomItemLibrary extends EventEmitter {
 
   /**
    * Calculate a further refinement of the culling by using the GPU to see which items are actually visible.
-   * @param {Float32Array} inFrustumIndices - The array of indices of items we know are in the frustum.
+   * @param inFrustumIndices - The array of indices of items we know are in the frustum.
    */
-  calculateOcclusionCulling(inFrustumIndices) {
+  calculateOcclusionCulling(inFrustumIndices: Float32Array) {
     if (inFrustumIndices && inFrustumIndices.length > 0) {
       this.updateCulledDrawIDsBuffer(inFrustumIndices)
     }
@@ -435,7 +442,7 @@ class GLGeomItemLibrary extends EventEmitter {
 
     this.occlusionDataBuffer.bindForWriting(renderstate, true)
     // this.renderer.drawSceneGeomData(renderstate)
-    const drawSceneGeomData = (renderstate) => {
+    const drawSceneGeomData = (renderstate: GeomDataRenderState) => {
       const opaqueGeomsPass = this.renderer.getPass(0)
       opaqueGeomsPass.drawGeomData(renderstate)
       const linesPass = this.renderer.getPass(1)
@@ -459,7 +466,7 @@ class GLGeomItemLibrary extends EventEmitter {
     const numReductionPoints = this.occlusionDataBuffer.width * this.occlusionDataBuffer.height
 
     // Now perform a reduction to calculate the indices of visible items.
-    const reduce = (renderstate, clear, query) => {
+    const reduce = (renderstate: GeomDataRenderState, clear: boolean, query: WebGLQuery) => {
       this.reductionDataBuffer.bindForWriting(renderstate, clear)
 
       this.reductionShader.bind(renderstate)
@@ -533,7 +540,7 @@ class GLGeomItemLibrary extends EventEmitter {
     const queryResults = {
       numReductionPoints,
     }
-    const checkQuery = (name, query) => {
+    const checkQuery = (name: string, query: WebGLQuery) => {
       const available = gl.getQueryParameter(query, gl.QUERY_RESULT_AVAILABLE)
       const disjoint = gl.getParameter(ext.GPU_DISJOINT_EXT)
 

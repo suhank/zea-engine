@@ -11,8 +11,9 @@ import { BaseGeom } from './Geometry'
 import { Material } from './Material'
 import { BinReader } from './BinReader'
 import { Vec3Attribute } from './Geometry/Vec3Attribute'
-import { AssetItem } from '.'
+import { AssetItem, AssetLoadContext } from '.'
 import { RangeLoadedEvent } from '../Utilities/Events/RangeLoadedEvent'
+import { CloneContext } from './CloneContext'
 
 let calculatePreciseBoundingBoxes = false
 
@@ -191,7 +192,7 @@ class GeomItem extends BaseGeomItem {
    * @param reader - The reader value.
    * @param context - The context value.
    */
-  readBinary(reader: BinReader, context: Record<string, any>) {
+  readBinary(reader: BinReader, context: AssetLoadContext) {
     super.readBinary(reader, context)
 
     context.numGeomItems++
@@ -205,13 +206,13 @@ class GeomItem extends BaseGeomItem {
 
     const geom = geomLibrary.getGeom(geomIndex)
     if (geom) {
-      this.geomParam.loadValue(geom)
+      this.geomParam.loadValue(<BaseGeom>geom)
     } else {
       const onGeomLoaded = (event: Record<string, any>) => {
         const { range } = event
         if (geomIndex >= range[0] && geomIndex < range[1]) {
           const geom = geomLibrary.getGeom(geomIndex)
-          if (geom) this.geomParam.value = geom
+          if (geom) this.geomParam.value = <BaseGeom>geom
           else console.warn('Geom not loaded:', this.getName())
           geomLibrary.removeListenerById('rangeLoaded', onGeomLoadedListenerID)
         }
@@ -278,7 +279,7 @@ class GeomItem extends BaseGeomItem {
    * @param context - The context value.
    * @return - Returns a new cloned geom item.
    */
-  clone(context?: Record<string, any>) {
+  clone(context?: CloneContext) {
     const cloned = new GeomItem()
     cloned.copyFrom(this, context)
     return cloned
@@ -290,7 +291,7 @@ class GeomItem extends BaseGeomItem {
    * @param src - The geom item to copy from.
    * @param context - The context value.
    */
-  copyFrom(src: GeomItem, context?: Record<string, any>) {
+  copyFrom(src: GeomItem, context?: CloneContext) {
     super.copyFrom(src, context)
 
     if (!src.geomParam.value && src.geomIndex != -1) {
@@ -304,6 +305,7 @@ class GeomItem extends BaseGeomItem {
           const geom = geomLibrary.getGeom(this.geomIndex)
           // Note: we need the 'valueChanged' event to be received by the
           // renderer to then load the geometry into the GPU.
+          // @ts-ignore
           if (geom) this.geomParam.value = geom
           else console.warn('Geom not loaded:', this.getName())
           geomLibrary.removeListenerById('rangeLoaded', this.listenerIDs['rangeLoaded'])

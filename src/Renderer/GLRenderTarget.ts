@@ -1,6 +1,8 @@
 import { Color } from '../Math/Color'
 import { EventEmitter } from '../Utilities/index'
 import { processTextureParams } from './processTextureParams'
+import { RenderState, Uniform } from './types/renderer'
+import { WebGL12RenderingContext } from './types/webgl'
 
 /** The GLRenderTarget is used to generate a WebGL Framebuffer and its associated textures.
  * It can be used to create a FrameBuffer, several color textures and an optional depth texture, all bound to the Framebuffer.

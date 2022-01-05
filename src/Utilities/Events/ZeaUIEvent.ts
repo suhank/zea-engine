@@ -3,11 +3,13 @@ import { Ray, Vec2 } from '../../Math'
 
 import { ZeaPointerEvent } from './ZeaPointerEvent'
 
+/**
+ * ZeaUIEvent are emitted from a 2D UI, such as from a HTMLCanvas element generated from
+ * a mouse or touch interaction.
+ */
 class ZeaUIEvent extends ZeaPointerEvent {
-  viewport: GLViewport
   detail: number
   pointerPos: Vec2
-  pointerRay: Ray
 
   constructor(pointerType: string) {
     super(pointerType)

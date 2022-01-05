@@ -10,6 +10,7 @@ import frag from './SimpleSurface.frag'
 // @ts-ignore
 import vert from './SimpleSurface.vert'
 import { SimpleSurfaceMaterial } from '../../SceneTree/Materials/SimpleSurfaceMaterial'
+import { WebGL12RenderingContext } from '../types/webgl'
 
 /** A simple shader with no support for PBR or textures
  * @ignore

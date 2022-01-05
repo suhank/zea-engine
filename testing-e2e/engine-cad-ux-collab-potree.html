@@ -44,7 +44,6 @@
     <script src="https://www.gstatic.com/draco/v1/decoders/draco_decoder_gltf.js"></script> -->
     <script type="module">
       import '../dist/index.umd.js'
-      import '../node_modules/@zeainc/zea-cad/dist/index.umd.js'
       // import '../node_modules/@zeainc/zea-ux/dist/index.umd.js'
       // import '../node_modules/@zeainc/zea-potree/dist/index.umd.js'
 
@@ -68,6 +67,7 @@
         CameraManipulator,
         GLBoundingBoxPass,
         AssetLoadContext,
+        CADAsset, CADBody
       } = zeaEngine
 
       const canvas = document.getElementById('viewport')
@@ -95,6 +95,13 @@
       )
       // const boundingBoxPass = new GLBoundingBoxPass()
       // renderer.addPass(boundingBoxPass)
+
+      const ortho = document.getElementById('ortho')
+      ortho.addEventListener('click', () => {
+        if (!renderer.getViewport().getCamera().isOrthographic(1))
+          renderer.getViewport().getCamera().setIsOrthographic(1)
+        else renderer.getViewport().getCamera().setIsOrthographic(0)
+      })
 
       /** HIGHLIGHT START */
       let highlightedItem
@@ -223,7 +230,6 @@
       /** TOOL MANAGER END */
 
       /** LOAD ASSETS START */
-      const { CADAsset, CADBody } = window.zeaCad
 
       const loadZCADAsset = (url, filename) => {
         const asset = new CADAsset()
@@ -321,7 +327,9 @@
   </head>
   <body class="bg-blue-100 h-full">
     <div class="main-wrapper grid h-screen">
-      <header class="border border-blue-400 flex justify-center items-center"></header>
+      <header class="border border-blue-400 flex justify-center items-left">
+        <button id="ortho">Ortho</button>
+      </header>
       <nav class="border border-blue-400 flex justify-center items-center">nav</nav>
       <main>
         <canvas id="viewport"></canvas>

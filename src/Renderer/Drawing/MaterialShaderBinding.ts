@@ -5,7 +5,7 @@ import {
   Parameter,
   MaterialFloatParam,
   BaseImage,
-  VLHImage,
+  HDRImage,
   MaterialColorParam,
   Mat4Parameter,
   ColorParameter,
@@ -14,6 +14,8 @@ import {
 } from '../../SceneTree'
 import { GLMaterial } from '.'
 import { BaseClass } from '../../Utilities/BaseClass'
+import { Uniform, RenderState, Uniforms } from '../types/renderer'
+import { WebGL12RenderingContext } from '../types/webgl'
 
 class ParamUniformBinding extends BaseClass {
   protected unif: Uniform
@@ -52,10 +54,10 @@ class SimpleUniformBinding extends ParamUniformBinding {
   protected texBinding: Record<string, Uniform>
   protected gltexture: GLTexture2D | null = null
   protected textureType: number = -1
-  protected val: number | boolean
+  protected val: number
 
   protected uniform1i: (index: number, value: number) => void
-  protected uniformXX: (index: number, value: number | boolean) => void
+  protected uniformXX: (index: number, value: number) => void
   protected update: () => void
 
   /**
@@ -105,7 +107,7 @@ class SimpleUniformBinding extends ParamUniformBinding {
       const textureType = 1
       if (!gltexture) {
         if (image.type === 'FLOAT') {
-          gltexture = new GLHDRImage(gl, <VLHImage>image)
+          gltexture = new GLHDRImage(gl, <HDRImage>image)
         } else {
           gltexture = new GLTexture2D(gl, image)
         }
@@ -129,7 +131,9 @@ class SimpleUniformBinding extends ParamUniformBinding {
         // Sometimes the value of a color param is an image.
         if (boundImage) {
         } else {
-          this.val = param.value
+          if (typeof param.value == 'boolean') {
+            this.val = param.value ? 1 : 0
+          } else this.val = param.value
         }
       } catch (e) {}
       glMaterial.emit('updated')
@@ -376,7 +380,7 @@ class ColorUniformBinding extends ParamUniformBinding {
       const textureType = 1
       if (!gltexture) {
         if (image.type === 'FLOAT') {
-          gltexture = new GLHDRImage(gl, <VLHImage>image)
+          gltexture = new GLHDRImage(gl, <HDRImage>image)
         } else {
           gltexture = new GLTexture2D(gl, image)
         }

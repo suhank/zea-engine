@@ -1,6 +1,8 @@
 import { EventEmitter } from '../../Utilities/index'
 import { GLShader } from '../GLShader'
 import { GLPass } from '../Passes'
+import { RenderState, GeomDataRenderState } from '../types/renderer'
+import { WebGL12RenderingContext } from '../types/webgl'
 import { GLGeom } from './GLGeom'
 import { GLGeomItem } from './GLGeomItem'
 import { GLMaterial } from './GLMaterial'
@@ -127,6 +129,7 @@ class GLShaderMaterials extends EventEmitter {
     for (const glMaterialGeomItemSet of this.glMaterialGeomItemSets) {
       glMaterialGeomItemSet.drawHighlighted(renderstate)
     }
+    this.glselectedshader.unbind(renderstate)
   }
 
   /**
@@ -151,6 +154,7 @@ class GLShaderMaterials extends EventEmitter {
     for (const glMaterialGeomItemSet of this.glMaterialGeomItemSets) {
       glMaterialGeomItemSet.drawGeomData(renderstate)
     }
+    this.glgeomdatashader.unbind(renderstate)
   }
 }
 

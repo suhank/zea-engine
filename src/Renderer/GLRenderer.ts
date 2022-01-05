@@ -10,10 +10,12 @@ import { EnvMapShader } from './Shaders/EnvMapShader'
 import { HighlightsShader } from './Shaders/HighlightsShader'
 import { SilhouetteShader } from './Shaders/SilhouetteShader'
 import { generateShaderGeomBinding, IGeomShaderBinding } from './Drawing/GeomShaderBinding'
-import { VLHImage } from '../SceneTree/Images/VLHImage'
+import { HDRImage } from '../SceneTree/Images/HDRImage'
 import { EnvMapAssignedEvent } from '../Utilities/Events/EnvMapAssignedEvent'
 import { GLViewport } from './GLViewport'
 import { IntersectionData } from '../Utilities/IntersectionData'
+import { GeomDataRenderState, ColorRenderState } from './types/renderer'
+import { WebGL12RenderingContext } from './types/webgl'
 
 const ALL_PASSES = PassType.OPAQUE | PassType.TRANSPARENT | PassType.OVERLAY
 // TODO: move this fn somewhere
@@ -124,7 +126,7 @@ class GLRenderer extends GLBaseRenderer {
       this.__glBackgroundMap = backgroundMap.getMetadata('gltexture')
       if (!this.__glBackgroundMap) {
         if (backgroundMap.type === 'FLOAT') {
-          this.__glBackgroundMap = new GLHDRImage(this.__gl, <VLHImage>backgroundMap) // todo: is this cast ok?
+          this.__glBackgroundMap = new GLHDRImage(this.__gl, <HDRImage>backgroundMap) // todo: is this cast ok?
         } else {
           this.__glBackgroundMap = new GLTexture2D(this.__gl, backgroundMap)
         }
@@ -297,7 +299,7 @@ class GLRenderer extends GLBaseRenderer {
    *
    * @private
    *
-   * @param xfo - The ray to use in the raycast.
+   * @param xfo - The xfo to use in the raycast.
    * @param ray - The ray to use in the raycast.
    * @param dist - The maximum distance to cast the ray
    * @param area - The area to use for the ray
@@ -305,19 +307,6 @@ class GLRenderer extends GLBaseRenderer {
    * @return - The object containing the ray cast results.
    */
   raycast(xfo: Xfo, ray: Ray, dist: number, area = 0.01, mask = ALL_PASSES): IntersectionData | null {
-    const gl = this.__gl
-
-    if (!this.__rayCastRenderTarget) {
-      this.__rayCastRenderTarget = new GLRenderTarget(gl, {
-        type: 'FLOAT',
-        format: 'RGBA',
-        filter: 'NEAREST',
-        width: 3,
-        height: 3,
-        numColorChannels: 1,
-      })
-    }
-
     if (this.rayCastDist != dist || this.rayCastArea != area) {
       this.__rayCastRenderTargetProjMatrix!.setOrthographicMatrix(
         area * -0.5,
@@ -331,6 +320,21 @@ class GLRenderer extends GLBaseRenderer {
       this.rayCastArea = area
     }
 
+    return this.raycastWithProjection(xfo, this.__rayCastRenderTargetProjMatrix, ray, mask)
+  }
+
+  /**
+   * Ray casting is implemented by rendering a small image from the position of the ray, and capturing geometries detected in the resulting image.
+   *
+   * @private
+   *
+   * @param xfo - The xfo to use in the raycast.
+   * @param projectionMatrix - The projectionMatrix to use in the raycast.
+   * @param ray - The ray to use in the raycast.
+   * @param mask - The mask to filter our certain pass types. Can be PassType.OPAQUE | PassType.TRANSPARENT | PassType.OVERLAY
+   * @return - The object containing the ray cast results.
+   */
+  raycastWithProjection(xfo: Xfo, projectionMatrix: Mat4, ray: Ray, mask = ALL_PASSES): IntersectionData | null {
     const region = [0, 0, 3, 3]
     const renderstate = <GeomDataRenderState>{
       cameraMatrix: xfo.toMat4(),
@@ -338,10 +342,23 @@ class GLRenderer extends GLBaseRenderer {
         {
           region,
           viewMatrix: xfo.inverse().toMat4(),
-          projectionMatrix: this.__rayCastRenderTargetProjMatrix,
+          projectionMatrix,
           isOrthographic: true,
         },
       ],
+    }
+
+    const gl = this.__gl
+    if (!this.__rayCastRenderTarget) {
+      this.__rayCastRenderTarget = new GLRenderTarget(gl, {
+        type: 'FLOAT',
+        format: 'RGBA',
+        filter: 'NEAREST',
+        createDepthTexture: true,
+        width: 3,
+        height: 3,
+        numColorChannels: 1,
+      })
     }
 
     this.__rayCastRenderTarget.bindForWriting(renderstate, true)
@@ -415,6 +432,7 @@ class GLRenderer extends GLBaseRenderer {
         type: 'FLOAT',
         format: 'RGBA',
         filter: 'NEAREST',
+        createDepthTexture: true,
         width: 3,
         height: 3,
         numColorChannels: 1,
@@ -482,7 +500,7 @@ class GLRenderer extends GLBaseRenderer {
           if (geomItemAndDist) {
             const intersectionPos = ray.start.add(ray.dir.scale(geomItemAndDist.dist))
             result.push({
-              ray,
+              pointerRay: ray,
               intersectionPos,
               geomItem: geomItemAndDist.geomItem,
               dist: geomItemAndDist.dist,

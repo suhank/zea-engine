@@ -3,6 +3,7 @@ import { MaterialColorParam } from '../Parameters/MaterialColorParam'
 import { MaterialFloatParam } from '../Parameters/MaterialFloatParam'
 import { Color } from '../../Math/Color'
 import { Material } from '../Material'
+import { CloneContext } from '../CloneContext'
 
 export class SimpleSurfaceMaterial extends Material {
   baseColorParam: MaterialColorParam = new MaterialColorParam('BaseColor', new Color(1.0, 1, 0.5))
@@ -14,6 +15,19 @@ export class SimpleSurfaceMaterial extends Material {
     this.addParameter(this.baseColorParam)
     this.addParameter(this.opacityParam)
     this.addParameter(this.emissiveStrengthParam)
+  }
+
+  /**
+   * The clone method constructs a new material, copies its values
+   * from this item and returns it.
+   *
+   * @param context - The context value.
+   * @return - Returns a new cloned material.
+   */
+  clone(context?: CloneContext) {
+    const cloned = new SimpleSurfaceMaterial()
+    cloned.copyFrom(this, context)
+    return cloned
   }
 }
 

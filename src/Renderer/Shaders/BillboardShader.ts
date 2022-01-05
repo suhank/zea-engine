@@ -6,6 +6,7 @@ import './GLSL/index'
 import frag from './Billboard.frag'
 // @ts-ignore
 import vert from './Billboard.vert'
+import { WebGL12RenderingContext } from '../types/webgl'
 
 class BillboardShader extends GLShader {
   /**

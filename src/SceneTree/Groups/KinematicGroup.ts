@@ -5,6 +5,7 @@ import { XfoParameter, MultiChoiceParameter } from '../Parameters/index'
 import { BaseGroup } from './BaseGroup'
 import { TreeItem } from '../TreeItem'
 import { GroupTransformXfoOperator, GroupMemberXfoOperator } from '../Operators/GroupMemberXfoOperator'
+import { CloneContext } from '../CloneContext'
 
 const GROUP_XFO_MODES = {
   disabled: 0,
@@ -309,7 +310,7 @@ class KinematicGroup extends BaseGroup {
    * @param context - The context value.
    * @return - Returns a new cloned group.
    */
-  clone(context: Record<string, unknown>) {
+  clone(context: CloneContext ) {
     const cloned = new KinematicGroup()
     cloned.copyFrom(this, context)
     return cloned

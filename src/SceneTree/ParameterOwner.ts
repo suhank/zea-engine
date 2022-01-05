@@ -9,6 +9,8 @@ import { BinReader } from './BinReader'
 import { ParameterAddedEvent } from '../Utilities/Events/ParameterAddedEvent'
 import { ParameterRemovedEvent } from '../Utilities/Events/ParameterRemovedEvent'
 import { Parameter } from './Parameters/Parameter'
+import { CloneContext } from './CloneContext'
+import { AssetLoadContext } from './AssetLoadContext'
 
 /**
  * Class that allows other classes to be parameterized by `Parameter` type of objects.
@@ -271,7 +273,7 @@ class ParameterOwner extends EventEmitter {
    * @param reader - The reader value.
    * @param context - The context value.
    */
-  readBinary(reader: BinReader, context: Record<string, any>): void {
+  readBinary(reader: BinReader, context: AssetLoadContext): void {
     // TODO: make this work
     if (context?.versions['zea-engine'].compare([0, 0, 3]) >= 0) {
       const numProps = reader.loadUInt32()
@@ -311,7 +313,7 @@ class ParameterOwner extends EventEmitter {
    * @param src - The ParameterOwner copy from.
    * @param context - The context value
    */
-  copyFrom(src: ParameterOwner, context?: Record<string, any>): void {
+  copyFrom(src: ParameterOwner, context?: CloneContext): void {
     // Note: Loop over the parameters in reverse order,
     // this is because often, parameter dependencies
     // are bottom to top (bottom params dependent on higher params).

@@ -5,6 +5,7 @@ import { Material } from '../../SceneTree/Material'
 import { PointsMaterial } from '../../SceneTree/Materials/PointsMaterial'
 import { GLShader } from '../GLShader'
 import { shaderLibrary } from '../ShaderLibrary'
+import { WebGL12RenderingContext } from '../types/webgl'
 
 import './GLSL/index'
 // @ts-ignore

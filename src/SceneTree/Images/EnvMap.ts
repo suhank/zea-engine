@@ -2,7 +2,7 @@
 /* eslint-disable require-jsdoc */
 import { Color, Vec3 } from '../../Math/index'
 import { Registry } from '../../Registry'
-import { VLHImage } from './VLHImage'
+import { HDRImage } from './HDRImage'
 import { BooleanParameter } from '../Parameters/BooleanParameter'
 
 /**
@@ -13,9 +13,9 @@ import { BooleanParameter } from '../Parameters/BooleanParameter'
  * * **HeadLightMode(`BooleanParameter`):** Enables Headlight mode so that the environment lighting is aligned with the camera.
  * With Headlight mode on, the top of the env map is aligned with the direction of the camera, so a the view is generally well lit.
  *
- * @extends VLHImage
+ * @extends HDRImage
  */
-class EnvMap extends VLHImage {
+class EnvMap extends HDRImage {
   protected utf8decoder: TextDecoder
   protected shCoeffs: any[]
   protected luminanceData: any

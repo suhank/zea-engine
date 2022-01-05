@@ -3,6 +3,7 @@ import { NumberParameter } from './NumberParameter'
 import { BaseImage } from '../BaseImage'
 import { IBinaryReader } from '../../Utilities/IBinaryReader'
 import { BinReader } from '../../SceneTree/BinReader'
+import { AssetLoadContext } from '../AssetLoadContext'
 /**
  * Represents a specific type of parameter, that stores `number` and `BaseImage` texture values.
  *
@@ -95,13 +96,13 @@ class MaterialFloatParam extends NumberParameter implements IBinaryReader {
    * @param reader - The reader value.
    * @param context - The context value.
    */
-  readBinary(reader: BinReader, context: Record<string, any>): void {
+  readBinary(reader: BinReader, context: AssetLoadContext): void {
     super.readBinary(reader, context)
 
     const textureName = reader.loadStr()
     if (textureName != '') {
       console.log('Load Texture')
-      this.setImage(context.materialLibrary.getImage(textureName))
+      this.setImage(context.assetItem.materialLibrary.getImage(textureName))
     }
   }
 
