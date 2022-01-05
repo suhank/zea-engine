@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>occlusion-culling2 - Zea Engine</title>
+    <title>occlusion-culling-occluded-by-hidden-bbox - Zea Engine</title>
 
     <link href="data/zea-logo.png" rel="shortcut icon" />
 
@@ -34,7 +34,9 @@
       scene.getRoot().addChild(geomItemSphere)
 
       // The inner torus is occluded by the outer torus, and the inner torus bbox should then
-      // occlude the bbox of the sphere.
+      // occlude the bbox of the sphere. This caused the sphere to be considered occluded.
+      // The fix is a stochastic transparency in the bbox rendering allowing the sphere or its bbox
+      // to be seen through the bbox of the occluded inner torus.
       const torusInner = new Torus(1, 3.0, 6)
       const geomItemInner = new GeomItem('Torus', torusInner, standardMaterial)
       scene.getRoot().addChild(geomItemInner)
