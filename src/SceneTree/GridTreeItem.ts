@@ -60,7 +60,6 @@ class GridTreeItem extends TreeItem {
     gridYAxisMaterial.getParameter('Overlay')!.value = 0.0
     gridYAxisMaterial.getParameter('StippleValue')!.value = 0
     gridYAxisMaterial.getParameter('OccludedStippleValue')!.value = 1
-    gridYAxisMaterial.setSelectable(false)
 
     const zAxisLineItem = new GeomItem('yAxisLine', axisLine, gridYAxisMaterial)
     zAxisLineItem.setSelectable(false)
