@@ -1,4 +1,3 @@
-export * from './AudioSourceCreatedEvent'
 export * from './ControllerAddedEvent'
 export * from './CountChangedEvent'
 export * from './EnvMapAssignedEvent'
