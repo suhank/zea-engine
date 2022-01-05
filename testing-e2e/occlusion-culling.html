@@ -13,7 +13,8 @@
     <script src="../dist/index.umd.js"></script>
 
     <script type="module">
-      const { Vec3, Xfo, Color, Sphere, Material, GeomItem, Scene, GLRenderer, TreeItem } = window.zeaEngine
+      const { Vec3, Xfo, Color, Sphere, Plane, SimpleSurfaceMaterial, GeomItem, Scene, GLRenderer, TreeItem } =
+        window.zeaEngine
 
       const canvas = document.querySelector('#renderer')
 
@@ -33,9 +34,9 @@
       const dim = Math.round(Math.cbrt(count))
       console.log('Will render GeomItem count:', Math.pow(dim, 3))
 
-      const detail = 20
-      const geom = new Sphere(0.5, 2 * detail, detail)
-      const simpleMaterial = new Material('mat', 'SimpleSurfaceShader')
+      const detail = 40
+      const geom = new Sphere(0.3, 2 * detail, detail)
+      const simpleMaterial = new SimpleSurfaceMaterial('mat')
 
       let geomItemCount = 0
       const addLayers = (layerId, treeItem) => {
@@ -62,6 +63,38 @@
 
         addLayers(i, treeItem)
       }
+
+      // Setup Floors
+      const floor = new Plane(dim, dim)
+      const floorMaterial = new SimpleSurfaceMaterial('mat')
+      floorMaterial.baseColorParam.value = new Color(0, 1, 0)
+      const floorDim = Math.round(dim / 4)
+      for (let i = 0; i <= floorDim; i += 1) {
+        const geomItem = new GeomItem('Wall' + i, floor, floorMaterial)
+        scene.getRoot().addChild(geomItem)
+
+        const xfo = new Xfo()
+        xfo.tr.set(dim * 0.5, dim * 0.5, (i - 0.5) * 4)
+        geomItem.getParameter('GlobalXfo').setValue(xfo)
+        // geomItemCount++
+      }
+
+      // Setup Walls
+      const wall = new Plane(dim, dim)
+      const wallMaterial = new SimpleSurfaceMaterial('mat')
+      wallMaterial.baseColorParam.value = new Color(0, 0, 1)
+      const wallDim = Math.round(dim / 4)
+      for (let i = 0; i <= wallDim; i += 1) {
+        const geomItem = new GeomItem('Wall' + i, wall, wallMaterial)
+        scene.getRoot().addChild(geomItem)
+
+        const xfo = new Xfo()
+        xfo.tr.set(dim * 0.5, (i - 0.5) * 4, dim * 0.5)
+        xfo.ori.setFromAxisAndAngle(new Vec3(1, 0, 0), Math.PI * 0.5)
+        geomItem.getParameter('GlobalXfo').setValue(xfo)
+        // geomItemCount++
+      }
+
       renderer.frameAll()
       renderer.getViewport().on('keyDown', (event) => {
         if (event.key == 'f') {
