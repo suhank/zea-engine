@@ -23,7 +23,6 @@ export * from './Materials/index'
 
 export * from './TreeItem'
 export * from './InstanceItem'
-// export * from './AudioItem'
 export * from './BaseGeomItem'
 export * from './GeomItem'
 export * from './AssetItem'
