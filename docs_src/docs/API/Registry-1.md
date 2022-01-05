@@ -54,7 +54,7 @@ The factory function that construct the class registered under the given name.
 
 #### Defined in
 
-[src/Registry.ts:78](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Registry.ts#L78)
+[src/Registry.ts:78](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Registry.ts#L78)
 
 ___
 
@@ -70,7 +70,7 @@ For testing purpose only, never call this outside of the test scope.
 
 #### Defined in
 
-[src/Registry.ts:90](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Registry.ts#L90)
+[src/Registry.ts:90](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Registry.ts#L90)
 
 ___
 
@@ -94,7 +94,7 @@ typeof [`BaseClass`](Utilities/Utilities_BaseClass.BaseClass)
 
 #### Defined in
 
-[src/Registry.ts:55](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Registry.ts#L55)
+[src/Registry.ts:55](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Registry.ts#L55)
 
 ___
 
@@ -118,7 +118,7 @@ Returns class name registered for the instantiated object.
 
 #### Defined in
 
-[src/Registry.ts:65](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Registry.ts#L65)
+[src/Registry.ts:65](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Registry.ts#L65)
 
 ___
 
@@ -141,5 +141,5 @@ Registers a new class to the factory.
 
 #### Defined in
 
-[src/Registry.ts:36](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Registry.ts#L36)
+[src/Registry.ts:36](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Registry.ts#L36)
 

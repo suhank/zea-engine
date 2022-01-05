@@ -71,5 +71,5 @@ Create an BaseEvent.
 
 #### Defined in
 
-[src/Utilities/BaseEvent.ts:6](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/BaseEvent.ts#L6)
+[src/Utilities/BaseEvent.ts:6](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/BaseEvent.ts#L6)
 

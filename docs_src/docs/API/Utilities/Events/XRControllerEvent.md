@@ -17,7 +17,7 @@ custom_edit_url: null
 
 ### constructor
 
-• **new XRControllerEvent**(`viewport`, `controller`, `button`)
+• **new XRControllerEvent**(`viewport`, `controller`, `button`, `buttonPressed`)
 
 Create an BaseEvent.
 
@@ -28,6 +28,7 @@ Create an BaseEvent.
 | `viewport` | [`XRViewport`](../../Renderer/VR/Renderer_VR_XRViewport.XRViewport) |
 | `controller` | [`XRController`](../../Renderer/VR/Renderer_VR_XRController.XRController) |
 | `button` | `number` |
+| `buttonPressed` | `number` |
 
 #### Overrides
 
@@ -35,7 +36,7 @@ Create an BaseEvent.
 
 #### Defined in
 
-[src/Utilities/Events/XRControllerEvent.ts:10](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/Events/XRControllerEvent.ts#L10)
+[src/Utilities/Events/XRControllerEvent.ts:10](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/XRControllerEvent.ts#L10)
 
 ## Properties
 
@@ -45,17 +46,17 @@ Create an BaseEvent.
 
 #### Defined in
 
-[src/Utilities/Events/XRControllerEvent.ts:8](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/Events/XRControllerEvent.ts#L8)
+[src/Utilities/Events/XRControllerEvent.ts:8](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/XRControllerEvent.ts#L8)
 
 ___
 
 ### buttonPressed
 
-• **buttonPressed**: `boolean`
+• **buttonPressed**: `number` = `0`
 
 #### Defined in
 
-[src/Utilities/Events/XRControllerEvent.ts:9](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/Events/XRControllerEvent.ts#L9)
+[src/Utilities/Events/XRControllerEvent.ts:9](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/XRControllerEvent.ts#L9)
 
 ___
 
@@ -65,7 +66,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/Events/XRControllerEvent.ts:7](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/Events/XRControllerEvent.ts#L7)
+[src/Utilities/Events/XRControllerEvent.ts:7](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/XRControllerEvent.ts#L7)
 
 ___
 
@@ -79,7 +80,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/Events/ZeaPointerEvent.ts:22](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/Events/ZeaPointerEvent.ts#L22)
+[src/Utilities/Events/ZeaPointerEvent.ts:22](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaPointerEvent.ts#L22)
 
 ___
 
@@ -93,7 +94,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/Events/ZeaPointerEvent.ts:23](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/Events/ZeaPointerEvent.ts#L23)
+[src/Utilities/Events/ZeaPointerEvent.ts:23](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaPointerEvent.ts#L23)
 
 ___
 
@@ -107,7 +108,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/Events/ZeaPointerEvent.ts:18](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/Events/ZeaPointerEvent.ts#L18)
+[src/Utilities/Events/ZeaPointerEvent.ts:18](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaPointerEvent.ts#L18)
 
 ___
 
@@ -121,7 +122,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/Events/ZeaPointerEvent.ts:17](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/Events/ZeaPointerEvent.ts#L17)
+[src/Utilities/Events/ZeaPointerEvent.ts:17](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaPointerEvent.ts#L17)
 
 ___
 
@@ -135,7 +136,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/Events/ZeaPointerEvent.ts:20](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/Events/ZeaPointerEvent.ts#L20)
+[src/Utilities/Events/ZeaPointerEvent.ts:20](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaPointerEvent.ts#L20)
 
 ___
 
@@ -149,7 +150,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/Events/ZeaPointerEvent.ts:19](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/Events/ZeaPointerEvent.ts#L19)
+[src/Utilities/Events/ZeaPointerEvent.ts:19](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaPointerEvent.ts#L19)
 
 ## Methods
 
@@ -167,7 +168,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/Events/XRControllerEvent.ts:25](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/Events/XRControllerEvent.ts#L25)
+[src/Utilities/Events/XRControllerEvent.ts:26](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/XRControllerEvent.ts#L26)
 
 ___
 
@@ -185,7 +186,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/Events/XRControllerEvent.ts:29](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/Events/XRControllerEvent.ts#L29)
+[src/Utilities/Events/XRControllerEvent.ts:30](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/XRControllerEvent.ts#L30)
 
 ___
 
@@ -209,7 +210,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/Events/XRControllerEvent.ts:21](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/Events/XRControllerEvent.ts#L21)
+[src/Utilities/Events/XRControllerEvent.ts:22](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/XRControllerEvent.ts#L22)
 
 ___
 
@@ -227,5 +228,5 @@ ___
 
 #### Defined in
 
-[src/Utilities/Events/XRControllerEvent.ts:17](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/Events/XRControllerEvent.ts#L17)
+[src/Utilities/Events/XRControllerEvent.ts:18](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/XRControllerEvent.ts#L18)
 

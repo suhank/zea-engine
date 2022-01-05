@@ -23,5 +23,5 @@ custom_edit_url: null
 
 #### Defined in
 
-[src/Utilities/ICloneable.ts:3](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Utilities/ICloneable.ts#L3)
+[src/Utilities/ICloneable.ts:3](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/ICloneable.ts#L3)
 

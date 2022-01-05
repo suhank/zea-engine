@@ -27,7 +27,7 @@ Creates a GL Framebuffer Object
 
 #### Defined in
 
-[src/Renderer/GLFbo.ts:29](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/GLFbo.ts#L29)
+[src/Renderer/GLFbo.ts:29](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLFbo.ts#L29)
 
 ## Properties
 
@@ -37,7 +37,7 @@ Creates a GL Framebuffer Object
 
 #### Defined in
 
-[src/Renderer/GLFbo.ts:17](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/GLFbo.ts#L17)
+[src/Renderer/GLFbo.ts:17](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLFbo.ts#L17)
 
 ___
 
@@ -47,7 +47,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLFbo.ts:15](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/GLFbo.ts#L15)
+[src/Renderer/GLFbo.ts:15](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLFbo.ts#L15)
 
 ___
 
@@ -57,7 +57,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLFbo.ts:16](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/GLFbo.ts#L16)
+[src/Renderer/GLFbo.ts:16](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLFbo.ts#L16)
 
 ___
 
@@ -67,7 +67,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLFbo.ts:18](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/GLFbo.ts#L18)
+[src/Renderer/GLFbo.ts:18](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLFbo.ts#L18)
 
 ___
 
@@ -77,7 +77,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLFbo.ts:19](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/GLFbo.ts#L19)
+[src/Renderer/GLFbo.ts:19](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLFbo.ts#L19)
 
 ___
 
@@ -87,7 +87,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLFbo.ts:14](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/GLFbo.ts#L14)
+[src/Renderer/GLFbo.ts:14](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLFbo.ts#L14)
 
 ___
 
@@ -97,7 +97,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLFbo.ts:20](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/GLFbo.ts#L20)
+[src/Renderer/GLFbo.ts:20](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLFbo.ts#L20)
 
 ___
 
@@ -107,7 +107,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLFbo.ts:13](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/GLFbo.ts#L13)
+[src/Renderer/GLFbo.ts:13](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLFbo.ts#L13)
 
 ## Accessors
 
@@ -125,7 +125,7 @@ Returns the ColorTexture of the Fbo
 
 #### Defined in
 
-[src/Renderer/GLFbo.ts:150](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/GLFbo.ts#L150)
+[src/Renderer/GLFbo.ts:150](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLFbo.ts#L150)
 
 ___
 
@@ -141,7 +141,7 @@ Returns the value of the depthTexture property.
 
 #### Defined in
 
-[src/Renderer/GLFbo.ts:170](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/GLFbo.ts#L170)
+[src/Renderer/GLFbo.ts:170](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLFbo.ts#L170)
 
 ___
 
@@ -159,7 +159,7 @@ Returns the `height` of the GL Texture
 
 #### Defined in
 
-[src/Renderer/GLFbo.ts:132](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/GLFbo.ts#L132)
+[src/Renderer/GLFbo.ts:132](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLFbo.ts#L132)
 
 ___
 
@@ -177,7 +177,7 @@ Returns the [width, height] of the GL Texture.
 
 #### Defined in
 
-[src/Renderer/GLFbo.ts:141](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/GLFbo.ts#L141)
+[src/Renderer/GLFbo.ts:141](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLFbo.ts#L141)
 
 ___
 
@@ -195,7 +195,7 @@ Returns the `width` of the GL Texture
 
 #### Defined in
 
-[src/Renderer/GLFbo.ts:123](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/GLFbo.ts#L123)
+[src/Renderer/GLFbo.ts:123](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLFbo.ts#L123)
 
 ## Methods
 
@@ -211,7 +211,7 @@ The __checkFramebuffer method.
 
 #### Defined in
 
-[src/Renderer/GLFbo.ts:331](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/GLFbo.ts#L331)
+[src/Renderer/GLFbo.ts:331](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLFbo.ts#L331)
 
 ___
 
@@ -233,7 +233,7 @@ Binds the Fbo to the canvas context, meaning that all WRITE operations will affe
 
 #### Defined in
 
-[src/Renderer/GLFbo.ts:403](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/GLFbo.ts#L403)
+[src/Renderer/GLFbo.ts:403](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLFbo.ts#L403)
 
 ___
 
@@ -255,7 +255,7 @@ Runs [`bind`](#bind) then [`clear`](#clear) methods.
 
 #### Defined in
 
-[src/Renderer/GLFbo.ts:463](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/GLFbo.ts#L463)
+[src/Renderer/GLFbo.ts:463](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLFbo.ts#L463)
 
 ___
 
@@ -277,7 +277,7 @@ Binds the Fbo to the canvas context, meaning that all READ operations will affec
 
 #### Defined in
 
-[src/Renderer/GLFbo.ts:426](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/GLFbo.ts#L426)
+[src/Renderer/GLFbo.ts:426](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLFbo.ts#L426)
 
 ___
 
@@ -299,7 +299,7 @@ Binds the Fbo to the canvas context, meaning that all WRITE operations will affe
 
 #### Defined in
 
-[src/Renderer/GLFbo.ts:375](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/GLFbo.ts#L375)
+[src/Renderer/GLFbo.ts:375](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLFbo.ts#L375)
 
 ___
 
@@ -316,7 +316,7 @@ specifying the default color values when clearing color buffers and clears the b
 
 #### Defined in
 
-[src/Renderer/GLFbo.ts:447](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/GLFbo.ts#L447)
+[src/Renderer/GLFbo.ts:447](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLFbo.ts#L447)
 
 ___
 
@@ -333,7 +333,7 @@ Users should never need to call this method directly.
 
 #### Defined in
 
-[src/Renderer/GLFbo.ts:472](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/GLFbo.ts#L472)
+[src/Renderer/GLFbo.ts:472](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLFbo.ts#L472)
 
 ___
 
@@ -351,7 +351,7 @@ Returns the ColorTexture of the Fbo
 
 #### Defined in
 
-[src/Renderer/GLFbo.ts:105](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/GLFbo.ts#L105)
+[src/Renderer/GLFbo.ts:105](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLFbo.ts#L105)
 
 ___
 
@@ -369,7 +369,7 @@ Returns the value of the deptTexture property.
 
 #### Defined in
 
-[src/Renderer/GLFbo.ts:114](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/GLFbo.ts#L114)
+[src/Renderer/GLFbo.ts:114](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLFbo.ts#L114)
 
 ___
 
@@ -387,7 +387,7 @@ Returns the `height` of the GL Texture
 
 #### Defined in
 
-[src/Renderer/GLFbo.ts:87](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/GLFbo.ts#L87)
+[src/Renderer/GLFbo.ts:87](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLFbo.ts#L87)
 
 ___
 
@@ -405,7 +405,7 @@ Returns the `width`(Index 0) and the `height`(Index 1) of the GL Texture.
 
 #### Defined in
 
-[src/Renderer/GLFbo.ts:96](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/GLFbo.ts#L96)
+[src/Renderer/GLFbo.ts:96](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLFbo.ts#L96)
 
 ___
 
@@ -423,7 +423,7 @@ Returns the `width` of the GL Texture
 
 #### Defined in
 
-[src/Renderer/GLFbo.ts:78](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/GLFbo.ts#L78)
+[src/Renderer/GLFbo.ts:78](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLFbo.ts#L78)
 
 ___
 
@@ -450,7 +450,7 @@ E.g. resizing and preserving data.
 
 #### Defined in
 
-[src/Renderer/GLFbo.ts:280](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/GLFbo.ts#L280)
+[src/Renderer/GLFbo.ts:280](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLFbo.ts#L280)
 
 ___
 
@@ -472,7 +472,7 @@ Sets FBO clear color using RGBA array structure.
 
 #### Defined in
 
-[src/Renderer/GLFbo.ts:69](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/GLFbo.ts#L69)
+[src/Renderer/GLFbo.ts:69](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLFbo.ts#L69)
 
 ___
 
@@ -494,7 +494,7 @@ Sets ColorTexture of the Fbo.
 
 #### Defined in
 
-[src/Renderer/GLFbo.ts:159](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/GLFbo.ts#L159)
+[src/Renderer/GLFbo.ts:159](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLFbo.ts#L159)
 
 ___
 
@@ -510,7 +510,7 @@ The setup method.
 
 #### Defined in
 
-[src/Renderer/GLFbo.ts:177](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/GLFbo.ts#L177)
+[src/Renderer/GLFbo.ts:177](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLFbo.ts#L177)
 
 ___
 
@@ -530,7 +530,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLFbo.ts:60](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/GLFbo.ts#L60)
+[src/Renderer/GLFbo.ts:60](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLFbo.ts#L60)
 
 ___
 
@@ -552,7 +552,7 @@ Unbinds the Fbo to the canvas context for WRITE operations.
 
 #### Defined in
 
-[src/Renderer/GLFbo.ts:412](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/GLFbo.ts#L412)
+[src/Renderer/GLFbo.ts:412](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLFbo.ts#L412)
 
 ___
 
@@ -568,7 +568,7 @@ Unbinds the Fbo to the canvas context for READ operations.
 
 #### Defined in
 
-[src/Renderer/GLFbo.ts:437](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/GLFbo.ts#L437)
+[src/Renderer/GLFbo.ts:437](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLFbo.ts#L437)
 
 ___
 
@@ -590,5 +590,5 @@ Unbinds the Fbo to the canvas context for WRITE operations.
 
 #### Defined in
 
-[src/Renderer/GLFbo.ts:391](https://github.com/ZeaInc/zea-engine/blob/976b47e27/src/Renderer/GLFbo.ts#L391)
+[src/Renderer/GLFbo.ts:391](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLFbo.ts#L391)
 
