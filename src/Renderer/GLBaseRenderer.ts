@@ -678,16 +678,18 @@ class GLBaseRenderer extends ParameterOwner {
     const isValidCanvas = () => this.getWidth() > 0 && this.getHeight()
 
     /** Mouse Events Start */
-    const isMobileSafariMouseEvent = (event: Record<string, any>) => {
-      if (SystemDesc.isMobileDevice && SystemDesc.browserName == 'Safari') {
-        console.warn('Mobile Safari is triggering mouse event:', event.type)
+    // Mobile devices emulate mouse events after emitting touch events
+    // which causes double taps and other weirdness.
+    const isMobileDeviceMouseEvent = (event: Record<string, any>) => {
+      if (SystemDesc.isMobileDevice) {
+        console.warn('Mobile device is triggering mouse event:', event.type)
         return true
       }
       return false
     }
 
     this.__glcanvas!.addEventListener('mousedown', (event: globalThis.MouseEvent) => {
-      if (isMobileSafariMouseEvent(event)) {
+      if (isMobileDeviceMouseEvent(event)) {
         return
       }
       const pointerEvent = new ZeaMouseEvent(event, this.__glcanvas!.getBoundingClientRect())
@@ -703,7 +705,7 @@ class GLBaseRenderer extends ParameterOwner {
     })
 
     document.addEventListener('mouseup', (event: globalThis.MouseEvent) => {
-      if (isMobileSafariMouseEvent(event)) {
+      if (isMobileDeviceMouseEvent(event)) {
         return
       }
 
@@ -725,7 +727,7 @@ class GLBaseRenderer extends ParameterOwner {
     })
 
     document.addEventListener('mousemove', (event: globalThis.MouseEvent) => {
-      if (isMobileSafariMouseEvent(event)) {
+      if (isMobileDeviceMouseEvent(event)) {
         return
       }
 
@@ -741,7 +743,7 @@ class GLBaseRenderer extends ParameterOwner {
     })
 
     this.__glcanvas!.addEventListener('mouseenter', (event: globalThis.MouseEvent) => {
-      if (isMobileSafariMouseEvent(event)) {
+      if (isMobileDeviceMouseEvent(event)) {
         return
       }
 
@@ -763,7 +765,7 @@ class GLBaseRenderer extends ParameterOwner {
     })
 
     this.__glcanvas!.addEventListener('mouseleave', (event: globalThis.MouseEvent) => {
-      if (isMobileSafariMouseEvent(event)) {
+      if (isMobileDeviceMouseEvent(event)) {
         return
       }
 
