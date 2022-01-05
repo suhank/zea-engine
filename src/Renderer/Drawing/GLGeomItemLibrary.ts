@@ -39,7 +39,7 @@ class GLGeomItemLibrary extends EventEmitter {
   protected enableFrustumCulling: boolean
   protected enableOcclusionCulling: boolean
 
-  protected xrViewport? = VRViewport
+  protected xrViewport?: VRViewport
   protected xrPresenting: boolean = false
   protected xrFovY: number = 0.0
   protected xrProjectionMatrix = new Mat4()
@@ -248,34 +248,20 @@ class GLGeomItemLibrary extends EventEmitter {
       if (this.enableOcclusionCulling) {
         const gl = this.renderer.gl
         this.floatOcclusionBuffer = gl.floatTexturesSupported
-        const occlusionDataBufferSizeFactor = 1
+        let occlusionDataBufferSizeFactor = 1
         const occlusionDataBufferWidth = Math.ceil(this.renderer.getWidth() * occlusionDataBufferSizeFactor)
         const occlusionDataBufferHeight = Math.ceil(this.renderer.getHeight() * occlusionDataBufferSizeFactor)
-        if (this.floatOcclusionBuffer) {
-          this.occlusionDataBuffer = new GLRenderTarget(gl, {
-            type: gl.FLOAT,
-            format: gl.RGBA,
-            minFilter: gl.NEAREST,
-            magFilter: gl.NEAREST,
-            width: occlusionDataBufferWidth,
-            height: occlusionDataBufferHeight,
-            depthType: gl.UNSIGNED_SHORT,
-            depthFormat: gl.DEPTH_COMPONENT,
-            depthInternalFormat: gl.DEPTH_COMPONENT16,
-          })
-        } else {
-          this.occlusionDataBuffer = new GLRenderTarget(gl, {
-            type: gl.UNSIGNED_BYTE,
-            format: gl.RGBA,
-            minFilter: gl.NEAREST,
-            magFilter: gl.NEAREST,
-            width: occlusionDataBufferWidth,
-            height: occlusionDataBufferHeight,
-            depthType: gl.UNSIGNED_SHORT,
-            depthFormat: gl.DEPTH_COMPONENT,
-            depthInternalFormat: gl.DEPTH_COMPONENT16,
-          })
-        }
+        this.occlusionDataBuffer = new GLRenderTarget(gl, {
+          type: gl.FLOAT,
+          format: gl.RGBA,
+          minFilter: gl.NEAREST,
+          magFilter: gl.NEAREST,
+          width: occlusionDataBufferWidth,
+          height: occlusionDataBufferHeight,
+          depthType: gl.UNSIGNED_SHORT,
+          depthFormat: gl.DEPTH_COMPONENT,
+          depthInternalFormat: gl.DEPTH_COMPONENT16,
+        })
         this.renderer.on('resized', (event) => {
           this.occlusionDataBuffer.resize(
             Math.ceil(event.width * occlusionDataBufferSizeFactor),
@@ -286,11 +272,13 @@ class GLGeomItemLibrary extends EventEmitter {
           const xrvp = event.xrViewport
           xrvp.on('presentingChanged', (event) => {
             if (event.state) {
+              occlusionDataBufferSizeFactor = 0.2
               this.occlusionDataBuffer.resize(
                 Math.ceil(xrvp.getWidth() * occlusionDataBufferSizeFactor),
                 Math.ceil(xrvp.getWidth() * occlusionDataBufferSizeFactor)
               )
             } else {
+              occlusionDataBufferSizeFactor = 1
               this.occlusionDataBuffer.resize(
                 Math.ceil(this.renderer.getWidth() * occlusionDataBufferSizeFactor),
                 Math.ceil(this.renderer.getWidth() * occlusionDataBufferSizeFactor)
@@ -301,7 +289,7 @@ class GLGeomItemLibrary extends EventEmitter {
         this.reductionDataBuffer = new GLRenderTarget(gl, {
           type: gl.UNSIGNED_BYTE,
           internalFormat: gl.R8,
-          format: gl.name == 'webgl2' ? gl.RED : gl.RGBA,
+          format: gl.RED,
           minFilter: gl.NEAREST,
           magFilter: gl.NEAREST,
           width: 1,
@@ -413,6 +401,7 @@ class GLGeomItemLibrary extends EventEmitter {
 
     this.renderer.bindGLBaseRenderer(renderstate)
     if (this.xrPresenting) {
+      // this.xrViewport.initRenderState(renderstate)
       /*if (!this.xrViewport.viewXfo) {
         return
       }
@@ -465,6 +454,10 @@ class GLGeomItemLibrary extends EventEmitter {
       // }
     }
 
+    // Draw one point for each pixel in the occlusion buffer.
+    // This point will color a single pixel in the reduction buffer.
+    const numReductionPoints = this.occlusionDataBuffer.width * this.occlusionDataBuffer.height
+
     // Now perform a reduction to calculate the indices of visible items.
     const reduce = (renderstate, clear, query) => {
       this.reductionDataBuffer.bindForWriting(renderstate, clear)
@@ -478,9 +471,6 @@ class GLGeomItemLibrary extends EventEmitter {
 
       gl.beginQuery(ext.TIME_ELAPSED_EXT, query)
 
-      // Draw one point for each pixel in the occlusion buffer.
-      // This point will color a single pixel in the reduction buffer.
-      const numReductionPoints = this.occlusionDataBuffer.width * this.occlusionDataBuffer.height
       gl.drawArrays(gl.POINTS, 0, numReductionPoints)
 
       gl.endQuery(ext.TIME_ELAPSED_EXT)
@@ -540,7 +530,9 @@ class GLGeomItemLibrary extends EventEmitter {
     const queryReduce2 = gl.createQuery()
     reduce(renderstate, false, queryReduce2)
 
-    const queryResults = {}
+    const queryResults = {
+      numReductionPoints,
+    }
     const checkQuery = (name, query) => {
       const available = gl.getQueryParameter(query, gl.QUERY_RESULT_AVAILABLE)
       const disjoint = gl.getParameter(ext.GPU_DISJOINT_EXT)
@@ -558,9 +550,9 @@ class GLGeomItemLibrary extends EventEmitter {
     // //////////////////////////////////////////
     // Pull down the reduction values from the GPU for processing.
 
-    const w = this.reductionDataBuffer.width * (gl.name == 'webgl2' ? 1 : 4)
+    const w = this.reductionDataBuffer.width
     const h = this.reductionDataBuffer.height
-    const format = gl.name == 'webgl2' ? gl.RED : gl.RGBA
+    const format = gl.RED
     const type = gl.UNSIGNED_BYTE
     this.reductionDataBuffer.bindForReading()
     readPixelsAsync(gl, 0, 0, w, h, format, type, this.reductionDataArray).then(() => {
