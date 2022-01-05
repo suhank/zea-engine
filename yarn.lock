@@ -2446,14 +2446,6 @@
     "@rollup/plugin-json" "^4.1.0"
     "@zeainc/zea-engine" "^3.12.4"
 
-"@zeainc/zea-cad@^4.0.0":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@zeainc/zea-cad/-/zea-cad-4.0.0.tgz#b89253aa7ec129496fa2fb1c159306013a39e7d6"
-  integrity sha512-RouznSN8KOSvOYe+EHSlt9piv0atEJa9d32rewFrCdGYHGBsn5AWVPB8LxH/AciSFrUg2tJWf+0XD0Ir5vs09w==
-  dependencies:
-    "@rollup/plugin-json" "^4.1.0"
-    "@zeainc/zea-engine" "^3.12.4"
-
 "@zeainc/zea-collab@^5.2.0":
   version "5.2.1"
   resolved "https://registry.yarnpkg.com/@zeainc/zea-collab/-/zea-collab-5.2.1.tgz#dcba59e6237631c35d631dcd46cc09c03397498d"
