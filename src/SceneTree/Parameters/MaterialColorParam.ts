@@ -87,7 +87,6 @@ class MaterialColorParam extends ColorParameter {
   setImage(value: BaseImage | null): void {
     const disconnectImage = () => {
       if (this.image) {
-        this.image.removeListenerById('loaded', this.listenerIDs['loaded'])
         this.image.removeListenerById('updated', this.listenerIDs['updated'])
         this.image = undefined
       }
