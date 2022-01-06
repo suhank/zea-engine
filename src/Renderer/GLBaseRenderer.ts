@@ -43,7 +43,7 @@ export interface RendererOptions {
   debugGeomIds: boolean
 
   // webgl setup options
-  powerPreference: string
+  powerPreference?: string
   depth: boolean
   alpha: boolean
   antialias: boolean
@@ -53,10 +53,25 @@ export interface RendererOptions {
   floatGeomBuffer: boolean
   preserveDrawingBuffer: boolean
 
-  //GLGeomItemLibrary
+  // GLGeomItemLibrary
   enableFrustumCulling: boolean
 }
 
+export const defaultRendererOptions: RendererOptions = {
+  supportXR: false,
+  disableTextures: true,
+  debugGeomIds: false,
+  depth: false,
+  alpha: false,
+  antialias: false,
+  stencil: false,
+  xrCompatible: false,
+  disableMultiDraw: false,
+  floatGeomBuffer: false,
+  preserveDrawingBuffer: false,
+
+  enableFrustumCulling: false,
+}
 /**
  * Class representing a GL base renderer.
  *
@@ -105,7 +120,7 @@ class GLBaseRenderer extends ParameterOwner {
    * @param $canvas - The canvas element.
    * @param options - The options value.
    */
-  constructor($canvas: HTMLCanvasElement, options: RendererOptions) {
+  constructor($canvas: HTMLCanvasElement, options: RendererOptions = defaultRendererOptions) {
     super()
 
     if (!SystemDesc.gpuDesc) {
@@ -567,7 +582,10 @@ class GLBaseRenderer extends ParameterOwner {
    * @param $canvas - The $canvas element.
    * @param webglOptions - The webglOptions value.
    */
-  private setupWebGL($canvas: HTMLCanvasElement, webglOptions: RendererOptions): WebGL12RenderingContext {
+  private setupWebGL(
+    $canvas: HTMLCanvasElement,
+    webglOptions: RendererOptions = defaultRendererOptions
+  ): WebGL12RenderingContext {
     const { tagName } = $canvas
 
     if (!['DIV', 'CANVAS'].includes(tagName)) {

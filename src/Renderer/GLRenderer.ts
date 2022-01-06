@@ -3,7 +3,7 @@ import { EnvMap, BaseImage, Scene } from '../SceneTree/index'
 import { GLRenderTarget } from './GLRenderTarget'
 import { GLHDRImage } from './GLHDRImage'
 import { GLEnvMap } from './GLEnvMap'
-import { GLBaseRenderer, RendererOptions } from './GLBaseRenderer'
+import { defaultRendererOptions, GLBaseRenderer, RendererOptions } from './GLBaseRenderer'
 import { GLTexture2D } from './GLTexture2D'
 import { PassType } from './Passes/GLPass'
 import { EnvMapShader } from './Shaders/EnvMapShader'
@@ -56,7 +56,7 @@ class GLRenderer extends GLBaseRenderer {
    * @param $canvas - The $canvas value.
    * @param options - The dictionary of options.
    */
-  constructor($canvas: HTMLCanvasElement, options: RendererOptions) {
+  constructor($canvas: HTMLCanvasElement, options: RendererOptions = defaultRendererOptions) {
     // use HTMLCanvasElement?
     super($canvas, options)
 
