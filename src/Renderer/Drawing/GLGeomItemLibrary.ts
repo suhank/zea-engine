@@ -29,7 +29,9 @@ import { XrViewportEvent } from '../../Utilities/Events/XrViewportEvent'
  */
 class GLGeomItemLibrary extends EventEmitter {
   protected renderer: GLBaseRenderer
-  protected glGeomItems: Array<GLGeomItem | null> = [null] // Note: item 0 is always null.
+  // Note: item 0 is always null.
+  // The reduction shader reads pixel values, and assumes 0 is an empty pixel.
+  protected glGeomItems: Array<GLGeomItem | null> = [null]
   protected glGeomItemEventHandlers: any[] = []
   protected glGeomItemsMap: Record<number, number> = {}
   protected glGeomItemsIndexFreeList: number[] = []
@@ -47,7 +49,7 @@ class GLGeomItemLibrary extends EventEmitter {
 
   // Occlusion Culling
   protected floatOcclusionBuffer: boolean = true
-  occlusionDataBuffer: GLRenderTarget
+  protected occlusionDataBuffer: GLRenderTarget
   protected reductionDataBuffer: GLRenderTarget
   protected bbox: GLMesh
   protected reductionShader: ReductionShader
@@ -172,6 +174,7 @@ class GLGeomItemLibrary extends EventEmitter {
     renderer.once('xrViewportSetup', (event: XrViewportEvent) => {
       const xrvp = event.xrViewport
       xrvp.on('presentingChanged', (event: StateChangedEvent) => {
+        this.xrPresenting = event.state
         if (event.state) {
           cullFreq = 10
           // Note: We approximate the culling viewport to be
@@ -474,7 +477,6 @@ class GLGeomItemLibrary extends EventEmitter {
       const { geomDataTexture, reductionTextureWidth, floatGeomBuffer } = renderstate.unifs
       if (geomDataTexture) this.occlusionDataBuffer.bindToUniform(renderstate, geomDataTexture)
       if (reductionTextureWidth) gl.uniform1i(reductionTextureWidth.location, this.reductionDataBuffer.width)
-      if (floatGeomBuffer) gl.uniform1i(floatGeomBuffer.location, 1)
 
       gl.beginQuery(ext.TIME_ELAPSED_EXT, query)
 
@@ -570,7 +572,7 @@ class GLGeomItemLibrary extends EventEmitter {
         checkQuery('queryDrawCulledBBoxes', queryDrawCulledBBoxes)
         checkQuery('queryReduce1', queryReduce1)
         checkQuery('queryReduce2', queryReduce2)
-        console.log(queryResults)
+        console.log(queryResults['queryReduce1'], queryResults['queryReduce2'])
       }
 
       // console.log(this.reductionDataArray)

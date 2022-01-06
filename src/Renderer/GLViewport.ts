@@ -53,6 +53,7 @@ class GLViewport extends GLBaseViewport {
   protected __geomDataBufferFbo: GLFbo
   debugGeomDataBuffer: boolean = false
   debugOcclusionBuffer: boolean = false
+  debugReductionBuffer: boolean = false
   debugHighlightedGeomsBuffer: boolean = false
 
   protected __x: number = 0
@@ -913,12 +914,21 @@ class GLViewport extends GLBaseViewport {
       screenQuad.draw(renderstate, this.highlightedGeomsBuffer, new Vec2(0, 0), new Vec2(1, 1))
     }
     if (this.debugOcclusionBuffer) {
-      const gl = this.__renderer.gl
+      // @ts-ignore
       const occlusionDataBuffer = this.__renderer.glGeomItemLibrary.occlusionDataBuffer
       const screenQuad = this.__renderer.screenQuad!
       screenQuad.bindShader(renderstate)
       const imageInif = <Uniform>renderstate.unifs.image
       occlusionDataBuffer.bindColorTexture(renderstate, imageInif)
+      screenQuad.draw(renderstate, null, new Vec2(0, 0), new Vec2(1, 1))
+    }
+    if (this.debugReductionBuffer) {
+      // @ts-ignore
+      const reductionDataBuffer = this.__renderer.glGeomItemLibrary.reductionDataBuffer
+      const screenQuad = this.__renderer.screenQuad!
+      screenQuad.bindShader(renderstate)
+      const imageInif = <Uniform>renderstate.unifs.image
+      reductionDataBuffer.bindColorTexture(renderstate, imageInif)
       screenQuad.draw(renderstate, null, new Vec2(0, 0), new Vec2(1, 1))
     }
   }

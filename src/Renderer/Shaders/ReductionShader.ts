@@ -15,7 +15,6 @@ export class ReductionShader extends GLShader {
 
 precision highp float;
 
-uniform int floatGeomBuffer;
 uniform int reductionTextureWidth;
 uniform sampler2D geomDataTexture;
 
@@ -37,19 +36,10 @@ vec2 pointPositionFromGeomItemId(int geomItemId){
 
 void main()
 {
-  int geomItemId = -1;
-
   // Get the texel coordinate in the source geomdata buffer.
   // there is one point for every pixel in the geomdata texture.
   ivec2 texelCoord = texelCoordFromVertexId();
-  if(floatGeomBuffer != 0) {
-    geomItemId = int(texelFetch(geomDataTexture, texelCoord, 0).g + 0.5);
-  } else {
-    // decode the id from 2 uint8 values into a 16 bit float
-    // vec2 twoXUInt8 = int(texture2D(geomDataTexture, texelCoord).ba;
-    // float float16bits = decode16BitFloatInto2xUInt8(twoXUInt8);
-    // geomItemId = int(float16bits);
-  }
+  int geomItemId = int(texelFetch(geomDataTexture, texelCoord, 0).g + 0.5);
 
   if (geomItemId > 0) {
     vec2 position = pointPositionFromGeomItemId(geomItemId);
