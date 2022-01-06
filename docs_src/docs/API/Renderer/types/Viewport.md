@@ -15,7 +15,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[src/Renderer/types/renderer.ts:71](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/types/renderer.ts#L71)
+[src/Renderer/types/renderer.ts:71](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/renderer.ts#L71)
 
 ___
 
@@ -25,7 +25,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/renderer.ts:70](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/types/renderer.ts#L70)
+[src/Renderer/types/renderer.ts:70](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/renderer.ts#L70)
 
 ___
 
@@ -35,7 +35,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/renderer.ts:68](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/types/renderer.ts#L68)
+[src/Renderer/types/renderer.ts:68](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/renderer.ts#L68)
 
 ___
 
@@ -45,7 +45,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/renderer.ts:66](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/types/renderer.ts#L66)
+[src/Renderer/types/renderer.ts:66](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/renderer.ts#L66)
 
 ___
 
@@ -55,7 +55,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/renderer.ts:67](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/types/renderer.ts#L67)
+[src/Renderer/types/renderer.ts:67](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/renderer.ts#L67)
 
 ___
 
@@ -65,5 +65,5 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/renderer.ts:69](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/types/renderer.ts#L69)
+[src/Renderer/types/renderer.ts:69](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/renderer.ts#L69)
 

@@ -25,7 +25,7 @@ Create a bin writer.
 
 #### Defined in
 
-[src/SceneTree/BinWriter.ts:18](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/BinWriter.ts#L18)
+[src/SceneTree/BinWriter.ts:18](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinWriter.ts#L18)
 
 ## Properties
 
@@ -35,7 +35,7 @@ Create a bin writer.
 
 #### Defined in
 
-[src/SceneTree/BinWriter.ts:11](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/BinWriter.ts#L11)
+[src/SceneTree/BinWriter.ts:11](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinWriter.ts#L11)
 
 ___
 
@@ -45,7 +45,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/BinWriter.ts:10](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/BinWriter.ts#L10)
+[src/SceneTree/BinWriter.ts:10](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinWriter.ts#L10)
 
 ___
 
@@ -55,7 +55,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/BinWriter.ts:13](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/BinWriter.ts#L13)
+[src/SceneTree/BinWriter.ts:13](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinWriter.ts#L13)
 
 ___
 
@@ -65,7 +65,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/BinWriter.ts:12](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/BinWriter.ts#L12)
+[src/SceneTree/BinWriter.ts:12](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinWriter.ts#L12)
 
 ## Methods
 
@@ -81,7 +81,7 @@ The __grow method.
 
 #### Defined in
 
-[src/SceneTree/BinWriter.ts:68](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/BinWriter.ts#L68)
+[src/SceneTree/BinWriter.ts:68](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinWriter.ts#L68)
 
 ___
 
@@ -103,7 +103,7 @@ The __offset method.
 
 #### Defined in
 
-[src/SceneTree/BinWriter.ts:95](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/BinWriter.ts#L95)
+[src/SceneTree/BinWriter.ts:95](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinWriter.ts#L95)
 
 ___
 
@@ -125,7 +125,7 @@ The __reserve method.
 
 #### Defined in
 
-[src/SceneTree/BinWriter.ts:84](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/BinWriter.ts#L84)
+[src/SceneTree/BinWriter.ts:84](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinWriter.ts#L84)
 
 ___
 
@@ -143,7 +143,7 @@ Returns written buffer data to current point.
 
 #### Defined in
 
-[src/SceneTree/BinWriter.ts:55](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/BinWriter.ts#L55)
+[src/SceneTree/BinWriter.ts:55](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinWriter.ts#L55)
 
 ___
 
@@ -161,7 +161,7 @@ Returns the byte offset position.
 
 #### Defined in
 
-[src/SceneTree/BinWriter.ts:30](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/BinWriter.ts#L30)
+[src/SceneTree/BinWriter.ts:30](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinWriter.ts#L30)
 
 ___
 
@@ -183,7 +183,7 @@ Sets byte offset value.
 
 #### Defined in
 
-[src/SceneTree/BinWriter.ts:39](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/BinWriter.ts#L39)
+[src/SceneTree/BinWriter.ts:39](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinWriter.ts#L39)
 
 ___
 
@@ -199,7 +199,7 @@ The seekEnd method.
 
 #### Defined in
 
-[src/SceneTree/BinWriter.ts:46](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/BinWriter.ts#L46)
+[src/SceneTree/BinWriter.ts:46](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinWriter.ts#L46)
 
 ___
 
@@ -221,7 +221,7 @@ The writeAlignment method.
 
 #### Defined in
 
-[src/SceneTree/BinWriter.ts:402](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/BinWriter.ts#L402)
+[src/SceneTree/BinWriter.ts:402](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinWriter.ts#L402)
 
 ___
 
@@ -243,7 +243,7 @@ Writes a `Box2` in the buffer using Floar32 values(In `p0,p1` order).
 
 #### Defined in
 
-[src/SceneTree/BinWriter.ts:373](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/BinWriter.ts#L373)
+[src/SceneTree/BinWriter.ts:373](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinWriter.ts#L373)
 
 ___
 
@@ -265,7 +265,7 @@ Writes a `Box3` in the buffer using Floar32 values(In `p0,p1` order).
 
 #### Defined in
 
-[src/SceneTree/BinWriter.ts:383](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/BinWriter.ts#L383)
+[src/SceneTree/BinWriter.ts:383](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinWriter.ts#L383)
 
 ___
 
@@ -287,7 +287,7 @@ Writes a Float16 value in current byte offset.
 
 #### Defined in
 
-[src/SceneTree/BinWriter.ts:148](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/BinWriter.ts#L148)
+[src/SceneTree/BinWriter.ts:148](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinWriter.ts#L148)
 
 ___
 
@@ -309,7 +309,7 @@ Writes a `Quat` in the buffer using Float16 values(In `x,y,z,w` order).
 
 #### Defined in
 
-[src/SceneTree/BinWriter.ts:303](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/BinWriter.ts#L303)
+[src/SceneTree/BinWriter.ts:303](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinWriter.ts#L303)
 
 ___
 
@@ -331,7 +331,7 @@ Writes a `Vec2` in the buffer using Float16 values(In `x,y` order).
 
 #### Defined in
 
-[src/SceneTree/BinWriter.ts:262](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/BinWriter.ts#L262)
+[src/SceneTree/BinWriter.ts:262](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinWriter.ts#L262)
 
 ___
 
@@ -353,7 +353,7 @@ Writes a `Vec3` in the buffer using Float16 values(In `x,y,z` order).
 
 #### Defined in
 
-[src/SceneTree/BinWriter.ts:282](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/BinWriter.ts#L282)
+[src/SceneTree/BinWriter.ts:282](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinWriter.ts#L282)
 
 ___
 
@@ -375,7 +375,7 @@ Writes a Float32 value in current byte offset.
 
 #### Defined in
 
-[src/SceneTree/BinWriter.ts:158](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/BinWriter.ts#L158)
+[src/SceneTree/BinWriter.ts:158](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinWriter.ts#L158)
 
 ___
 
@@ -398,7 +398,7 @@ Writes a Float32 array value from current byte offset.
 
 #### Defined in
 
-[src/SceneTree/BinWriter.ts:215](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/BinWriter.ts#L215)
+[src/SceneTree/BinWriter.ts:215](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinWriter.ts#L215)
 
 ___
 
@@ -420,7 +420,7 @@ Writes a `Quat` in the buffer using Float32 values(In `x,y,z,w` order).
 
 #### Defined in
 
-[src/SceneTree/BinWriter.ts:315](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/BinWriter.ts#L315)
+[src/SceneTree/BinWriter.ts:315](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinWriter.ts#L315)
 
 ___
 
@@ -442,7 +442,7 @@ Writes a `Vec2` in the buffer using Float32 values(In `x,y` order).
 
 #### Defined in
 
-[src/SceneTree/BinWriter.ts:272](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/BinWriter.ts#L272)
+[src/SceneTree/BinWriter.ts:272](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinWriter.ts#L272)
 
 ___
 
@@ -464,7 +464,7 @@ Writes a `Vec3` in the buffer using Float32 values(In `x,y,z` order).
 
 #### Defined in
 
-[src/SceneTree/BinWriter.ts:292](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/BinWriter.ts#L292)
+[src/SceneTree/BinWriter.ts:292](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinWriter.ts#L292)
 
 ___
 
@@ -486,7 +486,7 @@ The writePadd method.
 
 #### Defined in
 
-[src/SceneTree/BinWriter.ts:392](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/BinWriter.ts#L392)
+[src/SceneTree/BinWriter.ts:392](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinWriter.ts#L392)
 
 ___
 
@@ -508,7 +508,7 @@ Writes a RGBA `Color` in the buffer using Float32 values(In `r,g,b,a` order).
 
 #### Defined in
 
-[src/SceneTree/BinWriter.ts:338](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/BinWriter.ts#L338)
+[src/SceneTree/BinWriter.ts:338](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinWriter.ts#L338)
 
 ___
 
@@ -530,7 +530,7 @@ Writes a RGBA `Color` in the buffer using unsigned Int8 values(In `r,g,b,a` orde
 
 #### Defined in
 
-[src/SceneTree/BinWriter.ts:361](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/BinWriter.ts#L361)
+[src/SceneTree/BinWriter.ts:361](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinWriter.ts#L361)
 
 ___
 
@@ -552,7 +552,7 @@ Writes a RGB `Color` in the buffer using Float32 values(In `r,g,b` order).
 
 #### Defined in
 
-[src/SceneTree/BinWriter.ts:327](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/BinWriter.ts#L327)
+[src/SceneTree/BinWriter.ts:327](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinWriter.ts#L327)
 
 ___
 
@@ -574,7 +574,7 @@ Writes a RGB `Color` in the buffer using unsigned Int8 values(In `r,g,b` order).
 
 #### Defined in
 
-[src/SceneTree/BinWriter.ts:350](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/BinWriter.ts#L350)
+[src/SceneTree/BinWriter.ts:350](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinWriter.ts#L350)
 
 ___
 
@@ -596,7 +596,7 @@ Writes a signed Int32 value in current byte offset.
 
 #### Defined in
 
-[src/SceneTree/BinWriter.ts:137](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/BinWriter.ts#L137)
+[src/SceneTree/BinWriter.ts:137](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinWriter.ts#L137)
 
 ___
 
@@ -618,7 +618,7 @@ Writes a `Vec2` in the buffer using signed Int32 values(In `x,y` order).
 
 #### Defined in
 
-[src/SceneTree/BinWriter.ts:243](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/BinWriter.ts#L243)
+[src/SceneTree/BinWriter.ts:243](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinWriter.ts#L243)
 
 ___
 
@@ -641,7 +641,7 @@ Writes string value in current position, first writing an unsigned Int32 describ
 
 #### Defined in
 
-[src/SceneTree/BinWriter.ts:230](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/BinWriter.ts#L230)
+[src/SceneTree/BinWriter.ts:230](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinWriter.ts#L230)
 
 ___
 
@@ -663,7 +663,7 @@ Writes an unsigned Int16 value in current byte offset.
 
 #### Defined in
 
-[src/SceneTree/BinWriter.ts:117](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/BinWriter.ts#L117)
+[src/SceneTree/BinWriter.ts:117](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinWriter.ts#L117)
 
 ___
 
@@ -686,7 +686,7 @@ Writes an unsigned Int16 array value from current byte offset.
 
 #### Defined in
 
-[src/SceneTree/BinWriter.ts:185](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/BinWriter.ts#L185)
+[src/SceneTree/BinWriter.ts:185](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinWriter.ts#L185)
 
 ___
 
@@ -708,7 +708,7 @@ Writes an unsigned Int32 value in current byte offset.
 
 #### Defined in
 
-[src/SceneTree/BinWriter.ts:127](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/BinWriter.ts#L127)
+[src/SceneTree/BinWriter.ts:127](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinWriter.ts#L127)
 
 ___
 
@@ -731,7 +731,7 @@ Writes an unsigned Int32 array value from current byte offset.
 
 #### Defined in
 
-[src/SceneTree/BinWriter.ts:200](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/BinWriter.ts#L200)
+[src/SceneTree/BinWriter.ts:200](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinWriter.ts#L200)
 
 ___
 
@@ -753,7 +753,7 @@ Writes a `Vec2` in the buffer using unsigned Int32 values(In `x,y` order).
 
 #### Defined in
 
-[src/SceneTree/BinWriter.ts:253](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/BinWriter.ts#L253)
+[src/SceneTree/BinWriter.ts:253](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinWriter.ts#L253)
 
 ___
 
@@ -775,7 +775,7 @@ Writes an unsigned Int8 value in current byte offset.
 
 #### Defined in
 
-[src/SceneTree/BinWriter.ts:107](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/BinWriter.ts#L107)
+[src/SceneTree/BinWriter.ts:107](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinWriter.ts#L107)
 
 ___
 
@@ -798,5 +798,5 @@ Writes an unsigned Int8 array value from current byte offset.
 
 #### Defined in
 
-[src/SceneTree/BinWriter.ts:170](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/BinWriter.ts#L170)
+[src/SceneTree/BinWriter.ts:170](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinWriter.ts#L170)
 

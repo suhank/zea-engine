@@ -26,7 +26,7 @@ Create a VR head.
 
 #### Defined in
 
-[src/Renderer/VR/XRHead.ts:18](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/VR/XRHead.ts#L18)
+[src/Renderer/VR/XRHead.ts:18](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/VR/XRHead.ts#L18)
 
 ## Properties
 
@@ -36,7 +36,7 @@ Create a VR head.
 
 #### Defined in
 
-[src/Renderer/VR/XRHead.ts:11](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/VR/XRHead.ts#L11)
+[src/Renderer/VR/XRHead.ts:11](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/VR/XRHead.ts#L11)
 
 ___
 
@@ -46,7 +46,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/VR/XRHead.ts:10](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/VR/XRHead.ts#L10)
+[src/Renderer/VR/XRHead.ts:10](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/VR/XRHead.ts#L10)
 
 ___
 
@@ -56,7 +56,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/VR/XRHead.ts:9](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/VR/XRHead.ts#L9)
+[src/Renderer/VR/XRHead.ts:9](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/VR/XRHead.ts#L9)
 
 ___
 
@@ -66,7 +66,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/VR/XRHead.ts:8](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/VR/XRHead.ts#L8)
+[src/Renderer/VR/XRHead.ts:8](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/VR/XRHead.ts#L8)
 
 ___
 
@@ -76,7 +76,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/VR/XRHead.ts:12](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/VR/XRHead.ts#L12)
+[src/Renderer/VR/XRHead.ts:12](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/VR/XRHead.ts#L12)
 
 ## Methods
 
@@ -94,7 +94,7 @@ The getTreeItem method.
 
 #### Defined in
 
-[src/Renderer/VR/XRHead.ts:78](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/VR/XRHead.ts#L78)
+[src/Renderer/VR/XRHead.ts:78](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/VR/XRHead.ts#L78)
 
 ___
 
@@ -112,7 +112,7 @@ The getXfo method.
 
 #### Defined in
 
-[src/Renderer/VR/XRHead.ts:86](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/VR/XRHead.ts#L86)
+[src/Renderer/VR/XRHead.ts:86](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/VR/XRHead.ts#L86)
 
 ___
 
@@ -134,7 +134,7 @@ The Set wether the HMB is visible in rendering or not. Used in spectator renderi
 
 #### Defined in
 
-[src/Renderer/VR/XRHead.ts:31](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/VR/XRHead.ts#L31)
+[src/Renderer/VR/XRHead.ts:31](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/VR/XRHead.ts#L31)
 
 ___
 
@@ -156,5 +156,5 @@ The update method.
 
 #### Defined in
 
-[src/Renderer/VR/XRHead.ts:57](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/VR/XRHead.ts#L57)
+[src/Renderer/VR/XRHead.ts:57](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/VR/XRHead.ts#L57)
 

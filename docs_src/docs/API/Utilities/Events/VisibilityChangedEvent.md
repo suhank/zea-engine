@@ -33,7 +33,7 @@ Create an BaseEvent.
 
 #### Defined in
 
-[src/Utilities/Events/VisibilityChangedEvent.ts:5](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Utilities/Events/VisibilityChangedEvent.ts#L5)
+[src/Utilities/Events/VisibilityChangedEvent.ts:5](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/VisibilityChangedEvent.ts#L5)
 
 ## Properties
 
@@ -43,5 +43,5 @@ Create an BaseEvent.
 
 #### Defined in
 
-[src/Utilities/Events/VisibilityChangedEvent.ts:4](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Utilities/Events/VisibilityChangedEvent.ts#L4)
+[src/Utilities/Events/VisibilityChangedEvent.ts:4](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/VisibilityChangedEvent.ts#L4)
 

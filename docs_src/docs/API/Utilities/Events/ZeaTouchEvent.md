@@ -34,7 +34,7 @@ Create an BaseEvent.
 
 #### Defined in
 
-[src/Utilities/Events/ZeaTouchEvent.ts:69](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Utilities/Events/ZeaTouchEvent.ts#L69)
+[src/Utilities/Events/ZeaTouchEvent.ts:69](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaTouchEvent.ts#L69)
 
 ## Properties
 
@@ -44,7 +44,7 @@ Create an BaseEvent.
 
 #### Defined in
 
-[src/Utilities/Events/ZeaTouchEvent.ts:62](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Utilities/Events/ZeaTouchEvent.ts#L62)
+[src/Utilities/Events/ZeaTouchEvent.ts:62](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaTouchEvent.ts#L62)
 
 ___
 
@@ -54,7 +54,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/Events/ZeaTouchEvent.ts:60](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Utilities/Events/ZeaTouchEvent.ts#L60)
+[src/Utilities/Events/ZeaTouchEvent.ts:60](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaTouchEvent.ts#L60)
 
 ___
 
@@ -64,7 +64,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/Events/ZeaTouchEvent.ts:64](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Utilities/Events/ZeaTouchEvent.ts#L64)
+[src/Utilities/Events/ZeaTouchEvent.ts:64](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaTouchEvent.ts#L64)
 
 ___
 
@@ -78,7 +78,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/Events/ZeaUIEvent.ts:11](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Utilities/Events/ZeaUIEvent.ts#L11)
+[src/Utilities/Events/ZeaUIEvent.ts:11](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaUIEvent.ts#L11)
 
 ___
 
@@ -92,7 +92,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/Events/ZeaPointerEvent.ts:22](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Utilities/Events/ZeaPointerEvent.ts#L22)
+[src/Utilities/Events/ZeaPointerEvent.ts:22](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaPointerEvent.ts#L22)
 
 ___
 
@@ -106,7 +106,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/Events/ZeaPointerEvent.ts:23](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Utilities/Events/ZeaPointerEvent.ts#L23)
+[src/Utilities/Events/ZeaPointerEvent.ts:23](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaPointerEvent.ts#L23)
 
 ___
 
@@ -116,7 +116,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/Events/ZeaTouchEvent.ts:63](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Utilities/Events/ZeaTouchEvent.ts#L63)
+[src/Utilities/Events/ZeaTouchEvent.ts:63](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaTouchEvent.ts#L63)
 
 ___
 
@@ -130,7 +130,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/Events/ZeaUIEvent.ts:12](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Utilities/Events/ZeaUIEvent.ts#L12)
+[src/Utilities/Events/ZeaUIEvent.ts:12](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaUIEvent.ts#L12)
 
 ___
 
@@ -144,7 +144,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/Events/ZeaPointerEvent.ts:18](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Utilities/Events/ZeaPointerEvent.ts#L18)
+[src/Utilities/Events/ZeaPointerEvent.ts:18](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaPointerEvent.ts#L18)
 
 ___
 
@@ -158,7 +158,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/Events/ZeaPointerEvent.ts:17](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Utilities/Events/ZeaPointerEvent.ts#L17)
+[src/Utilities/Events/ZeaPointerEvent.ts:17](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaPointerEvent.ts#L17)
 
 ___
 
@@ -172,7 +172,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/Events/ZeaPointerEvent.ts:20](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Utilities/Events/ZeaPointerEvent.ts#L20)
+[src/Utilities/Events/ZeaPointerEvent.ts:20](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaPointerEvent.ts#L20)
 
 ___
 
@@ -182,7 +182,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/Events/ZeaTouchEvent.ts:65](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Utilities/Events/ZeaTouchEvent.ts#L65)
+[src/Utilities/Events/ZeaTouchEvent.ts:65](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaTouchEvent.ts#L65)
 
 ___
 
@@ -192,7 +192,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/Events/ZeaTouchEvent.ts:67](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Utilities/Events/ZeaTouchEvent.ts#L67)
+[src/Utilities/Events/ZeaTouchEvent.ts:67](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaTouchEvent.ts#L67)
 
 ___
 
@@ -202,7 +202,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/Events/ZeaTouchEvent.ts:61](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Utilities/Events/ZeaTouchEvent.ts#L61)
+[src/Utilities/Events/ZeaTouchEvent.ts:61](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaTouchEvent.ts#L61)
 
 ___
 
@@ -212,7 +212,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/Events/ZeaTouchEvent.ts:59](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Utilities/Events/ZeaTouchEvent.ts#L59)
+[src/Utilities/Events/ZeaTouchEvent.ts:59](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaTouchEvent.ts#L59)
 
 ___
 
@@ -226,7 +226,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/Events/ZeaPointerEvent.ts:19](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Utilities/Events/ZeaPointerEvent.ts#L19)
+[src/Utilities/Events/ZeaPointerEvent.ts:19](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaPointerEvent.ts#L19)
 
 ## Methods
 
@@ -244,7 +244,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/Events/ZeaPointerEvent.ts:38](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Utilities/Events/ZeaPointerEvent.ts#L38)
+[src/Utilities/Events/ZeaPointerEvent.ts:38](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaPointerEvent.ts#L38)
 
 ___
 
@@ -258,7 +258,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/Events/ZeaTouchEvent.ts:100](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Utilities/Events/ZeaTouchEvent.ts#L100)
+[src/Utilities/Events/ZeaTouchEvent.ts:100](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaTouchEvent.ts#L100)
 
 ___
 
@@ -276,7 +276,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/Events/ZeaPointerEvent.ts:42](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Utilities/Events/ZeaPointerEvent.ts#L42)
+[src/Utilities/Events/ZeaPointerEvent.ts:42](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaPointerEvent.ts#L42)
 
 ___
 
@@ -300,7 +300,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/Events/ZeaPointerEvent.ts:34](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Utilities/Events/ZeaPointerEvent.ts#L34)
+[src/Utilities/Events/ZeaPointerEvent.ts:34](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaPointerEvent.ts#L34)
 
 ___
 
@@ -318,5 +318,5 @@ ___
 
 #### Defined in
 
-[src/Utilities/Events/ZeaTouchEvent.ts:93](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Utilities/Events/ZeaTouchEvent.ts#L93)
+[src/Utilities/Events/ZeaTouchEvent.ts:93](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaTouchEvent.ts#L93)
 

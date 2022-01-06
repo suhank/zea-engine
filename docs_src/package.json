@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "extract-api": "node ./scripts/extract-api.js",
-    "docusaurus": "docusaurus",
+    "docusaurus": "node --max-old-space-size=8192 node_modules/@docusaurus/core/bin/docusaurus",
     "start": "docusaurus start",
     "build": "docusaurus build",
     "move": "rm -rf ../docs && mv build ../docs",
@@ -23,7 +23,6 @@
     "@docusaurus/preset-classic": "2.0.0-beta.6",
     "@docusaurus/theme-search-algolia": "^2.0.0-beta.6",
     "@mdx-js/react": "^1.6.21",
-    "@stackblitz/sdk": "^1.5.2",
     "@svgr/webpack": "^5.5.0",
     "@zeainc/jsdocs2md": "^0.0.8",
     "clsx": "^1.1.1",

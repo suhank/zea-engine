@@ -1,39 +1,37 @@
-const lightCodeTheme = require('prism-react-renderer/themes/github')
-const darkCodeTheme = require('prism-react-renderer/themes/dracula')
+const lightCodeTheme = require("prism-react-renderer/themes/github");
+const darkCodeTheme = require("prism-react-renderer/themes/dracula");
 
 // With JSDoc @type annotations, IDEs can provide config autocompletion
 /** @type {import('@docusaurus/types').DocusaurusConfig} */
 module.exports = {
-  title: 'Zea Engine Docs',
-  tagline: 'Fast, Easy, Open',
-  url: 'https://www.zea.live/',
-  baseUrl: '/zea-engine/',
-  onBrokenLinks: 'warn',
-  onBrokenMarkdownLinks: 'warn',
-  favicon: 'img/favicon.ico',
-  organizationName: 'Zea Inc.', // Usually your GitHub org/user name.
-  projectName: 'Zea Engine Docs', // Usually your repo name.
+  title: "Zea Engine Docs",
+  tagline: "Fast, Easy, Open",
+  url: "https://www.zea.live/",
+  baseUrl: "/zea-engine/",
+  onBrokenLinks: "warn",
+  onBrokenMarkdownLinks: "warn",
+  favicon: "img/favicon.ico",
+  organizationName: "Zea Inc.", // Usually your GitHub org/user name.
+  projectName: "Zea Engine Docs", // Usually your repo name.
   trailingSlash: false,
 
   plugins: [
     [
-      'docusaurus-plugin-typedoc',
+      "docusaurus-plugin-typedoc",
       {
-        out: '../typedoc-out',
+        out: "../typedoc-out",
         sidebar: {
-          categoryLabel: 'API',
+          categoryLabel: "API",
           position: 0,
           fullNames: false,
         },
-        entryPoints: ['../src/'],
-        entryPointStrategy: 'expand',
+        entryPoints: ["../src/"],
+        entryPointStrategy: "expand",
         exclude: [
-          '**/*+(**Impl|**PostCommand|**WsCommand|**index).ts',
-          '**/*+(**Utils).ts',
-          '**/*.test.ts',
-          '**/*.js',
-          '**/*.snap',
-          '**/*.fixture.ts',
+          "**/*+(**Impl|**PostCommand|**WsCommand|**index).ts",
+          "**/decoders/*",
+          "**/*+(**Utils).ts",
+          "**/*.test.ts",
         ],
         // excludePrivate: true,
       },
@@ -41,17 +39,17 @@ module.exports = {
   ],
   presets: [
     [
-      '@docusaurus/preset-classic',
+      "@docusaurus/preset-classic",
       /** @type {import('@docusaurus/preset-classic').Options} */
       ({
         docs: {
-          routeBasePath: '/',
-          sidebarPath: require.resolve('./sidebars.js'),
+          routeBasePath: "/",
+          sidebarPath: require.resolve("./sidebars.js"),
           // Please change this to your repo.
           // editUrl: 'https://github.com/ZeaInc/zea-engine/', // TODO:
         },
         theme: {
-          customCss: require.resolve('./src/css/custom.css'),
+          customCss: require.resolve("./src/css/custom.css"),
         },
       }),
     ],
@@ -82,41 +80,41 @@ module.exports = {
         //defaultMode: 'dark',
       },
       navbar: {
-        title: '',
+        title: "",
         logo: {
-          alt: 'Zea logo',
-          src: 'img/logo-zea.svg',
+          alt: "Zea logo",
+          src: "img/logo-zea.svg",
         },
         items: [
           {
-            type: 'doc',
-            docId: 'Manual/intro',
-            position: 'left',
-            label: 'Manual',
+            type: "doc",
+            docId: "Manual/intro",
+            position: "left",
+            label: "Manual",
           },
           {
-            type: 'doc',
-            docId: 'API/index',
-            position: 'left',
-            label: 'API',
+            type: "doc",
+            docId: "API/index",
+            position: "left",
+            label: "API",
           },
           {
-            type: 'doc',
-            docId: 'Tutorials/tutorials',
-            position: 'left',
-            label: 'Tutorials',
+            type: "doc",
+            docId: "Tutorials/tutorials",
+            position: "left",
+            label: "Tutorials",
           },
           {
-            type: 'doc',
-            docId: 'Plugins/plugins-templates-overview',
-            position: 'left',
-            label: 'Plugins',
+            type: "doc",
+            docId: "Plugins/plugins-templates-overview",
+            position: "left",
+            label: "Plugins",
           },
           {
-            type: 'doc',
-            docId: 'Community/c1',
-            position: 'left',
-            label: 'Community',
+            type: "doc",
+            docId: "Community/c1",
+            position: "left",
+            label: "Community",
           },
           // {
           //   type: 'doc',
@@ -132,34 +130,34 @@ module.exports = {
           // },
           // {to: '/blog', label: 'Blog', position: 'left'},
           {
-            href: 'https://zea.live',
-            label: 'zea.live',
-            position: 'right',
+            href: "https://zea.live",
+            label: "zea.live",
+            position: "right",
           },
         ],
       },
       footer: {
-        style: 'dark',
+        style: "dark",
         links: [
           {
-            title: 'Zea',
+            title: "Zea",
             items: [
               {
-                label: 'Website',
-                href: 'https://www.zea.live/',
+                label: "Website",
+                href: "https://www.zea.live/",
               },
               {
-                label: 'Blog',
-                href: 'https://blog.zea.live/en/blog',
+                label: "Blog",
+                href: "https://blog.zea.live/en/blog",
               },
             ],
           },
           {
-            title: 'Community',
+            title: "Community",
             items: [
               {
-                label: 'Zea Community',
-                href: 'https://community.zea.live/',
+                label: "Zea Community",
+                href: "https://community.zea.live/",
               },
               // {
               //   label: 'Stack Overflow',
@@ -176,11 +174,11 @@ module.exports = {
             ],
           },
           {
-            title: 'More',
+            title: "More",
             items: [
               {
-                label: 'GitHub',
-                href: 'https://github.com/ZeaInc/zea-engine',
+                label: "GitHub",
+                href: "https://github.com/ZeaInc/zea-engine",
               },
             ],
           },
@@ -192,4 +190,4 @@ module.exports = {
         darkTheme: darkCodeTheme,
       },
     }),
-}
+};
