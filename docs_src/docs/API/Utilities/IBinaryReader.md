@@ -37,7 +37,7 @@ The readBinary method.
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `reader` | [`BinReader`](../SceneTree/SceneTree_BinReader.BinReader) | The reader value. |
-| `context?` | `Record`<`string`, `unknown`\> | The context value. |
+| `context?` | [`AssetLoadContext`](../SceneTree/SceneTree_AssetLoadContext.AssetLoadContext) | The context value. |
 
 #### Returns
 
@@ -45,5 +45,5 @@ The readBinary method.
 
 #### Defined in
 
-[Utilities/IBinaryReader.ts:10](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/IBinaryReader.ts#L10)
+[src/Utilities/IBinaryReader.ts:11](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Utilities/IBinaryReader.ts#L11)
 

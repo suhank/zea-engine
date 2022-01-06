@@ -29,13 +29,13 @@ Create a GL billboards pass.
 
 #### Defined in
 
-[Renderer/Passes/GLBillboardsPass.ts:47](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Passes/GLBillboardsPass.ts#L47)
+[src/Renderer/Passes/GLBillboardsPass.ts:48](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/Passes/GLBillboardsPass.ts#L48)
 
 ## Properties
 
 ### \_\_gl
 
-• `Protected` **\_\_gl**: `WebGL12RenderingContext` = `null`
+• `Protected` **\_\_gl**: [`WebGL12RenderingContext`](../types/Renderer_types_webgl.WebGL12RenderingContext) = `null`
 
 #### Inherited from
 
@@ -43,7 +43,7 @@ Create a GL billboards pass.
 
 #### Defined in
 
-[Renderer/Passes/GLPass.ts:20](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Passes/GLPass.ts#L20)
+[src/Renderer/Passes/GLPass.ts:22](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/Passes/GLPass.ts#L22)
 
 ___
 
@@ -57,7 +57,7 @@ ___
 
 #### Defined in
 
-[Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/BaseClass.ts#L11)
+[src/Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Utilities/BaseClass.ts#L11)
 
 ___
 
@@ -71,7 +71,7 @@ ___
 
 #### Defined in
 
-[Renderer/Passes/GLPass.ts:22](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Passes/GLPass.ts#L22)
+[src/Renderer/Passes/GLPass.ts:24](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/Passes/GLPass.ts#L24)
 
 ___
 
@@ -81,7 +81,7 @@ ___
 
 #### Defined in
 
-[Renderer/Passes/GLBillboardsPass.ts:28](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Passes/GLBillboardsPass.ts#L28)
+[src/Renderer/Passes/GLBillboardsPass.ts:29](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/Passes/GLBillboardsPass.ts#L29)
 
 ___
 
@@ -91,7 +91,7 @@ ___
 
 #### Defined in
 
-[Renderer/Passes/GLBillboardsPass.ts:39](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Passes/GLBillboardsPass.ts#L39)
+[src/Renderer/Passes/GLBillboardsPass.ts:40](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/Passes/GLBillboardsPass.ts#L40)
 
 ___
 
@@ -101,7 +101,7 @@ ___
 
 #### Defined in
 
-[Renderer/Passes/GLBillboardsPass.ts:21](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Passes/GLBillboardsPass.ts#L21)
+[src/Renderer/Passes/GLBillboardsPass.ts:22](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/Passes/GLBillboardsPass.ts#L22)
 
 ___
 
@@ -115,7 +115,7 @@ ___
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:23](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L23)
+[src/SceneTree/ParameterOwner.ts:25](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/ParameterOwner.ts#L25)
 
 ___
 
@@ -125,7 +125,7 @@ ___
 
 #### Defined in
 
-[Renderer/Passes/GLBillboardsPass.ts:22](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Passes/GLBillboardsPass.ts#L22)
+[src/Renderer/Passes/GLBillboardsPass.ts:23](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/Passes/GLBillboardsPass.ts#L23)
 
 ___
 
@@ -135,7 +135,7 @@ ___
 
 #### Defined in
 
-[Renderer/Passes/GLBillboardsPass.ts:24](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Passes/GLBillboardsPass.ts#L24)
+[src/Renderer/Passes/GLBillboardsPass.ts:25](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/Passes/GLBillboardsPass.ts#L25)
 
 ___
 
@@ -145,7 +145,7 @@ ___
 
 #### Defined in
 
-[Renderer/Passes/GLBillboardsPass.ts:43](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Passes/GLBillboardsPass.ts#L43)
+[src/Renderer/Passes/GLBillboardsPass.ts:44](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/Passes/GLBillboardsPass.ts#L44)
 
 ___
 
@@ -159,7 +159,7 @@ ___
 
 #### Defined in
 
-[Renderer/Passes/GLPass.ts:17](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Passes/GLPass.ts#L17)
+[src/Renderer/Passes/GLPass.ts:19](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/Passes/GLPass.ts#L19)
 
 ___
 
@@ -173,7 +173,7 @@ ___
 
 #### Defined in
 
-[Renderer/Passes/GLPass.ts:24](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Passes/GLPass.ts#L24)
+[src/Renderer/Passes/GLPass.ts:26](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/Passes/GLPass.ts#L26)
 
 ___
 
@@ -183,7 +183,7 @@ ___
 
 #### Defined in
 
-[Renderer/Passes/GLBillboardsPass.ts:23](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Passes/GLBillboardsPass.ts#L23)
+[src/Renderer/Passes/GLBillboardsPass.ts:24](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/Passes/GLBillboardsPass.ts#L24)
 
 ___
 
@@ -193,7 +193,7 @@ ___
 
 #### Defined in
 
-[Renderer/Passes/GLBillboardsPass.ts:33](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Passes/GLBillboardsPass.ts#L33)
+[src/Renderer/Passes/GLBillboardsPass.ts:34](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/Passes/GLBillboardsPass.ts#L34)
 
 ___
 
@@ -203,7 +203,7 @@ ___
 
 #### Defined in
 
-[Renderer/Passes/GLBillboardsPass.ts:31](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Passes/GLBillboardsPass.ts#L31)
+[src/Renderer/Passes/GLBillboardsPass.ts:32](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/Passes/GLBillboardsPass.ts#L32)
 
 ___
 
@@ -213,7 +213,7 @@ ___
 
 #### Defined in
 
-[Renderer/Passes/GLBillboardsPass.ts:29](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Passes/GLBillboardsPass.ts#L29)
+[src/Renderer/Passes/GLBillboardsPass.ts:30](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/Passes/GLBillboardsPass.ts#L30)
 
 ___
 
@@ -223,7 +223,7 @@ ___
 
 #### Defined in
 
-[Renderer/Passes/GLBillboardsPass.ts:30](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Passes/GLBillboardsPass.ts#L30)
+[src/Renderer/Passes/GLBillboardsPass.ts:31](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/Passes/GLBillboardsPass.ts#L31)
 
 ___
 
@@ -237,7 +237,7 @@ ___
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/EventEmitter.ts#L26)
+[src/Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Utilities/EventEmitter.ts#L26)
 
 ___
 
@@ -247,7 +247,7 @@ ___
 
 #### Defined in
 
-[Renderer/Passes/GLBillboardsPass.ts:38](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Passes/GLBillboardsPass.ts#L38)
+[src/Renderer/Passes/GLBillboardsPass.ts:39](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/Passes/GLBillboardsPass.ts#L39)
 
 ___
 
@@ -261,7 +261,7 @@ ___
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:20](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L20)
+[src/SceneTree/ParameterOwner.ts:22](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/ParameterOwner.ts#L22)
 
 ___
 
@@ -275,7 +275,7 @@ ___
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:21](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L21)
+[src/SceneTree/ParameterOwner.ts:23](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/ParameterOwner.ts#L23)
 
 ___
 
@@ -289,7 +289,7 @@ ___
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:22](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L22)
+[src/SceneTree/ParameterOwner.ts:24](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/ParameterOwner.ts#L24)
 
 ___
 
@@ -303,7 +303,7 @@ ___
 
 #### Defined in
 
-[Renderer/Passes/GLPass.ts:18](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Passes/GLPass.ts#L18)
+[src/Renderer/Passes/GLPass.ts:20](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/Passes/GLPass.ts#L20)
 
 ___
 
@@ -313,7 +313,7 @@ ___
 
 #### Defined in
 
-[Renderer/Passes/GLBillboardsPass.ts:27](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Passes/GLBillboardsPass.ts#L27)
+[src/Renderer/Passes/GLBillboardsPass.ts:28](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/Passes/GLBillboardsPass.ts#L28)
 
 ___
 
@@ -327,7 +327,7 @@ ___
 
 #### Defined in
 
-[Renderer/Passes/GLPass.ts:21](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Passes/GLPass.ts#L21)
+[src/Renderer/Passes/GLPass.ts:23](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/Passes/GLPass.ts#L23)
 
 ___
 
@@ -337,7 +337,7 @@ ___
 
 #### Defined in
 
-[Renderer/Passes/GLBillboardsPass.ts:36](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Passes/GLBillboardsPass.ts#L36)
+[src/Renderer/Passes/GLBillboardsPass.ts:37](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/Passes/GLBillboardsPass.ts#L37)
 
 ___
 
@@ -347,7 +347,7 @@ ___
 
 #### Defined in
 
-[Renderer/Passes/GLBillboardsPass.ts:34](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Passes/GLBillboardsPass.ts#L34)
+[src/Renderer/Passes/GLBillboardsPass.ts:35](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/Passes/GLBillboardsPass.ts#L35)
 
 ___
 
@@ -357,7 +357,7 @@ ___
 
 #### Defined in
 
-[Renderer/Passes/GLBillboardsPass.ts:25](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Passes/GLBillboardsPass.ts#L25)
+[src/Renderer/Passes/GLBillboardsPass.ts:26](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/Passes/GLBillboardsPass.ts#L26)
 
 ___
 
@@ -367,7 +367,7 @@ ___
 
 #### Defined in
 
-[Renderer/Passes/GLBillboardsPass.ts:40](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Passes/GLBillboardsPass.ts#L40)
+[src/Renderer/Passes/GLBillboardsPass.ts:41](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/Passes/GLBillboardsPass.ts#L41)
 
 ___
 
@@ -377,7 +377,7 @@ ___
 
 #### Defined in
 
-[Renderer/Passes/GLBillboardsPass.ts:26](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Passes/GLBillboardsPass.ts#L26)
+[src/Renderer/Passes/GLBillboardsPass.ts:27](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/Passes/GLBillboardsPass.ts#L27)
 
 ___
 
@@ -387,7 +387,7 @@ ___
 
 #### Defined in
 
-[Renderer/Passes/GLBillboardsPass.ts:42](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Passes/GLBillboardsPass.ts#L42)
+[src/Renderer/Passes/GLBillboardsPass.ts:43](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/Passes/GLBillboardsPass.ts#L43)
 
 ## Methods
 
@@ -401,7 +401,7 @@ Invoke the drawing of each item, compiling the shader using the provided key.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `renderstate` | `RenderState` | The object tracking the current state of the renderer |
+
 | `key` | `string` | The key to cache the compiler results against. |
 
 #### Returns
@@ -410,7 +410,7 @@ Invoke the drawing of each item, compiling the shader using the provided key.
 
 #### Defined in
 
-[Renderer/Passes/GLBillboardsPass.ts:472](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Passes/GLBillboardsPass.ts#L472)
+[src/Renderer/Passes/GLBillboardsPass.ts:473](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/Passes/GLBillboardsPass.ts#L473)
 
 ___
 
@@ -432,7 +432,7 @@ The addBillboard method.
 
 #### Defined in
 
-[Renderer/Passes/GLBillboardsPass.ts:130](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Passes/GLBillboardsPass.ts#L130)
+[src/Renderer/Passes/GLBillboardsPass.ts:131](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/Passes/GLBillboardsPass.ts#L131)
 
 ___
 
@@ -462,7 +462,7 @@ Adds `Parameter` object to the owner's parameter list.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:133](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L133)
+[src/SceneTree/ParameterOwner.ts:135](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/ParameterOwner.ts#L135)
 
 ___
 
@@ -492,7 +492,7 @@ This is used to handle migrating parameters to new names.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:90](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L90)
+[src/SceneTree/ParameterOwner.ts:92](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/ParameterOwner.ts#L92)
 
 ___
 
@@ -507,7 +507,7 @@ Copies Parameters from another `ParameterOwner` to current object.
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `src` | [`ParameterOwner`](../../SceneTree/SceneTree_ParameterOwner.ParameterOwner) | The ParameterOwner copy from. |
-| `context?` | `Record`<`string`, `any`\> | The context value |
+| `context?` | [`CloneContext`](../../SceneTree/SceneTree_CloneContext.CloneContext) | The context value |
 
 #### Returns
 
@@ -519,7 +519,7 @@ Copies Parameters from another `ParameterOwner` to current object.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:314](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L314)
+[src/SceneTree/ParameterOwner.ts:316](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/ParameterOwner.ts#L316)
 
 ___
 
@@ -533,7 +533,7 @@ The sort method.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `renderstate` | `RenderState` | The object tracking the current state of the renderer |
+
 
 #### Returns
 
@@ -545,7 +545,7 @@ The sort method.
 
 #### Defined in
 
-[Renderer/Passes/GLBillboardsPass.ts:533](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Passes/GLBillboardsPass.ts#L533)
+[src/Renderer/Passes/GLBillboardsPass.ts:534](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/Passes/GLBillboardsPass.ts#L534)
 
 ___
 
@@ -559,7 +559,7 @@ The drawGeomData method.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `renderstate` | `GeomDataRenderState` | The object tracking the current state of the renderer |
+| `renderstate` | [`GeomDataRenderState`](../types/Renderer_types_renderer.GeomDataRenderState) | The object tracking the current state of the renderer |
 
 #### Returns
 
@@ -571,7 +571,7 @@ The drawGeomData method.
 
 #### Defined in
 
-[Renderer/Passes/GLBillboardsPass.ts:597](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Passes/GLBillboardsPass.ts#L597)
+[src/Renderer/Passes/GLBillboardsPass.ts:598](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/Passes/GLBillboardsPass.ts#L598)
 
 ___
 
@@ -585,7 +585,7 @@ The drawHighlightedGeoms method.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `renderstate` | `RenderState` | The object tracking the current state of the renderer |
+
 
 #### Returns
 
@@ -597,7 +597,7 @@ The drawHighlightedGeoms method.
 
 #### Defined in
 
-[Renderer/Passes/GLBillboardsPass.ts:588](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Passes/GLBillboardsPass.ts#L588)
+[src/Renderer/Passes/GLBillboardsPass.ts:589](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/Passes/GLBillboardsPass.ts#L589)
 
 ___
 
@@ -624,7 +624,7 @@ Triggers all listener functions in an event.
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/EventEmitter.ts#L154)
+[src/Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Utilities/EventEmitter.ts#L154)
 
 ___
 
@@ -640,7 +640,7 @@ The filterRenderTree method.
 
 #### Defined in
 
-[Renderer/Passes/GLBillboardsPass.ts:124](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Passes/GLBillboardsPass.ts#L124)
+[src/Renderer/Passes/GLBillboardsPass.ts:125](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/Passes/GLBillboardsPass.ts#L125)
 
 ___
 
@@ -667,7 +667,7 @@ The fromJSON method decodes a json object for this type.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:239](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L239)
+[src/SceneTree/ParameterOwner.ts:241](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/ParameterOwner.ts#L241)
 
 ___
 
@@ -689,7 +689,7 @@ Returns the unmangled name of the class.
 
 #### Defined in
 
-[Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/BaseClass.ts#L33)
+[src/Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Utilities/BaseClass.ts#L33)
 
 ___
 
@@ -717,7 +717,7 @@ The getGeomItemAndDist method.
 
 #### Defined in
 
-[Renderer/Passes/GLBillboardsPass.ts:607](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Passes/GLBillboardsPass.ts#L607)
+[src/Renderer/Passes/GLBillboardsPass.ts:608](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/Passes/GLBillboardsPass.ts#L608)
 
 ___
 
@@ -741,7 +741,7 @@ Returns the unique id of the object.
 
 #### Defined in
 
-[Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/BaseClass.ts#L25)
+[src/Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Utilities/BaseClass.ts#L25)
 
 ___
 
@@ -763,7 +763,7 @@ Returns the number of parameters current object has.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:39](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L39)
+[src/SceneTree/ParameterOwner.ts:41](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/ParameterOwner.ts#L41)
 
 ___
 
@@ -791,7 +791,7 @@ Returns `Parameter` object using the given name
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:100](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L100)
+[src/SceneTree/ParameterOwner.ts:102](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/ParameterOwner.ts#L102)
 
 ___
 
@@ -819,7 +819,7 @@ Returns `Parameter` object in a given index
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:68](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L68)
+[src/SceneTree/ParameterOwner.ts:70](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/ParameterOwner.ts#L70)
 
 ___
 
@@ -847,7 +847,7 @@ Returns the index of a parameter in parameter list.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:58](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L58)
+[src/SceneTree/ParameterOwner.ts:60](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/ParameterOwner.ts#L60)
 
 ___
 
@@ -869,7 +869,7 @@ Returns all the parameters of the object.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:48](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L48)
+[src/SceneTree/ParameterOwner.ts:50](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/ParameterOwner.ts#L50)
 
 ___
 
@@ -891,7 +891,7 @@ Returns the pass type. OPAQUE passes are always rendered first, followed by TRAN
 
 #### Defined in
 
-[Renderer/Passes/GLBillboardsPass.ts:81](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Passes/GLBillboardsPass.ts#L81)
+[src/Renderer/Passes/GLBillboardsPass.ts:82](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/Passes/GLBillboardsPass.ts#L82)
 
 ___
 
@@ -919,7 +919,7 @@ Validates if the specified parameter exists in the object.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:78](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L78)
+[src/SceneTree/ParameterOwner.ts:80](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/ParameterOwner.ts#L80)
 
 ___
 
@@ -946,7 +946,7 @@ The init method.
 
 #### Defined in
 
-[Renderer/Passes/GLBillboardsPass.ts:65](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Passes/GLBillboardsPass.ts#L65)
+[src/Renderer/Passes/GLBillboardsPass.ts:66](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/Passes/GLBillboardsPass.ts#L66)
 
 ___
 
@@ -978,7 +978,7 @@ It replaces the event in the specified index.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:147](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L147)
+[src/SceneTree/ParameterOwner.ts:149](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/ParameterOwner.ts#L149)
 
 ___
 
@@ -1009,7 +1009,7 @@ It allows Passes to select geometries to handle the drawing of.
 
 #### Defined in
 
-[Renderer/Passes/GLBillboardsPass.ts:95](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Passes/GLBillboardsPass.ts#L95)
+[src/Renderer/Passes/GLBillboardsPass.ts:96](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/Passes/GLBillboardsPass.ts#L96)
 
 ___
 
@@ -1039,7 +1039,7 @@ is removed to the scene, and the pass must handle cleaning up any resources.
 
 #### Defined in
 
-[Renderer/Passes/GLBillboardsPass.ts:110](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Passes/GLBillboardsPass.ts#L110)
+[src/Renderer/Passes/GLBillboardsPass.ts:111](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/Passes/GLBillboardsPass.ts#L111)
 
 ___
 
@@ -1066,7 +1066,7 @@ Removes a listener function from the specified event, using either the function 
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/EventEmitter.ts#L97)
+[src/Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Utilities/EventEmitter.ts#L97)
 
 ___
 
@@ -1095,7 +1095,7 @@ Adds a listener function for a given event name.
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/EventEmitter.ts#L44)
+[src/Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Utilities/EventEmitter.ts#L44)
 
 ___
 
@@ -1133,7 +1133,7 @@ asset.once('loaded', () => {
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/EventEmitter.ts#L82)
+[src/Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Utilities/EventEmitter.ts#L82)
 
 ___
 
@@ -1159,7 +1159,7 @@ The __parameterValueChanged method.
 
 #### Defined in
 
-[Renderer/Passes/GLPass.ts:42](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Passes/GLPass.ts#L42)
+[src/Renderer/Passes/GLPass.ts:44](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/Passes/GLPass.ts#L44)
 
 ___
 
@@ -1183,7 +1183,7 @@ The populateBillboardDataArray method.
 
 #### Defined in
 
-[Renderer/Passes/GLBillboardsPass.ts:220](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Passes/GLBillboardsPass.ts#L220)
+[src/Renderer/Passes/GLBillboardsPass.ts:221](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/Passes/GLBillboardsPass.ts#L221)
 
 ___
 
@@ -1203,7 +1203,7 @@ used to build the right `Parameter` class. Then all of them are added to the obj
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `reader` | [`BinReader`](../../SceneTree/SceneTree_BinReader.BinReader) | The reader value. |
-| `context` | `Record`<`string`, `any`\> | The context value. |
+| `context` | [`AssetLoadContext`](../../SceneTree/SceneTree_AssetLoadContext.AssetLoadContext) | The context value. |
 
 #### Returns
 
@@ -1215,7 +1215,7 @@ used to build the right `Parameter` class. Then all of them are added to the obj
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:274](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L274)
+[src/SceneTree/ParameterOwner.ts:276](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/ParameterOwner.ts#L276)
 
 ___
 
@@ -1237,7 +1237,7 @@ The removeBillboard method.
 
 #### Defined in
 
-[Renderer/Passes/GLBillboardsPass.ts:182](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Passes/GLBillboardsPass.ts#L182)
+[src/Renderer/Passes/GLBillboardsPass.ts:183](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/Passes/GLBillboardsPass.ts#L183)
 
 ___
 
@@ -1264,7 +1264,7 @@ remove listener by ID returned from #on
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/EventEmitter.ts#L134)
+[src/Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Utilities/EventEmitter.ts#L134)
 
 ___
 
@@ -1292,7 +1292,7 @@ Removes `Parameter` from owner, by using parameter's name.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:174](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L174)
+[src/SceneTree/ParameterOwner.ts:176](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/ParameterOwner.ts#L176)
 
 ___
 
@@ -1320,7 +1320,7 @@ Replaces old `Parameter` by passing a new one with the same name.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:196](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L196)
+[src/SceneTree/ParameterOwner.ts:198](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/ParameterOwner.ts#L198)
 
 ___
 
@@ -1336,7 +1336,7 @@ The reqUpdateIndexArray method.
 
 #### Defined in
 
-[Renderer/Passes/GLBillboardsPass.ts:275](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Passes/GLBillboardsPass.ts#L275)
+[src/Renderer/Passes/GLBillboardsPass.ts:276](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/Passes/GLBillboardsPass.ts#L276)
 
 ___
 
@@ -1352,7 +1352,7 @@ The requestUpdate method.
 
 #### Defined in
 
-[Renderer/Passes/GLBillboardsPass.ts:264](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Passes/GLBillboardsPass.ts#L264)
+[src/Renderer/Passes/GLBillboardsPass.ts:265](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/Passes/GLBillboardsPass.ts#L265)
 
 ___
 
@@ -1378,7 +1378,7 @@ The setPassIndex method.
 
 #### Defined in
 
-[Renderer/Passes/GLPass.ts:65](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Passes/GLPass.ts#L65)
+[src/Renderer/Passes/GLPass.ts:67](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/Passes/GLPass.ts#L67)
 
 ___
 
@@ -1400,7 +1400,7 @@ The sort method.
 
 #### Defined in
 
-[Renderer/Passes/GLBillboardsPass.ts:442](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Passes/GLBillboardsPass.ts#L442)
+[src/Renderer/Passes/GLBillboardsPass.ts:443](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/Passes/GLBillboardsPass.ts#L443)
 
 ___
 
@@ -1420,7 +1420,7 @@ The startPresenting method.
 
 #### Defined in
 
-[Renderer/Passes/GLPass.ts:107](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Passes/GLPass.ts#L107)
+[src/Renderer/Passes/GLPass.ts:109](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/Passes/GLPass.ts#L109)
 
 ___
 
@@ -1440,7 +1440,7 @@ The stopPresenting method.
 
 #### Defined in
 
-[Renderer/Passes/GLPass.ts:112](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Passes/GLPass.ts#L112)
+[src/Renderer/Passes/GLPass.ts:114](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/Passes/GLPass.ts#L114)
 
 ___
 
@@ -1468,7 +1468,7 @@ The toJSON method encodes this type as a json object for persistence.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:216](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L216)
+[src/SceneTree/ParameterOwner.ts:218](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/ParameterOwner.ts#L218)
 
 ___
 
@@ -1496,7 +1496,7 @@ Converts object's JSON value and converts it to a string.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:301](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L301)
+[src/SceneTree/ParameterOwner.ts:303](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/ParameterOwner.ts#L303)
 
 ___
 
@@ -1518,7 +1518,7 @@ The updateBillboard method.
 
 #### Defined in
 
-[Renderer/Passes/GLBillboardsPass.ts:408](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Passes/GLBillboardsPass.ts#L408)
+[src/Renderer/Passes/GLBillboardsPass.ts:409](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/Passes/GLBillboardsPass.ts#L409)
 
 ___
 
@@ -1532,7 +1532,7 @@ The updateBillboards method.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `renderstate` | `RenderState` | The object tracking the current state of the renderer |
+
 
 #### Returns
 
@@ -1540,7 +1540,7 @@ The updateBillboards method.
 
 #### Defined in
 
-[Renderer/Passes/GLBillboardsPass.ts:310](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Passes/GLBillboardsPass.ts#L310)
+[src/Renderer/Passes/GLBillboardsPass.ts:311](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/Passes/GLBillboardsPass.ts#L311)
 
 ___
 
@@ -1554,5 +1554,5 @@ ___
 
 #### Defined in
 
-[Renderer/Passes/GLBillboardsPass.ts:282](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Passes/GLBillboardsPass.ts#L282)
+[src/Renderer/Passes/GLBillboardsPass.ts:283](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/Passes/GLBillboardsPass.ts#L283)
 

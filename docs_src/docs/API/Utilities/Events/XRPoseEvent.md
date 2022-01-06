@@ -25,9 +25,9 @@ Create an BaseEvent.
 
 | Name | Type |
 | :------ | :------ |
-| `viewport` | [`VRViewport`](../../Renderer/VR/Renderer_VR_VRViewport.VRViewport) |
+| `viewport` | [`XRViewport`](../../Renderer/VR/Renderer_VR_XRViewport.XRViewport) |
 | `viewXfo` | [`Xfo`](../../Math/Math_Xfo.Xfo) |
-| `controllers` | [`VRController`](../../Renderer/VR/Renderer_VR_VRController.VRController)[] |
+| `controllers` | [`XRController`](../../Renderer/VR/Renderer_VR_XRController.XRController)[] |
 
 #### Overrides
 
@@ -35,31 +35,31 @@ Create an BaseEvent.
 
 #### Defined in
 
-[Utilities/Events/XRPoseEvent.ts:21](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/Events/XRPoseEvent.ts#L21)
+[src/Utilities/Events/XRPoseEvent.ts:20](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Utilities/Events/XRPoseEvent.ts#L20)
 
 ## Properties
 
 ### controllers
 
-• **controllers**: [`VRController`](../../Renderer/VR/Renderer_VR_VRController.VRController)[] = `[]`
+• **controllers**: [`XRController`](../../Renderer/VR/Renderer_VR_XRController.XRController)[] = `[]`
 
 #### Defined in
 
-[Utilities/Events/XRPoseEvent.ts:19](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/Events/XRPoseEvent.ts#L19)
+[src/Utilities/Events/XRPoseEvent.ts:19](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Utilities/Events/XRPoseEvent.ts#L19)
 
 ___
 
 ### intersectionData
 
-• **intersectionData**: [`IntersectionData`](../Utilities_IntersectionData.IntersectionData)
+• `Optional` **intersectionData**: [`IntersectionData`](../Utilities_IntersectionData.IntersectionData)
 
-#### Overrides
+#### Inherited from
 
 [ZeaPointerEvent](Utilities_Events_ZeaPointerEvent.ZeaPointerEvent).[intersectionData](Utilities_Events_ZeaPointerEvent.ZeaPointerEvent#intersectiondata)
 
 #### Defined in
 
-[Utilities/Events/XRPoseEvent.ts:20](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/Events/XRPoseEvent.ts#L20)
+[src/Utilities/Events/ZeaPointerEvent.ts:22](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Utilities/Events/ZeaPointerEvent.ts#L22)
 
 ___
 
@@ -73,7 +73,21 @@ ___
 
 #### Defined in
 
-[Utilities/Events/ZeaPointerEvent.ts:19](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/Events/ZeaPointerEvent.ts#L19)
+[src/Utilities/Events/ZeaPointerEvent.ts:23](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Utilities/Events/ZeaPointerEvent.ts#L23)
+
+___
+
+### pointerRay
+
+• **pointerRay**: [`Ray`](../../Math/Math_Ray.Ray)
+
+#### Inherited from
+
+[ZeaPointerEvent](Utilities_Events_ZeaPointerEvent.ZeaPointerEvent).[pointerRay](Utilities_Events_ZeaPointerEvent.ZeaPointerEvent#pointerray)
+
+#### Defined in
+
+[src/Utilities/Events/ZeaPointerEvent.ts:18](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Utilities/Events/ZeaPointerEvent.ts#L18)
 
 ___
 
@@ -87,7 +101,7 @@ ___
 
 #### Defined in
 
-[Utilities/Events/ZeaPointerEvent.ts:14](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/Events/ZeaPointerEvent.ts#L14)
+[src/Utilities/Events/ZeaPointerEvent.ts:17](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Utilities/Events/ZeaPointerEvent.ts#L17)
 
 ___
 
@@ -101,7 +115,7 @@ ___
 
 #### Defined in
 
-[Utilities/Events/ZeaPointerEvent.ts:16](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/Events/ZeaPointerEvent.ts#L16)
+[src/Utilities/Events/ZeaPointerEvent.ts:20](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Utilities/Events/ZeaPointerEvent.ts#L20)
 
 ___
 
@@ -111,7 +125,7 @@ ___
 
 #### Defined in
 
-[Utilities/Events/XRPoseEvent.ts:18](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/Events/XRPoseEvent.ts#L18)
+[src/Utilities/Events/XRPoseEvent.ts:18](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Utilities/Events/XRPoseEvent.ts#L18)
 
 ___
 
@@ -125,7 +139,7 @@ ___
 
 #### Defined in
 
-[Utilities/Events/ZeaPointerEvent.ts:15](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/Events/ZeaPointerEvent.ts#L15)
+[src/Utilities/Events/ZeaPointerEvent.ts:19](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Utilities/Events/ZeaPointerEvent.ts#L19)
 
 ## Methods
 
@@ -143,7 +157,7 @@ ___
 
 #### Defined in
 
-[Utilities/Events/ZeaPointerEvent.ts:34](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/Events/ZeaPointerEvent.ts#L34)
+[src/Utilities/Events/ZeaPointerEvent.ts:38](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Utilities/Events/ZeaPointerEvent.ts#L38)
 
 ___
 
@@ -161,7 +175,7 @@ ___
 
 #### Defined in
 
-[Utilities/Events/ZeaPointerEvent.ts:38](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/Events/ZeaPointerEvent.ts#L38)
+[src/Utilities/Events/ZeaPointerEvent.ts:42](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Utilities/Events/ZeaPointerEvent.ts#L42)
 
 ___
 
@@ -185,7 +199,7 @@ ___
 
 #### Defined in
 
-[Utilities/Events/ZeaPointerEvent.ts:30](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/Events/ZeaPointerEvent.ts#L30)
+[src/Utilities/Events/ZeaPointerEvent.ts:34](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Utilities/Events/ZeaPointerEvent.ts#L34)
 
 ___
 
@@ -203,5 +217,5 @@ ___
 
 #### Defined in
 
-[Utilities/Events/ZeaPointerEvent.ts:26](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/Events/ZeaPointerEvent.ts#L26)
+[src/Utilities/Events/ZeaPointerEvent.ts:30](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Utilities/Events/ZeaPointerEvent.ts#L30)
 

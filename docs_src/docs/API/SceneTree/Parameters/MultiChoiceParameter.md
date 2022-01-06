@@ -50,7 +50,7 @@ Create a multi choice parameter.
 
 #### Defined in
 
-[SceneTree/Parameters/MultiChoiceParameter.ts:30](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Parameters/MultiChoiceParameter.ts#L30)
+[src/SceneTree/Parameters/MultiChoiceParameter.ts:30](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/Parameters/MultiChoiceParameter.ts#L30)
 
 ## Properties
 
@@ -64,7 +64,7 @@ Create a multi choice parameter.
 
 #### Defined in
 
-[Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/BaseClass.ts#L11)
+[src/Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Utilities/BaseClass.ts#L11)
 
 ___
 
@@ -78,7 +78,7 @@ ___
 
 #### Defined in
 
-[SceneTree/Parameters/Parameter.ts:25](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Parameters/Parameter.ts#L25)
+[src/SceneTree/Parameters/Parameter.ts:25](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/Parameters/Parameter.ts#L25)
 
 ___
 
@@ -92,7 +92,7 @@ ___
 
 #### Defined in
 
-[SceneTree/Parameters/Parameter.ts:19](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Parameters/Parameter.ts#L19)
+[src/SceneTree/Parameters/Parameter.ts:19](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/Parameters/Parameter.ts#L19)
 
 ___
 
@@ -106,7 +106,7 @@ ___
 
 #### Defined in
 
-[SceneTree/Parameters/Parameter.ts:20](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Parameters/Parameter.ts#L20)
+[src/SceneTree/Parameters/Parameter.ts:20](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/Parameters/Parameter.ts#L20)
 
 ___
 
@@ -116,7 +116,7 @@ ___
 
 #### Defined in
 
-[SceneTree/Parameters/MultiChoiceParameter.ts:22](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Parameters/MultiChoiceParameter.ts#L22)
+[src/SceneTree/Parameters/MultiChoiceParameter.ts:22](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/Parameters/MultiChoiceParameter.ts#L22)
 
 ___
 
@@ -130,7 +130,7 @@ ___
 
 #### Defined in
 
-[SceneTree/Parameters/Parameter.ts:21](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Parameters/Parameter.ts#L21)
+[src/SceneTree/Parameters/Parameter.ts:21](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/Parameters/Parameter.ts#L21)
 
 ___
 
@@ -144,7 +144,7 @@ ___
 
 #### Defined in
 
-[SceneTree/Parameters/Parameter.ts:26](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Parameters/Parameter.ts#L26)
+[src/SceneTree/Parameters/Parameter.ts:26](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/Parameters/Parameter.ts#L26)
 
 ___
 
@@ -158,7 +158,7 @@ ___
 
 #### Defined in
 
-[SceneTree/Parameters/Parameter.ts:18](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Parameters/Parameter.ts#L18)
+[src/SceneTree/Parameters/Parameter.ts:18](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/Parameters/Parameter.ts#L18)
 
 ___
 
@@ -172,7 +172,7 @@ ___
 
 #### Defined in
 
-[SceneTree/Parameters/Parameter.ts:22](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Parameters/Parameter.ts#L22)
+[src/SceneTree/Parameters/Parameter.ts:22](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/Parameters/Parameter.ts#L22)
 
 ___
 
@@ -186,7 +186,7 @@ ___
 
 #### Defined in
 
-[SceneTree/Parameters/Parameter.ts:23](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Parameters/Parameter.ts#L23)
+[src/SceneTree/Parameters/Parameter.ts:23](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/Parameters/Parameter.ts#L23)
 
 ___
 
@@ -200,7 +200,7 @@ ___
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/EventEmitter.ts#L26)
+[src/Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Utilities/EventEmitter.ts#L26)
 
 ___
 
@@ -214,7 +214,7 @@ ___
 
 #### Defined in
 
-[SceneTree/Parameters/Parameter.ts:24](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Parameters/Parameter.ts#L24)
+[src/SceneTree/Parameters/Parameter.ts:24](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/Parameters/Parameter.ts#L24)
 
 ___
 
@@ -228,7 +228,7 @@ ___
 
 #### Defined in
 
-[SceneTree/Parameters/Parameter.ts:27](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Parameters/Parameter.ts#L27)
+[src/SceneTree/Parameters/Parameter.ts:27](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/Parameters/Parameter.ts#L27)
 
 ___
 
@@ -242,7 +242,7 @@ ___
 
 #### Defined in
 
-[SceneTree/Parameters/NumberParameter.ts:20](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Parameters/NumberParameter.ts#L20)
+[src/SceneTree/Parameters/NumberParameter.ts:21](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/Parameters/NumberParameter.ts#L21)
 
 ___
 
@@ -256,7 +256,7 @@ ___
 
 #### Defined in
 
-[SceneTree/Parameters/NumberParameter.ts:21](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Parameters/NumberParameter.ts#L21)
+[src/SceneTree/Parameters/NumberParameter.ts:22](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/Parameters/NumberParameter.ts#L22)
 
 ## Accessors
 
@@ -274,7 +274,7 @@ NumberParameter.value
 
 #### Defined in
 
-[SceneTree/Parameters/Parameter.ts:399](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Parameters/Parameter.ts#L399)
+[src/SceneTree/Parameters/Parameter.ts:405](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/Parameters/Parameter.ts#L405)
 
 • `set` **value**(`value`): `void`
 
@@ -294,7 +294,7 @@ NumberParameter.value
 
 #### Defined in
 
-[SceneTree/Parameters/Parameter.ts:403](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Parameters/Parameter.ts#L403)
+[src/SceneTree/Parameters/Parameter.ts:409](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/Parameters/Parameter.ts#L409)
 
 ## Methods
 
@@ -320,7 +320,7 @@ Cleans the parameter up tp the index of the specified index of the bound Operato
 
 #### Defined in
 
-[SceneTree/Parameters/Parameter.ts:328](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Parameters/Parameter.ts#L328)
+[src/SceneTree/Parameters/Parameter.ts:334](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/Parameters/Parameter.ts#L334)
 
 ___
 
@@ -350,7 +350,7 @@ them explicitly.
 
 #### Defined in
 
-[SceneTree/Parameters/Parameter.ts:136](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Parameters/Parameter.ts#L136)
+[src/SceneTree/Parameters/Parameter.ts:136](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/Parameters/Parameter.ts#L136)
 
 ___
 
@@ -381,7 +381,7 @@ the output parameters.
 
 #### Defined in
 
-[SceneTree/Parameters/Parameter.ts:161](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Parameters/Parameter.ts#L161)
+[src/SceneTree/Parameters/Parameter.ts:161](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/Parameters/Parameter.ts#L161)
 
 ___
 
@@ -404,7 +404,7 @@ from this parameter and returns it.
 
 #### Defined in
 
-[SceneTree/Parameters/NumberParameter.ts:119](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Parameters/NumberParameter.ts#L119)
+[src/SceneTree/Parameters/NumberParameter.ts:120](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/Parameters/NumberParameter.ts#L120)
 
 ___
 
@@ -424,7 +424,7 @@ The readBinary method.
 
 #### Defined in
 
-[SceneTree/Parameters/Parameter.ts:441](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Parameters/Parameter.ts#L441)
+[src/SceneTree/Parameters/Parameter.ts:447](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/Parameters/Parameter.ts#L447)
 
 ___
 
@@ -451,7 +451,7 @@ Triggers all listener functions in an event.
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/EventEmitter.ts#L154)
+[src/Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Utilities/EventEmitter.ts#L154)
 
 ___
 
@@ -478,7 +478,7 @@ The fromJSON method decodes a json object for this type.
 
 #### Defined in
 
-[SceneTree/Parameters/NumberParameter.ts:94](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Parameters/NumberParameter.ts#L94)
+[src/SceneTree/Parameters/NumberParameter.ts:95](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/Parameters/NumberParameter.ts#L95)
 
 ___
 
@@ -496,7 +496,7 @@ Returns choices array.
 
 #### Defined in
 
-[SceneTree/Parameters/MultiChoiceParameter.ts:40](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Parameters/MultiChoiceParameter.ts#L40)
+[src/SceneTree/Parameters/MultiChoiceParameter.ts:40](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/Parameters/MultiChoiceParameter.ts#L40)
 
 ___
 
@@ -518,7 +518,7 @@ Returns the unmangled name of the class.
 
 #### Defined in
 
-[Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/BaseClass.ts#L33)
+[src/Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Utilities/BaseClass.ts#L33)
 
 ___
 
@@ -540,7 +540,7 @@ Returns parameter's data type.
 
 #### Defined in
 
-[SceneTree/Parameters/Parameter.ts:120](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Parameters/Parameter.ts#L120)
+[src/SceneTree/Parameters/Parameter.ts:120](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/Parameters/Parameter.ts#L120)
 
 ___
 
@@ -563,7 +563,7 @@ first operator that will evaluate when the parameter needs to be cleaned.
 
 #### Defined in
 
-[SceneTree/Parameters/Parameter.ts:257](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Parameters/Parameter.ts#L257)
+[src/SceneTree/Parameters/Parameter.ts:263](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/Parameters/Parameter.ts#L263)
 
 ___
 
@@ -587,7 +587,7 @@ Returns the unique id of the object.
 
 #### Defined in
 
-[Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/BaseClass.ts#L25)
+[src/Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Utilities/BaseClass.ts#L25)
 
 ___
 
@@ -609,7 +609,7 @@ Returns specified name of the parameter.
 
 #### Defined in
 
-[SceneTree/Parameters/Parameter.ts:63](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Parameters/Parameter.ts#L63)
+[src/SceneTree/Parameters/Parameter.ts:63](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/Parameters/Parameter.ts#L63)
 
 ___
 
@@ -631,7 +631,7 @@ Returns the owner item of the current parameter.
 
 #### Defined in
 
-[SceneTree/Parameters/Parameter.ts:88](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Parameters/Parameter.ts#L88)
+[src/SceneTree/Parameters/Parameter.ts:88](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/Parameters/Parameter.ts#L88)
 
 ___
 
@@ -654,7 +654,7 @@ Includes owner's path in case it is owned by a `ParameterOwner`.
 
 #### Defined in
 
-[SceneTree/Parameters/Parameter.ts:107](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Parameters/Parameter.ts#L107)
+[src/SceneTree/Parameters/Parameter.ts:107](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/Parameters/Parameter.ts#L107)
 
 ___
 
@@ -676,7 +676,7 @@ Returns the range to which the parameter is restrained.
 
 #### Defined in
 
-[SceneTree/Parameters/NumberParameter.ts:41](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Parameters/NumberParameter.ts#L41)
+[src/SceneTree/Parameters/NumberParameter.ts:42](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/Parameters/NumberParameter.ts#L42)
 
 ___
 
@@ -698,7 +698,7 @@ Returns the step number, which is the one used for rounding.
 
 #### Defined in
 
-[SceneTree/Parameters/NumberParameter.ts:59](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Parameters/NumberParameter.ts#L59)
+[src/SceneTree/Parameters/NumberParameter.ts:60](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/Parameters/NumberParameter.ts#L60)
 
 ___
 
@@ -720,7 +720,7 @@ Returns parameter's value.
 
 #### Defined in
 
-[SceneTree/Parameters/Parameter.ts:359](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Parameters/Parameter.ts#L359)
+[src/SceneTree/Parameters/Parameter.ts:365](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/Parameters/Parameter.ts#L365)
 
 ___
 
@@ -749,7 +749,7 @@ value of one of their outputs.
 
 #### Defined in
 
-[SceneTree/Parameters/Parameter.ts:313](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Parameters/Parameter.ts#L313)
+[src/SceneTree/Parameters/Parameter.ts:319](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/Parameters/Parameter.ts#L319)
 
 ___
 
@@ -772,7 +772,7 @@ operators if its value is requested by a call to getValue.
 
 #### Defined in
 
-[SceneTree/Parameters/Parameter.ts:247](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Parameters/Parameter.ts#L247)
+[src/SceneTree/Parameters/Parameter.ts:253](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/Parameters/Parameter.ts#L253)
 
 ___
 
@@ -799,7 +799,7 @@ valueChanges, or setting the USER_EDITED state.
 
 #### Defined in
 
-[SceneTree/Parameters/Parameter.ts:415](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Parameters/Parameter.ts#L415)
+[src/SceneTree/Parameters/Parameter.ts:421](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/Parameters/Parameter.ts#L421)
 
 ___
 
@@ -826,7 +826,7 @@ Removes a listener function from the specified event, using either the function 
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/EventEmitter.ts#L97)
+[src/Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Utilities/EventEmitter.ts#L97)
 
 ___
 
@@ -855,7 +855,7 @@ Adds a listener function for a given event name.
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/EventEmitter.ts#L44)
+[src/Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Utilities/EventEmitter.ts#L44)
 
 ___
 
@@ -893,7 +893,7 @@ asset.once('loaded', () => {
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/EventEmitter.ts#L82)
+[src/Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Utilities/EventEmitter.ts#L82)
 
 ___
 
@@ -908,7 +908,7 @@ Extracts a number value from a buffer, updating current parameter state.
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `reader` | [`BinReader`](../SceneTree_BinReader.BinReader) | The reader value. |
-| `context?` | `Record`<`string`, `unknown`\> | The context value. |
+| `context?` | [`AssetLoadContext`](../SceneTree_AssetLoadContext.AssetLoadContext) | The context value. |
 
 #### Returns
 
@@ -920,7 +920,7 @@ Extracts a number value from a buffer, updating current parameter state.
 
 #### Defined in
 
-[SceneTree/Parameters/NumberParameter.ts:106](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Parameters/NumberParameter.ts#L106)
+[src/SceneTree/Parameters/NumberParameter.ts:107](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/Parameters/NumberParameter.ts#L107)
 
 ___
 
@@ -947,7 +947,7 @@ remove listener by ID returned from #on
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/EventEmitter.ts#L134)
+[src/Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Utilities/EventEmitter.ts#L134)
 
 ___
 
@@ -974,7 +974,7 @@ The setCleanFromOp method.
 
 #### Defined in
 
-[SceneTree/Parameters/Parameter.ts:266](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Parameters/Parameter.ts#L266)
+[src/SceneTree/Parameters/Parameter.ts:272](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/Parameters/Parameter.ts#L272)
 
 ___
 
@@ -1002,7 +1002,7 @@ Dirties this Parameter so subsequent calls to `getValue` will cause an evaluatio
 
 #### Defined in
 
-[SceneTree/Parameters/Parameter.ts:214](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Parameters/Parameter.ts#L214)
+[src/SceneTree/Parameters/Parameter.ts:219](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/Parameters/Parameter.ts#L219)
 
 ___
 
@@ -1030,7 +1030,7 @@ Sets the name of the current parameter.
 
 #### Defined in
 
-[SceneTree/Parameters/Parameter.ts:73](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Parameters/Parameter.ts#L73)
+[src/SceneTree/Parameters/Parameter.ts:73](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/Parameters/Parameter.ts#L73)
 
 ___
 
@@ -1056,7 +1056,7 @@ Sets the owner item of the current parameter.
 
 #### Defined in
 
-[SceneTree/Parameters/Parameter.ts:97](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Parameters/Parameter.ts#L97)
+[src/SceneTree/Parameters/Parameter.ts:97](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/Parameters/Parameter.ts#L97)
 
 ___
 
@@ -1082,7 +1082,7 @@ Sets the range to which the parameter is restrained.
 
 #### Defined in
 
-[SceneTree/Parameters/NumberParameter.ts:50](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Parameters/NumberParameter.ts#L50)
+[src/SceneTree/Parameters/NumberParameter.ts:51](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/Parameters/NumberParameter.ts#L51)
 
 ___
 
@@ -1108,7 +1108,7 @@ Returns step value.
 
 #### Defined in
 
-[SceneTree/Parameters/NumberParameter.ts:68](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Parameters/NumberParameter.ts#L68)
+[src/SceneTree/Parameters/NumberParameter.ts:69](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/Parameters/NumberParameter.ts#L69)
 
 ___
 
@@ -1134,7 +1134,7 @@ Sets parameter index value.
 
 #### Defined in
 
-[SceneTree/Parameters/MultiChoiceParameter.ts:49](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Parameters/MultiChoiceParameter.ts#L49)
+[src/SceneTree/Parameters/MultiChoiceParameter.ts:49](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/Parameters/MultiChoiceParameter.ts#L49)
 
 ___
 
@@ -1162,7 +1162,7 @@ The toJSON method encodes this type as a json object for persistence.
 
 #### Defined in
 
-[SceneTree/Parameters/NumberParameter.ts:81](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Parameters/NumberParameter.ts#L81)
+[src/SceneTree/Parameters/NumberParameter.ts:82](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/Parameters/NumberParameter.ts#L82)
 
 ___
 
@@ -1191,7 +1191,7 @@ This means the operator will no longer receive updates when the operator changes
 
 #### Defined in
 
-[SceneTree/Parameters/Parameter.ts:147](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Parameters/Parameter.ts#L147)
+[src/SceneTree/Parameters/Parameter.ts:147](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/Parameters/Parameter.ts#L147)
 
 ___
 
@@ -1220,5 +1220,5 @@ by the parameter.
 
 #### Defined in
 
-[SceneTree/Parameters/Parameter.ts:181](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Parameters/Parameter.ts#L181)
+[src/SceneTree/Parameters/Parameter.ts:185](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/SceneTree/Parameters/Parameter.ts#L185)
 

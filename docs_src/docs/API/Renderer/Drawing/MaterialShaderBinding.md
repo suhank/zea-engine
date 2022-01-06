@@ -21,14 +21,14 @@ Create material shader binding.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `gl` | `WebGL12RenderingContext` | The webgl rendering context. |
+| `gl` | [`WebGL12RenderingContext`](../types/Renderer_types_webgl.WebGL12RenderingContext) | The webgl rendering context. |
 | `glMaterial` | `any` | The glMaterial value. |
-| `unifs` | `Uniforms` | The dictionary of WebGL uniforms. |
+
 | `warnMissingUnifs` | `any` | The warnMissingUnifs value. |
 
 #### Defined in
 
-[Renderer/Drawing/MaterialShaderBinding.ts:497](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Drawing/MaterialShaderBinding.ts#L497)
+[src/Renderer/Drawing/MaterialShaderBinding.ts:501](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/Drawing/MaterialShaderBinding.ts#L501)
 
 ## Properties
 
@@ -38,7 +38,7 @@ Create material shader binding.
 
 #### Defined in
 
-[Renderer/Drawing/MaterialShaderBinding.ts:489](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Drawing/MaterialShaderBinding.ts#L489)
+[src/Renderer/Drawing/MaterialShaderBinding.ts:493](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/Drawing/MaterialShaderBinding.ts#L493)
 
 ## Methods
 
@@ -52,7 +52,7 @@ The bind method.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `renderstate` | `RenderState` | The object tracking the current state of the renderer |
+
 
 #### Returns
 
@@ -62,7 +62,7 @@ The bind method.
 
 #### Defined in
 
-[Renderer/Drawing/MaterialShaderBinding.ts:579](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Drawing/MaterialShaderBinding.ts#L579)
+[src/Renderer/Drawing/MaterialShaderBinding.ts:583](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/Drawing/MaterialShaderBinding.ts#L583)
 
 ___
 
@@ -79,7 +79,7 @@ Users should never need to call this method directly.
 
 #### Defined in
 
-[Renderer/Drawing/MaterialShaderBinding.ts:599](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Drawing/MaterialShaderBinding.ts#L599)
+[src/Renderer/Drawing/MaterialShaderBinding.ts:603](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/Drawing/MaterialShaderBinding.ts#L603)
 
 ___
 
@@ -93,7 +93,7 @@ The unbind method.
 
 | Name | Type |
 | :------ | :------ |
-| `renderstate` | `RenderState` |
+
 
 #### Returns
 
@@ -101,5 +101,5 @@ The unbind method.
 
 #### Defined in
 
-[Renderer/Drawing/MaterialShaderBinding.ts:589](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/Drawing/MaterialShaderBinding.ts#L589)
+[src/Renderer/Drawing/MaterialShaderBinding.ts:593](https://github.com/ZeaInc/zea-engine/blob/455b10853/src/Renderer/Drawing/MaterialShaderBinding.ts#L593)
 
