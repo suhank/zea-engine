@@ -4,97 +4,71 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>occlusion-culling - Zea Engine</title>
+    <title>occlusion-culling-zcad - Zea Engine</title>
 
     <link href="data/zea-logo.png" rel="shortcut icon" />
 
     <link rel="stylesheet" href="styles/tailwind.min.css" />
 
-    <script src="../dist/index.umd.js"></script>
-
     <script type="module">
-      const { Vec3, Xfo, Color, Sphere, Plane, SimpleSurfaceMaterial, GeomItem, Scene, GLRenderer, TreeItem } =
-        window.zeaEngine
+      import '../dist/index.umd.js'
+      import '../node_modules/@zeainc/zea-cad/dist/index.umd.js'
+      const {
+        Vec3,
+        Xfo,
+        Color,
+        Sphere,
+        Plane,
+        SimpleSurfaceMaterial,
+        GeomItem,
+        Scene,
+        GLRenderer,
+        TreeItem,
+        AssetLoadContext,
+      } = window.zeaEngine
 
       const canvas = document.querySelector('#renderer')
 
       const scene = new Scene()
       const renderer = new GLRenderer(canvas, {
-        hideSplash: true,
         enableOcclusionCulling: true,
         debugOcclusionBuffer: false,
       })
-      // renderer.getViewport().debugReductionBuffer = true
       renderer.setScene(scene)
 
       scene.setupGrid(10.0, 10)
 
       const urlParams = new URLSearchParams(window.location.search)
 
-      const count = urlParams.has('count') ? urlParams.get('count') : 10000
-      const dim = Math.round(Math.cbrt(count))
-      console.log('Will render GeomItem count:', Math.pow(dim, 3))
+      /** LOAD ASSETS START */
+      const { CADAsset, CADBody } = window.zeaCad
 
-      const detail = 40
-      const geom = new Sphere(0.3, 2 * detail, detail)
-      const simpleMaterial = new SimpleSurfaceMaterial('mat')
-
-      let geomItemCount = 0
-      const addLayers = (layerId, treeItem) => {
-        for (let j = 0; j < dim; j += 1) {
-          const material = simpleMaterial
-          const treeItemJ = new TreeItem('TreeItem' + j)
-          treeItem.addChild(treeItemJ)
-
-          for (let k = 0; k < dim; k += 1) {
-            const geomItem = new GeomItem('Geom' + k, geom, material)
-            treeItemJ.addChild(geomItem)
-
-            const xfo = new Xfo()
-            xfo.tr.set(j, k, layerId)
-            geomItem.getParameter('GlobalXfo').setValue(xfo)
-            geomItemCount++
-          }
-        }
+      const loadZCADAsset = (url, filename) => {
+        const asset = new CADAsset()
+        const context = new AssetLoadContext()
+        context.units = 'millimeters'
+        context.camera = context
+        asset.load(url, context).then(() => {
+          const matLib = asset.getMaterialLibrary()
+          matLib.getMaterials().forEach((material) => {
+            const baseColorParam = material.getParameter('BaseColor')
+            baseColorParam.setImage(null)
+          })
+          renderer.frameAll()
+        })
+        asset.getGeometryLibrary().on('loaded', () => {
+          postMessage('done-loading')
+        })
+        scene.getRoot().addChild(asset)
+        return asset
       }
 
-      for (let i = 0; i < dim; i += 1) {
-        const treeItem = new TreeItem('TreeItem' + i)
-        scene.getRoot().addChild(treeItem)
-
-        addLayers(i, treeItem)
+      let assetUrl = 'data/Maison.skp.zcad'
+      if (urlParams.has('zcad')) {
+        assetUrl = urlParams.get('zcad')
       }
-
-      // Setup Floors
-      const floor = new Plane(dim, dim)
-      const floorMaterial = new SimpleSurfaceMaterial('mat')
-      floorMaterial.baseColorParam.value = new Color(0, 1, 0)
-      const floorDim = Math.round(dim / 4)
-      for (let i = 0; i <= floorDim; i += 1) {
-        const geomItem = new GeomItem('Wall' + i, floor, floorMaterial)
-        scene.getRoot().addChild(geomItem)
-
-        const xfo = new Xfo()
-        xfo.tr.set(dim * 0.5, dim * 0.5, (i - 0.5) * 4)
-        geomItem.getParameter('GlobalXfo').setValue(xfo)
-        // geomItemCount++
-      }
-
-      // Setup Walls
-      const wall = new Plane(dim, dim)
-      const wallMaterial = new SimpleSurfaceMaterial('mat')
-      wallMaterial.baseColorParam.value = new Color(0, 0, 1)
-      const wallDim = Math.round(dim / 4)
-      for (let i = 0; i <= wallDim; i += 1) {
-        const geomItem = new GeomItem('Wall' + i, wall, wallMaterial)
-        scene.getRoot().addChild(geomItem)
-
-        const xfo = new Xfo()
-        xfo.tr.set(dim * 0.5, (i - 0.5) * 4, dim * 0.5)
-        xfo.ori.setFromAxisAndAngle(new Vec3(1, 0, 0), Math.PI * 0.5)
-        geomItem.getParameter('GlobalXfo').setValue(xfo)
-        // geomItemCount++
-      }
+      loadZCADAsset(assetUrl, assetUrl)
+      /** LOAD ASSETS END */
 
       renderer.frameAll()
       renderer.getViewport().on('keyDown', (event) => {
@@ -183,9 +157,7 @@
 
       const cullElement = document.getElementById('cull-stats')
       renderer.on('CullingUpdated', (event) => {
-        cullElement.textContent = `visible: ${event.visible} / total: ${event.total} triangles: ${
-          geomItemCount * geom.getNumTriangles()
-        } visible triangles: ${event.visible * geom.getNumTriangles()}`
+        cullElement.textContent = `visible: ${event.visible} / total: ${event.total}`
       })
     </script>
     <style>
@@ -199,6 +171,7 @@
         right: 10px;
       }
       #cull-stats {
+        color: white;
         position: fixed;
         bottom: 10px;
         left: 10px;
