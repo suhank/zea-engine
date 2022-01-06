@@ -88,7 +88,7 @@ const unCull = (index) => {
 const checkGeomItem = (geomItemData) => {
   if (!geomItemData || !cameraPos) return
 
-  // Some items, like Handles that
+  // Some items, like Handles and the grid, or or the VR controllers that should not be culled.
   if (!geomItemData.cullable) {
     unCull(geomItemData.id)
     return
@@ -274,7 +274,7 @@ const processOcclusionData = (data) => {
 
     if (!outOfFrustum[index]) {
       if (value == 0) {
-        if (!occluded[index]) {
+        if (!occluded[index] && geomItemsData[index].cullable) {
           occluded[index] = true
           if (!outOfFrustum[index]) newlyCulled.push(index)
         }

@@ -273,10 +273,12 @@ class GLGeomItemLibrary extends EventEmitter {
           depthInternalFormat: gl.DEPTH_COMPONENT16,
         })
         this.renderer.on('resized', (event) => {
-          this.occlusionDataBuffer.resize(
-            Math.ceil(event.width * occlusionDataBufferSizeFactor),
-            Math.ceil(event.height * occlusionDataBufferSizeFactor)
-          )
+          if (!this.xrPresenting) {
+            this.occlusionDataBuffer.resize(
+              Math.ceil(event.width * occlusionDataBufferSizeFactor),
+              Math.ceil(event.height * occlusionDataBufferSizeFactor)
+            )
+          }
         })
         renderer.once('xrViewportSetup', (event: XrViewportEvent) => {
           const xrvp = event.xrViewport
@@ -572,7 +574,7 @@ class GLGeomItemLibrary extends EventEmitter {
         checkQuery('queryDrawCulledBBoxes', queryDrawCulledBBoxes)
         checkQuery('queryReduce1', queryReduce1)
         checkQuery('queryReduce2', queryReduce2)
-        console.log(queryResults['queryReduce1'], queryResults['queryReduce2'])
+        // console.log(queryResults['queryReduce1'], queryResults['queryReduce2'])
       }
 
       // console.log(this.reductionDataArray)
@@ -873,6 +875,14 @@ class GLGeomItemLibrary extends EventEmitter {
       cullable = false
     }
     if (material.hasParameter('PointSize')) {
+      cullable = false
+    }
+    // Occlusion culling uses the geomdata rendering
+    // TODO: this could eventually be improved ir the number of 'nonSelectable' objects
+    // in a scene is high, this could become a perf loss.
+    // *  When rendering the occlusion buffer, we could ignore this 'isSelectable' property
+    //    and render geomdata for non-selectable items.
+    if (this.enableOcclusionCulling && !geomItem.isSelectable()) {
       cullable = false
     }
 
