@@ -1,7 +1,7 @@
 /* eslint-disable guard-for-in */
 import { EventEmitter } from '../../Utilities/index'
-import { Mat4, Vec4 } from '../../Math/index'
-import { Cuboid } from '../../SceneTree/index'
+import { Mat4, Vec2, Vec3, Vec4, Xfo } from '../../Math/index'
+import { Cuboid, DataImage, FlatSurfaceMaterial, Plane } from '../../SceneTree/index'
 import { GLMesh } from './GLMesh'
 import { GLGeomItemFlags, GLGeomItem } from './GLGeomItem'
 import { MathFunctions } from '../../Utilities/MathFunctions'
@@ -23,6 +23,24 @@ import { pixelsPerItem } from '../GLSLConstants'
 import { readPixelsAsync } from './readPixelsAsync.js'
 import { XRViewport } from '../VR/XRViewport'
 import { XrViewportEvent } from '../../Utilities/Events/XrViewportEvent'
+
+// This enabled a visual HUD in the view to display the occlusion buffer.
+// The is the only way to debug the occlusion system in VR.
+// BEcause we are rendering the geomdata buffer, we must also disable material
+// binding in the GLMaterialGeomItemSets.drawGeomData function
+const displayOcclusionBuffer = false
+/*
+   drawGeomData(renderstate: GeomDataRenderState) {
+-    this.glMaterial.bind(renderstate, false)
++    // this.glMaterial.bind(renderstate, false)
+     for (const key in this.glGeomItemSets) {
+       const glGeomItemSet = this.glGeomItemSets[key]
+       glGeomItemSet.draw(renderstate)
+     }
+-    this.glMaterial.unbind(renderstate)
++    // this.glMaterial.unbind(renderstate)
+   }
+*/
 
 /** Class for managing all the GeomItems discovered in the SceneTree.
  * @private
@@ -50,6 +68,8 @@ class GLGeomItemLibrary extends EventEmitter {
   // Occlusion Culling
   protected floatOcclusionBuffer: boolean = true
   protected occlusionDataBuffer: GLRenderTarget
+  protected occlusionImage: DataImage
+  protected occlusionImageItem: GeomItem
   protected reductionDataBuffer: GLRenderTarget
   protected bbox: GLMesh
   protected reductionShader: ReductionShader
@@ -121,6 +141,12 @@ class GLGeomItemLibrary extends EventEmitter {
     this.worker.onmessage = (message: Record<string, any>) => {
       if (message.data.type == 'InFrustumIndices') {
         if (this.enableOcclusionCulling) {
+          // First full the items that the frustum culling removed.
+          if (message.data.newlyCulled) {
+            this.applyCullResults({
+              newlyCulled: message.data.newlyCulled,
+            })
+          }
           this.calculateOcclusionCulling(message.data.inFrustumIndices)
         } else {
           this.applyCullResults(message.data)
@@ -172,6 +198,7 @@ class GLGeomItemLibrary extends EventEmitter {
     viewportChanged()
 
     renderer.once('xrViewportSetup', (event: XrViewportEvent) => {
+      this.xrViewport = event.xrViewport
       const xrvp = event.xrViewport
       xrvp.on('presentingChanged', (event: StateChangedEvent) => {
         this.xrPresenting = event.state
@@ -184,8 +211,28 @@ class GLGeomItemLibrary extends EventEmitter {
           // able to get it from the WebXR API, so I am putting in some guesses
           // based on this diagram: https://blog.mozvr.com/content/images/2016/02/human-visual-field.jpg
           const degToRad = Math.PI / 180
-          const frustumHalfAngleY = 62 * degToRad
-          const frustumHalfAngleX = 50 * degToRad
+          let frustumHalfAngleY = 62 * degToRad
+          let frustumHalfAngleX = 50 * degToRad
+
+          // Note: adding the * 0.5 while debugging the occlusion culling
+          // I rendered the view using this frustum and then displayed it back in the view.
+          // Initially it was far too wide, so adding a * 0.5 it appears to match perfectly now.
+          // This range may differ based on the HMD. Need to test this.
+          switch (xrvp.getHMDName()) {
+            case 'Vive':
+              frustumHalfAngleY *= 0.6
+              frustumHalfAngleX *= 0.6
+              break
+            case 'Oculus':
+              frustumHalfAngleY *= 0.5
+              frustumHalfAngleX *= 0.5
+              break
+
+            default:
+              frustumHalfAngleY *= 0.5
+              frustumHalfAngleX *= 0.5
+              break
+          }
 
           this.xrFovY = frustumHalfAngleY * 2.0
           const aspect = 62 / 50
@@ -201,7 +248,7 @@ class GLGeomItemLibrary extends EventEmitter {
             frustumHalfAngleX,
             frustumHalfAngleY,
             isOrthographic: false,
-            solidAngleLimit: renderer.solidAngleLimit * 2,
+            solidAngleLimit: renderer.solidAngleLimit,
           })
         } else {
           cullFreq = 5
@@ -272,32 +319,64 @@ class GLGeomItemLibrary extends EventEmitter {
           depthFormat: gl.DEPTH_COMPONENT,
           depthInternalFormat: gl.DEPTH_COMPONENT16,
         })
+        this.occlusionDataBuffer.clearColor.set(0.1, 0, 0, 1)
+
         this.renderer.on('resized', (event) => {
           if (!this.xrPresenting) {
             this.occlusionDataBuffer.resize(
               Math.ceil(event.width * occlusionDataBufferSizeFactor),
               Math.ceil(event.height * occlusionDataBufferSizeFactor)
             )
-          }
-        })
-        renderer.once('xrViewportSetup', (event: XrViewportEvent) => {
-          const xrvp = event.xrViewport
-          xrvp.on('presentingChanged', (event: StateChangedEvent) => {
-            if (event.state) {
-              occlusionDataBufferSizeFactor = 0.2
-              this.occlusionDataBuffer.resize(
-                Math.ceil(xrvp.getWidth() * occlusionDataBufferSizeFactor),
-                Math.ceil(xrvp.getWidth() * occlusionDataBufferSizeFactor)
-              )
-            } else {
-              occlusionDataBufferSizeFactor = 1
-              this.occlusionDataBuffer.resize(
-                Math.ceil(this.renderer.getWidth() * occlusionDataBufferSizeFactor),
-                Math.ceil(this.renderer.getWidth() * occlusionDataBufferSizeFactor)
+
+            if (displayOcclusionBuffer) {
+              if (!this.occlusionImage) {
+                const material = new FlatSurfaceMaterial('Material')
+                const image = new DataImage('LDRImage')
+                image.mipMapped = false
+                image.format = 'RGB'
+                material.baseColorParam.setImage(image)
+                const xfo = new Xfo(new Vec3(0, -3, 0))
+                xfo.sc.set(5, 5, 1)
+                const geomItem = new GeomItem('geomItem2', new Plane(1, 1), material, xfo)
+                geomItem.setSelectable(false)
+                this.renderer.addTreeItem(geomItem)
+                this.occlusionImage = image
+                this.occlusionImageItem = geomItem
+              }
+              this.occlusionImage.setData(
+                this.occlusionDataBuffer.width,
+                this.occlusionDataBuffer.height,
+                // @ts-ignore
+                this.occlusionDataBuffer.textureTargets[0]
               )
             }
-          })
+          }
         })
+        // renderer.once('xrViewportSetup', (event: XrViewportEvent) => {
+        //   console.log('xrViewportSetup')
+        //   const xrvp = event.xrViewport
+
+        //   xrvp.on('presentingChanged', (event: StateChangedEvent) => {
+        //     if (event.state) {
+        //       occlusionDataBufferSizeFactor = 0.2
+        //       this.occlusionDataBuffer.resize(
+        //         Math.ceil(xrvp.getWidth() * occlusionDataBufferSizeFactor),
+        //         Math.ceil(xrvp.getWidth() * occlusionDataBufferSizeFactor)
+        //       )
+        //     } else {
+        //       occlusionDataBufferSizeFactor = 1
+        //       this.occlusionDataBuffer.resize(
+        //         Math.ceil(this.renderer.getWidth() * occlusionDataBufferSizeFactor),
+        //         Math.ceil(this.renderer.getWidth() * occlusionDataBufferSizeFactor)
+        //       )
+        //     }
+        //     this.occlusionImage.setData(
+        //       this.occlusionDataBuffer.width,
+        //       this.occlusionDataBuffer.height,
+        //       this.occlusionDataBuffer.textureTargets[0]
+        //     )
+        //   })
+        // })
         this.reductionDataBuffer = new GLRenderTarget(gl, {
           type: gl.UNSIGNED_BYTE,
           internalFormat: gl.R8,
@@ -328,22 +407,28 @@ class GLGeomItemLibrary extends EventEmitter {
    */
   applyCullResults(data: Record<string, any>) {
     // return
-    data.newlyCulled.forEach((index: number) => {
-      if (!this.glGeomItems[index]) {
-        if (this.removedItemIndices.indexOf(index) == -1) {
-          console.warn('Culling worker has items that are deleted.')
+    if (data.newlyCulled) {
+      data.newlyCulled.forEach((index: number) => {
+        // console.log('newlyCulled:', this.glGeomItems[index].geomItem.getName())
+        if (!this.glGeomItems[index]) {
+          if (this.removedItemIndices.indexOf(index) == -1) {
+            console.warn('Culling worker has items that are deleted.')
+          }
+          // oddly, the culling worker generates indices that are out of range
+          // on the first cull and after that behaves itself.
+          // until I can figure out why, just ignoring this issue.
+          console.warn(`Culling index our of range: ${index}`)
+          return
         }
-        // oddly, the culling worker generates indices that are out of range
-        // on the first cull and after that behaves itself.
-        // until I can figure out why, just ignoring this issue.
-        console.warn(`Culling index our of range: ${index}`)
-        return
-      }
-      this.glGeomItems[index].setCulled(true)
-    })
-    data.newlyUnCulled.forEach((index: number) => {
-      this.glGeomItems[index].setCulled(false)
-    })
+        this.glGeomItems[index].setCulled(true)
+      })
+    }
+    if (data.newlyUnCulled) {
+      data.newlyUnCulled.forEach((index: number) => {
+        // console.log('newlyUnCulled:', this.glGeomItems[index].geomItem.getName())
+        this.glGeomItems[index].setCulled(false)
+      })
+    }
     this.renderer.requestRedraw()
     // Used mostly to make our unit testing robust.
     // Also to help display render stats.
@@ -383,6 +468,7 @@ class GLGeomItemLibrary extends EventEmitter {
 
     // Note: we get errors trying to read data back from images less than 4x4 pixels.
     const size = Math.max(4, MathFunctions.nextPow2(Math.round(Math.sqrt(this.glGeomItems.length) + 0.5)))
+
     if (this.reductionDataBuffer.width != size) {
       this.reductionDataBuffer.resize(size, size)
       this.reductionDataArray = new Uint8Array(size * size)
@@ -404,6 +490,7 @@ class GLGeomItemLibrary extends EventEmitter {
       })
       return
     }
+
     const gl = this.renderer.gl
 
     const renderstate: GeomDataRenderState = <GeomDataRenderState>{ shaderopts: {} }
@@ -413,26 +500,9 @@ class GLGeomItemLibrary extends EventEmitter {
 
     this.renderer.bindGLBaseRenderer(renderstate)
     if (this.xrPresenting) {
-      // this.xrViewport.initRenderState(renderstate)
-      /*if (!this.xrViewport.viewXfo) {
-        return
-      }
-      renderstate.viewXfo = this.xrViewport.viewXfo
-      renderstate.viewScale = 1.0
-      renderstate.region = this.xrViewport.__region
-      renderstate.cameraMatrix = this.xrViewport.viewXfo.toMat4()
-      renderstate.depthRange = this.xrViewport.depthRange
-      renderstate.viewport = this.xrViewport
-      renderstate.viewports = [
-        {
-          region: this.region,
-          viewMatrix: renderstate.cameraMatrix.inverse(),
-          projectionMatrix: this.xrProjectionMatrix,
-          isOrthographic: false,
-          fovY: this.xrFovY,
-        },
-      ]
-      */
+      this.xrViewport.initCullingRenderState(renderstate)
+      renderstate.viewports[0].fovY = this.xrFovY
+      renderstate.viewports[0].projectionMatrix = this.xrProjectionMatrix
     } else {
       this.renderer.getViewport().initRenderState(renderstate)
     }
@@ -445,9 +515,11 @@ class GLGeomItemLibrary extends EventEmitter {
     gl.depthFunc(gl.LESS)
     gl.depthMask(true)
 
-    this.occlusionDataBuffer.bindForWriting(renderstate, true)
     // this.renderer.drawSceneGeomData(renderstate)
     const drawSceneGeomData = (renderstate: GeomDataRenderState) => {
+      this.occlusionDataBuffer.bindForWriting(renderstate, true)
+
+      // For now, just rendering the main opaque geoms.
       const opaqueGeomsPass = this.renderer.getPass(0)
       opaqueGeomsPass.drawGeomData(renderstate)
       const linesPass = this.renderer.getPass(1)
@@ -464,6 +536,7 @@ class GLGeomItemLibrary extends EventEmitter {
       //     if (pass.enabled) pass.drawGeomData(renderstate)
       //   }
       // }
+      this.occlusionDataBuffer.unbindForWriting(renderstate)
     }
 
     // Draw one point for each pixel in the occlusion buffer.
@@ -496,14 +569,22 @@ class GLGeomItemLibrary extends EventEmitter {
 
       this.boundingBoxShader.bind(renderstate, 'GLGeomItemLibrary')
       this.bbox.bind(renderstate)
+      gl.disable(gl.CULL_FACE)
 
       // Read each Matrix and Bbox settings from the Texture.
-      const { instancesTexture, instancesTextureSize, instancedDraw, reductionDataTexture, occlusionCulling } =
-        renderstate.unifs
+      const {
+        instancesTexture,
+        instancesTextureSize,
+        instancedDraw,
+        reductionDataTexture,
+        occlusionCulling,
+        viewportSize,
+      } = renderstate.unifs
       this.glGeomItemsTexture.bindToUniform(renderstate, instancesTexture)
       gl.uniform1i(instancesTextureSize.location, this.glGeomItemsTexture.width)
       gl.uniform1i(instancedDraw.location, 1)
       gl.uniform1i(occlusionCulling.location, 1)
+      gl.uniform2f(viewportSize.location, this.occlusionDataBuffer.width, this.occlusionDataBuffer.height)
 
       this.reductionDataBuffer.bindColorTexture(renderstate, reductionDataTexture)
 
@@ -520,26 +601,32 @@ class GLGeomItemLibrary extends EventEmitter {
       renderstate.bindViewports(renderstate.unifs, () => {
         this.bbox.drawInstanced(renderstate, this.inFrustumIndicesCount)
       })
+
+      this.occlusionDataBuffer.unbindForWriting(renderstate)
     }
 
     const queryDrawScene = gl.createQuery()
     gl.beginQuery(ext.TIME_ELAPSED_EXT, queryDrawScene)
-
     drawSceneGeomData(renderstate)
-
     gl.endQuery(ext.TIME_ELAPSED_EXT)
-    const queryReduce1 = gl.createQuery()
 
+    // We render the scene geometry, reduce, then render
+    // the boxes, reduce again. The bounding boxes displayed
+    // are based on the results of the first reduce.
+
+    const queryReduce1 = gl.createQuery()
     reduce(renderstate, true, queryReduce1)
 
     const queryDrawCulledBBoxes = gl.createQuery()
     gl.beginQuery(ext.TIME_ELAPSED_EXT, queryDrawCulledBBoxes)
+
+    //
     drawCulledBBoxes()
 
     gl.endQuery(ext.TIME_ELAPSED_EXT)
 
-    const queryReduce2 = gl.createQuery()
-    reduce(renderstate, false, queryReduce2)
+    // const queryReduce = gl.createQuery()
+    // reduce(renderstate, false, queryReduce)
 
     const queryResults = {
       numReductionPoints,
@@ -569,13 +656,13 @@ class GLGeomItemLibrary extends EventEmitter {
     readPixelsAsync(gl, 0, 0, w, h, format, type, this.reductionDataArray).then(() => {
       this.reductionDataBuffer.unbindForReading()
 
-      if (queryReduce1) {
-        checkQuery('queryDrawScene', queryDrawScene)
-        checkQuery('queryDrawCulledBBoxes', queryDrawCulledBBoxes)
-        checkQuery('queryReduce1', queryReduce1)
-        checkQuery('queryReduce2', queryReduce2)
-        // console.log(queryResults['queryReduce1'], queryResults['queryReduce2'])
-      }
+      // if (queryDrawScene) {
+      //   checkQuery('queryDrawScene', queryDrawScene)
+      //   checkQuery('queryDrawCulledBBoxes', queryDrawCulledBBoxes)
+      //   // checkQuery('queryReduce1', queryReduce1)
+      //   checkQuery('queryReduce', queryReduce)
+      //   console.log(queryResults)
+      // }
 
       // console.log(this.reductionDataArray)
       // Now send the buffer to the worker, where it will determine what culling

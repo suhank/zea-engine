@@ -23,6 +23,7 @@ const int GEOMITEM_INVISIBLE_IN_GEOMDATA = 2; // 1<<1;
 
 /* VS Outputs */
 varying vec4 v_color;
+varying vec2 v_screenSpaceSize;
 
 void main(void) {
 
@@ -59,7 +60,13 @@ void main(void) {
     // smaller items in the scene.
     vec4 posMin = viewProjectionMatrix * vec4(bboxMin.xyz, 1.0);
     vec4 posMax = viewProjectionMatrix * vec4(bboxMax.xyz, 1.0);
-    v_color.a = length((posMax.xy / posMax.z) - (posMin.xy / posMin.z));
+    if (posMax.z > 0.0 && posMin.z > 0.0) {
+      // v_color.a = length((posMax.xy / posMax.z) - (posMin.xy / posMin.z));
+      v_screenSpaceSize = (posMax.xy / posMax.z) - (posMin.xy / posMin.z);
+    }
+    else {
+      v_screenSpaceSize = vec2(1.0, 1.0);
+    }
   } else {
     v_color = fetchTexel(instancesTexture, instancesTextureSize, (drawItemId * pixelsPerItem) + 4);
   }

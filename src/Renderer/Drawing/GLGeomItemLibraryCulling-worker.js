@@ -247,7 +247,7 @@ const onDoneFrustumCull = (postMessage) => {
       // }
       if (newlyCulled.length > 0 || newlyUnCulled.length > 0 || !inFrustumDrawIdsBufferPopulated) {
         const inFrustumIndices = generateInFrustumIndices()
-        postMessage({ type: 'InFrustumIndices', inFrustumIndices }, [inFrustumIndices.buffer])
+        postMessage({ type: 'InFrustumIndices', newlyCulled, inFrustumIndices }, [inFrustumIndices.buffer])
         inFrustumDrawIdsBufferPopulated = true
       } else {
         // Note: the inFrustumDrawIdsBuffer is already up to date we can skip this.
@@ -287,14 +287,15 @@ const processOcclusionData = (data) => {
       }
     }
   })
-
-  postMessage({
-    type: 'CullResults',
-    newlyCulled,
-    newlyUnCulled,
-    visible: visibleCount,
-    total: geomItemsData.length - 1,
-  })
+  if (newlyCulled.length > 0 || newlyUnCulled.length > 0) {
+    postMessage({
+      type: 'CullResults',
+      newlyCulled,
+      newlyUnCulled,
+      visible: visibleCount,
+      total: geomItemsData.length - 1,
+    })
+  }
 }
 
 // ///////////////////////////////////////////////

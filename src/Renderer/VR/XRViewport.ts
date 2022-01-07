@@ -459,6 +459,25 @@ class XRViewport extends GLBaseViewport {
   }
 
   /**
+   * The initRenderState method.
+   * @param renderstate - The object tracking the current state of the renderer
+   */
+  initCullingRenderState(renderstate: GeomDataRenderState) {
+    renderstate.viewXfo = this.viewXfo
+    renderstate.viewScale = 1.0
+    renderstate.region = this.region
+    renderstate.cameraMatrix = renderstate.viewXfo.toMat4()
+    renderstate.viewport = this
+    renderstate.viewports = [
+      {
+        region: this.region,
+        viewMatrix: renderstate.cameraMatrix.inverse(),
+        isOrthographic: false,
+      },
+    ]
+  }
+
+  /**
    * The drawXRFrame method.
    * @param xrFrame - The xrFrame value.
    */
