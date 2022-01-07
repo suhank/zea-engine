@@ -71,19 +71,19 @@ import { EventEmitter } from '../..'
 class XRController extends EventEmitter {
   id: number
   buttonPressed: boolean
-  private xrvp: XRViewport
-  private inputSource: any
-  private pressedButtons: Array<boolean> = []
-  private mat4: Mat4
-  private xfo: Xfo
-  private treeItem: TreeItem
-  private tipItem: TreeItem
+  xrvp: XRViewport
+  inputSource: any
+  pressedButtons: Array<boolean> = []
+  treeItem: TreeItem
+  tipItem: TreeItem
 
   // The frequency of raycasting into the scene for this controller
   raycastTick: number = 5
   raycastArea: number = 0.005
   raycastDist: number = 0.04
   pointerRay: Ray = new Ray()
+  private mat4: Mat4
+  private xfo: Xfo
   private raycastAreaCache: number = 0
   private raycastDistCache: number = 0
   private rayCastRenderTargetProjMatrix: Mat4 = new Mat4()

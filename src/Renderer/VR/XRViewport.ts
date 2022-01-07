@@ -13,7 +13,7 @@ import { ControllerAddedEvent } from '../../Utilities/Events/ControllerAddedEven
 import { StateChangedEvent } from '../../Utilities/Events/StateChangedEvent'
 import { XRControllerEvent } from '../../Utilities/Events/XRControllerEvent'
 import { XRPoseEvent } from '../../Utilities/Events/XRPoseEvent'
-import { ColorRenderState } from '../types/renderer'
+import { ColorRenderState, GeomDataRenderState, RenderState } from '../types/renderer'
 import { GLViewport } from '../GLViewport'
 
 /** This Viewport class is used for rendering stereoscopic views to VR controllers using the WebXR api.
@@ -42,25 +42,21 @@ class XRViewport extends GLBaseViewport {
   private tick: number
   stageScale: number
 
-  private __leftViewMatrix: Mat4
-  private __leftProjectionMatrix: Mat4
-  private __rightViewMatrix: Mat4
-  private __rightProjectionMatrix: Mat4
   private __vrAsset?: VLAAsset
   private viewXfo: Xfo = new Xfo()
-  private __stageXfo: Xfo = new Xfo()
-  private __stageMatrix: Mat4 = new Mat4()
+  private stageXfo: Xfo = new Xfo()
+  private invStageMatrix: Mat4 = new Mat4()
   private session: any = null
 
-  private __hmd: string = ''
-  private __hmdAssetPromise?: Promise<VLAAsset | null>
+  private hmd: string = ''
+  private hmdAssetPromise?: Promise<VLAAsset | null>
   private region: Array<number> = []
 
   private __refSpace: any
 
-  private __projectionMatrices: Array<Mat4> = []
-  private __viewMatrices: Array<Mat4> = []
-  private __cameraMatrices: Array<Mat4> = []
+  private projectionMatrices: Array<Mat4> = []
+  private viewMatrices: Array<Mat4> = []
+  private cameraMatrices: Array<Mat4> = []
   /**
    * Create a VR viewport.
    * @param renderer - The renderer value.
@@ -94,11 +90,6 @@ class XRViewport extends GLBaseViewport {
     // Convert Y-Up to Z-Up.
     xfo.ori.setFromAxisAndAngle(new Vec3(1, 0, 0), Math.PI * 0.5)
     this.setXfo(xfo) // Reset the stage Xfo.
-
-    this.__leftViewMatrix = new Mat4()
-    this.__leftProjectionMatrix = new Mat4()
-    this.__rightViewMatrix = new Mat4()
-    this.__rightProjectionMatrix = new Mat4()
 
     this.setManipulator(new XRViewManipulator(this))
   }
@@ -136,18 +127,19 @@ class XRViewport extends GLBaseViewport {
    * @return - The return value.
    */
   getXfo() {
-    return this.__stageXfo
+    return this.stageXfo
   }
 
   /**
-   * The setXfo method.
+   * Sets the stage Xfo, which is the Xfo that transforms the user into the world.
+   * The local displacement of the user within their volume is applied on top of this Xfo.
    * @param xfo - The xfo value.
    */
   setXfo(xfo: Xfo) {
-    this.__stageXfo = xfo
+    this.stageXfo = xfo
     this.__stageTreeItem.globalXfoParam.value = xfo
-    this.__stageMatrix = xfo.inverse().toMat4()
-    // this.__stageMatrix.multiplyInPlace(this.__sittingToStandingMatrix);
+    this.invStageMatrix = xfo.inverse().toMat4()
+    // this.invStageMatrix.multiplyInPlace(this.__sittingToStandingMatrix);
     this.stageScale = xfo.sc.x
   }
 
@@ -157,6 +149,14 @@ class XRViewport extends GLBaseViewport {
    */
   getControllers(): XRController[] {
     return this.controllers
+  }
+
+  /**
+   * Returns the name of the HMD being used.
+   * @return - The return value.
+   */
+  getHMDName(): string {
+    return this.hmd
   }
 
   // //////////////////////////
@@ -214,15 +214,15 @@ class XRViewport extends GLBaseViewport {
     // If the HMD has changed, reset it.
     let hmd = localStorage.getItem('ZeaEngine_XRDevice')
     if (!hmd) {
-      hmd = 'Vive'
+      hmd = 'Oculus'
       localStorage.setItem('ZeaEngine_XRDevice', hmd)
     }
-    if (this.__hmd != hmd) {
-      this.__hmdAssetPromise = undefined
-    } else if (this.__hmdAssetPromise) return this.__hmdAssetPromise
+    if (this.hmd != hmd) {
+      this.hmdAssetPromise = undefined
+    } else if (this.hmdAssetPromise) return this.hmdAssetPromise
 
-    this.__hmd = hmd
-    this.__hmdAssetPromise = new Promise((resolve, reject) => {
+    this.hmd = hmd
+    this.hmdAssetPromise = new Promise((resolve, reject) => {
       // ////////////////////////////////////////////
       // Resources
       {
@@ -264,7 +264,7 @@ class XRViewport extends GLBaseViewport {
         else this.__vrAsset.once('loaded', bind)
       }
     })
-    return this.__hmdAssetPromise
+    return this.hmdAssetPromise
   }
 
   /**
@@ -500,16 +500,16 @@ class XRViewport extends GLBaseViewport {
     const views = pose.views
 
     if (!this.__projectionMatricesUpdated) {
-      this.__projectionMatrices = []
-      this.__viewMatrices = []
-      this.__cameraMatrices = []
+      this.projectionMatrices = []
+      this.viewMatrices = []
+      this.cameraMatrices = []
       for (let i = 0; i < views.length; i++) {
         const view = views[i]
         const projMat = new Mat4()
         projMat.setDataArray(view.projectionMatrix)
-        this.__projectionMatrices[i] = projMat
-        this.__viewMatrices[i] = new Mat4()
-        this.__cameraMatrices[i] = new Mat4()
+        this.projectionMatrices[i] = projMat
+        this.viewMatrices[i] = new Mat4()
+        this.cameraMatrices[i] = new Mat4()
       }
       this.__projectionMatricesUpdated = true
     }
@@ -534,14 +534,14 @@ class XRViewport extends GLBaseViewport {
 
     for (let i = 0; i < views.length; i++) {
       const view = views[i]
-      this.__viewMatrices[i].setDataArray(view.transform.inverse.matrix)
-      this.__viewMatrices[i].multiplyInPlace(this.__stageMatrix)
-      // this.__cameraMatrices[i].setDataArray(view.transform.matrix);
+      this.viewMatrices[i].setDataArray(view.transform.inverse.matrix)
+      this.viewMatrices[i].multiplyInPlace(this.invStageMatrix)
+      // this.cameraMatrices[i].setDataArray(view.transform.matrix);
 
       const vp = layer.getViewport(view)
       renderstate.viewports.push({
-        viewMatrix: this.__viewMatrices[i],
-        projectionMatrix: this.__projectionMatrices[i],
+        viewMatrix: this.viewMatrices[i],
+        projectionMatrix: this.projectionMatrices[i],
         region: [vp.x, vp.y, vp.width, vp.height],
         isOrthographic: false,
       })
@@ -574,7 +574,7 @@ class XRViewport extends GLBaseViewport {
 
     const viewChangedEvent = new XRViewChangedEvent(renderstate.viewXfo)
     // TODO: better solution than setting members individually?
-    viewChangedEvent.hmd = this.__hmd
+    viewChangedEvent.hmd = this.hmd
     viewChangedEvent.controllers = this.controllers
     viewChangedEvent.viewport = this
     viewChangedEvent.vrviewport = this
