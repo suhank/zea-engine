@@ -31,35 +31,36 @@ import { GLViewport } from '../GLViewport'
  * @extends GLBaseViewport
  */
 class XRViewport extends GLBaseViewport {
-  protected __projectionMatricesUpdated: boolean
-  protected __stageTreeItem: TreeItem
+  private __projectionMatricesUpdated: boolean
+  private __stageTreeItem: TreeItem
   // __renderer: any // GLBaseRenderer
-  protected __xrhead: XRHead
-  protected controllersMap: Record<string, XRController>
-  protected controllers: XRController[]
-  protected controllerPointerDownTime: number[]
-  protected spectatorMode: boolean
-  protected tick: number
+  private __xrhead: XRHead
+  private controllersMap: Record<string, XRController>
+  private controllers: XRController[]
+  private controllerPointerDownTime: number[]
+  private spectatorMode: boolean
+  private tick: number
   stageScale: number
 
-  protected __leftViewMatrix: Mat4
-  protected __leftProjectionMatrix: Mat4
-  protected __rightViewMatrix: Mat4
-  protected __rightProjectionMatrix: Mat4
-  protected __vrAsset?: VLAAsset
-  protected __stageXfo: Xfo = new Xfo()
-  protected __stageMatrix: Mat4 = new Mat4()
-  protected session: any = null
+  private __leftViewMatrix: Mat4
+  private __leftProjectionMatrix: Mat4
+  private __rightViewMatrix: Mat4
+  private __rightProjectionMatrix: Mat4
+  private __vrAsset?: VLAAsset
+  private viewXfo: Xfo = new Xfo()
+  private __stageXfo: Xfo = new Xfo()
+  private __stageMatrix: Mat4 = new Mat4()
+  private session: any = null
 
-  protected __hmd: string = ''
-  protected __hmdAssetPromise?: Promise<VLAAsset | null>
-  protected __region: Array<number> = []
+  private __hmd: string = ''
+  private __hmdAssetPromise?: Promise<VLAAsset | null>
+  private region: Array<number> = []
 
-  protected __refSpace: any
+  private __refSpace: any
 
-  protected __projectionMatrices: Array<Mat4> = []
-  protected __viewMatrices: Array<Mat4> = []
-  protected __cameraMatrices: Array<Mat4> = []
+  private __projectionMatrices: Array<Mat4> = []
+  private __viewMatrices: Array<Mat4> = []
+  private __cameraMatrices: Array<Mat4> = []
   /**
    * Create a VR viewport.
    * @param renderer - The renderer value.
@@ -279,7 +280,8 @@ class XRViewport extends GLBaseViewport {
       // https://github.com/immersive-web/webxr/blob/master/explainer.md
 
       const startPresenting = () => {
-        ;(navigator as any)?.xr
+        // @ts-ignore
+        navigator.xr
           .requestSession('immersive-vr', {
             requiredFeatures: ['local-floor'],
             optionalFeatures: ['bounded-floor'],
@@ -360,7 +362,8 @@ class XRViewport extends GLBaseViewport {
 
             this.__width = glLayer.framebufferWidth
             this.__height = glLayer.framebufferHeight
-            this.__region = [0, 0, this.__width, this.__height]
+            this.region = [0, 0, this.__width, this.__height]
+            this.depthRange = [session.renderState.depthNear, session.renderState.depthFar]
             this.resizeRenderTargets(this.__width, this.__height)
 
             // ////////////////////////////
@@ -473,6 +476,7 @@ class XRViewport extends GLBaseViewport {
 
     this.__xrhead.update(pose)
     const viewXfo = this.__xrhead.getTreeItem().globalXfoParam.value
+    this.viewXfo = viewXfo
 
     const views = pose.views
 
@@ -502,7 +506,7 @@ class XRViewport extends GLBaseViewport {
     const renderstate: ColorRenderState = <ColorRenderState>{}
 
     renderstate.boundRendertarget = layer.framebuffer
-    renderstate.region = this.__region
+    renderstate.region = this.region
     renderstate.viewport = this
     renderstate.vrviewport = this
     renderstate.viewports = []
@@ -527,7 +531,7 @@ class XRViewport extends GLBaseViewport {
     renderstate.viewXfo = viewXfo
     renderstate.viewScale = 1.0 / this.stageScale
     renderstate.cameraMatrix = renderstate.viewXfo.toMat4()
-    renderstate.region = this.__region
+    renderstate.region = this.region
     renderstate.vrPresenting = true // Some rendering is adjusted slightly in VR. e.g. Billboards
 
     this.draw(renderstate)
