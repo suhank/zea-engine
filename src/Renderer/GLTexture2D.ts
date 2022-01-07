@@ -232,19 +232,37 @@ class GLTexture2D extends RefCounted {
    */
 
   // TODO: type Image doesn't exist.
-  bufferData(data: any, width = -1, height = -1, bind = true, emit = true) {
+  bufferData(
+    data:
+      | HTMLImageElement
+      | ImageData
+      | HTMLCanvasElement
+      | HTMLImageElement
+      | HTMLVideoElement
+      | Uint8Array
+      | Uint8ClampedArray
+      | Uint16Array
+      | Float32Array
+      | WebGLTexture,
+    width = -1,
+    height = -1,
+    bind = true,
+    emit = true
+  ) {
     const gl = this.__gl
-    if (bind) {
-      gl.bindTexture(gl.TEXTURE_2D, this.__gltex)
-    }
     if (data != undefined) {
-      if (
-        data instanceof Image ||
+      if (data instanceof WebGLTexture) {
+        this.__gltex = data
+      } else if (
+        data instanceof HTMLImageElement ||
         data instanceof ImageData ||
         data instanceof HTMLCanvasElement ||
         data instanceof HTMLImageElement ||
         data instanceof HTMLVideoElement
       ) {
+        if (bind) {
+          gl.bindTexture(gl.TEXTURE_2D, this.__gltex)
+        }
         gl.texImage2D(gl.TEXTURE_2D, 0, this.__internalFormat, this.__format, this.__type, data)
         this.width = data.width
         this.height = data.height
@@ -303,13 +321,38 @@ class GLTexture2D extends RefCounted {
               numPixels * numChannels
           )
         }
+        let uploadData = data
         if (this.__type == gl.HALF_FLOAT && data instanceof Float32Array) {
-          data = MathFunctions.convertFloat32ArrayToUInt16Array(data)
+          uploadData = MathFunctions.convertFloat32ArrayToUInt16Array(data)
+        }
+        if (bind) {
+          gl.bindTexture(gl.TEXTURE_2D, this.__gltex)
         }
         if (gl.name == 'webgl2') {
-          gl.texImage2D(gl.TEXTURE_2D, 0, this.__internalFormat, width, height, 0, this.__format, this.__type, data, 0)
+          gl.texImage2D(
+            gl.TEXTURE_2D,
+            0,
+            this.__internalFormat,
+            width,
+            height,
+            0,
+            this.__format,
+            this.__type,
+            uploadData,
+            0
+          )
         } else {
-          gl.texImage2D(gl.TEXTURE_2D, 0, this.__internalFormat, width, height, 0, this.__format, this.__type, data)
+          gl.texImage2D(
+            gl.TEXTURE_2D,
+            0,
+            this.__internalFormat,
+            width,
+            height,
+            0,
+            this.__format,
+            this.__type,
+            uploadData
+          )
         }
         // These values may not have changed....
         this.width = width
@@ -320,6 +363,9 @@ class GLTexture2D extends RefCounted {
         gl.generateMipmap(gl.TEXTURE_2D)
       }
     } else {
+      if (bind) {
+        gl.bindTexture(gl.TEXTURE_2D, this.__gltex)
+      }
       gl.texImage2D(
         gl.TEXTURE_2D,
         0,

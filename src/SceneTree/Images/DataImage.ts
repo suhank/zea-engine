@@ -12,7 +12,8 @@ import { BaseImage, ImageParams } from '../BaseImage'
  * @extends BaseImage
  */
 class DataImage extends BaseImage {
-  protected __data: Uint8Array | ImageData = new Uint8Array(4)
+  protected __data: Uint8Array | Uint8ClampedArray | Uint16Array | Float32Array | ImageData | WebGLTexture =
+    new Uint8Array(4)
   /**
    * Create a data image.
    * @param name - The name value.
@@ -51,7 +52,11 @@ class DataImage extends BaseImage {
    * @param height - The height value.
    * @param data - The data value.
    */
-  setData(width: number, height: number, data: Uint8Array) {
+  setData(
+    width: number,
+    height: number,
+    data: Uint8Array | Uint8ClampedArray | Uint16Array | Float32Array | ImageData | WebGLTexture
+  ) {
     if (this.__data == data) return
     this.width = width
     this.height = height
