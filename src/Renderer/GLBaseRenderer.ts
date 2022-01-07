@@ -166,7 +166,7 @@ class GLBaseRenderer extends ParameterOwner {
 
     // ////////////////////////////////////////////
     // WebXR
-    this.__supportXR = options.supportXR !== undefined ? options.supportXR : true
+    this.__supportXR = options.supportXR ?? true
     this.__xrViewportPromise = new Promise((resolve, reject) => {
       if (this.__supportXR) {
         // if(!navigator.xr && window.WebVRPolyfill != undefined) {
@@ -664,10 +664,10 @@ class GLBaseRenderer extends ParameterOwner {
     this.handleResize(this.__glcanvas.parentElement.clientWidth, this.__glcanvas.parentElement.clientHeight)
 
     webglOptions.preserveDrawingBuffer = true
-    webglOptions.antialias = webglOptions.antialias != undefined ? webglOptions.antialias : true
+    webglOptions.antialias = webglOptions.antialias ?? true
     webglOptions.depth = true
     webglOptions.stencil = false
-    webglOptions.alpha = webglOptions.alpha ? webglOptions.alpha : false
+    webglOptions.alpha = webglOptions.alpha ?? false
     // Note: Due to a change in Chrome (version 88-89), providing true here caused a pause when creating
     // an WebGL context, if the XR device was unplugged. We also call 'makeXRCompatible' when setting
     // up the XRViewport, so we to get an XR Compatible context anyway.
@@ -706,7 +706,7 @@ class GLBaseRenderer extends ParameterOwner {
       this.floatGeomBuffer = false
     } else {
       this.floatGeomBuffer =
-        webglOptions.floatGeomBuffer != undefined ? webglOptions.floatGeomBuffer : gl.floatTexturesSupported
+        webglOptions.floatGeomBuffer ?? gl.floatTexturesSupported
     }
     gl.floatGeomBuffer = this.floatGeomBuffer
     return gl
