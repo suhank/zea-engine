@@ -21,7 +21,7 @@
       const renderer = new GLRenderer(canvas, {
         enableFrustumCulling: true,
         enableOcclusionCulling: true,
-        debugOcclusionBuffer: false,
+        debugOcclusionBuffer: true,
       })
       renderer.setScene(scene)
 
@@ -30,23 +30,25 @@
       const standardMaterial = new SimpleSurfaceMaterial('main')
       standardMaterial.getParameter('BaseColor').setValue(new Color(89 / 255, 182 / 255, 92 / 255))
 
-      const mainCylinder = new Cylinder(1, 8, 40)
-      const geomItemSphere = new GeomItem('Sphere', mainCylinder, standardMaterial)
-      scene.getRoot().addChild(geomItemSphere)
+      // const mainCylinder = new Cylinder(1, 8, 40)
+      // const geomItemSphere = new GeomItem('Sphere', mainCylinder, standardMaterial)
+      // scene.getRoot().addChild(geomItemSphere)
 
-      const tinyCylinder = new Cylinder(0.01, 8, 12)
+      const tinyCylinder = new Cylinder(0.1, 8, 12)
       const material2 = new SimpleSurfaceMaterial('main')
       material2.getParameter('BaseColor').setValue(new Color(1, 0, 0))
 
       for (let i = 0; i <= 6; i++) {
         const geomItemSphere = new GeomItem('TinyCylinder' + i, tinyCylinder, material2)
         const xfo = geomItemSphere.globalXfoParam.value
-        xfo.tr.set(Math.sin((i / 6) * Math.PI * 2.0), Math.cos((i / 6) * Math.PI * 2.0), 0)
+        // xfo.tr.set(Math.sin((i / 6) * Math.PI * 2.0), Math.cos((i / 6) * Math.PI * 2.0), 0)
+        xfo.tr.set(i, 0, 0)
+        if (i == 0) xfo.sc.set(3, 3, 1)
         geomItemSphere.globalXfoParam.value = xfo
         scene.getRoot().addChild(geomItemSphere)
       }
 
-      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(12, 12, 2.7), new Vec3(0, 0, 0.4))
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-20, 0, 2.7), new Vec3(0, 0, 0.4))
       // renderer.frameAll()
 
       renderer.on('CullingUpdated', (event) => {
@@ -64,7 +66,7 @@
         const { data } = event
 
         if (data === 'variant-01') {
-          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, -2.7), new Vec3(0, 0, 0.4))
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-20, 5, 2.7), new Vec3(0, 0, 0.4))
           // renderer.frameAll()
           renderer.once('CullingUpdated', () => {
             postMessage(`done-${data}`)

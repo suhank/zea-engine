@@ -26,23 +26,27 @@
 
       scene.setupGrid(10.0, 10)
 
-      const standardMaterial = new Material('surfaces', 'SimpleSurfaceShader')
-      standardMaterial.getParameter('BaseColor').setValue(new Color(89 / 255, 182 / 255, 92 / 255))
+      const redMaterial = new Material('surfaces', 'SimpleSurfaceShader')
+      redMaterial.getParameter('BaseColor').setValue(new Color(1, 0, 0))
+      const yellowMaterial = new Material('surfaces', 'SimpleSurfaceShader')
+      yellowMaterial.getParameter('BaseColor').setValue(new Color(1, 1, 0))
+      const sphereMaterial = new Material('surfaces', 'SimpleSurfaceShader')
+      sphereMaterial.getParameter('BaseColor').setValue(new Color(0, 1, 1))
 
       const sphere = new Sphere(0.5, 8, 5)
-      const geomItemSphere = new GeomItem('Sphere', sphere, standardMaterial)
+      const geomItemSphere = new GeomItem('Sphere', sphere, sphereMaterial)
       scene.getRoot().addChild(geomItemSphere)
 
       // The inner torus is occluded by the outer torus, and the inner torus bbox should then
       // occlude the bbox of the sphere. This caused the sphere to be considered occluded.
       // The fix is a stochastic transparency in the bbox rendering allowing the sphere or its bbox
       // to be seen through the bbox of the occluded inner torus.
-      const torusInner = new Torus(1, 3.0, 6)
-      const geomItemInner = new GeomItem('Torus', torusInner, standardMaterial)
+      const torusInner = new Torus(1, 5.0, 6)
+      const geomItemInner = new GeomItem('SkinnyTorus', torusInner, redMaterial)
       scene.getRoot().addChild(geomItemInner)
 
-      const torusOuter = new Torus(1.5, 3.0, 6)
-      const geomItemOuter = new GeomItem('Torus', torusOuter, standardMaterial)
+      const torusOuter = new Torus(1.2, 5.0, 6)
+      const geomItemOuter = new GeomItem('FatTorus', torusOuter, yellowMaterial)
       scene.getRoot().addChild(geomItemOuter)
 
       renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, 2.7), new Vec3(0, 0, 0.4))
