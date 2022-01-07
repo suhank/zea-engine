@@ -221,10 +221,9 @@ class GLRenderTarget extends EventEmitter {
    * @param renderstate - The object tracking the current state of the renderer
    */
   unbindForWriting(renderstate?: RenderState) {
-    if (renderstate) renderstate.boundRendertarget = this.__prevBoundFbo
     const gl = this.__gl
-    if (gl.name == 'webgl2') gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, this.__prevBoundFbo)
-    else gl.bindFramebuffer(gl.FRAMEBUFFER, this.__prevBoundFbo)
+    gl.bindFramebuffer(gl.name == 'webgl2' ? gl.DRAW_FRAMEBUFFER : gl.FRAMEBUFFER, this.__prevBoundFbo)
+    this.__prevBoundFbo = null
   }
 
   /**
