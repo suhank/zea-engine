@@ -36,42 +36,27 @@ const registeredPasses: Record<string, any> = {}
 
 export interface RendererOptions {
   // GLBaseRenderer
-  supportXR: boolean
+  supportXR?: boolean
 
   // GLRenderer
-  disableTextures: boolean
-  debugGeomIds: boolean
+  disableTextures?: boolean
+  debugGeomIds?: boolean
 
   // webgl setup options
   powerPreference?: string
-  depth: boolean
-  alpha: boolean
-  antialias: boolean
-  stencil: boolean
-  xrCompatible: boolean
-  disableMultiDraw: boolean
-  floatGeomBuffer: boolean
-  preserveDrawingBuffer: boolean
+  depth?: boolean
+  alpha?: boolean
+  antialias?: boolean
+  stencil?: boolean
+  xrCompatible?: boolean
+  disableMultiDraw?: boolean
+  floatGeomBuffer?: boolean
+  preserveDrawingBuffer?: boolean
 
   // GLGeomItemLibrary
-  enableFrustumCulling: boolean
+  enableFrustumCulling?: boolean
 }
 
-export const defaultRendererOptions: RendererOptions = {
-  supportXR: false,
-  disableTextures: true,
-  debugGeomIds: false,
-  depth: false,
-  alpha: false,
-  antialias: false,
-  stencil: false,
-  xrCompatible: false,
-  disableMultiDraw: false,
-  floatGeomBuffer: false,
-  preserveDrawingBuffer: false,
-
-  enableFrustumCulling: false,
-}
 /**
  * Class representing a GL base renderer.
  *
@@ -120,7 +105,7 @@ class GLBaseRenderer extends ParameterOwner {
    * @param $canvas - The canvas element.
    * @param options - The options value.
    */
-  constructor($canvas: HTMLCanvasElement, options: RendererOptions = defaultRendererOptions) {
+  constructor($canvas: HTMLCanvasElement, options: RendererOptions = {}) {
     super()
 
     if (!SystemDesc.gpuDesc) {
@@ -582,10 +567,7 @@ class GLBaseRenderer extends ParameterOwner {
    * @param $canvas - The $canvas element.
    * @param webglOptions - The webglOptions value.
    */
-  private setupWebGL(
-    $canvas: HTMLCanvasElement,
-    webglOptions: RendererOptions = defaultRendererOptions
-  ): WebGL12RenderingContext {
+  private setupWebGL($canvas: HTMLCanvasElement, webglOptions: RendererOptions = {}): WebGL12RenderingContext {
     const { tagName } = $canvas
 
     if (!['DIV', 'CANVAS'].includes(tagName)) {
