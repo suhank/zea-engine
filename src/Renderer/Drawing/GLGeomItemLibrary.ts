@@ -1,8 +1,7 @@
 /* eslint-disable guard-for-in */
 import { EventEmitter } from '../../Utilities/index'
 import { Mat4, Vec2, Vec3, Vec4, Xfo } from '../../Math/index'
-import { Cuboid, DataImage, FlatSurfaceMaterial, Plane } from '../../SceneTree/index'
-import { GLMesh } from './GLMesh'
+import { DataImage, FlatSurfaceMaterial, Plane } from '../../SceneTree/index'
 import { GLGeomItemFlags, GLGeomItem } from './GLGeomItem'
 import { MathFunctions } from '../../Utilities/MathFunctions'
 import { GLTexture2D } from '../GLTexture2D'
@@ -23,6 +22,9 @@ import { pixelsPerItem } from '../GLSLConstants'
 import { readPixelsAsync } from './readPixelsAsync.js'
 import { XRViewport } from '../VR/XRViewport'
 import { XrViewportEvent } from '../../Utilities/Events/XrViewportEvent'
+import { BBoxOcclusionLinesCuboid } from './BBoxOcclusionLinesCuboid'
+import { GLLines } from './GLLines'
+import { GLGeom } from './GLGeom'
 
 // This enabled a visual HUD in the view to display the occlusion buffer.
 // The is the only way to debug the occlusion system in VR.
@@ -71,7 +73,7 @@ class GLGeomItemLibrary extends EventEmitter {
   protected occlusionImage: DataImage
   protected occlusionImageItem: GeomItem
   protected reductionDataBuffer: GLRenderTarget
-  protected bbox: GLMesh
+  protected bbox: GLGeom
   protected reductionShader: ReductionShader
   protected boundingBoxShader: BoundingBoxShader
   protected inFrustumIndicesCount: number = 0
@@ -390,7 +392,7 @@ class GLGeomItemLibrary extends EventEmitter {
           depthInternalFormat: gl.DEPTH_COMPONENT16,
         })
 
-        this.bbox = new GLMesh(gl, new Cuboid(1, 1, 1, false))
+        this.bbox = new GLLines(gl, new BBoxOcclusionLinesCuboid())
         this.reductionShader = new ReductionShader(gl)
         this.boundingBoxShader = new BoundingBoxShader(gl)
         this.boundingBoxShader.compileForTarget('GLGeomItemLibrary', {
@@ -605,7 +607,6 @@ class GLGeomItemLibrary extends EventEmitter {
       gl.uniform1i(instancesTextureSize.location, this.glGeomItemsTexture.width)
       gl.uniform1i(instancedDraw.location, 1)
       gl.uniform1i(occlusionCulling.location, 1)
-      gl.uniform2f(viewportSize.location, this.occlusionDataBuffer.width, this.occlusionDataBuffer.height)
 
       this.reductionDataBuffer.bindColorTexture(renderstate, reductionDataTexture)
 

@@ -23,7 +23,6 @@ const int GEOMITEM_INVISIBLE_IN_GEOMDATA = 2; // 1<<1;
 
 /* VS Outputs */
 varying vec4 v_color;
-varying vec2 v_screenSpaceSize;
 
 void main(void) {
 
@@ -50,31 +49,10 @@ void main(void) {
  
   if (occlusionCulling != 0) {
     // TODO: The bounding box stochastic 
-    v_color = vec4(float(drawItemId) / 5.0, 1.0, float(drawItemId) / 5.0, 1.0);
-    v_color.g = float(drawItemId);
-
-    // Calculate the screen space radius of the bounding sphere.
-    // We can use that in the fragment shader to generate a stochatsic
-    // transparency the is denser for smaller items on screen, and sparser
-    // for bigger items. This is so that many big boudning boxes do not occlude
-    // smaller items in the scene.
-    vec4 posMin = viewProjectionMatrix * vec4(bboxMin.xyz, 1.0);
-    vec4 posMax = viewProjectionMatrix * vec4(bboxMax.xyz, 1.0);
-    if (posMax.z > 0.0 && posMin.z > 0.0) {
-      // v_color.a = length((posMax.xy / posMax.z) - (posMin.xy / posMin.z));
-      v_screenSpaceSize = (posMax.xy / posMax.z) - (posMin.xy / posMin.z);
-    }
-    else {
-      v_screenSpaceSize = vec2(1.0, 1.0);
-    }
+    v_color = vec4(0.0, float(drawItemId), 0.0, 1.0);
   } else {
     v_color = fetchTexel(instancesTexture, instancesTextureSize, (drawItemId * pixelsPerItem) + 4);
   }
-
-  // // Use cross platform bit flags methods
-  // if (drawOnTop) {
-  //   gl_Position.z = mix(gl_Position.z, -gl_Position.w, 0.5);
-  // }
  
   vec4 pos = positions;
   if (pos.x < 0.0) pos.x = bboxMin.x;
