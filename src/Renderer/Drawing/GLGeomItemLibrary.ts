@@ -547,9 +547,19 @@ class GLGeomItemLibrary extends EventEmitter {
     const reduce = (renderstate: GeomDataRenderState, clear: boolean, query: WebGLQuery) => {
       this.reductionDataBuffer.bindForWriting(renderstate, clear)
 
+      // The second time we reduce into the reductionDataBuffer, we want to
+      // keep the values that were already there. The first reduction counted
+      // the items visible after the scene was drawn. The second one adds items
+      // visible due to the bounding boxes being visible.
+      if (!clear) {
+        gl.enable(gl.BLEND)
+        gl.blendEquation(gl.FUNC_ADD)
+        gl.blendFunc(gl.SRC_COLOR, gl.DST_COLOR)
+      }
+
       this.reductionShader.bind(renderstate)
 
-      const { geomDataTexture, reductionTextureWidth, floatGeomBuffer } = renderstate.unifs
+      const { geomDataTexture, reductionTextureWidth } = renderstate.unifs
       if (geomDataTexture) this.occlusionDataBuffer.bindToUniform(renderstate, geomDataTexture)
       if (reductionTextureWidth) gl.uniform1i(reductionTextureWidth.location, this.reductionDataBuffer.width)
 
@@ -559,13 +569,24 @@ class GLGeomItemLibrary extends EventEmitter {
 
       gl.endQuery(ext.TIME_ELAPSED_EXT)
 
+      if (!clear) {
+        gl.disable(gl.BLEND)
+      }
       this.reductionDataBuffer.unbindForWriting(renderstate)
     }
 
     const drawCulledBBoxes = () => {
+      this.occlusionDataBuffer.bindForWriting(renderstate, false)
+
       // Now clear the color buffer, but not the depth buffer
       // and draw the bounding boxes of occluded items.
-      this.occlusionDataBuffer.bindForWriting(renderstate, false)
+      // This means the second reduction only count fragments
+      // rasterized by the bounding boxes, and not the initial
+      // scene geometry.(which was counted in the first reduce)
+      // Note: disable this code to see the full occlusion buffer in debugging.
+      gl.colorMask(true, true, true, true)
+      gl.clearColor(0, 0, 0, 0)
+      gl.clear(gl.COLOR_BUFFER_BIT)
 
       this.boundingBoxShader.bind(renderstate, 'GLGeomItemLibrary')
       this.bbox.bind(renderstate)
@@ -614,8 +635,8 @@ class GLGeomItemLibrary extends EventEmitter {
     // the boxes, reduce again. The bounding boxes displayed
     // are based on the results of the first reduce.
 
-    const queryReduce1 = gl.createQuery()
-    reduce(renderstate, true, queryReduce1)
+    const queryReduceSceneGeoms = gl.createQuery()
+    reduce(renderstate, true, queryReduceSceneGeoms)
 
     const queryDrawCulledBBoxes = gl.createQuery()
     gl.beginQuery(ext.TIME_ELAPSED_EXT, queryDrawCulledBBoxes)
@@ -625,8 +646,8 @@ class GLGeomItemLibrary extends EventEmitter {
 
     gl.endQuery(ext.TIME_ELAPSED_EXT)
 
-    // const queryReduce = gl.createQuery()
-    // reduce(renderstate, false, queryReduce)
+    const queryReduceBBoxes = gl.createQuery()
+    reduce(renderstate, false, queryReduceBBoxes)
 
     const queryResults = {
       numReductionPoints,
@@ -656,13 +677,13 @@ class GLGeomItemLibrary extends EventEmitter {
     readPixelsAsync(gl, 0, 0, w, h, format, type, this.reductionDataArray).then(() => {
       this.reductionDataBuffer.unbindForReading()
 
-      // if (queryDrawScene) {
-      //   checkQuery('queryDrawScene', queryDrawScene)
-      //   checkQuery('queryDrawCulledBBoxes', queryDrawCulledBBoxes)
-      //   // checkQuery('queryReduce1', queryReduce1)
-      //   checkQuery('queryReduce', queryReduce)
-      //   console.log(queryResults)
-      // }
+      if (queryDrawScene) {
+        checkQuery('queryDrawScene', queryDrawScene)
+        checkQuery('queryDrawCulledBBoxes', queryDrawCulledBBoxes)
+        checkQuery('queryReduceSceneGeoms', queryReduceSceneGeoms)
+        checkQuery('queryReduceBBoxes', queryReduceBBoxes)
+        this.renderer.emit('occlusionCullingProfilingData', queryResults)
+      }
 
       // console.log(this.reductionDataArray)
       // Now send the buffer to the worker, where it will determine what culling
