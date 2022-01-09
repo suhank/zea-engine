@@ -143,12 +143,15 @@ class GLShaderMaterials extends EventEmitter {
 
     const gl = this.gl
 
-    const { floatGeomBuffer, passId } = renderstate.unifs
+    const { floatGeomBuffer, passId, occlusionCulling } = renderstate.unifs
     if (floatGeomBuffer) {
       gl.uniform1i(floatGeomBuffer.location, renderstate.floatGeomBuffer ? 1 : 0)
     }
     if (passId) {
       gl.uniform1i(passId.location, renderstate.passIndex)
+    }
+    if (occlusionCulling) {
+      gl.uniform1i(occlusionCulling.location, renderstate.occlusionCulling ?? 0)
     }
 
     for (const glMaterialGeomItemSet of this.glMaterialGeomItemSets) {

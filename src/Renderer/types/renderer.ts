@@ -50,6 +50,7 @@ export type Shaderopts = Record<string, string[]>
 export interface GeomDataRenderState extends BaseRenderState {
   geomDataFbo?: GLFbo // only used in geomdata buffer rendering
   floatGeomBuffer: boolean
+  occlusionCulling: number
 }
 
 // only used in color rendering

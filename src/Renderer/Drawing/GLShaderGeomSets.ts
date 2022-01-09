@@ -182,12 +182,16 @@ class GLShaderGeomSets extends EventEmitter {
     this.bindShader(this.glGeomDataShader, renderstate, this.glGeomDataShaderKey)
 
     const gl = renderstate.gl
-    const { floatGeomBuffer, passId } = renderstate.unifs
+    const { floatGeomBuffer, passId, occlusionCulling, viewportSize } = renderstate.unifs
     if (floatGeomBuffer) {
       gl.uniform1i(floatGeomBuffer.location, renderstate.floatGeomBuffer ? 1 : 0)
     }
     if (passId) {
       gl.uniform1i(passId.location, renderstate.passIndex)
+    }
+
+    if (occlusionCulling) {
+      gl.uniform1i(occlusionCulling.location, renderstate.occlusionCulling ?? 0)
     }
 
     for (const elementType in this.glGeomItemSets) {
