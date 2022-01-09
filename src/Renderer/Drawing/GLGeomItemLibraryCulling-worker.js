@@ -80,6 +80,11 @@ const cull = (index) => {
 const unCull = (index) => {
   if (outOfFrustum[index]) {
     outOfFrustum[index] = false
+    // Occlusion culling can only determine if something is visible
+    // meaning that we assume it is not, until it shows up in the occlusion buffer.
+    if (enableOcclusionCulling) {
+      occluded[index] = true
+    }
     frustumCulledCount--
     newlyUnCulled.push(index)
   }
@@ -247,7 +252,11 @@ const onDoneFrustumCull = (postMessage) => {
       // }
       if (newlyCulled.length > 0 || newlyUnCulled.length > 0 || !inFrustumDrawIdsBufferPopulated) {
         const inFrustumIndices = generateInFrustumIndices()
-        postMessage({ type: 'InFrustumIndices', newlyCulled, inFrustumIndices }, [inFrustumIndices.buffer])
+        if (newlyCulled.length > 0) {
+          postMessage({ type: 'InFrustumIndices', newlyCulled, inFrustumIndices }, [inFrustumIndices.buffer])
+        } else {
+          postMessage({ type: 'InFrustumIndices', inFrustumIndices }, [inFrustumIndices.buffer])
+        }
         inFrustumDrawIdsBufferPopulated = true
       } else {
         // Note: the inFrustumDrawIdsBuffer is already up to date we can skip this.
@@ -285,6 +294,12 @@ const processOcclusionData = (data) => {
           newlyUnCulled.push(index)
         }
       }
+    } else {
+      // Note: We have detected a geometry in the occlusion buffer that was flagged as culled by the
+      // frustum culling. This is most likely a small item culled due to solid angle being too small
+      // yet the occlusion rendering picked up a bounding box. We leave this item as culled.
+      // if (value != 0) {
+      // }
     }
   })
   if (newlyCulled.length > 0 || newlyUnCulled.length > 0) {

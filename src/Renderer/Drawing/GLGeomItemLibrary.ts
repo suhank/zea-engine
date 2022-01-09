@@ -122,11 +122,8 @@ class GLGeomItemLibrary extends EventEmitter {
    * @param renderer - The renderer instance
    */
   setupCullingWorker(renderer: GLBaseRenderer) {
-    // this.worker = {
-    //   postMessage: (message) => {},
-    // }
-
     this.worker = new GLGeomItemLibraryCullingWorker()
+    // This is a mock web worker to use when testing.
     // this.worker = {
     //   postMessage: (message) => {
     //     handleMessage(message, (message) => {
@@ -158,7 +155,7 @@ class GLGeomItemLibrary extends EventEmitter {
         this.applyCullResults(message.data)
         workerReady = true
       } else if (message.data.type == 'Done') {
-        // Used mostly to make our uni testing robust.
+        // Used mostly to make our unit testing robust.
         this.renderer.emit('CullingUpdated')
       }
       workerReady = true
@@ -321,7 +318,7 @@ class GLGeomItemLibrary extends EventEmitter {
           depthFormat: gl.DEPTH_COMPONENT,
           depthInternalFormat: gl.DEPTH_COMPONENT16,
         })
-        this.occlusionDataBuffer.clearColor.set(0.1, 0, 0, 1)
+        // this.occlusionDataBuffer.clearColor.set(0.1, 0, 0, 1)
 
         this.renderer.on('resized', (event) => {
           if (!this.xrPresenting) {
@@ -354,6 +351,11 @@ class GLGeomItemLibrary extends EventEmitter {
             }
           }
         })
+
+        // Do we resize the occlusion buffer to match the screen resolution of the HMD?
+        // So far we are not seeing great performance in XR with culling enabled.
+        // For some reason, reduction is already 10x more costly in VR with the same
+        // resolution occlusion buffer.
         // renderer.once('xrViewportSetup', (event: XrViewportEvent) => {
         //   console.log('xrViewportSetup')
         //   const xrvp = event.xrViewport
@@ -379,6 +381,7 @@ class GLGeomItemLibrary extends EventEmitter {
         //     )
         //   })
         // })
+
         this.reductionDataBuffer = new GLRenderTarget(gl, {
           type: gl.UNSIGNED_BYTE,
           internalFormat: gl.R8,
@@ -499,6 +502,7 @@ class GLGeomItemLibrary extends EventEmitter {
     renderstate.directives = [...this.renderer.directives, '#define DRAW_GEOMDATA']
     renderstate.shaderopts.directives = renderstate.directives
     renderstate.floatGeomBuffer = true
+    renderstate.occlusionCulling = 1
 
     this.renderer.bindGLBaseRenderer(renderstate)
     if (this.xrPresenting) {
@@ -508,18 +512,16 @@ class GLGeomItemLibrary extends EventEmitter {
     } else {
       this.renderer.getViewport().initRenderState(renderstate)
     }
-    //
-    const ext = this.timer_query_ext
-
-    gl.disable(gl.BLEND)
-    gl.disable(gl.CULL_FACE)
-    gl.enable(gl.DEPTH_TEST)
-    gl.depthFunc(gl.LESS)
-    gl.depthMask(true)
 
     // this.renderer.drawSceneGeomData(renderstate)
     const drawSceneGeomData = (renderstate: GeomDataRenderState) => {
       this.occlusionDataBuffer.bindForWriting(renderstate, true)
+
+      gl.disable(gl.BLEND)
+      gl.disable(gl.CULL_FACE)
+      gl.enable(gl.DEPTH_TEST)
+      gl.depthFunc(gl.LESS)
+      gl.depthMask(true)
 
       // For now, just rendering the main opaque geoms.
       const opaqueGeomsPass = this.renderer.getPass(0)
@@ -545,6 +547,8 @@ class GLGeomItemLibrary extends EventEmitter {
     // This point will color a single pixel in the reduction buffer.
     const numReductionPoints = this.occlusionDataBuffer.width * this.occlusionDataBuffer.height
 
+    const ext = this.timer_query_ext
+
     // Now perform a reduction to calculate the indices of visible items.
     const reduce = (renderstate: GeomDataRenderState, clear: boolean, query: WebGLQuery) => {
       this.reductionDataBuffer.bindForWriting(renderstate, clear)
@@ -565,11 +569,11 @@ class GLGeomItemLibrary extends EventEmitter {
       if (geomDataTexture) this.occlusionDataBuffer.bindToUniform(renderstate, geomDataTexture)
       if (reductionTextureWidth) gl.uniform1i(reductionTextureWidth.location, this.reductionDataBuffer.width)
 
-      gl.beginQuery(ext.TIME_ELAPSED_EXT, query)
+      if (ext) gl.beginQuery(ext.TIME_ELAPSED_EXT, query)
 
       gl.drawArrays(gl.POINTS, 0, numReductionPoints)
 
-      gl.endQuery(ext.TIME_ELAPSED_EXT)
+      if (ext) gl.endQuery(ext.TIME_ELAPSED_EXT)
 
       if (!clear) {
         gl.disable(gl.BLEND)
@@ -586,23 +590,17 @@ class GLGeomItemLibrary extends EventEmitter {
       // rasterized by the bounding boxes, and not the initial
       // scene geometry.(which was counted in the first reduce)
       // Note: disable this code to see the full occlusion buffer in debugging.
-      gl.colorMask(true, true, true, true)
-      gl.clearColor(0, 0, 0, 0)
-      gl.clear(gl.COLOR_BUFFER_BIT)
+      // gl.colorMask(true, true, true, true)
+      // gl.clearColor(0, 0, 0, 0)
+      // gl.clear(gl.COLOR_BUFFER_BIT)
 
       this.boundingBoxShader.bind(renderstate, 'GLGeomItemLibrary')
       this.bbox.bind(renderstate)
       gl.disable(gl.CULL_FACE)
 
       // Read each Matrix and Bbox settings from the Texture.
-      const {
-        instancesTexture,
-        instancesTextureSize,
-        instancedDraw,
-        reductionDataTexture,
-        occlusionCulling,
-        viewportSize,
-      } = renderstate.unifs
+      const { instancesTexture, instancesTextureSize, instancedDraw, reductionDataTexture, occlusionCulling } =
+        renderstate.unifs
       this.glGeomItemsTexture.bindToUniform(renderstate, instancesTexture)
       gl.uniform1i(instancesTextureSize.location, this.glGeomItemsTexture.width)
       gl.uniform1i(instancedDraw.location, 1)
@@ -627,27 +625,35 @@ class GLGeomItemLibrary extends EventEmitter {
       this.occlusionDataBuffer.unbindForWriting(renderstate)
     }
 
-    const queryDrawScene = gl.createQuery()
-    gl.beginQuery(ext.TIME_ELAPSED_EXT, queryDrawScene)
+    let queryDrawScene: WebGLQuery
+    let queryReduceSceneGeoms: WebGLQuery
+    let queryDrawCulledBBoxes: WebGLQuery
+    let queryReduceBBoxes: WebGLQuery
+    if (ext) {
+      queryDrawScene = gl.createQuery()
+      gl.beginQuery(ext.TIME_ELAPSED_EXT, queryDrawScene)
+    }
     drawSceneGeomData(renderstate)
-    gl.endQuery(ext.TIME_ELAPSED_EXT)
+    if (ext) gl.endQuery(ext.TIME_ELAPSED_EXT)
 
     // We render the scene geometry, reduce, then render
     // the boxes, reduce again. The bounding boxes displayed
     // are based on the results of the first reduce.
 
-    const queryReduceSceneGeoms = gl.createQuery()
+    if (ext) queryReduceSceneGeoms = gl.createQuery()
     reduce(renderstate, true, queryReduceSceneGeoms)
 
-    const queryDrawCulledBBoxes = gl.createQuery()
-    gl.beginQuery(ext.TIME_ELAPSED_EXT, queryDrawCulledBBoxes)
+    if (ext) {
+      queryDrawCulledBBoxes = gl.createQuery()
+      gl.beginQuery(ext.TIME_ELAPSED_EXT, queryDrawCulledBBoxes)
+    }
 
     //
     drawCulledBBoxes()
 
-    gl.endQuery(ext.TIME_ELAPSED_EXT)
+    if (ext) gl.endQuery(ext.TIME_ELAPSED_EXT)
 
-    const queryReduceBBoxes = gl.createQuery()
+    if (ext) queryReduceBBoxes = gl.createQuery()
     reduce(renderstate, false, queryReduceBBoxes)
 
     const queryResults = {
@@ -678,7 +684,7 @@ class GLGeomItemLibrary extends EventEmitter {
     readPixelsAsync(gl, 0, 0, w, h, format, type, this.reductionDataArray).then(() => {
       this.reductionDataBuffer.unbindForReading()
 
-      if (queryDrawScene) {
+      if (ext) {
         checkQuery('queryDrawScene', queryDrawScene)
         checkQuery('queryDrawCulledBBoxes', queryDrawCulledBBoxes)
         checkQuery('queryReduceSceneGeoms', queryReduceSceneGeoms)
