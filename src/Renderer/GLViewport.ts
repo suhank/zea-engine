@@ -920,16 +920,29 @@ class GLViewport extends GLBaseViewport {
       screenQuad.bindShader(renderstate)
       const imageInif = <Uniform>renderstate.unifs.image
       occlusionDataBuffer.bindColorTexture(renderstate, imageInif)
+
+      const gl = this.__renderer.gl
+      gl.enable(gl.BLEND)
+      gl.blendEquation(gl.FUNC_ADD)
+      gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
       screenQuad.draw(renderstate, null, new Vec2(0, 0), new Vec2(1, 1))
+      gl.disable(gl.BLEND)
     }
     if (this.debugReductionBuffer) {
       // @ts-ignore
       const reductionDataBuffer = this.__renderer.glGeomItemLibrary.reductionDataBuffer
       const screenQuad = this.__renderer.screenQuad!
       screenQuad.bindShader(renderstate)
+
       const imageInif = <Uniform>renderstate.unifs.image
       reductionDataBuffer.bindColorTexture(renderstate, imageInif)
+
+      const gl = this.__renderer.gl
+      gl.enable(gl.BLEND)
+      gl.blendEquation(gl.FUNC_ADD)
+      gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
       screenQuad.draw(renderstate, null, new Vec2(0, 0), new Vec2(1, 1))
+      gl.disable(gl.BLEND)
     }
   }
 }
