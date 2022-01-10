@@ -49,7 +49,7 @@ class TreeItemParameter extends Parameter<TreeItem | undefined> {
    *
    * @param owner - The owner value.
    */
-  setOwner(owner: TreeItem) {
+  setOwner(owner: TreeItem): void {
     this.owner = owner
   }
 
@@ -58,7 +58,7 @@ class TreeItemParameter extends Parameter<TreeItem | undefined> {
    *
    * @return - The return value.
    */
-  getOwner() {
+  getOwner(): TreeItem {
     return this.owner
   }
 
@@ -74,7 +74,7 @@ class TreeItemParameter extends Parameter<TreeItem | undefined> {
    * The getFilterFn method.
    * @return - The return value.
    */
-  getFilterFn() {
+  getFilterFn(): any {
     return this.filterFn
   }
 
@@ -84,7 +84,7 @@ class TreeItemParameter extends Parameter<TreeItem | undefined> {
    * @param treeItem - The treeItem value
    * @return - The return value.
    */
-  setValue(treeItem: TreeItem) {
+  setValue(treeItem: TreeItem): void {
     // 0 == normal set. 1 = changed via cleaner fn, 2=change by loading/cloning code.
     if (this.filterFn && !this.filterFn(treeItem)) return
     if (this.__value !== treeItem) {
@@ -123,7 +123,7 @@ class TreeItemParameter extends Parameter<TreeItem | undefined> {
    * @param j - The json object this item must decode.
    * @param context - The context value.
    */
-  fromJSON(j: Record<string, unknown>, context: Record<string, any>) {
+  fromJSON(j: Record<string, unknown>, context: Record<string, any>): void {
     if (j.value == undefined) {
       console.warn('Invalid Parameter JSON')
       return
@@ -148,7 +148,7 @@ class TreeItemParameter extends Parameter<TreeItem | undefined> {
    *
    * @return - Returns a new tree item parameter.
    */
-  clone(context?: CloneContext) {
+  clone(context?: CloneContext): TreeItemParameter {
     const clonedParam = new TreeItemParameter(this.name, this.filterFn)
     if (this.__value) clonedParam.setValue(this.__value.clone(context))
     return clonedParam

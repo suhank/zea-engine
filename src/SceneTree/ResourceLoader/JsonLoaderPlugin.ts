@@ -11,7 +11,7 @@ function checkStatus(response: any) {
  */
 class JsonLoaderPlugin {
   resourceLoader: any
-  init(resourceLoader: any) {
+  init(resourceLoader: any): void {
     this.resourceLoader = resourceLoader
   }
 
@@ -19,11 +19,11 @@ class JsonLoaderPlugin {
    * The type of file this plugin handles.
    * @return The type of file.
    */
-  getType() {
+  getType(): string {
     return 'json'
   }
 
-  loadFile(url: string) {
+  loadFile(url: string): Promise<unknown> {
     this.resourceLoader.incrementWorkload(1)
 
     const promise = new Promise(

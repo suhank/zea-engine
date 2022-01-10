@@ -90,7 +90,7 @@ class ZeaTouchEvent extends ZeaUIEvent {
     }
   }
 
-  stopPropagation() {
+  stopPropagation(): void {
     super.stopPropagation()
     if (this.sourceEvent) this.sourceEvent.stopPropagation()
   }
