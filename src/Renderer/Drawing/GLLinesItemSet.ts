@@ -21,7 +21,7 @@ class GLLinesItemSet extends GLGeomItemSetMultiDraw {
     counts: Int32Array,
     offsets: Int32Array,
     drawCount: number
-  ) {
+  ): void {
     const gl = this.gl
     if (gl.multiDrawArrays) {
       const { occluded } = renderstate.unifs

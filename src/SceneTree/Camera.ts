@@ -347,7 +347,7 @@ class Camera extends TreeItem {
    * @param viewport - The viewport value.
    * @param treeItems - The treeItems value.
    */
-  frameView(viewport: GLBaseViewport, treeItems: TreeItem[]) {
+  frameView(viewport: GLBaseViewport, treeItems: TreeItem[]): void {
     const focalDistance = this.focalDistanceParam.value
     const fovY = this.fovParam.value
 
@@ -405,11 +405,11 @@ class Camera extends TreeItem {
         boundaryPoints.push(box3.p1)
       } else {
         treeItems.forEach((treeItem: TreeItem) => {
-          treeItem.traverse((childItem) => {
+          treeItem.traverse((childItem: TreeItem) => {
             // Stop traversal when we hig an item with a disabled bounding box
             // or non-tree item.
-            if (!(childItem instanceof TreeItem)) return false
-            if (childItem.disableBoundingBox) return false
+            if (!(childItem instanceof TreeItem)) return
+            if (childItem.disableBoundingBox) return
             if (childItem instanceof GeomItem) {
               const geom = childItem.geomParam.value
               if (geom) {

@@ -30,7 +30,7 @@ class GLMesh extends GLGeom {
   /**
    * The genBuffers method.
    */
-  genBuffers() {
+  genBuffers(): void {
     super.genBuffers()
 
     const gl = this.__gl

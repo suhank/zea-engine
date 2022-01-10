@@ -113,7 +113,7 @@ class GLGeomItem extends EventEmitter {
    * The getGeomItem method.
    * @return - The return value.
    */
-  getGeomItem() {
+  getGeomItem(): GeomItem {
     return this.geomItem
   }
 
@@ -121,7 +121,7 @@ class GLGeomItem extends EventEmitter {
    * The isVisible method.
    * @return - The return value.
    */
-  isVisible() {
+  isVisible(): boolean {
     return this.visible
   }
 
@@ -129,14 +129,14 @@ class GLGeomItem extends EventEmitter {
    * The getId method.
    * @return - The return value.
    */
-  getDrawItemId() {
+  getDrawItemId(): number  {
     return this.drawItemId
   }
 
   /**
    * The updateVisibility method.
    */
-  updateVisibility() {
+  updateVisibility(): void {
     this.geomVisible = this.geomItem.isVisible()
     const visible = this.geomVisible && !this.culled
     if (this.visible != visible) {
@@ -151,7 +151,7 @@ class GLGeomItem extends EventEmitter {
    * Sets the additional culled value which controls visiblity
    * @param culled - True if culled, else false.
    */
-  setCulled(culled: boolean) {
+  setCulled(culled: boolean): void {
     this.culled = culled
     const visible = this.geomVisible && !this.culled
     if (this.visible != visible) {
@@ -166,7 +166,7 @@ class GLGeomItem extends EventEmitter {
    * @param renderstate - The object tracking the current state of the renderer
    * @return - The return value.
    */
-  bind(renderstate: RenderState) {
+  bind(renderstate: RenderState): boolean {
     const gl = this.gl
     const unifs = renderstate.unifs
 
@@ -206,7 +206,7 @@ class GLGeomItem extends EventEmitter {
    * The destroy is called by the system to cause explicit resources cleanup.
    * Users should never need to call this method directly.
    */
-  destroy() {
+  destroy(): void {
     this.geomItem.removeListenerById('visibilityChanged', this.listenerIDs['visibilityChanged'])
     if (!this.supportInstancing) {
       this.geomItem.geomMatParam.removeListenerById('valueChanged', this.listenerIDs['GeomMat.valueChanged'])

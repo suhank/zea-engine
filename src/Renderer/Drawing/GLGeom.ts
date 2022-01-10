@@ -71,7 +71,7 @@ class GLGeom extends RefCounted {
    * The updateBuffers method.
    * @param renderstate - The object tracking the current state of the renderer
    */
-  updateBuffers(renderstate?: RenderState) {
+  updateBuffers(renderstate?: RenderState): void {
     this.genBuffers(renderstate)
     this.buffersDirty = false
   }
@@ -84,7 +84,7 @@ class GLGeom extends RefCounted {
    * @param renderstate - The object tracking the current state of the renderer
    * @return - returns false if the binding failed.
    */
-  bind(renderstate: RenderState) {
+  bind(renderstate: RenderState): boolean {
     if (this.__destroyed) throw new Error('Error binding a destroyed geom')
 
     if (this.buffersDirty) this.updateBuffers()
@@ -103,7 +103,7 @@ class GLGeom extends RefCounted {
    * The unbind method.
    * @param renderstate - The object tracking the current state of the renderer
    */
-  unbind(renderstate: RenderState) {
+  unbind(renderstate: RenderState): void {
     // Unbinding a geom is important as it puts back some important
     // GL state. (vertexAttribDivisor)
     const shaderBinding = this.__shaderBindings[renderstate.shaderkey!]
@@ -120,7 +120,7 @@ class GLGeom extends RefCounted {
    * The draw method.
    * @param renderstate - The object tracking the current state of the renderer
    */
-  draw(renderstate: RenderState) {
+  draw(renderstate: RenderState): void {
     throw new Error('Not implemented. Implement this method in a derived class.')
   }
 
@@ -129,7 +129,7 @@ class GLGeom extends RefCounted {
    * @param renderstate - The object tracking the current state of the renderer
    * @param instanceCount - The instanceCount param.
    */
-  drawInstanced(renderstate: RenderState, instanceCount: number) {
+  drawInstanced(renderstate: RenderState, instanceCount: number): void {
     throw new Error('Not implemented. Implement this method in a derived class.')
   }
 
@@ -145,7 +145,7 @@ class GLGeom extends RefCounted {
   /**
    * The clearBuffers method.
    */
-  clearBuffers() {
+  clearBuffers(): void {
     const gl = this.__gl
     // eslint-disable-next-line guard-for-in
     for (const attrName in this.__glattrbuffers) {
@@ -167,7 +167,7 @@ class GLGeom extends RefCounted {
    * The destroy is called by the system to cause explicit resources cleanup.
    * Users should never need to call this method directly.
    */
-  destroy() {
+  destroy(): void {
     this.__geom.deleteMetadata('glgeom')
 
     this.clearBuffers()

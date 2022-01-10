@@ -54,7 +54,7 @@ class GLShader extends BaseItem {
    * > Note: normally the context should be passed to the constructor. This method us used when using the Registry to construct shaders.
    * @param gl - The webgl rendering context.
    */
-  setGLContext(gl: WebGL12RenderingContext) {
+  setGLContext(gl: WebGL12RenderingContext): void {
     this.__gl = gl
   }
 
@@ -63,7 +63,7 @@ class GLShader extends BaseItem {
    * @param stageName - The name of the stage. currently only 'VERTEX_SHADER' or 'FRAGMENT_SHADER' are supported.
    * @param glsl - The GLSL code for the shader stage.
    */
-  setShaderStage(stageName: string, glsl: string) {
+  setShaderStage(stageName: string, glsl: string): void {
     this.__shaderStagesGLSL[stageName] = glsl
     this.clearProgramsCache()
   }
@@ -73,14 +73,14 @@ class GLShader extends BaseItem {
    * @param stageName - The name of the stage. currently only 'VERTEX_SHADER' or 'FRAGMENT_SHADER' are supported.
    * @return - The GLSL code for the shader stage.
    */
-  getShaderStage(stageName: string) {
+  getShaderStage(stageName: string): string {
     return this.__shaderStagesGLSL[stageName]
   }
 
   /**
    * Clears all cached shader compilations for this shader.
    */
-  clearProgramsCache() {
+  clearProgramsCache(): void {
     const gl = this.__gl!
     for (const shaderProgramkey in this.__shaderProgramHdls) {
       const shaderCompilationResult = this.__shaderProgramHdls[shaderProgramkey]
@@ -97,7 +97,7 @@ class GLShader extends BaseItem {
    * The isTransparent method.
    * @return - The return value.
    */
-  static isTransparent() {
+  static isTransparent(): boolean {
     return false
   }
 
@@ -105,7 +105,7 @@ class GLShader extends BaseItem {
    * The isOverlay method.
    * @return - The return value.
    */
-  static isOverlay() {
+  static isOverlay(): boolean {
     return false
   }
 
@@ -210,7 +210,7 @@ class GLShader extends BaseItem {
    * @private
    */
   // TODO: can't use shaderopt tpye
-  __createProgram(shaderopts: Record<string, any>) {
+  __createProgram(shaderopts: Record<string, any>): Record<string, any> | boolean {
     const gl = this.__gl!
     this.__shaderCompilationAttempted = true
     const shaderProgramHdl = gl.createProgram()
@@ -294,7 +294,7 @@ class GLShader extends BaseItem {
    * @return - The dictionary of attributes and uniform values
    * @private
    */
-  __extractAttributeAndUniformLocations(shaderProgramHdl: WebGLProgram, shaderopts: Shaderopts) {
+  __extractAttributeAndUniformLocations(shaderProgramHdl: WebGLProgram, shaderopts: Shaderopts): Record<string, any> {
     const gl = this.__gl!
     const attrs: Record<string, any> = this.getAttributes()
     const result: Record<string, any> = {
@@ -414,7 +414,7 @@ class GLShader extends BaseItem {
   /**
    * The compile method.
    */
-  compile() {
+  compile(): void {
     this.compileForTarget()
   }
 
@@ -424,7 +424,7 @@ class GLShader extends BaseItem {
    * @param key - The key value.
    * @return - The return value.
    */
-  bind(renderstate: RenderState, key?: string) {
+  bind(renderstate: RenderState, key?: string): boolean {
     const gl = this.__gl!
 
     if (renderstate.glShader != this) {
@@ -484,7 +484,7 @@ class GLShader extends BaseItem {
   /**
    * The getSelectedShaderName method.
    */
-  getSelectedShaderName() {
+  getSelectedShaderName(): string {
     return ''
   }
 
@@ -523,7 +523,7 @@ class GLShader extends BaseItem {
    * The destroy is called by the system to cause explicit resources cleanup.
    * Users should never need to call this method directly.
    */
-  destroy() {
+  destroy(): void {
     const gl = this.__gl!
     // eslint-disable-next-line guard-for-in
     for (const key in this.__shaderProgramHdls) {

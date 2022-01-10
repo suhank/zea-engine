@@ -133,7 +133,7 @@ class EulerAngles {
    *
    * @return - The return value.
    */
-  toString() {
+  toString(): string {
     // eslint-disable-next-line new-cap
     return StringFunctions.stringifyJSONWithFixedPrecision(this.toJSON())
   }

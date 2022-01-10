@@ -120,7 +120,7 @@ class GLViewport extends GLBaseViewport {
    * The getBl method.
    * @return - The return value.
    */
-  getBl() {
+  getBl(): Vec2 {
     return this.__bl
   }
 
@@ -128,7 +128,7 @@ class GLViewport extends GLBaseViewport {
    * The setBl method.
    * @param bl - The bl value.
    */
-  setBl(bl: number) {
+  setBl(bl: number): void {
     this.__bl.x = bl
     this.__bl.y = bl // TODO: check. Before this method was 1 line, implying __bl is a number type not a vec2
     this.resize(this.__canvasWidth, this.__canvasHeight)
@@ -138,7 +138,7 @@ class GLViewport extends GLBaseViewport {
    * The getTr method.
    * @return - The return value.
    */
-  getTr() {
+  getTr(): Vec2 {
     return this.__tr
   }
 
@@ -146,7 +146,7 @@ class GLViewport extends GLBaseViewport {
    * The setTr method.
    * @param tr - The tr value.
    */
-  setTr(tr: number) {
+  setTr(tr: number): void {
     this.__tr.x = tr
     this.__tr.y = tr // TODO: check. Before this method was 1 line, implying __bl is a number type not a vec2
     this.resize(this.__canvasWidth, this.__canvasHeight)
@@ -156,7 +156,7 @@ class GLViewport extends GLBaseViewport {
    * The getPosX method.
    * @return - The return value.
    */
-  getPosX() {
+  getPosX(): number {
     return this.__x
   }
 
@@ -164,7 +164,7 @@ class GLViewport extends GLBaseViewport {
    * The getPosY method.
    * @return - The return value.
    */
-  getPosY() {
+  getPosY(): number {
     return this.__y
   }
 
@@ -174,7 +174,7 @@ class GLViewport extends GLBaseViewport {
    * @param canvasWidth - The canvasWidth value.
    * @param canvasHeight - The canvasHeight value.
    */
-  resize(canvasWidth: number, canvasHeight: number) {
+  resize(canvasWidth: number, canvasHeight: number): void {
     if (this.__canvasWidth == canvasWidth && this.__canvasHeight == canvasHeight) return
     this.__canvasWidth = canvasWidth
     this.__canvasHeight = canvasHeight
@@ -196,7 +196,7 @@ class GLViewport extends GLBaseViewport {
    * @param width - The width used by this viewport.
    * @param height - The height  used by this viewport.
    */
-  resizeRenderTargets(width: number, height: number) {
+  resizeRenderTargets(width: number, height: number): void {
     super.resizeRenderTargets(width, height)
 
     if (this.__geomDataBufferFbo) {
@@ -213,7 +213,7 @@ class GLViewport extends GLBaseViewport {
    *
    * @return - The return value.
    */
-  getCamera() {
+  getCamera(): Camera {
     return this.__camera
   }
 
@@ -222,7 +222,7 @@ class GLViewport extends GLBaseViewport {
    *
    * @param camera - The camera value.
    */
-  setCamera(camera: Camera) {
+  setCamera(camera: Camera): void {
     this.__camera = camera
     this.depthRange = [this.__camera.getNear(), this.__camera.getFar()]
     const globalXfoParam = camera.globalXfoParam
@@ -263,7 +263,7 @@ class GLViewport extends GLBaseViewport {
    * The getProjectionMatrix method.
    * @return - The return projection matrix for the viewport.
    */
-  getProjectionMatrix() {
+  getProjectionMatrix(): Mat4 {
     return this.__projectionMatrix
   }
 
@@ -271,7 +271,7 @@ class GLViewport extends GLBaseViewport {
    * The getProjectionMatrix method.
    * @return - The return projection matrix for the viewport.
    */
-  getViewMatrix() {
+  getViewMatrix(): Mat4 {
     return this.__viewMat
   }
 
@@ -281,7 +281,7 @@ class GLViewport extends GLBaseViewport {
    * > See Camera.frameView
    * @param treeItems - The array of TreeItem.
    */
-  frameView(treeItems?: TreeItem[]) {
+  frameView(treeItems?: TreeItem[]): void {
     if (this.__width > 0 && this.__height > 0) {
       this.__camera.frameView(this, treeItems)
     } else {
@@ -359,7 +359,7 @@ class GLViewport extends GLBaseViewport {
    * Renders the scene geometry to the viewport's geom data buffer
    * in preparation for mouse picking.
    */
-  renderGeomDataFbo() {
+  renderGeomDataFbo(): void {
     if (this.__geomDataBufferFbo) {
       const geomDataRenderstate: GeomDataRenderState = <GeomDataRenderState>{}
       this.__initRenderState(geomDataRenderstate)
@@ -378,7 +378,7 @@ class GLViewport extends GLBaseViewport {
   /**
    * The invalidateGeomDataBuffer method.
    */
-  invalidateGeomDataBuffer() {
+  invalidateGeomDataBuffer(): void {
     this.__geomDataBufferInvalid = true
   }
 
@@ -555,7 +555,7 @@ class GLViewport extends GLBaseViewport {
    * @return - Returns a new Vec2.
    * @private
    */
-  __getPointerPos(rendererX: number, rendererY: number) {
+  __getPointerPos(rendererX: number, rendererY: number): Vec2 {
     return new Vec2(rendererX - this.getPosX(), rendererY - this.getPosY())
   }
 
@@ -565,7 +565,7 @@ class GLViewport extends GLBaseViewport {
    * @param event - The event that occurs in the canvas
    * @private
    */
-  prepareUIEvent(event: ZeaUIEvent) {
+  prepareUIEvent(event: ZeaUIEvent): void {
     event.viewport = this
   }
 
@@ -574,7 +574,7 @@ class GLViewport extends GLBaseViewport {
    *
    * @param event - The DOM event produced by a pointer
    */
-  onPointerDown(event: ZeaUIEvent) {
+  onPointerDown(event: ZeaUIEvent): void {
     this.prepareUIEvent(event)
 
     if (event.pointerType === POINTER_TYPES.mouse) {
@@ -639,7 +639,7 @@ class GLViewport extends GLBaseViewport {
    *
    * @param event - The event that occurs.
    */
-  onPointerUp(event: ZeaUIEvent) {
+  onPointerUp(event: ZeaUIEvent): void {
     this.prepareUIEvent(event)
 
     if (event.pointerType === POINTER_TYPES.mouse) {
@@ -685,7 +685,7 @@ class GLViewport extends GLBaseViewport {
    *
    * @param event - The event that occurs.
    */
-  onPointerMove(event: ZeaUIEvent) {
+  onPointerMove(event: ZeaUIEvent): void {
     this.prepareUIEvent(event)
 
     if (event.pointerType === POINTER_TYPES.mouse) {
@@ -760,7 +760,7 @@ class GLViewport extends GLBaseViewport {
    * Causes an event to occur when the mouse pointer is moved into this viewport
    * @param event - The event that occurs.
    */
-  onPointerEnter(event: ZeaUIEvent) {
+  onPointerEnter(event: ZeaUIEvent): void {
     this.prepareUIEvent(event)
     this.emit('pointerEnter', event)
     if (!event.propagating) return
@@ -775,7 +775,7 @@ class GLViewport extends GLBaseViewport {
    * Causes an event to occur when the mouse pointer is moved out of this viewport
    * @param event - The event that occurs.
    */
-  onPointerLeave(event: ZeaUIEvent) {
+  onPointerLeave(event: ZeaUIEvent): void {
     this.prepareUIEvent(event)
     this.emit('pointerLeave', event)
     if (!event.propagating) return
@@ -790,7 +790,7 @@ class GLViewport extends GLBaseViewport {
    * Causes an event to occur when the user is pressing a key on the keyboard.
    * @param event - The event that occurs.
    */
-  onKeyDown(event: KeyboardEvent) {
+  onKeyDown(event: KeyboardEvent): void {
     // this.prepareUIEvent(event)
     if (this.manipulator) {
       this.manipulator.onKeyDown(event)
@@ -803,7 +803,7 @@ class GLViewport extends GLBaseViewport {
    * Causes an event to occur  when the user releases a key on the keyboard.
    * @param event - The event that occurs.
    */
-  onKeyUp(event: KeyboardEvent) {
+  onKeyUp(event: KeyboardEvent): void {
     // this.prepareUIEvent(event)
     if (this.manipulator) {
       this.manipulator.onKeyUp(event)
@@ -816,7 +816,7 @@ class GLViewport extends GLBaseViewport {
    * Causes an event to occur when the mouse wheel is rolled up or down over an element.
    * @param event - The event that occurs.
    */
-  onWheel(event: ZeaWheelEvent) {
+  onWheel(event: ZeaWheelEvent): void {
     this.prepareUIEvent(event)
 
     event.pointerPos = this.__getPointerPos(event.rendererX, event.rendererY)
@@ -841,7 +841,7 @@ class GLViewport extends GLBaseViewport {
    * Causes an event to occur when the touch event gets interrupted.
    * @param event - The event that occurs.
    */
-  onTouchCancel(event: ZeaTouchEvent) {
+  onTouchCancel(event: ZeaTouchEvent): void {
     this.prepareUIEvent(event)
 
     if (event.getCapture()) {
@@ -867,7 +867,7 @@ class GLViewport extends GLBaseViewport {
    * @param renderstate - The object tracking the current state of the renderer
    * @private
    */
-  __initRenderState(renderstate: RenderState) {
+  __initRenderState(renderstate: RenderState): void {
     // console.log(this.__viewMat.toString())
     renderstate.viewXfo = this.__cameraXfo
     renderstate.viewScale = 1.0
@@ -890,7 +890,7 @@ class GLViewport extends GLBaseViewport {
   /**
    * The draw method.
    */
-  draw() {
+  draw(): void {
     const renderstate: ColorRenderState = <ColorRenderState>{}
     this.__initRenderState(renderstate)
 
