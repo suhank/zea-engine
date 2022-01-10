@@ -47,7 +47,7 @@ class XRViewManipulator extends BaseTool {
    * @param event
    * @private
    */
-  addIconToController(controller: XRController) {
+  addIconToController(controller: XRController): void {
     const geomItem = new GeomItem('HandleToolTip', this.vrControllerToolTip, this.vrControllerToolTipMat)
     geomItem.setSelectable(false)
     controller.getTipItem().removeAllChildren()
@@ -57,7 +57,7 @@ class XRViewManipulator extends BaseTool {
   /**
    * The activateTool method.
    */
-  activateTool() {
+  activateTool(): void {
     super.activateTool()
 
     for (const controller of this.xrvp.getControllers()) {
@@ -71,7 +71,7 @@ class XRViewManipulator extends BaseTool {
   /**
    * The deactivateTool method.
    */
-  deactivateTool() {
+  deactivateTool(): void {
     super.deactivateTool()
 
     for (const controller of this.xrvp.getControllers()) {
@@ -84,7 +84,7 @@ class XRViewManipulator extends BaseTool {
   // XRController events
 
   // eslint-disable-next-line require-jsdoc
-  __initMoveStage() {
+  __initMoveStage(): void {
     if (this.__controllerTriggersHeld.length == 1) {
       this.__grabPos = this.__controllerTriggersHeld[0].getControllerTipStageLocalXfo().tr.clone()
       this.stageXfo__GrabStart = this.xrvp.getXfo().clone()
@@ -107,7 +107,7 @@ class XRViewManipulator extends BaseTool {
    * @param event - The event param.
    * @return The return value.
    */
-  onVRControllerButtonDown(event: XRControllerEvent) {
+  onVRControllerButtonDown(event: XRControllerEvent): void {
     if (event.button != 0) return
     const index = this.__controllerTriggersHeld.indexOf(event.controller)
     if (index == -1) {
@@ -122,7 +122,7 @@ class XRViewManipulator extends BaseTool {
    * @param event - The event param.
    * @return The return value.
    */
-  onVRControllerButtonUp(event: XRControllerEvent) {
+  onVRControllerButtonUp(event: XRControllerEvent): void {
     if (event.button != 0) return
     const index = this.__controllerTriggersHeld.indexOf(event.controller)
     if (index != -1) {
@@ -136,7 +136,7 @@ class XRViewManipulator extends BaseTool {
    * The onVRControllerDoubleClicked method.
    * @param event - The event param.
    */
-  onVRControllerDoubleClicked(event: XRControllerEvent) {
+  onVRControllerDoubleClicked(event: XRControllerEvent): void {
     console.log('onVRControllerDoubleClicked:', this.__controllerTriggersHeld.length)
 
     const stageXfo = this.xrvp.getXfo().clone()
@@ -148,7 +148,7 @@ class XRViewManipulator extends BaseTool {
    * The onVRPoseChanged method.
    * @param event - The event param.
    */
-  onVRPoseChanged(event: XRPoseEvent) {
+  onVRPoseChanged(event: XRPoseEvent): void {
     if (this.__controllerTriggersHeld.length == 1) {
       const grabPos = this.__controllerTriggersHeld[0].getControllerTipStageLocalXfo().tr
 
@@ -222,7 +222,7 @@ class XRViewManipulator extends BaseTool {
    *
    * @param event - The event param.
    */
-  onPointerDown(event: ZeaPointerEvent) {
+  onPointerDown(event: ZeaPointerEvent): void {
     if (event.pointerType === POINTER_TYPES.xr) {
       this.onVRControllerButtonDown(<XRControllerEvent>event)
     }
@@ -233,7 +233,7 @@ class XRViewManipulator extends BaseTool {
    *
    * @param event - The event param.
    */
-  onPointerMove(event: ZeaPointerEvent) {
+  onPointerMove(event: ZeaPointerEvent): void {
     if (event.pointerType === POINTER_TYPES.xr) {
       this.onVRPoseChanged(<XRPoseEvent>event)
     }
@@ -244,7 +244,7 @@ class XRViewManipulator extends BaseTool {
    *
    * @param event - The event param.
    */
-  onPointerUp(event: ZeaPointerEvent) {
+  onPointerUp(event: ZeaPointerEvent): void {
     if (event.pointerType === POINTER_TYPES.xr) {
       this.onVRControllerButtonUp(<XRControllerEvent>event)
     }
@@ -255,7 +255,7 @@ class XRViewManipulator extends BaseTool {
    *
    * @param event - The event param.
    */
-  onPointerDoublePress(event: ZeaPointerEvent) {
+  onPointerDoublePress(event: ZeaPointerEvent): void {
     if (event.pointerType === POINTER_TYPES.xr) {
       this.onVRControllerDoubleClicked(<XRControllerEvent>event)
     }

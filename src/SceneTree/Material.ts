@@ -57,7 +57,7 @@ class Material extends BaseItem {
    *
    * @param shaderName - The shader name.
    */
-  setShaderName(shaderName: string) {
+  setShaderName(shaderName: string): void {
     if (this.__shaderName == shaderName) return
     this.__shaderName = shaderName
 

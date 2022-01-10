@@ -21,7 +21,7 @@ class GLMeshItemSet extends GLGeomItemSetMultiDraw {
     counts: Int32Array,
     offsets: Int32Array,
     drawCount: number
-  ) {
+  ): void{
     const gl = this.gl
     if (gl.multiDrawElements) {
       gl.multiDrawElements(gl.TRIANGLES, counts, 0, gl.UNSIGNED_INT, offsets, 0, drawCount)

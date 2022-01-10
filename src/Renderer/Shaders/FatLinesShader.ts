@@ -31,7 +31,7 @@ class FatLinesShader extends GLShader {
     this.setShaderStage('FRAGMENT_SHADER', frag)
   }
 
-  bind(renderstate: RenderState, key: any) {
+  bind(renderstate: RenderState, key: any): boolean {
     if (super.bind(renderstate, key)) {
       renderstate.supportsInstancing = false
       return true
@@ -43,7 +43,7 @@ class FatLinesShader extends GLShader {
    * The supportsInstancing method.
    * @return - return false for shaders that cannot be rendered in instanced mode.
    */
-  static supportsInstancing() {
+  static supportsInstancing(): boolean {
     return false
   }
 

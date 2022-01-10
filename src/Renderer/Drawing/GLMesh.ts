@@ -86,7 +86,7 @@ class GLMesh extends GLGeom {
    * The updateBuffers method.
    * @param opts - The options object.
    */
-  updateBuffers(renderstate?: RenderState) {
+  updateBuffers(renderstate?: RenderState): void {
     const gl = this.__gl
 
     if (this.__numVertices != this.__geom.getNumVertices()) {
@@ -108,7 +108,7 @@ class GLMesh extends GLGeom {
   /**
    * The clearBuffers method.
    */
-  clearBuffers() {
+  clearBuffers(): void {
     const gl = this.__gl
     gl.deleteBuffer(this.__indexBuffer)
     this.__indexBuffer = null
@@ -123,7 +123,7 @@ class GLMesh extends GLGeom {
    * Draw an item to screen.
    * @param renderstate - The object tracking the current state of the renderer
    */
-  draw(renderstate: RenderState) {
+  draw(renderstate: RenderState): void {
     this.__gl.drawElements(this.__gl.TRIANGLES, this.__numTriIndices, this.__indexDataType, 0)
   }
 
@@ -132,7 +132,7 @@ class GLMesh extends GLGeom {
    * @param renderstate - The object tracking the current state of the renderer
    * @param instanceCount - The instanceCount value.
    */
-  drawInstanced(renderstate: RenderState, instanceCount: number) {
+  drawInstanced(renderstate: RenderState, instanceCount: number): void {
     const gl = this.__gl
     gl.drawElementsInstanced(this.__gl.TRIANGLES, this.__numTriIndices, this.__indexDataType, 0, instanceCount)
   }
@@ -141,7 +141,7 @@ class GLMesh extends GLGeom {
    * The destroy is called by the system to cause explicit resources cleanup.
    * Users should never need to call this method directly.
    */
-  destroy() {
+  destroy(): void {
     super.destroy()
     const gl = this.__gl
     gl.deleteBuffer(this.__indexBuffer)

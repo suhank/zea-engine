@@ -21,7 +21,7 @@ class GLPointsItemSet extends GLGeomItemSetMultiDraw {
     counts: Int32Array,
     offsets: Int32Array,
     drawCount: number
-  ) {
+  ): void {
     const gl = this.gl
     if (gl.multiDrawArrays) {
       gl.multiDrawArrays(gl.POINTS, offsets, 0, counts, 0, drawCount)

@@ -28,7 +28,7 @@ class XRHead {
    * The Set wether the HMB is visible in rendering or not. Used in spectator rendering.
    * @param state - The visibility value.
    */
-  setVisible(state: boolean) {
+  setVisible(state: boolean): void {
     if (state && !this.hmdGeomItem) {
       const assetItem = this.__xrvp.getAsset()
       if (!assetItem) return
@@ -54,7 +54,7 @@ class XRHead {
    * The update method.
    * @param pose - The pose value.
    */
-  update(pose: any) {
+  update(pose: any): void {
     // Old
     // this.__mat4.setDataArray(pose.poseModelMatrix);
 
@@ -75,7 +75,7 @@ class XRHead {
    * The getTreeItem method.
    * @return - The return value.
    */
-  getTreeItem() {
+  getTreeItem(): TreeItem {
     return this.__treeItem
   }
 
@@ -83,7 +83,7 @@ class XRHead {
    * The getXfo method.
    * @return - The return value.
    */
-  getXfo() {
+  getXfo(): Xfo {
     return this.__localXfo
   }
 }
