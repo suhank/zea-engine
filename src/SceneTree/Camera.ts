@@ -244,7 +244,7 @@ class Camera extends TreeItem {
    *
    * @return - Returns the lens focal length value..
    */
-  getFocalDistance(): number{
+  getFocalDistance(): number {
     return this.focalDistanceParam.value
   }
 
@@ -347,7 +347,7 @@ class Camera extends TreeItem {
    * @param viewport - The viewport value.
    * @param treeItems - The treeItems value.
    */
-  frameView(viewport: GLBaseViewport, treeItems: TreeItem[]): void {
+  frameView(viewport: GLBaseViewport, treeItems: TreeItem[])  {
     const focalDistance = this.focalDistanceParam.value
     const fovY = this.fovParam.value
 
@@ -405,7 +405,7 @@ class Camera extends TreeItem {
         boundaryPoints.push(box3.p1)
       } else {
         treeItems.forEach((treeItem: TreeItem) => {
-          treeItem.traverse((childItem: TreeItem) => {
+          treeItem.traverse((childItem) => {
             // Stop traversal when we hig an item with a disabled bounding box
             // or non-tree item.
             if (!(childItem instanceof TreeItem)) return false
