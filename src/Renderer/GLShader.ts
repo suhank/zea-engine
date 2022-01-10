@@ -424,7 +424,7 @@ class GLShader extends BaseItem {
    * @param key - The key value.
    * @return - The return value.
    */
-  bind(renderstate: RenderState, key?: string) {
+  bind(renderstate: RenderState, key?: string): boolean {
     const gl = this.__gl!
 
     if (renderstate.glShader != this) {

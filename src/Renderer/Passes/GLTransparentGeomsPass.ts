@@ -257,24 +257,19 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
   _drawItem(renderstate: RenderState, transparentItem: Record<string, any>, cache: Record<string, any>) {
     if (cache.currentGLMaterial != transparentItem.glMaterial) {
       cache.currentGLMaterial = transparentItem.glMaterial
-      if (!cache.currentGLMaterial.bind(renderstate)) {
-        return
-      }
+      cache.currentGLMaterial.bind(renderstate)
     }
 
     if (cache.currentGLGeom != transparentItem.glGeom) {
       cache.currentGLGeom = transparentItem.glGeom
-      if (!cache.currentGLGeom.bind(renderstate)) {
-        return
-      }
+      cache.currentGLGeom.bind(renderstate)
     }
 
     const glGeomItem = transparentItem.glGeomItem
-    if (glGeomItem.bind(renderstate)) {
-      renderstate.bindViewports(renderstate.unifs, () => {
-        cache.currentGLGeom.draw(renderstate)
-      })
-    }
+    glGeomItem.bind(renderstate)
+    renderstate.bindViewports(renderstate.unifs, () => {
+      cache.currentGLGeom.draw(renderstate)
+    })
   }
 
   /**

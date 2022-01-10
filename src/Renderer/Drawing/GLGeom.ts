@@ -84,7 +84,7 @@ class GLGeom extends RefCounted {
    * @param renderstate - The object tracking the current state of the renderer
    * @return - returns false if the binding failed.
    */
-  bind(renderstate: RenderState) {
+  bind(renderstate: RenderState): void {
     if (this.__destroyed) throw new Error('Error binding a destroyed geom')
 
     if (this.buffersDirty) this.updateBuffers()
@@ -96,14 +96,13 @@ class GLGeom extends RefCounted {
       this.__shaderBindings[renderstate.shaderkey!] = shaderBinding
     }
     shaderBinding.bind(renderstate)
-    return true
   }
 
   /**
    * The unbind method.
    * @param renderstate - The object tracking the current state of the renderer
    */
-  unbind(renderstate: RenderState) {
+  unbind(renderstate: RenderState): void {
     // Unbinding a geom is important as it puts back some important
     // GL state. (vertexAttribDivisor)
     const shaderBinding = this.__shaderBindings[renderstate.shaderkey!]

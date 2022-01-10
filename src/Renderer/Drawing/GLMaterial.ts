@@ -35,7 +35,7 @@ class GLMaterial extends EventEmitter {
    * The getMaterial method.
    * @return - The return value.
    */
-  getMaterial() {
+  getMaterial(): Material {
     return this.__material
   }
 
@@ -43,7 +43,7 @@ class GLMaterial extends EventEmitter {
    * The getGLShader method.
    * @return - The return value.
    */
-  getGLShader() {
+  getGLShader(): GLShader {
     return this.__glshader
   }
 
@@ -52,7 +52,7 @@ class GLMaterial extends EventEmitter {
    * @param renderstate - The object tracking the current state of the renderer
    * @param warnMissingUnifs - The renderstate value.
    */
-  bind(renderstate: RenderState, warnMissingUnifs: any) {
+  bind(renderstate: RenderState, warnMissingUnifs: any): void {
     this.__boundTexturesBeforeMaterial = renderstate.boundTextures
 
     let shaderBinding = this.__shaderBindings[renderstate.shaderkey!]
@@ -68,7 +68,7 @@ class GLMaterial extends EventEmitter {
    * The unbind method.
    * @param renderstate - The object tracking the current state of the renderer
    */
-  unbind(renderstate: RenderState) {
+  unbind(renderstate: RenderState): void {
     // Enable texture units to be re-used by resetting the count back
     // to what it was.
     // Note: we don't need to unbind each texture, as re-binding a new material
