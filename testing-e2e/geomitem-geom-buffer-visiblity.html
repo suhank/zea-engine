@@ -35,7 +35,7 @@
       const canvas = document.getElementById('viewport')
 
       const scene = new Scene()
-      const renderer = new GLRenderer(canvas, { antialias: false, debugGeomDataBuffer: true })
+      const renderer = new GLRenderer(canvas, { antialias: false, debugGeomDataBuffer: false })
       renderer.setScene(scene)
 
       renderer.outlineThickness = 1.5
