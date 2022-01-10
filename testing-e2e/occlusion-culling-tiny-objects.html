@@ -59,20 +59,16 @@
         console.log(msg)
         window.postMessage(msg)
       }
-      postMessage('done-loading')
+      renderer.once('CullingUpdated', () => {
+        postMessage('done-loading')
+      })
 
       // {{{ Messages handler.
       const handleMessage = (event) => {
         const { data } = event
 
         if (data === 'variant-01') {
-          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-20, 5, 2.7), new Vec3(0, 0, 0.4))
-          // renderer.frameAll()
-          renderer.once('CullingUpdated', () => {
-            postMessage(`done-${data}`)
-          })
-        } else if (data === 'variant-02') {
-          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 0.4))
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-10, 10, 2.7), new Vec3(0, 0, 0.4))
           // renderer.frameAll()
           renderer.once('CullingUpdated', () => {
             postMessage(`done-${data}`)

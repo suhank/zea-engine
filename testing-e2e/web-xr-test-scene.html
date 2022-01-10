@@ -337,6 +337,11 @@
         })
       })
 
+      renderer.on('occlusionCullingProfilingData', (event) => {
+        console.log(
+          `occlusionCulling DrawScene: ${event.queryDrawScene} DrawBBoxes: ${event.queryDrawCulledBBoxes} ReduceSceneGeoms: ${event.queryReduceSceneGeoms} ReduceBBoxes:${event.queryReduceBBoxes}`
+        )
+      })
       // //////////////////////////////////////
       // Setup FPS Counter
 

@@ -11,9 +11,26 @@
     <link rel="stylesheet" href="styles/tailwind.min.css" />
 
     <script src="../dist/index.umd.js"></script>
+    <style>
+      .hud {
+        color: #333333;
+        font-size: 16px;
+      }
+      #fps-display {
+        position: fixed;
+        bottom: 10px;
+        right: 10px;
+      }
+      #cull-stats {
+        color: rgb(0, 0, 0);
+        position: fixed;
+        bottom: 10px;
+        left: 10px;
+      }
+    </style>
 
     <script type="module">
-      const { GLRenderer, Scene, Vec3, Color, Torus, Sphere, Material, GeomItem } = zeaEngine
+      const { GLRenderer, Scene, Vec3, Xfo, Color, Torus, Sphere, Material, GeomItem } = zeaEngine
 
       const canvas = document.querySelector('#renderer')
 
@@ -24,7 +41,7 @@
       })
       renderer.setScene(scene)
 
-      scene.setupGrid(10.0, 10)
+      // scene.setupGrid(10.0, 10)
 
       const redMaterial = new Material('surfaces', 'SimpleSurfaceShader')
       redMaterial.getParameter('BaseColor').setValue(new Color(1, 0, 0))
@@ -41,43 +58,72 @@
       // occlude the bbox of the sphere. This caused the sphere to be considered occluded.
       // The fix is a stochastic transparency in the bbox rendering allowing the sphere or its bbox
       // to be seen through the bbox of the occluded inner torus.
-      const torusInner = new Torus(1, 5.0, 6)
+      const torusInner = new Torus(1, 5.0, 16)
       const geomItemInner = new GeomItem('SkinnyTorus', torusInner, redMaterial)
       scene.getRoot().addChild(geomItemInner)
 
-      const torusOuter = new Torus(1.2, 5.0, 6)
+      const torusOuter = new Torus(1.5, 5.0, 16)
       const geomItemOuter = new GeomItem('FatTorus', torusOuter, yellowMaterial)
       scene.getRoot().addChild(geomItemOuter)
 
-      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, 2.7), new Vec3(0, 0, 0.4))
-      renderer.frameAll()
+      const geomItemSphere2 = new GeomItem('Sphere', new Sphere(0.1, 8, 5), sphereMaterial, new Xfo(new Vec3(5, 0, 1)))
+      scene.getRoot().addChild(geomItemSphere2)
 
-      renderer.on('CullingUpdated', (event) => {
-        console.log(`visible: ${event.visible} / total: ${event.total}`)
-      })
-      renderer.on('occlusionCullingProfilingData', (event) => {
-        console.log(`occlusionCulling: ${JSON.stringify(event)}`)
-      })
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(10, 10, 10), new Vec3(0, 0, 0))
+
+      // renderer.on('CullingUpdated', (event) => {
+      //   console.log(`visible: ${event.visible} / total: ${event.total}`)
+      // })
+      // renderer.on('occlusionCullingProfilingData', (event) => {
+      //   console.log(`occlusionCulling: ${JSON.stringify(event)}`)
+      // })
 
       const postMessage = (msg) => {
         console.log(msg)
         window.postMessage(msg)
       }
-      postMessage('done-loading')
+      renderer.once('CullingUpdated', () => {
+        postMessage('done-loading')
+      })
+      renderer.on('occlusionCullingProfilingData', (event) => {
+        const { queryReduceSceneGeoms, queryReduceBBoxes } = event
+        console.log(`occlusionCulling Reduction: ${queryReduceSceneGeoms}, ${queryReduceBBoxes}`)
+      })
+      const cullElement = document.getElementById('cull-stats')
+      renderer.on('CullingUpdated', (event) => {
+        if (event.visible != undefined && event.total != undefined) {
+          cullElement.textContent = `visible: ${event.visible} / total: ${event.total}`
+        }
+      })
 
       // {{{ Messages handler.
       const handleMessage = (event) => {
         const { data } = event
 
         if (data === 'variant-01') {
-          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, -2.7), new Vec3(0, 0, 0.4))
-          renderer.frameAll()
+          // Rotate the camera away from the objects. Rotate back, and check that everything is still visible
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(10, 10, 10), new Vec3(10, 0, 0))
+          renderer.once('CullingUpdated', () => {
+            renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(10, 10, 10), new Vec3(0, 0, 0))
+            renderer.once('CullingUpdated', () => {
+              postMessage(`done-${data}`)
+            })
+          })
+        } else if (data === 'variant-02') {
+          // Rotate the camera away from the objects. Rotate back, and check that everything is still visible
+          geomItemOuter.visibleParam.value = false
           renderer.once('CullingUpdated', () => {
             postMessage(`done-${data}`)
           })
-        } else if (data === 'variant-02') {
-          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 0.4))
-          renderer.frameAll()
+        } else if (data === 'variant-03') {
+          // Rotate the camera away from the objects. Rotate back, and check that everything is still visible
+          geomItemOuter.visibleParam.value = true
+          renderer.once('CullingUpdated', () => {
+            postMessage(`done-${data}`)
+          })
+        } else if (data === 'variant-04') {
+          // Rotate the camera away from the objects. Rotate back, and check that everything is still visible
+          geomItemOuter.globalXfoParam.value = new Xfo(new Vec3(3, 0, 1))
           renderer.once('CullingUpdated', () => {
             postMessage(`done-${data}`)
           })
@@ -91,6 +137,7 @@
   <body class="bg-blue-100">
     <div class="h-screen">
       <canvas class="absolute" id="renderer"></canvas>
+      <div id="cull-stats" class="hud"></div>
     </div>
   </body>
 </html>

@@ -32,7 +32,7 @@
       const scene = new Scene()
       const renderer = new GLRenderer(canvas, {
         enableOcclusionCulling: true,
-        debugOcclusionBuffer: false,
+        debugOcclusionBuffer: true,
       })
       renderer.setScene(scene)
 
@@ -75,6 +75,10 @@
         if (event.key == 'f') {
           renderer.frameAll()
         }
+      })
+      renderer.on('occlusionCullingProfilingData', (event) => {
+        const { queryReduceSceneGeoms, queryReduceBBoxes } = event
+        console.log(`occlusionCulling Reduction: ${queryReduceSceneGeoms}, ${queryReduceBBoxes}`)
       })
 
       const postMessage = (msg) => {
@@ -157,7 +161,9 @@
 
       const cullElement = document.getElementById('cull-stats')
       renderer.on('CullingUpdated', (event) => {
-        cullElement.textContent = `visible: ${event.visible} / total: ${event.total}`
+        if (event.visible != undefined && event.total != undefined) {
+          cullElement.textContent = `visible: ${event.visible} / total: ${event.total}`
+        }
       })
     </script>
     <style>
