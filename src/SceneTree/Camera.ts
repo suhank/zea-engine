@@ -408,8 +408,8 @@ class Camera extends TreeItem {
           treeItem.traverse((childItem: TreeItem) => {
             // Stop traversal when we hig an item with a disabled bounding box
             // or non-tree item.
-            if (!(childItem instanceof TreeItem)) return
-            if (childItem.disableBoundingBox) return
+            if (!(childItem instanceof TreeItem)) return false
+            if (childItem.disableBoundingBox) return false
             if (childItem instanceof GeomItem) {
               const geom = childItem.geomParam.value
               if (geom) {
