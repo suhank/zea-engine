@@ -39,7 +39,7 @@ class FileImage extends BaseImage {
    * @default anonymous
    * @param crossOrigin - The crossOrigin value.
    */
-  setCrossOrigin(crossOrigin: string) {
+  setCrossOrigin(crossOrigin: string): void {
     this.crossOrigin = crossOrigin
   }
 
@@ -111,7 +111,7 @@ class FileImage extends BaseImage {
    * @param url - The url value.
    * @param format - The format value. Can be 'RGB' or 'RGBA' for files that contain an alpha channel. This will cause objects to be drawn using the Transparent pass.
    */
-  setImageURL(url: string, format: string = 'RGB') {
+  setImageURL(url: string, format: string = 'RGB'): void {
     this.load(url, format)
   }
 
@@ -134,7 +134,7 @@ class FileImage extends BaseImage {
    * The toJSON method encodes this type as a json object for persistence.
    * @param context - The context value.
    */
-  toJSON(context?: Record<string, any>) {
+  toJSON(context?: Record<string, any>): Record<any,any> {
     return {}
   }
 
@@ -143,14 +143,14 @@ class FileImage extends BaseImage {
    * @param json - The json object this item must decode.
    * @param context - The context value.
    */
-  fromJSON(json: Record<string, any>, context?: Record<string, any>) {}
+  fromJSON(json: Record<string, any>, context?: Record<string, any>): void {}
 
   /**
    * The readBinary method.
    * @param reader - The reader param.
    * @param context - The context param.
    */
-  readBinary(reader: BinReader, context: AssetLoadContext) {
+  readBinary(reader: BinReader, context: AssetLoadContext): void {
     // super.readBinary(reader, context);
     this.setName(reader.loadStr())
 

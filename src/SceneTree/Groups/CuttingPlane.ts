@@ -112,7 +112,7 @@ class CuttingPlane extends BaseGroup {
    * @param index - The index value.
    * @private
    */
-  bindItem(item: BaseItem, index: number) {
+  bindItem(item: BaseItem, index: number): void {
     if (!(item instanceof TreeItem)) return
 
     // ///////////////////////////////
@@ -148,7 +148,7 @@ class CuttingPlane extends BaseGroup {
    * @param index - The index value.
    * @private
    */
-  unbindItem(item: BaseItem, index: number) {
+  unbindItem(item: BaseItem, index: number): void{
     if (!(item instanceof TreeItem)) return
 
     // ///////////////////////////////

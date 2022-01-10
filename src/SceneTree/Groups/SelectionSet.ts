@@ -77,7 +77,7 @@ class SelectionSet extends BaseGroup {
    * The updateHighlight method.
    * @private
    */
-  updateHighlight() {
+  updateHighlight(): void {
     // Make this function async so that we don't pull on the
     // graph immediately when we receive a notification.
     // Note: propagating using an operator would be much better.
@@ -91,7 +91,7 @@ class SelectionSet extends BaseGroup {
    * The updateHighlight method.
    * @private
    */
-  __updateHighlightHelper() {
+  __updateHighlightHelper(): void {
     let highlighted = false
     let color: Color
     if (this.highlightedParam.value || this.isSelected()) {
@@ -113,7 +113,7 @@ class SelectionSet extends BaseGroup {
    *
    * @param sel - Boolean indicating the new selection state.
    */
-  setSelected(sel: boolean) {
+  setSelected(sel: boolean): void {
     super.setSelected(sel)
     this.updateHighlight()
   }
@@ -127,7 +127,7 @@ class SelectionSet extends BaseGroup {
    * @param index - The index value.
    * @private
    */
-  bindItem(item: BaseItem, index: number) {
+  bindItem(item: BaseItem, index: number): void {
     super.bindItem(<TreeItem>item, index)
     const listenerIDs = this.__itemsEventHandlers[index]
     if (!(item instanceof TreeItem)) return
@@ -157,7 +157,7 @@ class SelectionSet extends BaseGroup {
    * @param index - The index value.
    * @private
    */
-  unbindItem(item: BaseItem, index: number) {
+  unbindItem(item: BaseItem, index: number): void {
     super.unbindItem(<TreeItem>item, index)
     if (!(item instanceof TreeItem)) return
 
@@ -192,7 +192,7 @@ class SelectionSet extends BaseGroup {
    * @param context - The context value.
    * @return - Returns a new cloned group.
    */
-  clone(context: CloneContext) {
+  clone(context: CloneContext): SelectionSet {
     const cloned = new SelectionSet(this.__name + ' clone')
     cloned.copyFrom(this, context)
     return cloned

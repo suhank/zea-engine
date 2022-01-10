@@ -51,7 +51,7 @@ class DataImage extends BaseImage {
    * @param height - The height value.
    * @param data - The data value.
    */
-  setData(width: number, height: number, data: Uint8Array) {
+  setData(width: number, height: number, data: Uint8Array): void {
     if (this.__data == data) return
     this.width = width
     this.height = height

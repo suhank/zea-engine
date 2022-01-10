@@ -85,7 +85,7 @@ class KinematicGroup extends BaseGroup {
    * The updateHighlight method.
    * @private
    */
-  updateHighlight() {
+  updateHighlight(): void {
     // Make this function async so that we don't pull on the
     // graph immediately when we receive a notification.
     // Note: propagating using an operator would be much better.
@@ -125,7 +125,7 @@ class KinematicGroup extends BaseGroup {
    * @private
    * @return - Returns a new Xfo.
    */
-  calcGroupXfo() {
+  calcGroupXfo(): void{
     const items = Array.from(this.itemsParam.value)
     if (items.length == 0) return
     this.calculatingGroupXfo = true
@@ -244,7 +244,7 @@ class KinematicGroup extends BaseGroup {
    * @param item - The item value.
    * @param emit - The emit value.
    */
-  addItem(item: TreeItem, emit = true) {
+  addItem(item: TreeItem, emit = true): void {
     super.addItem(<TreeItem>item, emit)
     if (emit) {
       this.calcGroupXfo()
@@ -257,7 +257,7 @@ class KinematicGroup extends BaseGroup {
    * @param item - The item value.
    * @param emit - The emit value.
    */
-  removeItem(item: TreeItem, emit = true) {
+  removeItem(item: TreeItem, emit = true): void {
     super.removeItem(<TreeItem>item, emit)
     if (emit) {
       this.calcGroupXfo()
@@ -269,7 +269,7 @@ class KinematicGroup extends BaseGroup {
    *
    * @param items - List of `TreeItem` you want to add to the group
    */
-  setItems(items: Set<TreeItem>) {
+  setItems(items: Set<TreeItem>): void {
     super.setItems(items) // TODO: originally: super.setItems(emit) -- should emit be done here?
     this.calcGroupXfo()
   }
@@ -279,7 +279,7 @@ class KinematicGroup extends BaseGroup {
    *
    * @param emit - `true` triggers `valueChanged` event.
    */
-  clearItems(emit = true) {
+  clearItems(emit = true): void {
     super.clearItems(emit)
     this.memberXfoOps = []
     if (emit) {
@@ -294,7 +294,7 @@ class KinematicGroup extends BaseGroup {
    * called once loading is done.
    * @private
    */
-  loadDone() {
+  loadDone(): void {
     this.calculatingGroupXfo = true
     this.calcGroupXfo()
     this.calculatingGroupXfo = false
@@ -310,7 +310,7 @@ class KinematicGroup extends BaseGroup {
    * @param context - The context value.
    * @return - Returns a new cloned group.
    */
-  clone(context: CloneContext ) {
+  clone(context: CloneContext ): KinematicGroup {
     const cloned = new KinematicGroup()
     cloned.copyFrom(this, context)
     return cloned
