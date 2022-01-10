@@ -105,18 +105,4 @@ export interface Bindings {
   textureTypeUnif: WebGLUniformLocation
 }
 
-export interface Options {
-  antialias: boolean
-  depth: boolean
-  stencil: boolean
-  alpha: boolean
-  disableMultiDraw: boolean
-  webglContextType: string
-  powerPreference: string
-  preserveDrawingBuffer: boolean
-  xrCompatible: boolean
-  supportXR: boolean
-  debugGeomIds: boolean
-}
-
 export type JSON = Record<string, any>

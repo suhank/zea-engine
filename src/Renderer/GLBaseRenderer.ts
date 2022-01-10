@@ -35,46 +35,43 @@ let pointerLeft = false
 const registeredPasses: Record<string, any> = {}
 
 /*
- * WebGL context attributes:
- *
- * alpha: Boolean that indicates if the canvas contains an alpha buffer.
- * depth: Boolean that indicates that the drawing buffer is requested to have a depth buffer of at least 16 bits.
- * stencil: Boolean that indicates that the drawing buffer is requested to have a stencil buffer of at least 8 bits.
- * desynchronized: Boolean that hints the user agent to reduce the latency by desynchronizing the canvas paint cycle from the event loop
- * antialias: Boolean that indicates whether or not to perform anti-aliasing if possible.
- * failIfMajorPerformanceCaveat: Boolean that indicates if a context will be created if the system performance is low or if no hardware GPU is available.
- * powerPreference: A hint to the user agent indicating what configuration of GPU is suitable for the WebGL context. Possible values are:
- *  - "default": Let the user agent decide which GPU configuration is most suitable. This is the default value.
- *  - "high-performance": Prioritizes rendering performance over power consumption.
- *  - "low-power": Prioritizes power saving over rendering performance.
- * premultipliedAlpha: Boolean that indicates that the page compositor will assume the drawing buffer contains colors with pre-multiplied alpha.
- * preserveDrawingBuffer: If the value is true the buffers will not be cleared and will preserve their values until cleared or overwritten by the author.
- * xrCompatible: Boolean that hints to the user agent to use a compatible graphics adapter for an immersive XR device. 
- * Setting this synchronous flag at context creation is discouraged; rather call the asynchronous WebGLRenderingContext.makeXRCompatible() 
-*    method the moment you intend to start an XR session.
-*/
+ * GLRenderer options
+ */
 export interface RendererOptions {
-  // GLBaseRenderer
+  // Enable WebXR Rendering.
   supportXR?: boolean
+  // alpha: Boolean that indicates if the canvas contains an alpha buffer.
+  alpha?: boolean
+
+  // antialias: Boolean that indicates whether or not to perform anti-aliasing if possible.
+  antialias?: boolean
+
+  // powerPreference: A hint to the user agent indicating what configuration of GPU is suitable for the WebGL context. Possible values are:
+  // - "default": Let the user agent decide which GPU configuration is most suitable. This is the default value.
+  // - "high-performance": Prioritizes rendering performance over power consumption.
+  // - "low-power": Prioritizes power saving over rendering performance.
+  powerPreference?: string
 
   // GLRenderer
   disableTextures?: boolean
+  // This debugging option modifies the color of each geometry to display its id as a pseudo-random color.
+  // This option is useful to see visually each geometry in the scene.
   debugGeomIds?: boolean
 
-  // GLGeomItemLibrary. Set this to true to cull objects not within view of the camera.
+  // Enabled frustum culling which is a performance optimization that speeds up rendering in heavy scenes.
   enableFrustumCulling?: boolean
+  // Enabled Occlusion culling which is a performance optimization that speeds up rendering in heavy scenes.
+  enableOcclusionCulling?: boolean
 
-  // webgl context attributes
-  alpha?: boolean
-  depth?: boolean
-  stencil?: boolean
-  antialias?: boolean
-  powerPreference?: string
-  preserveDrawingBuffer?: boolean
-  xrCompatible?: boolean
-
+  // This debugging option disabled use of the multi-draw extension.
   disableMultiDraw?: boolean
+  // This debugging option is used to disable the use of floating point geom data buffers.
+  // Mainly for testing compatibility with older browsers.
   floatGeomBuffer?: boolean
+  // This debugging option is used to display the GeomData picking buffer on screen.
+  debugGeomDataBuffer?: boolean
+  // This debugging option is used to display the occlusion buffer generated during occlusion culling.
+  debugOcclusionBuffer?: boolean
 }
 
 /**
@@ -589,7 +586,7 @@ class GLBaseRenderer extends ParameterOwner {
    * @param $canvas - The $canvas element.
    * @param webglOptions - The webglOptions value.
    */
-  private setupWebGL($canvas: HTMLCanvasElement, webglOptions: RendererOptions = {}): WebGL12RenderingContext {
+  private setupWebGL($canvas: HTMLCanvasElement, options: RendererOptions = {}): WebGL12RenderingContext {
     const { tagName } = $canvas
 
     if (!['DIV', 'CANVAS'].includes(tagName)) {
@@ -665,18 +662,19 @@ class GLBaseRenderer extends ParameterOwner {
 
     this.handleResize(this.__glcanvas.parentElement.clientWidth, this.__glcanvas.parentElement.clientHeight)
 
+    const webglOptions: Record<string, any> = {}
     webglOptions.preserveDrawingBuffer = true
-    webglOptions.antialias = webglOptions.antialias ?? true
+    webglOptions.antialias = options.antialias ?? true
     webglOptions.depth = true
     webglOptions.stencil = false
-    webglOptions.alpha = webglOptions.alpha ?? false
+    webglOptions.alpha = options.alpha ?? false
     // Note: Due to a change in Chrome (version 88-89), providing true here caused a pause when creating
     // an WebGL context, if the XR device was unplugged. We also call 'makeXRCompatible' when setting
     // up the XRViewport, so we to get an XR Compatible context anyway.
     webglOptions.xrCompatible = false
 
     // Most applications of our engine will prefer the high-performance context by default.
-    webglOptions.powerPreference = webglOptions.powerPreference || 'high-performance'
+    webglOptions.powerPreference = options.powerPreference || 'high-performance'
     const gl = create3DContext(this.__glcanvas, webglOptions)
     if (!gl) alert('Unable to create WebGL context. WebGL not supported.')
 
@@ -689,7 +687,7 @@ class GLBaseRenderer extends ParameterOwner {
 
     {
       const ext = gl.name == 'webgl2' ? gl.getExtension('WEBGL_multi_draw') : null
-      if (ext && !webglOptions.disableMultiDraw) {
+      if (ext && !options.disableMultiDraw) {
         gl.multiDrawArrays = ext.multiDrawArraysWEBGL.bind(ext)
         gl.multiDrawElements = ext.multiDrawElementsWEBGL.bind(ext)
         gl.multiDrawElementsInstanced = ext.multiDrawElementsInstancedWEBGL.bind(ext)
@@ -707,8 +705,7 @@ class GLBaseRenderer extends ParameterOwner {
     if (SystemDesc.browserName == 'Safari' && gl.name == 'webgl') {
       this.floatGeomBuffer = false
     } else {
-      this.floatGeomBuffer =
-        webglOptions.floatGeomBuffer ?? gl.floatTexturesSupported
+      this.floatGeomBuffer = options.floatGeomBuffer ?? gl.floatTexturesSupported
     }
     gl.floatGeomBuffer = this.floatGeomBuffer
     return gl
