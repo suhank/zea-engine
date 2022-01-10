@@ -215,14 +215,14 @@ let inFrustumDrawIdsBufferPopulated = false
 const generateInFrustumIndices = () => {
   let offset = 0
   outOfFrustum.forEach((value, index) => {
-    if (index > 0 && !value) offset++
+    if (index > 0 && !value && geomItemsData[index].visible) offset++
   })
   // Create a float array that can be used as an instances
   // attribute to pass into the drawing of the bounding boxes.
   const inFrustumIndices = new Float32Array(offset)
   offset = 0
   outOfFrustum.forEach((value, index) => {
-    if (index > 0 && !value) {
+    if (index > 0 && !value && geomItemsData[index].visible) {
       inFrustumIndices[offset] = index
       offset++
     }
@@ -332,6 +332,7 @@ const handleMessage = (data, postMessage) => {
       outOfFrustum[geomItem.id] = false
       checkGeomItem(geomItemsData[geomItem.id])
     })
+    inFrustumDrawIdsBufferPopulated = false
     onDoneFrustumCull(postMessage)
   } else if (data.type == 'OcclusionData') {
     processOcclusionData(data, postMessage)
