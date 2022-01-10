@@ -903,7 +903,13 @@ class GLViewport extends GLBaseViewport {
       const renderstate: ColorRenderState = <ColorRenderState>{}
       const screenQuad = this.__renderer.screenQuad!
       screenQuad.bindShader(renderstate)
+
+      const gl = this.__renderer.gl
+      gl.enable(gl.BLEND)
+      gl.blendEquation(gl.FUNC_ADD)
+      gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
       screenQuad.draw(renderstate, this.__geomDataBuffer, new Vec2(0, 0), new Vec2(1, 1))
+      gl.disable(gl.BLEND)
     }
     if (this.debugHighlightedGeomsBuffer) {
       // Note: renderGeomDataFbo would have bound other shaders.
@@ -911,7 +917,13 @@ class GLViewport extends GLBaseViewport {
       const renderstate: ColorRenderState = <ColorRenderState>{}
       const screenQuad = this.__renderer.screenQuad!
       screenQuad.bindShader(renderstate)
+
+      const gl = this.__renderer.gl
+      gl.enable(gl.BLEND)
+      gl.blendEquation(gl.FUNC_ADD)
+      gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
       screenQuad.draw(renderstate, this.highlightedGeomsBuffer, new Vec2(0, 0), new Vec2(1, 1))
+      gl.disable(gl.BLEND)
     }
     if (this.debugOcclusionBuffer) {
       // @ts-ignore
