@@ -38,7 +38,7 @@ class Scene {
    *
    * @return - The return value.
    */
-  getRoot() {
+  getRoot(): TreeItem {
     return this.root
   }
 
@@ -56,7 +56,7 @@ class Scene {
    *
    * @param envMap - The envMap value.
    */
-  setEnvMap(envMap: EnvMap) {
+  setEnvMap(envMap: EnvMap): void {
     this.envMapParam.value = envMap
   }
 

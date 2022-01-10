@@ -93,7 +93,7 @@ class Material extends BaseItem {
   /**
    * Remove all textures from Material's parameters.
    */
-  removeAllTextures() {
+  removeAllTextures(): void{
     for (const param of this.params) {
       if (param instanceof MaterialColorParam) {
         if ((<MaterialColorParam>param).getImage()) (<MaterialColorParam>param).setImage(null)
@@ -246,7 +246,7 @@ class Material extends BaseItem {
    * @param j - The json object this item must decode.
    * @param context - The context value.
    */
-  fromJSON(j: Record<string, any>, context: Record<string, any> = {}) {
+  fromJSON(j: Record<string, any>, context: Record<string, any> = {}): void {
     if (!j.shader) {
       console.warn('Invalid Material JSON')
       return
@@ -341,7 +341,7 @@ class Material extends BaseItem {
    * @param context - The context value.
    * @return - Returns a new cloned material.
    */
-  clone(context?: CloneContext) {
+  clone(context?: CloneContext): Material {
     const cloned = new Material('clone', '') // TODO: what should the arguemnts be here?
     cloned.copyFrom(this, context)
     return cloned
@@ -353,7 +353,7 @@ class Material extends BaseItem {
    * @param src - The material to copy from.
    * @param context - The context value.
    */
-  copyFrom(src: Material, context?: CloneContext) {
+  copyFrom(src: Material, context?: CloneContext): void{
     this.setShaderName(src.getShaderName())
     super.copyFrom(src, context)
   }

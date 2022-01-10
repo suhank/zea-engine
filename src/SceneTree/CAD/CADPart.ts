@@ -26,7 +26,7 @@ class CADPart extends TreeItem {
    * @param {number} flags - The flags param.
    * @return {CADPart} - The return value.
    */
-  clone(context?: CloneContext) {
+  clone(context?: CloneContext): CADPart {
     const cloned = new CADPart()
     cloned.copyFrom(this, context)
     return cloned
@@ -51,7 +51,7 @@ class CADPart extends TreeItem {
    * @param {BinReader} reader - The reader param.
    * @param {object} context - The context param.
    */
-  readBinary(reader: BinReader, context: AssetLoadContext) {
+  readBinary(reader: BinReader, context: AssetLoadContext): void {
     super.readBinary(reader, context)
   }
 
@@ -61,7 +61,7 @@ class CADPart extends TreeItem {
    * @param {number} flags - The flags param.
    * @return {object} - The return value.
    */
-  toJSON(context?: Record<string, any>) {
+  toJSON(context?: Record<string, any>): Record<string, any> {
     const j = super.toJSON(context)
     return j
   }
@@ -72,7 +72,7 @@ class CADPart extends TreeItem {
    * @param {object} j - The j param.
    * @param {number} flags - The flags param.
    */
-  fromJSON(j?: Record<string, any>) {
+  fromJSON(j?: Record<string, any>): void {
     super.fromJSON(j)
   }
 }

@@ -45,7 +45,7 @@ class InstanceItem extends TreeItem {
    *
    * @return - The return value.
    */
-  getSrcTree() {
+  getSrcTree(): TreeItem {
     return this.srcTree
   }
 
@@ -113,7 +113,7 @@ class InstanceItem extends TreeItem {
    * @param context - The context value.
    * @return - Returns a new cloned geom item.
    */
-  clone(context?: CloneContext) {
+  clone(context?: CloneContext): InstanceItem {
     const cloned = new InstanceItem()
     cloned.copyFrom(this, context)
 

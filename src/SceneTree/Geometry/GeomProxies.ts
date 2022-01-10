@@ -41,8 +41,8 @@ class BaseProxy extends EventEmitter {
    *
    * @return - The return value.
    */
-  getNumVertices() {
-    return this.__buffers.numVertices
+  getNumVertices(): number {
+    return <number>this.__buffers.numVertices // TODO: check cast
   }
 
   /**

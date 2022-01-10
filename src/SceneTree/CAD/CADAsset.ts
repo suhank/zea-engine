@@ -38,7 +38,7 @@ class CADAsset extends AssetItem {
    * @param {number} flags - The flags param.
    * @return {XRef} - The return value.
    */
-  clone(context?: CloneContext) {
+  clone(context?: CloneContext): CADAsset {
     const cloned = new CADAsset()
     cloned.copyFrom(this, context)
     return cloned
@@ -62,7 +62,7 @@ class CADAsset extends AssetItem {
    * @param {BinReader} reader - The reader param.
    * @param {AssetLoadContext} context - The load context object that provides additional data such as the units of the scene we are loading into.
    */
-  readRootLevelBinary(reader: BinReader, context: AssetLoadContext) {
+  readRootLevelBinary(reader: BinReader, context: AssetLoadContext): void {
     this.numCADBodyItems = 0
 
     context.versions['zea-cad'] = new Version(reader.loadStr())
@@ -80,7 +80,7 @@ class CADAsset extends AssetItem {
    * @param {AssetLoadContext} context - The load context object that provides additional data such as paths to external references.
    * @return {Promise} - Returns a promise that resolves once the load of the tree is complete. Geometries, textures and other resources might still be loading.
    */
-  load(url: string, context = new AssetLoadContext()) {
+  load(url: string, context = new AssetLoadContext()): any{
     if (this.__loadPromise) return this.__loadPromise
     this.__loadPromise = new Promise((resolve, reject) => {
       const folder = url.lastIndexOf('/') > -1 ? url.substring(0, url.lastIndexOf('/')) + '/' : ''
@@ -171,7 +171,7 @@ class CADAsset extends AssetItem {
    * @param {number} flags - The flags param.
    * @return {object} - The return value.
    */
-  toJSON(context: Record<string, any>) {
+  toJSON(context: Record<string, any>): Record<string, any> {
     const j = super.toJSON(context)
     return j 
   }
@@ -184,7 +184,7 @@ class CADAsset extends AssetItem {
    * @param {callback} onDone - The onDone param.
    */
   // TODO: can't pass in onDone
-  fromJSON(j: Record<string, any>, context: Record<string, any>) { //, onDone
+  fromJSON(j: Record<string, any>, context: Record<string, any>): void { //, onDone
     const loadAssetJSON = () => {
       //const flags = TreeItem.LoadFlags.LOAD_FLAG_LOADING_BIN_TREE_VALUES
       super.fromJSON(j, context) //, flags, onDone

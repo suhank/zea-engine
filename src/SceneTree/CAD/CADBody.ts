@@ -35,7 +35,7 @@ class CADBody extends BaseGeomItem {
    *
    * @return {CADAsset} - The return value.
    */
-  getCADAsset() {
+  getCADAsset(): CADAsset {
     return this.__cadAsset
   }
 
@@ -46,7 +46,7 @@ class CADBody extends BaseGeomItem {
    * @param {object} context - The context value.
    * @return {CADBody} - The return value.
    */
-  clone(context: CloneContext) {
+  clone(context: CloneContext): CADBody {
     const cloned = new CADBody()
     cloned.copyFrom(this, context)
     return cloned
@@ -58,7 +58,7 @@ class CADBody extends BaseGeomItem {
    * @param {object} context - The context value.
    * @private
    */
-  copyFrom(src: CADBody, context: CloneContext) {
+  copyFrom(src: CADBody, context: CloneContext): void{
     super.copyFrom(src, context)
     this.__cadAsset = src.getCADAsset()
   }
@@ -72,7 +72,7 @@ class CADBody extends BaseGeomItem {
    * @param reader - The reader param.
    * @param context - The context param.
    */
-  readBinary(reader: BinReader, context: AssetLoadContext) {
+  readBinary(reader: BinReader, context: AssetLoadContext): void {
     super.readBinary(reader, context)
 
     // Cache only in debug mode.
@@ -114,7 +114,7 @@ class CADBody extends BaseGeomItem {
    * @param {number} flags - The flags param.
    * @return {object} - The return value.
    */
-  toJSON(context: Record<string, any>) {
+  toJSON(context: Record<string, any>): Record<string, any> {
     const j = super.toJSON()
     return j
   }
@@ -125,7 +125,7 @@ class CADBody extends BaseGeomItem {
    * @param {object} j - The j param.
    * @param {number} flags - The flags param.
    */
-  fromJSON(j: Record<string, any>) {
+  fromJSON(j: Record<string, any>): void{
     super.fromJSON(j)
   }
 }
