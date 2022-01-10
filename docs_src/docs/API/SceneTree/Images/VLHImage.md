@@ -7,82 +7,64 @@ custom_edit_url: null
 
 
 
-Class representing a VLH image.
+Class representing a LDR (low dynamic range) image.
 
-**Events**
+```
+const image = new VLHImage()
+image.load("https://storage.googleapis.com/zea-playground-assets/zea-engine/texture.png")
+```
+
+**Parameters**
+* **PreferredSize(`NumberParameter`):** _todo_
+
+**Events:**
 * **loaded:** Triggered when image data is loaded.
-* **updated:** Triggered when image data is updated.
+
+**File Types:** jpg, jpeg, png
 
 ## Hierarchy
 
-- [`BaseImage`](../SceneTree_BaseImage.BaseImage)
+- [`FileImage`](SceneTree_Images_FileImage.FileImage)
 
   ↳ **`VLHImage`**
-
-  ↳↳ [`EnvMap`](SceneTree_Images_EnvMap.EnvMap)
 
 ## Constructors
 
 ### constructor
 
-• **new VLHImage**(`name?`, `params?`)
+• **new VLHImage**(`name?`, `filePath?`, `params?`)
 
-Create a VLH image.
+Create a LDR image.
 
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `name?` | `string` | The name value. |
-| `params` | `Record`<`string`, `any`\> | The params value. |
+| `filePath?` | `string` | The filePath value. |
+| `params?` | `Record`<`string`, `any`\> | The params value. |
 
 #### Overrides
 
-[BaseImage](../SceneTree_BaseImage.BaseImage).[constructor](../SceneTree_BaseImage.BaseImage#constructor)
+[FileImage](SceneTree_Images_FileImage.FileImage).[constructor](SceneTree_Images_FileImage.FileImage#constructor)
 
 #### Defined in
 
-[SceneTree/Images/VLHImage.ts:28](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Images/VLHImage.ts#L28)
+[src/SceneTree/Images/VLHImage.ts:30](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Images/VLHImage.ts#L30)
 
 ## Properties
 
-### \_\_ambientLightFactor
-
-• `Protected` **\_\_ambientLightFactor**: `number`
-
-#### Defined in
-
-[SceneTree/Images/VLHImage.ts:18](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Images/VLHImage.ts#L18)
-
-___
-
 ### \_\_data
 
-• `Protected` **\_\_data**: `Record`<`string`, `any`\> = `{}`
+• `Protected` **\_\_data**: `HTMLImageElement` = `null`
+
+#### Inherited from
+
+[FileImage](SceneTree_Images_FileImage.FileImage).[__data](SceneTree_Images_FileImage.FileImage#__data)
 
 #### Defined in
 
-[SceneTree/Images/VLHImage.ts:21](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Images/VLHImage.ts#L21)
-
-___
-
-### \_\_exposure
-
-• `Protected` **\_\_exposure**: `number`
-
-#### Defined in
-
-[SceneTree/Images/VLHImage.ts:17](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Images/VLHImage.ts#L17)
-
-___
-
-### \_\_hdrTint
-
-• `Protected` **\_\_hdrTint**: [`Color`](../../Math/Math_Color.Color)
-
-#### Defined in
-
-[SceneTree/Images/VLHImage.ts:19](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Images/VLHImage.ts#L19)
+[src/SceneTree/Images/FileImage.ts:16](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Images/FileImage.ts#L16)
 
 ___
 
@@ -92,11 +74,11 @@ ___
 
 #### Inherited from
 
-[BaseImage](../SceneTree_BaseImage.BaseImage).[__id](../SceneTree_BaseImage.BaseImage#__id)
+[FileImage](SceneTree_Images_FileImage.FileImage).[__id](SceneTree_Images_FileImage.FileImage#__id)
 
 #### Defined in
 
-[Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/BaseClass.ts#L11)
+[src/Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/BaseClass.ts#L11)
 
 ___
 
@@ -106,11 +88,11 @@ ___
 
 #### Inherited from
 
-[BaseImage](../SceneTree_BaseImage.BaseImage).[__metaData](../SceneTree_BaseImage.BaseImage#__metadata)
+[FileImage](SceneTree_Images_FileImage.FileImage).[__metaData](SceneTree_Images_FileImage.FileImage#__metadata)
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:39](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/BaseItem.ts#L39)
+[src/SceneTree/BaseItem.ts:41](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BaseItem.ts#L41)
 
 ___
 
@@ -120,11 +102,11 @@ ___
 
 #### Inherited from
 
-[BaseImage](../SceneTree_BaseImage.BaseImage).[__name](../SceneTree_BaseImage.BaseImage#__name)
+[FileImage](SceneTree_Images_FileImage.FileImage).[__name](SceneTree_Images_FileImage.FileImage#__name)
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:34](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/BaseItem.ts#L34)
+[src/SceneTree/BaseItem.ts:36](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BaseItem.ts#L36)
 
 ___
 
@@ -134,11 +116,11 @@ ___
 
 #### Inherited from
 
-[BaseImage](../SceneTree_BaseImage.BaseImage).[__ownerItem](../SceneTree_BaseImage.BaseImage#__owneritem)
+[FileImage](SceneTree_Images_FileImage.FileImage).[__ownerItem](SceneTree_Images_FileImage.FileImage#__owneritem)
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:35](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/BaseItem.ts#L35)
+[src/SceneTree/BaseItem.ts:37](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BaseItem.ts#L37)
 
 ___
 
@@ -148,11 +130,11 @@ ___
 
 #### Inherited from
 
-[BaseImage](../SceneTree_BaseImage.BaseImage).[__path](../SceneTree_BaseImage.BaseImage#__path)
+[FileImage](SceneTree_Images_FileImage.FileImage).[__path](SceneTree_Images_FileImage.FileImage#__path)
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:36](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/BaseItem.ts#L36)
+[src/SceneTree/BaseItem.ts:38](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BaseItem.ts#L38)
 
 ___
 
@@ -162,11 +144,11 @@ ___
 
 #### Inherited from
 
-[BaseImage](../SceneTree_BaseImage.BaseImage).[__selectable](../SceneTree_BaseImage.BaseImage#__selectable)
+[FileImage](SceneTree_Images_FileImage.FileImage).[__selectable](SceneTree_Images_FileImage.FileImage#__selectable)
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:37](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/BaseItem.ts#L37)
+[src/SceneTree/BaseItem.ts:39](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BaseItem.ts#L39)
 
 ___
 
@@ -176,21 +158,25 @@ ___
 
 #### Inherited from
 
-[BaseImage](../SceneTree_BaseImage.BaseImage).[__selected](../SceneTree_BaseImage.BaseImage#__selected)
+[FileImage](SceneTree_Images_FileImage.FileImage).[__selected](SceneTree_Images_FileImage.FileImage#__selected)
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:38](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/BaseItem.ts#L38)
+[src/SceneTree/BaseItem.ts:40](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BaseItem.ts#L40)
 
 ___
 
-### \_\_stream
+### crossOrigin
 
-• `Protected` **\_\_stream**: `boolean`
+• **crossOrigin**: `string`
+
+#### Inherited from
+
+[FileImage](SceneTree_Images_FileImage.FileImage).[crossOrigin](SceneTree_Images_FileImage.FileImage#crossorigin)
 
 #### Defined in
 
-[SceneTree/Images/VLHImage.ts:20](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Images/VLHImage.ts#L20)
+[src/SceneTree/Images/FileImage.ts:14](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Images/FileImage.ts#L14)
 
 ___
 
@@ -200,11 +186,11 @@ ___
 
 #### Inherited from
 
-[BaseImage](../SceneTree_BaseImage.BaseImage).[deprecatedParamMapping](../SceneTree_BaseImage.BaseImage#deprecatedparammapping)
+[FileImage](SceneTree_Images_FileImage.FileImage).[deprecatedParamMapping](SceneTree_Images_FileImage.FileImage#deprecatedparammapping)
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:23](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L23)
+[src/SceneTree/ParameterOwner.ts:25](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L25)
 
 ___
 
@@ -214,11 +200,11 @@ ___
 
 #### Inherited from
 
-[BaseImage](../SceneTree_BaseImage.BaseImage).[format](../SceneTree_BaseImage.BaseImage#format)
+[FileImage](SceneTree_Images_FileImage.FileImage).[format](SceneTree_Images_FileImage.FileImage#format)
 
 #### Defined in
 
-[SceneTree/BaseImage.ts:14](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/BaseImage.ts#L14)
+[src/SceneTree/BaseImage.ts:31](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BaseImage.ts#L31)
 
 ___
 
@@ -228,11 +214,11 @@ ___
 
 #### Inherited from
 
-[BaseImage](../SceneTree_BaseImage.BaseImage).[height](../SceneTree_BaseImage.BaseImage#height)
+[FileImage](SceneTree_Images_FileImage.FileImage).[height](SceneTree_Images_FileImage.FileImage#height)
 
 #### Defined in
 
-[SceneTree/BaseImage.ts:13](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/BaseImage.ts#L13)
+[src/SceneTree/BaseImage.ts:30](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BaseImage.ts#L30)
 
 ___
 
@@ -242,11 +228,11 @@ ___
 
 #### Inherited from
 
-[BaseImage](../SceneTree_BaseImage.BaseImage).[listeners](../SceneTree_BaseImage.BaseImage#listeners)
+[FileImage](SceneTree_Images_FileImage.FileImage).[listeners](SceneTree_Images_FileImage.FileImage#listeners)
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/EventEmitter.ts#L26)
+[src/Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/EventEmitter.ts#L26)
 
 ___
 
@@ -256,39 +242,39 @@ ___
 
 #### Inherited from
 
-[BaseImage](../SceneTree_BaseImage.BaseImage).[loaded](../SceneTree_BaseImage.BaseImage#loaded)
+[FileImage](SceneTree_Images_FileImage.FileImage).[loaded](SceneTree_Images_FileImage.FileImage#loaded)
 
 #### Defined in
 
-[SceneTree/BaseImage.ts:22](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/BaseImage.ts#L22)
+[src/SceneTree/BaseImage.ts:33](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BaseImage.ts#L33)
 
 ___
 
 ### magFilter
 
-• `Protected` **magFilter**: `string` = `'LINEAR'`
+• **magFilter**: `string` = `'LINEAR'`
 
 #### Inherited from
 
-[BaseImage](../SceneTree_BaseImage.BaseImage).[magFilter](../SceneTree_BaseImage.BaseImage#magfilter)
+[FileImage](SceneTree_Images_FileImage.FileImage).[magFilter](SceneTree_Images_FileImage.FileImage#magfilter)
 
 #### Defined in
 
-[SceneTree/BaseImage.ts:21](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/BaseImage.ts#L21)
+[src/SceneTree/BaseImage.ts:38](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BaseImage.ts#L38)
 
 ___
 
 ### minFilter
 
-• `Protected` **minFilter**: `string` = `'LINEAR'`
+• **minFilter**: `string` = `'LINEAR'`
 
 #### Inherited from
 
-[BaseImage](../SceneTree_BaseImage.BaseImage).[minFilter](../SceneTree_BaseImage.BaseImage#minfilter)
+[FileImage](SceneTree_Images_FileImage.FileImage).[minFilter](SceneTree_Images_FileImage.FileImage#minfilter)
 
 #### Defined in
 
-[SceneTree/BaseImage.ts:20](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/BaseImage.ts#L20)
+[src/SceneTree/BaseImage.ts:37](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BaseImage.ts#L37)
 
 ___
 
@@ -298,11 +284,11 @@ ___
 
 #### Inherited from
 
-[BaseImage](../SceneTree_BaseImage.BaseImage).[mipMapped](../SceneTree_BaseImage.BaseImage#mipmapped)
+[FileImage](SceneTree_Images_FileImage.FileImage).[mipMapped](SceneTree_Images_FileImage.FileImage#mipmapped)
 
 #### Defined in
 
-[SceneTree/BaseImage.ts:16](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/BaseImage.ts#L16)
+[src/SceneTree/BaseImage.ts:34](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BaseImage.ts#L34)
 
 ___
 
@@ -312,11 +298,11 @@ ___
 
 #### Inherited from
 
-[BaseImage](../SceneTree_BaseImage.BaseImage).[paramEventListenerIDs](../SceneTree_BaseImage.BaseImage#parameventlistenerids)
+[FileImage](SceneTree_Images_FileImage.FileImage).[paramEventListenerIDs](SceneTree_Images_FileImage.FileImage#parameventlistenerids)
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:20](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L20)
+[src/SceneTree/ParameterOwner.ts:22](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L22)
 
 ___
 
@@ -326,11 +312,11 @@ ___
 
 #### Inherited from
 
-[BaseImage](../SceneTree_BaseImage.BaseImage).[paramMapping](../SceneTree_BaseImage.BaseImage#parammapping)
+[FileImage](SceneTree_Images_FileImage.FileImage).[paramMapping](SceneTree_Images_FileImage.FileImage#parammapping)
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:21](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L21)
+[src/SceneTree/ParameterOwner.ts:23](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L23)
 
 ___
 
@@ -340,11 +326,11 @@ ___
 
 #### Inherited from
 
-[BaseImage](../SceneTree_BaseImage.BaseImage).[params](../SceneTree_BaseImage.BaseImage#params)
+[FileImage](SceneTree_Images_FileImage.FileImage).[params](SceneTree_Images_FileImage.FileImage#params)
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:22](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L22)
+[src/SceneTree/ParameterOwner.ts:24](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L24)
 
 ___
 
@@ -354,11 +340,25 @@ ___
 
 #### Inherited from
 
-[BaseImage](../SceneTree_BaseImage.BaseImage).[type](../SceneTree_BaseImage.BaseImage#type)
+[FileImage](SceneTree_Images_FileImage.FileImage).[type](SceneTree_Images_FileImage.FileImage#type)
 
 #### Defined in
 
-[SceneTree/BaseImage.ts:15](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/BaseImage.ts#L15)
+[src/SceneTree/BaseImage.ts:32](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BaseImage.ts#L32)
+
+___
+
+### url
+
+• **url**: `string`
+
+#### Inherited from
+
+[FileImage](SceneTree_Images_FileImage.FileImage).[url](SceneTree_Images_FileImage.FileImage#url)
+
+#### Defined in
+
+[src/SceneTree/Images/FileImage.ts:15](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Images/FileImage.ts#L15)
 
 ___
 
@@ -368,63 +368,41 @@ ___
 
 #### Inherited from
 
-[BaseImage](../SceneTree_BaseImage.BaseImage).[width](../SceneTree_BaseImage.BaseImage#width)
+[FileImage](SceneTree_Images_FileImage.FileImage).[width](SceneTree_Images_FileImage.FileImage#width)
 
 #### Defined in
 
-[SceneTree/BaseImage.ts:12](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/BaseImage.ts#L12)
+[src/SceneTree/BaseImage.ts:29](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BaseImage.ts#L29)
 
 ___
 
 ### wrapS
 
-• `Protected` **wrapS**: `string` = `'REPEAT'`
+• **wrapS**: `string` = `'REPEAT'`
 
 #### Inherited from
 
-[BaseImage](../SceneTree_BaseImage.BaseImage).[wrapS](../SceneTree_BaseImage.BaseImage#wraps)
+[FileImage](SceneTree_Images_FileImage.FileImage).[wrapS](SceneTree_Images_FileImage.FileImage#wraps)
 
 #### Defined in
 
-[SceneTree/BaseImage.ts:18](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/BaseImage.ts#L18)
+[src/SceneTree/BaseImage.ts:35](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BaseImage.ts#L35)
 
 ___
 
 ### wrapT
 
-• `Protected` **wrapT**: `string` = `'REPEAT'`
+• **wrapT**: `string` = `'REPEAT'`
 
 #### Inherited from
 
-[BaseImage](../SceneTree_BaseImage.BaseImage).[wrapT](../SceneTree_BaseImage.BaseImage#wrapt)
+[FileImage](SceneTree_Images_FileImage.FileImage).[wrapT](SceneTree_Images_FileImage.FileImage#wrapt)
 
 #### Defined in
 
-[SceneTree/BaseImage.ts:19](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/BaseImage.ts#L19)
+[src/SceneTree/BaseImage.ts:36](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BaseImage.ts#L36)
 
 ## Methods
-
-### \_\_decodeData
-
-▸ `Private` **__decodeData**(`entries`): `Promise`<`void`\>
-
-The __decodeData method.
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `entries` | `Record`<`string`, `any`\> | The entries value. |
-
-#### Returns
-
-`Promise`<`void`\>
-
-#### Defined in
-
-[SceneTree/Images/VLHImage.ts:51](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Images/VLHImage.ts#L51)
-
-___
 
 ### addParameter
 
@@ -448,11 +426,11 @@ Adds `Parameter` object to the owner's parameter list.
 
 #### Inherited from
 
-[BaseImage](../SceneTree_BaseImage.BaseImage).[addParameter](../SceneTree_BaseImage.BaseImage#addparameter)
+[FileImage](SceneTree_Images_FileImage.FileImage).[addParameter](SceneTree_Images_FileImage.FileImage#addparameter)
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:133](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L133)
+[src/SceneTree/ParameterOwner.ts:135](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L135)
 
 ___
 
@@ -478,11 +456,11 @@ This is used to handle migrating parameters to new names.
 
 #### Inherited from
 
-[BaseImage](../SceneTree_BaseImage.BaseImage).[addParameterDeprecationMapping](../SceneTree_BaseImage.BaseImage#addparameterdeprecationmapping)
+[FileImage](SceneTree_Images_FileImage.FileImage).[addParameterDeprecationMapping](SceneTree_Images_FileImage.FileImage#addparameterdeprecationmapping)
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:90](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L90)
+[src/SceneTree/ParameterOwner.ts:92](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L92)
 
 ___
 
@@ -498,7 +476,7 @@ Clones this base item and returns a new base item.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `context?` | `Record`<`string`, `any`\> | The context value. |
+| `context?` | [`CloneContext`](../SceneTree_CloneContext.CloneContext) | The context value. |
 
 #### Returns
 
@@ -506,11 +484,11 @@ Clones this base item and returns a new base item.
 
 #### Inherited from
 
-[BaseImage](../SceneTree_BaseImage.BaseImage).[clone](../SceneTree_BaseImage.BaseImage#clone)
+[FileImage](SceneTree_Images_FileImage.FileImage).[clone](SceneTree_Images_FileImage.FileImage#clone)
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:317](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/BaseItem.ts#L317)
+[src/SceneTree/BaseItem.ts:319](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BaseItem.ts#L319)
 
 ___
 
@@ -531,7 +509,7 @@ data from the source object.
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `src` | [`BaseItem`](../SceneTree_BaseItem.BaseItem) | The BaseItem to copy from. |
-| `context?` | `Record`<`string`, `any`\> | The context value |
+| `context?` | [`CloneContext`](../SceneTree_CloneContext.CloneContext) | The context value |
 
 #### Returns
 
@@ -539,11 +517,11 @@ data from the source object.
 
 #### Inherited from
 
-[BaseImage](../SceneTree_BaseImage.BaseImage).[copyFrom](../SceneTree_BaseImage.BaseImage#copyfrom)
+[FileImage](SceneTree_Images_FileImage.FileImage).[copyFrom](SceneTree_Images_FileImage.FileImage#copyfrom)
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:333](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/BaseItem.ts#L333)
+[src/SceneTree/BaseItem.ts:335](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BaseItem.ts#L335)
 
 ___
 
@@ -565,11 +543,11 @@ Removes metadata for a given key.
 
 #### Inherited from
 
-[BaseImage](../SceneTree_BaseImage.BaseImage).[deleteMetadata](../SceneTree_BaseImage.BaseImage#deletemetadata)
+[FileImage](SceneTree_Images_FileImage.FileImage).[deleteMetadata](SceneTree_Images_FileImage.FileImage#deletemetadata)
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:261](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/BaseItem.ts#L261)
+[src/SceneTree/BaseItem.ts:263](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BaseItem.ts#L263)
 
 ___
 
@@ -592,17 +570,17 @@ Triggers all listener functions in an event.
 
 #### Inherited from
 
-[BaseImage](../SceneTree_BaseImage.BaseImage).[emit](../SceneTree_BaseImage.BaseImage#emit)
+[FileImage](SceneTree_Images_FileImage.FileImage).[emit](SceneTree_Images_FileImage.FileImage#emit)
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/EventEmitter.ts#L154)
+[src/Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/EventEmitter.ts#L154)
 
 ___
 
 ### fromJSON
 
-▸ **fromJSON**(`json`, `context`): `Record`<`string`, `any`\>
+▸ **fromJSON**(`json`, `context?`): `void`
 
 The fromJSON method decodes a json object for this type.
 
@@ -611,19 +589,19 @@ The fromJSON method decodes a json object for this type.
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `json` | `Record`<`string`, `any`\> | The json object this item must decode. |
-| `context` | `Record`<`string`, `any`\> | The context value. |
+| `context?` | `Record`<`string`, `any`\> | The context value. |
 
 #### Returns
 
-`Record`<`string`, `any`\>
+`void`
 
-#### Overrides
+#### Inherited from
 
-[BaseImage](../SceneTree_BaseImage.BaseImage).[fromJSON](../SceneTree_BaseImage.BaseImage#fromjson)
+[FileImage](SceneTree_Images_FileImage.FileImage).[fromJSON](SceneTree_Images_FileImage.FileImage#fromjson)
 
 #### Defined in
 
-[SceneTree/Images/VLHImage.ts:179](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Images/VLHImage.ts#L179)
+[src/SceneTree/Images/FileImage.ts:146](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Images/FileImage.ts#L146)
 
 ___
 
@@ -641,29 +619,32 @@ Returns the unmangled name of the class.
 
 #### Inherited from
 
-[BaseImage](../SceneTree_BaseImage.BaseImage).[getClassName](../SceneTree_BaseImage.BaseImage#getclassname)
+[FileImage](SceneTree_Images_FileImage.FileImage).[getClassName](SceneTree_Images_FileImage.FileImage#getclassname)
 
 #### Defined in
 
-[Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/BaseClass.ts#L33)
+[src/Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/BaseClass.ts#L33)
 
 ___
 
-### getHDRTint
+### getDOMElement
 
-▸ `Private` **getHDRTint**(): [`Color`](../../Math/Math_Color.Color)
+▸ **getDOMElement**(): `HTMLImageElement`
 
-The getHDRTint method.
+Returns the HTML DOM element used to load the image file.
+Be
 
 #### Returns
 
-[`Color`](../../Math/Math_Color.Color)
+`HTMLImageElement`
 
-- The return value.
+#### Inherited from
+
+[FileImage](SceneTree_Images_FileImage.FileImage).[getDOMElement](SceneTree_Images_FileImage.FileImage#getdomelement)
 
 #### Defined in
 
-[SceneTree/Images/VLHImage.ts:157](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Images/VLHImage.ts#L157)
+[src/SceneTree/Images/FileImage.ts:51](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Images/FileImage.ts#L51)
 
 ___
 
@@ -683,11 +664,11 @@ Returns the unique id of the object.
 
 #### Inherited from
 
-[BaseImage](../SceneTree_BaseImage.BaseImage).[getId](../SceneTree_BaseImage.BaseImage#getid)
+[FileImage](SceneTree_Images_FileImage.FileImage).[getId](SceneTree_Images_FileImage.FileImage#getid)
 
 #### Defined in
 
-[Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/BaseClass.ts#L25)
+[src/Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/BaseClass.ts#L25)
 
 ___
 
@@ -711,11 +692,11 @@ Gets Item's meta-data value by passing the `key` string.
 
 #### Inherited from
 
-[BaseImage](../SceneTree_BaseImage.BaseImage).[getMetadata](../SceneTree_BaseImage.BaseImage#getmetadata)
+[FileImage](SceneTree_Images_FileImage.FileImage).[getMetadata](SceneTree_Images_FileImage.FileImage#getmetadata)
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:232](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/BaseItem.ts#L232)
+[src/SceneTree/BaseItem.ts:234](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BaseItem.ts#L234)
 
 ___
 
@@ -733,11 +714,11 @@ Returns the name of the base item.
 
 #### Inherited from
 
-[BaseImage](../SceneTree_BaseImage.BaseImage).[getName](../SceneTree_BaseImage.BaseImage#getname)
+[FileImage](SceneTree_Images_FileImage.FileImage).[getName](SceneTree_Images_FileImage.FileImage#getname)
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:74](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/BaseItem.ts#L74)
+[src/SceneTree/BaseItem.ts:76](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BaseItem.ts#L76)
 
 ___
 
@@ -755,11 +736,11 @@ Returns the number of parameters current object has.
 
 #### Inherited from
 
-[BaseImage](../SceneTree_BaseImage.BaseImage).[getNumParameters](../SceneTree_BaseImage.BaseImage#getnumparameters)
+[FileImage](SceneTree_Images_FileImage.FileImage).[getNumParameters](SceneTree_Images_FileImage.FileImage#getnumparameters)
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:39](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L39)
+[src/SceneTree/ParameterOwner.ts:41](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L41)
 
 ___
 
@@ -778,11 +759,11 @@ The item is a child of the current owner.
 
 #### Inherited from
 
-[BaseImage](../SceneTree_BaseImage.BaseImage).[getOwner](../SceneTree_BaseImage.BaseImage#getowner)
+[FileImage](SceneTree_Images_FileImage.FileImage).[getOwner](SceneTree_Images_FileImage.FileImage#getowner)
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:154](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/BaseItem.ts#L154)
+[src/SceneTree/BaseItem.ts:156](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BaseItem.ts#L156)
 
 ___
 
@@ -806,11 +787,11 @@ Returns `Parameter` object using the given name
 
 #### Inherited from
 
-[BaseImage](../SceneTree_BaseImage.BaseImage).[getParameter](../SceneTree_BaseImage.BaseImage#getparameter)
+[FileImage](SceneTree_Images_FileImage.FileImage).[getParameter](SceneTree_Images_FileImage.FileImage#getparameter)
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:100](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L100)
+[src/SceneTree/ParameterOwner.ts:102](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L102)
 
 ___
 
@@ -834,11 +815,11 @@ Returns `Parameter` object in a given index
 
 #### Inherited from
 
-[BaseImage](../SceneTree_BaseImage.BaseImage).[getParameterByIndex](../SceneTree_BaseImage.BaseImage#getparameterbyindex)
+[FileImage](SceneTree_Images_FileImage.FileImage).[getParameterByIndex](SceneTree_Images_FileImage.FileImage#getparameterbyindex)
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:68](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L68)
+[src/SceneTree/ParameterOwner.ts:70](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L70)
 
 ___
 
@@ -862,11 +843,11 @@ Returns the index of a parameter in parameter list.
 
 #### Inherited from
 
-[BaseImage](../SceneTree_BaseImage.BaseImage).[getParameterIndex](../SceneTree_BaseImage.BaseImage#getparameterindex)
+[FileImage](SceneTree_Images_FileImage.FileImage).[getParameterIndex](SceneTree_Images_FileImage.FileImage#getparameterindex)
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:58](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L58)
+[src/SceneTree/ParameterOwner.ts:60](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L60)
 
 ___
 
@@ -884,33 +865,33 @@ Returns all the parameters of the object.
 
 #### Inherited from
 
-[BaseImage](../SceneTree_BaseImage.BaseImage).[getParameters](../SceneTree_BaseImage.BaseImage#getparameters)
+[FileImage](SceneTree_Images_FileImage.FileImage).[getParameters](SceneTree_Images_FileImage.FileImage#getparameters)
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:48](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L48)
+[src/SceneTree/ParameterOwner.ts:50](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L50)
 
 ___
 
 ### getParams
 
-▸ **getParams**(): `Record`<`string`, `any`\>
+▸ **getParams**(): [`ImageParams`](../SceneTree_BaseImage.ImageParams)
 
-Returns all parameters and class state values.
+The getParams method.
 
 #### Returns
 
-`Record`<`string`, `any`\>
+[`ImageParams`](../SceneTree_BaseImage.ImageParams)
 
 - The return value.
 
-#### Overrides
+#### Inherited from
 
-[BaseImage](../SceneTree_BaseImage.BaseImage).[getParams](../SceneTree_BaseImage.BaseImage#getparams)
+[FileImage](SceneTree_Images_FileImage.FileImage).[getParams](SceneTree_Images_FileImage.FileImage#getparams)
 
 #### Defined in
 
-[SceneTree/Images/VLHImage.ts:134](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Images/VLHImage.ts#L134)
+[src/SceneTree/Images/FileImage.ts:122](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Images/FileImage.ts#L122)
 
 ___
 
@@ -928,11 +909,11 @@ Returns the current path of the item in the tree as an array of names.
 
 #### Inherited from
 
-[BaseImage](../SceneTree_BaseImage.BaseImage).[getPath](../SceneTree_BaseImage.BaseImage#getpath)
+[FileImage](SceneTree_Images_FileImage.FileImage).[getPath](SceneTree_Images_FileImage.FileImage#getpath)
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:111](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/BaseItem.ts#L111)
+[src/SceneTree/BaseItem.ts:113](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BaseItem.ts#L113)
 
 ___
 
@@ -956,11 +937,11 @@ Checks to see if there is metadata for a given key.
 
 #### Inherited from
 
-[BaseImage](../SceneTree_BaseImage.BaseImage).[hasMetadata](../SceneTree_BaseImage.BaseImage#hasmetadata)
+[FileImage](SceneTree_Images_FileImage.FileImage).[hasMetadata](SceneTree_Images_FileImage.FileImage#hasmetadata)
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:242](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/BaseItem.ts#L242)
+[src/SceneTree/BaseItem.ts:244](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BaseItem.ts#L244)
 
 ___
 
@@ -984,11 +965,11 @@ Validates if the specified parameter exists in the object.
 
 #### Inherited from
 
-[BaseImage](../SceneTree_BaseImage.BaseImage).[hasParameter](../SceneTree_BaseImage.BaseImage#hasparameter)
+[FileImage](SceneTree_Images_FileImage.FileImage).[hasParameter](SceneTree_Images_FileImage.FileImage#hasparameter)
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:78](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L78)
+[src/SceneTree/ParameterOwner.ts:80](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L80)
 
 ___
 
@@ -1016,11 +997,11 @@ It replaces the event in the specified index.
 
 #### Inherited from
 
-[BaseImage](../SceneTree_BaseImage.BaseImage).[insertParameter](../SceneTree_BaseImage.BaseImage#insertparameter)
+[FileImage](SceneTree_Images_FileImage.FileImage).[insertParameter](SceneTree_Images_FileImage.FileImage#insertparameter)
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:147](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L147)
+[src/SceneTree/ParameterOwner.ts:149](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L149)
 
 ___
 
@@ -1038,11 +1019,11 @@ Returns true if loaded.
 
 #### Inherited from
 
-[BaseImage](../SceneTree_BaseImage.BaseImage).[isLoaded](../SceneTree_BaseImage.BaseImage#isloaded)
+[FileImage](SceneTree_Images_FileImage.FileImage).[isLoaded](SceneTree_Images_FileImage.FileImage#isloaded)
 
 #### Defined in
 
-[SceneTree/BaseImage.ts:48](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/BaseImage.ts#L48)
+[src/SceneTree/BaseImage.ts:56](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BaseImage.ts#L56)
 
 ___
 
@@ -1060,11 +1041,11 @@ Returns a boolean indicating if this item is selectable.
 
 #### Inherited from
 
-[BaseImage](../SceneTree_BaseImage.BaseImage).[isSelectable](../SceneTree_BaseImage.BaseImage#isselectable)
+[FileImage](SceneTree_Images_FileImage.FileImage).[isSelectable](SceneTree_Images_FileImage.FileImage#isselectable)
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:183](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/BaseItem.ts#L183)
+[src/SceneTree/BaseItem.ts:185](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BaseItem.ts#L185)
 
 ___
 
@@ -1082,53 +1063,41 @@ The isSelected method.
 
 #### Inherited from
 
-[BaseImage](../SceneTree_BaseImage.BaseImage).[isSelected](../SceneTree_BaseImage.BaseImage#isselected)
+[FileImage](SceneTree_Images_FileImage.FileImage).[isSelected](SceneTree_Images_FileImage.FileImage#isselected)
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:207](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/BaseItem.ts#L207)
-
-___
-
-### isStream
-
-▸ **isStream**(): `boolean`
-
-Returns if the data is a stream or not.
-
-#### Returns
-
-`boolean`
-
-- The return value.
-
-#### Defined in
-
-[SceneTree/Images/VLHImage.ts:125](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Images/VLHImage.ts#L125)
+[src/SceneTree/BaseItem.ts:209](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BaseItem.ts#L209)
 
 ___
 
 ### load
 
-▸ **load**(`url`): `Promise`<`void`\>
+▸ **load**(`url`, `format?`): `Promise`<`void`\>
 
-Loads a vlh file given a URL.
+Uses the specify url to load an Image element and adds it to the data library.
+Sets the state of the current object.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `url` | `string` | The URL of the vlh file to load |
+| Name | Type | Default value | Description |
+| :------ | :------ | :------ | :------ |
+| `url` | `string` | `undefined` | The url value. |
+| `format` | `string` | `'RGB'` | The format value. |
 
 #### Returns
 
 `Promise`<`void`\>
 
-- Returns a promise that resolves once the initial load is complete
+Returns a promise that resolves once the image is loaded.
+
+#### Inherited from
+
+[FileImage](SceneTree_Images_FileImage.FileImage).[load](SceneTree_Images_FileImage.FileImage#load)
 
 #### Defined in
 
-[SceneTree/Images/VLHImage.ts:85](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Images/VLHImage.ts#L85)
+[src/SceneTree/Images/FileImage.ts:63](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Images/FileImage.ts#L63)
 
 ___
 
@@ -1151,11 +1120,11 @@ Removes a listener function from the specified event, using either the function 
 
 #### Inherited from
 
-[BaseImage](../SceneTree_BaseImage.BaseImage).[off](../SceneTree_BaseImage.BaseImage#off)
+[FileImage](SceneTree_Images_FileImage.FileImage).[off](SceneTree_Images_FileImage.FileImage#off)
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/EventEmitter.ts#L97)
+[src/Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/EventEmitter.ts#L97)
 
 ___
 
@@ -1180,11 +1149,11 @@ Adds a listener function for a given event name.
 
 #### Inherited from
 
-[BaseImage](../SceneTree_BaseImage.BaseImage).[on](../SceneTree_BaseImage.BaseImage#on)
+[FileImage](SceneTree_Images_FileImage.FileImage).[on](SceneTree_Images_FileImage.FileImage#on)
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/EventEmitter.ts#L44)
+[src/Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/EventEmitter.ts#L44)
 
 ___
 
@@ -1218,11 +1187,11 @@ asset.once('loaded', () => {
 
 #### Inherited from
 
-[BaseImage](../SceneTree_BaseImage.BaseImage).[once](../SceneTree_BaseImage.BaseImage#once)
+[FileImage](SceneTree_Images_FileImage.FileImage).[once](SceneTree_Images_FileImage.FileImage#once)
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/EventEmitter.ts#L82)
+[src/Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/EventEmitter.ts#L82)
 
 ___
 
@@ -1245,11 +1214,11 @@ to perform general updates (see GLPass or BaseItem).
 
 #### Inherited from
 
-[BaseImage](../SceneTree_BaseImage.BaseImage).[parameterValueChanged](../SceneTree_BaseImage.BaseImage#parametervaluechanged)
+[FileImage](SceneTree_Images_FileImage.FileImage).[parameterValueChanged](SceneTree_Images_FileImage.FileImage#parametervaluechanged)
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:122](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L122)
+[src/SceneTree/ParameterOwner.ts:124](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L124)
 
 ___
 
@@ -1257,26 +1226,26 @@ ___
 
 ▸ **readBinary**(`reader`, `context`): `void`
 
-Sets state of current Image using a binary reader object, and adds it to the resource loader.
+The readBinary method.
 
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `reader` | [`BinReader`](../SceneTree_BinReader.BinReader) | The reader value. |
-| `context` | `Record`<`string`, `any`\> | The context value. |
+| `reader` | [`BinReader`](../SceneTree_BinReader.BinReader) | The reader param. |
+| `context` | [`AssetLoadContext`](../SceneTree_AssetLoadContext.AssetLoadContext) | The context param. |
 
 #### Returns
 
 `void`
 
-#### Overrides
+#### Inherited from
 
-[BaseImage](../SceneTree_BaseImage.BaseImage).[readBinary](../SceneTree_BaseImage.BaseImage#readbinary)
+[FileImage](SceneTree_Images_FileImage.FileImage).[readBinary](SceneTree_Images_FileImage.FileImage#readbinary)
 
 #### Defined in
 
-[SceneTree/Images/VLHImage.ts:189](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Images/VLHImage.ts#L189)
+[src/SceneTree/Images/FileImage.ts:153](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Images/FileImage.ts#L153)
 
 ___
 
@@ -1299,11 +1268,11 @@ remove listener by ID returned from #on
 
 #### Inherited from
 
-[BaseImage](../SceneTree_BaseImage.BaseImage).[removeListenerById](../SceneTree_BaseImage.BaseImage#removelistenerbyid)
+[FileImage](SceneTree_Images_FileImage.FileImage).[removeListenerById](SceneTree_Images_FileImage.FileImage#removelistenerbyid)
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/EventEmitter.ts#L134)
+[src/Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/EventEmitter.ts#L134)
 
 ___
 
@@ -1327,11 +1296,11 @@ Removes `Parameter` from owner, by using parameter's name.
 
 #### Inherited from
 
-[BaseImage](../SceneTree_BaseImage.BaseImage).[removeParameter](../SceneTree_BaseImage.BaseImage#removeparameter)
+[FileImage](SceneTree_Images_FileImage.FileImage).[removeParameter](SceneTree_Images_FileImage.FileImage#removeparameter)
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:174](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L174)
+[src/SceneTree/ParameterOwner.ts:176](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L176)
 
 ___
 
@@ -1355,11 +1324,11 @@ Replaces old `Parameter` by passing a new one with the same name.
 
 #### Inherited from
 
-[BaseImage](../SceneTree_BaseImage.BaseImage).[replaceParameter](../SceneTree_BaseImage.BaseImage#replaceparameter)
+[FileImage](SceneTree_Images_FileImage.FileImage).[replaceParameter](SceneTree_Images_FileImage.FileImage#replaceparameter)
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:196](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L196)
+[src/SceneTree/ParameterOwner.ts:198](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L198)
 
 ___
 
@@ -1386,33 +1355,71 @@ end of the path.
 
 #### Inherited from
 
-[BaseImage](../SceneTree_BaseImage.BaseImage).[resolvePath](../SceneTree_BaseImage.BaseImage#resolvepath)
+[FileImage](SceneTree_Images_FileImage.FileImage).[resolvePath](SceneTree_Images_FileImage.FileImage#resolvepath)
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:126](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/BaseItem.ts#L126)
+[src/SceneTree/BaseItem.ts:128](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BaseItem.ts#L128)
 
 ___
 
-### setHDRTint
+### setCrossOrigin
 
-▸ `Private` **setHDRTint**(`hdrTint`): `void`
+▸ **setCrossOrigin**(`crossOrigin`): `void`
 
-The setHDRTint method.
+Defines how to handle cross origin request.
+
+**Possible values:**
+* **anonymous** - CORS requests for this element will have the credentials flag set to 'same-origin'.
+* **use-credentials** - CORS requests for this element will have the credentials flag set to 'include'.
+* **""** - Setting the attribute name to an empty value, like crossorigin or crossorigin="", is the same as anonymous.
+
+**`default`** anonymous
 
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `hdrTint` | [`Color`](../../Math/Math_Color.Color) | The hdrTint value. |
+| `crossOrigin` | `string` | The crossOrigin value. |
 
 #### Returns
 
 `void`
 
+#### Inherited from
+
+[FileImage](SceneTree_Images_FileImage.FileImage).[setCrossOrigin](SceneTree_Images_FileImage.FileImage#setcrossorigin)
+
 #### Defined in
 
-[SceneTree/Images/VLHImage.ts:148](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Images/VLHImage.ts#L148)
+[src/SceneTree/Images/FileImage.ts:42](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Images/FileImage.ts#L42)
+
+___
+
+### setImageURL
+
+▸ **setImageURL**(`url`, `format?`): `void`
+
+Loads in Image file using the given URL
+
+#### Parameters
+
+| Name | Type | Default value | Description |
+| :------ | :------ | :------ | :------ |
+| `url` | `string` | `undefined` | The url value. |
+| `format` | `string` | `'RGB'` | The format value. Can be 'RGB' or 'RGBA' for files that contain an alpha channel. This will cause objects to be drawn using the Transparent pass. |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[FileImage](SceneTree_Images_FileImage.FileImage).[setImageURL](SceneTree_Images_FileImage.FileImage#setimageurl)
+
+#### Defined in
+
+[src/SceneTree/Images/FileImage.ts:114](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Images/FileImage.ts#L114)
 
 ___
 
@@ -1435,11 +1442,11 @@ Assigns metadata to a given key.
 
 #### Inherited from
 
-[BaseImage](../SceneTree_BaseImage.BaseImage).[setMetadata](../SceneTree_BaseImage.BaseImage#setmetadata)
+[FileImage](SceneTree_Images_FileImage.FileImage).[setMetadata](SceneTree_Images_FileImage.FileImage#setmetadata)
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:252](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/BaseItem.ts#L252)
+[src/SceneTree/BaseItem.ts:254](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BaseItem.ts#L254)
 
 ___
 
@@ -1463,11 +1470,11 @@ Sets the name of the base item(Updates path).
 
 #### Inherited from
 
-[BaseImage](../SceneTree_BaseImage.BaseImage).[setName](../SceneTree_BaseImage.BaseImage#setname)
+[FileImage](SceneTree_Images_FileImage.FileImage).[setName](SceneTree_Images_FileImage.FileImage#setname)
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:84](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/BaseItem.ts#L84)
+[src/SceneTree/BaseItem.ts:86](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BaseItem.ts#L86)
 
 ___
 
@@ -1489,11 +1496,11 @@ The setOwner method assigns a new owner to the item.
 
 #### Inherited from
 
-[BaseImage](../SceneTree_BaseImage.BaseImage).[setOwner](../SceneTree_BaseImage.BaseImage#setowner)
+[FileImage](SceneTree_Images_FileImage.FileImage).[setOwner](SceneTree_Images_FileImage.FileImage#setowner)
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:164](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/BaseItem.ts#L164)
+[src/SceneTree/BaseItem.ts:166](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BaseItem.ts#L166)
 
 ___
 
@@ -1517,11 +1524,11 @@ Modifies the selectability of this item.
 
 #### Inherited from
 
-[BaseImage](../SceneTree_BaseImage.BaseImage).[setSelectable](../SceneTree_BaseImage.BaseImage#setselectable)
+[FileImage](SceneTree_Images_FileImage.FileImage).[setSelectable](SceneTree_Images_FileImage.FileImage#setselectable)
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:193](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/BaseItem.ts#L193)
+[src/SceneTree/BaseItem.ts:195](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BaseItem.ts#L195)
 
 ___
 
@@ -1545,17 +1552,17 @@ Changes the current state of the selection of this item.
 
 #### Inherited from
 
-[BaseImage](../SceneTree_BaseImage.BaseImage).[setSelected](../SceneTree_BaseImage.BaseImage#setselected)
+[FileImage](SceneTree_Images_FileImage.FileImage).[setSelected](SceneTree_Images_FileImage.FileImage#setselected)
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:217](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/BaseItem.ts#L217)
+[src/SceneTree/BaseItem.ts:219](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BaseItem.ts#L219)
 
 ___
 
 ### toJSON
 
-▸ **toJSON**(`context?`): `Record`<`string`, `any`\>
+▸ **toJSON**(`context?`): `Object`
 
 The toJSON method encodes this type as a json object for persistence.
 
@@ -1567,15 +1574,15 @@ The toJSON method encodes this type as a json object for persistence.
 
 #### Returns
 
-`Record`<`string`, `any`\>
+`Object`
 
-#### Overrides
+#### Inherited from
 
-[BaseImage](../SceneTree_BaseImage.BaseImage).[toJSON](../SceneTree_BaseImage.BaseImage#tojson)
+[FileImage](SceneTree_Images_FileImage.FileImage).[toJSON](SceneTree_Images_FileImage.FileImage#tojson)
 
 #### Defined in
 
-[SceneTree/Images/VLHImage.ts:169](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Images/VLHImage.ts#L169)
+[src/SceneTree/Images/FileImage.ts:137](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Images/FileImage.ts#L137)
 
 ___
 
@@ -1599,11 +1606,11 @@ Converts object's JSON value and converts it to a string.
 
 #### Inherited from
 
-[BaseImage](../SceneTree_BaseImage.BaseImage).[toString](../SceneTree_BaseImage.BaseImage#tostring)
+[FileImage](SceneTree_Images_FileImage.FileImage).[toString](SceneTree_Images_FileImage.FileImage#tostring)
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:301](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L301)
+[src/SceneTree/ParameterOwner.ts:303](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L303)
 
 ___
 
@@ -1620,11 +1627,11 @@ recomputes and caches the path of this item.
 
 #### Inherited from
 
-[BaseImage](../SceneTree_BaseImage.BaseImage).[updatePath](../SceneTree_BaseImage.BaseImage#updatepath)
+[FileImage](SceneTree_Images_FileImage.FileImage).[updatePath](SceneTree_Images_FileImage.FileImage#updatepath)
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:99](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/BaseItem.ts#L99)
+[src/SceneTree/BaseItem.ts:101](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BaseItem.ts#L101)
 
 ___
 
@@ -1643,9 +1650,9 @@ This method is used in debugging memory consumption.
 
 #### Inherited from
 
-[BaseImage](../SceneTree_BaseImage.BaseImage).[getNumBaseItems](../SceneTree_BaseImage.BaseImage#getnumbaseitems)
+[FileImage](SceneTree_Images_FileImage.FileImage).[getNumBaseItems](SceneTree_Images_FileImage.FileImage#getnumbaseitems)
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:62](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/BaseItem.ts#L62)
+[src/SceneTree/BaseItem.ts:64](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BaseItem.ts#L64)
 

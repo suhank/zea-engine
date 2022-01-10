@@ -13,7 +13,7 @@ import { BoundingBoxShader } from '../Shaders/BoundingBoxShader'
 // @ts-ignore
 import GLGeomItemLibraryCullingWorker from 'web-worker:./GLGeomItemLibraryCulling-worker'
 import { GeomItem } from '../../SceneTree/GeomItem'
-import { GLBaseRenderer } from '../GLBaseRenderer'
+import { GLBaseRenderer, RendererOptions } from '../GLBaseRenderer'
 import { Material } from '../../SceneTree/Material'
 import { GeomDataRenderState, RenderState } from '../types/renderer'
 import { StateChangedEvent } from '../../Utilities/Events/StateChangedEvent'
@@ -90,7 +90,7 @@ class GLGeomItemLibrary extends EventEmitter {
    * @param renderer - The renderer instance
    * @param options - The options object passed to the GLRenderer constructor.
    */
-  constructor(renderer: GLBaseRenderer, options: Record<string, any>) {
+  constructor(renderer: GLBaseRenderer, options: RendererOptions ) {
     super()
 
     this.renderer = renderer

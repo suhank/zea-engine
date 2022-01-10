@@ -33,7 +33,7 @@ Create a material
 
 #### Defined in
 
-[SceneTree/Materials/PointsMaterial.ts:14](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Materials/PointsMaterial.ts#L14)
+[src/SceneTree/Materials/PointsMaterial.ts:14](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Materials/PointsMaterial.ts#L14)
 
 ## Properties
 
@@ -47,7 +47,7 @@ Create a material
 
 #### Defined in
 
-[Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/BaseClass.ts#L11)
+[src/Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/BaseClass.ts#L11)
 
 ___
 
@@ -61,7 +61,7 @@ ___
 
 #### Defined in
 
-[SceneTree/Material.ts:32](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Material.ts#L32)
+[src/SceneTree/Material.ts:33](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Material.ts#L33)
 
 ___
 
@@ -75,7 +75,7 @@ ___
 
 #### Defined in
 
-[SceneTree/Material.ts:31](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Material.ts#L31)
+[src/SceneTree/Material.ts:32](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Material.ts#L32)
 
 ___
 
@@ -89,7 +89,7 @@ ___
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:39](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/BaseItem.ts#L39)
+[src/SceneTree/BaseItem.ts:41](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BaseItem.ts#L41)
 
 ___
 
@@ -103,7 +103,7 @@ ___
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:34](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/BaseItem.ts#L34)
+[src/SceneTree/BaseItem.ts:36](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BaseItem.ts#L36)
 
 ___
 
@@ -117,7 +117,7 @@ ___
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:35](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/BaseItem.ts#L35)
+[src/SceneTree/BaseItem.ts:37](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BaseItem.ts#L37)
 
 ___
 
@@ -131,7 +131,7 @@ ___
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:36](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/BaseItem.ts#L36)
+[src/SceneTree/BaseItem.ts:38](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BaseItem.ts#L38)
 
 ___
 
@@ -145,7 +145,7 @@ ___
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:37](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/BaseItem.ts#L37)
+[src/SceneTree/BaseItem.ts:39](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BaseItem.ts#L39)
 
 ___
 
@@ -159,7 +159,7 @@ ___
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:38](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/BaseItem.ts#L38)
+[src/SceneTree/BaseItem.ts:40](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BaseItem.ts#L40)
 
 ___
 
@@ -173,7 +173,7 @@ ___
 
 #### Defined in
 
-[SceneTree/Material.ts:33](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Material.ts#L33)
+[src/SceneTree/Material.ts:34](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Material.ts#L34)
 
 ___
 
@@ -183,7 +183,7 @@ ___
 
 #### Defined in
 
-[SceneTree/Materials/PointsMaterial.ts:9](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Materials/PointsMaterial.ts#L9)
+[src/SceneTree/Materials/PointsMaterial.ts:9](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Materials/PointsMaterial.ts#L9)
 
 ___
 
@@ -197,7 +197,7 @@ ___
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:23](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L23)
+[src/SceneTree/ParameterOwner.ts:25](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L25)
 
 ___
 
@@ -211,7 +211,7 @@ ___
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/EventEmitter.ts#L26)
+[src/Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/EventEmitter.ts#L26)
 
 ___
 
@@ -221,7 +221,7 @@ ___
 
 #### Defined in
 
-[SceneTree/Materials/PointsMaterial.ts:12](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Materials/PointsMaterial.ts#L12)
+[src/SceneTree/Materials/PointsMaterial.ts:12](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Materials/PointsMaterial.ts#L12)
 
 ___
 
@@ -235,7 +235,7 @@ ___
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:20](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L20)
+[src/SceneTree/ParameterOwner.ts:22](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L22)
 
 ___
 
@@ -249,7 +249,7 @@ ___
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:21](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L21)
+[src/SceneTree/ParameterOwner.ts:23](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L23)
 
 ___
 
@@ -263,7 +263,7 @@ ___
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:22](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L22)
+[src/SceneTree/ParameterOwner.ts:24](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L24)
 
 ___
 
@@ -273,7 +273,7 @@ ___
 
 #### Defined in
 
-[SceneTree/Materials/PointsMaterial.ts:11](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Materials/PointsMaterial.ts#L11)
+[src/SceneTree/Materials/PointsMaterial.ts:11](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Materials/PointsMaterial.ts#L11)
 
 ## Methods
 
@@ -297,7 +297,7 @@ ___
 
 #### Defined in
 
-[SceneTree/Material.ts:180](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Material.ts#L180)
+[src/SceneTree/Material.ts:181](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Material.ts#L181)
 
 ___
 
@@ -321,7 +321,7 @@ ___
 
 #### Defined in
 
-[SceneTree/Material.ts:134](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Material.ts#L134)
+[src/SceneTree/Material.ts:135](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Material.ts#L135)
 
 ___
 
@@ -351,7 +351,7 @@ Adds `Parameter` object to the owner's parameter list.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:133](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L133)
+[src/SceneTree/ParameterOwner.ts:135](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L135)
 
 ___
 
@@ -381,7 +381,7 @@ This is used to handle migrating parameters to new names.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:90](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L90)
+[src/SceneTree/ParameterOwner.ts:92](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L92)
 
 ___
 
@@ -396,7 +396,7 @@ from this material and returns it.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `context?` | `Record`<`string`, `any`\> | The context value. |
+| `context?` | [`CloneContext`](../SceneTree_CloneContext.CloneContext) | The context value. |
 
 #### Returns
 
@@ -410,7 +410,7 @@ from this material and returns it.
 
 #### Defined in
 
-[SceneTree/Material.ts:343](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Material.ts#L343)
+[src/SceneTree/Material.ts:344](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Material.ts#L344)
 
 ___
 
@@ -425,7 +425,7 @@ When a Material is copied, first runs `BaseItem` copyFrom method, then sets shad
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `src` | [`Material`](../SceneTree_Material.Material) | The material to copy from. |
-| `context?` | `Record`<`string`, `any`\> | The context value. |
+| `context?` | [`CloneContext`](../SceneTree_CloneContext.CloneContext) | The context value. |
 
 #### Returns
 
@@ -437,7 +437,7 @@ When a Material is copied, first runs `BaseItem` copyFrom method, then sets shad
 
 #### Defined in
 
-[SceneTree/Material.ts:355](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Material.ts#L355)
+[src/SceneTree/Material.ts:356](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Material.ts#L356)
 
 ___
 
@@ -463,7 +463,7 @@ Removes metadata for a given key.
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:261](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/BaseItem.ts#L261)
+[src/SceneTree/BaseItem.ts:263](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BaseItem.ts#L263)
 
 ___
 
@@ -490,7 +490,7 @@ Triggers all listener functions in an event.
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/EventEmitter.ts#L154)
+[src/Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/EventEmitter.ts#L154)
 
 ___
 
@@ -517,7 +517,7 @@ The fromJSON method decodes a json object for this type.
 
 #### Defined in
 
-[SceneTree/Material.ts:248](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Material.ts#L248)
+[src/SceneTree/Material.ts:249](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Material.ts#L249)
 
 ___
 
@@ -539,7 +539,7 @@ Returns the unmangled name of the class.
 
 #### Defined in
 
-[Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/BaseClass.ts#L33)
+[src/Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/BaseClass.ts#L33)
 
 ___
 
@@ -563,7 +563,7 @@ Returns the unique id of the object.
 
 #### Defined in
 
-[Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/BaseClass.ts#L25)
+[src/Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/BaseClass.ts#L25)
 
 ___
 
@@ -591,7 +591,7 @@ Gets Item's meta-data value by passing the `key` string.
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:232](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/BaseItem.ts#L232)
+[src/SceneTree/BaseItem.ts:234](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BaseItem.ts#L234)
 
 ___
 
@@ -613,7 +613,7 @@ Returns the name of the base item.
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:74](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/BaseItem.ts#L74)
+[src/SceneTree/BaseItem.ts:76](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BaseItem.ts#L76)
 
 ___
 
@@ -635,7 +635,7 @@ Returns the number of parameters current object has.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:39](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L39)
+[src/SceneTree/ParameterOwner.ts:41](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L41)
 
 ___
 
@@ -658,7 +658,7 @@ The item is a child of the current owner.
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:154](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/BaseItem.ts#L154)
+[src/SceneTree/BaseItem.ts:156](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BaseItem.ts#L156)
 
 ___
 
@@ -680,7 +680,7 @@ Returns all texture parameters in current Material.
 
 #### Defined in
 
-[SceneTree/Material.ts:113](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Material.ts#L113)
+[src/SceneTree/Material.ts:114](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Material.ts#L114)
 
 ___
 
@@ -708,7 +708,7 @@ Returns `Parameter` object using the given name
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:100](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L100)
+[src/SceneTree/ParameterOwner.ts:102](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L102)
 
 ___
 
@@ -736,7 +736,7 @@ Returns `Parameter` object in a given index
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:68](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L68)
+[src/SceneTree/ParameterOwner.ts:70](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L70)
 
 ___
 
@@ -764,7 +764,7 @@ Returns the index of a parameter in parameter list.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:58](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L58)
+[src/SceneTree/ParameterOwner.ts:60](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L60)
 
 ___
 
@@ -786,7 +786,7 @@ Returns all the parameters of the object.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:48](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L48)
+[src/SceneTree/ParameterOwner.ts:50](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L50)
 
 ___
 
@@ -808,7 +808,7 @@ Returns the current path of the item in the tree as an array of names.
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:111](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/BaseItem.ts#L111)
+[src/SceneTree/BaseItem.ts:113](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BaseItem.ts#L113)
 
 ___
 
@@ -830,7 +830,7 @@ typeof [`GLShader`](../../Renderer/Renderer_GLShader.GLShader)
 
 #### Defined in
 
-[SceneTree/Material.ts:222](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Material.ts#L222)
+[src/SceneTree/Material.ts:223](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Material.ts#L223)
 
 ___
 
@@ -852,7 +852,7 @@ Getter for the shader name.
 
 #### Defined in
 
-[SceneTree/Material.ts:48](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Material.ts#L48)
+[src/SceneTree/Material.ts:49](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Material.ts#L49)
 
 ___
 
@@ -880,7 +880,7 @@ Checks to see if there is metadata for a given key.
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:242](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/BaseItem.ts#L242)
+[src/SceneTree/BaseItem.ts:244](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BaseItem.ts#L244)
 
 ___
 
@@ -908,7 +908,7 @@ Validates if the specified parameter exists in the object.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:78](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L78)
+[src/SceneTree/ParameterOwner.ts:80](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L80)
 
 ___
 
@@ -940,7 +940,7 @@ It replaces the event in the specified index.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:147](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L147)
+[src/SceneTree/ParameterOwner.ts:149](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L149)
 
 ___
 
@@ -962,7 +962,7 @@ Returns a boolean indicating if this item is selectable.
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:183](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/BaseItem.ts#L183)
+[src/SceneTree/BaseItem.ts:185](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BaseItem.ts#L185)
 
 ___
 
@@ -984,7 +984,7 @@ The isSelected method.
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:207](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/BaseItem.ts#L207)
+[src/SceneTree/BaseItem.ts:209](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BaseItem.ts#L209)
 
 ___
 
@@ -1006,7 +1006,7 @@ Checks if the material has a texture applied. The renderer can use this to optim
 
 #### Defined in
 
-[SceneTree/Material.ts:176](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Material.ts#L176)
+[src/SceneTree/Material.ts:177](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Material.ts#L177)
 
 ___
 
@@ -1028,7 +1028,7 @@ Checks if the material is transparent by checking the `Opacity` parameter.
 
 #### Defined in
 
-[SceneTree/Material.ts:130](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Material.ts#L130)
+[src/SceneTree/Material.ts:131](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Material.ts#L131)
 
 ___
 
@@ -1055,7 +1055,7 @@ Removes a listener function from the specified event, using either the function 
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/EventEmitter.ts#L97)
+[src/Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/EventEmitter.ts#L97)
 
 ___
 
@@ -1084,7 +1084,7 @@ Adds a listener function for a given event name.
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/EventEmitter.ts#L44)
+[src/Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/EventEmitter.ts#L44)
 
 ___
 
@@ -1122,7 +1122,7 @@ asset.once('loaded', () => {
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/EventEmitter.ts#L82)
+[src/Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/EventEmitter.ts#L82)
 
 ___
 
@@ -1149,7 +1149,7 @@ to perform general updates (see GLPass or BaseItem).
 
 #### Defined in
 
-[SceneTree/Material.ts:211](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Material.ts#L211)
+[src/SceneTree/Material.ts:212](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Material.ts#L212)
 
 ___
 
@@ -1164,7 +1164,7 @@ Sets state of current Item(Including Shaders and Materials) using a binary reade
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `reader` | [`BinReader`](../SceneTree_BinReader.BinReader) | The reader value. |
-| `context` | `Record`<`string`, `any`\> | The context value. |
+| `context` | [`AssetLoadContext`](../SceneTree_AssetLoadContext.AssetLoadContext) | The context value. |
 
 #### Returns
 
@@ -1176,7 +1176,7 @@ Sets state of current Item(Including Shaders and Materials) using a binary reade
 
 #### Defined in
 
-[SceneTree/Material.ts:274](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Material.ts#L274)
+[src/SceneTree/Material.ts:275](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Material.ts#L275)
 
 ___
 
@@ -1196,7 +1196,7 @@ Remove all textures from Material's parameters.
 
 #### Defined in
 
-[SceneTree/Material.ts:95](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Material.ts#L95)
+[src/SceneTree/Material.ts:96](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Material.ts#L96)
 
 ___
 
@@ -1223,7 +1223,7 @@ remove listener by ID returned from #on
 
 #### Defined in
 
-[Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/EventEmitter.ts#L134)
+[src/Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/EventEmitter.ts#L134)
 
 ___
 
@@ -1251,7 +1251,7 @@ Removes `Parameter` from owner, by using parameter's name.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:174](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L174)
+[src/SceneTree/ParameterOwner.ts:176](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L176)
 
 ___
 
@@ -1279,7 +1279,7 @@ Replaces old `Parameter` by passing a new one with the same name.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:196](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L196)
+[src/SceneTree/ParameterOwner.ts:198](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L198)
 
 ___
 
@@ -1310,7 +1310,7 @@ end of the path.
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:126](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/BaseItem.ts#L126)
+[src/SceneTree/BaseItem.ts:128](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BaseItem.ts#L128)
 
 ___
 
@@ -1337,7 +1337,7 @@ Assigns metadata to a given key.
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:252](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/BaseItem.ts#L252)
+[src/SceneTree/BaseItem.ts:254](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BaseItem.ts#L254)
 
 ___
 
@@ -1365,7 +1365,7 @@ Sets the name of the base item(Updates path).
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:84](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/BaseItem.ts#L84)
+[src/SceneTree/BaseItem.ts:86](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BaseItem.ts#L86)
 
 ___
 
@@ -1391,7 +1391,7 @@ The setOwner method assigns a new owner to the item.
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:164](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/BaseItem.ts#L164)
+[src/SceneTree/BaseItem.ts:166](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BaseItem.ts#L166)
 
 ___
 
@@ -1419,7 +1419,7 @@ Modifies the selectability of this item.
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:193](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/BaseItem.ts#L193)
+[src/SceneTree/BaseItem.ts:195](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BaseItem.ts#L195)
 
 ___
 
@@ -1447,7 +1447,7 @@ Changes the current state of the selection of this item.
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:217](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/BaseItem.ts#L217)
+[src/SceneTree/BaseItem.ts:219](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BaseItem.ts#L219)
 
 ___
 
@@ -1475,7 +1475,7 @@ See all classes that extend from `GLShader`.
 
 #### Defined in
 
-[SceneTree/Material.ts:59](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Material.ts#L59)
+[src/SceneTree/Material.ts:60](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Material.ts#L60)
 
 ___
 
@@ -1503,7 +1503,7 @@ The toJSON method encodes the current object as a json object.
 
 #### Defined in
 
-[SceneTree/Material.ts:235](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/Material.ts#L235)
+[src/SceneTree/Material.ts:236](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Material.ts#L236)
 
 ___
 
@@ -1531,7 +1531,7 @@ Converts object's JSON value and converts it to a string.
 
 #### Defined in
 
-[SceneTree/ParameterOwner.ts:301](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/ParameterOwner.ts#L301)
+[src/SceneTree/ParameterOwner.ts:303](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L303)
 
 ___
 
@@ -1552,7 +1552,7 @@ recomputes and caches the path of this item.
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:99](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/BaseItem.ts#L99)
+[src/SceneTree/BaseItem.ts:101](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BaseItem.ts#L101)
 
 ___
 
@@ -1575,5 +1575,5 @@ This method is used in debugging memory consumption.
 
 #### Defined in
 
-[SceneTree/BaseItem.ts:62](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/SceneTree/BaseItem.ts#L62)
+[src/SceneTree/BaseItem.ts:64](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BaseItem.ts#L64)
 

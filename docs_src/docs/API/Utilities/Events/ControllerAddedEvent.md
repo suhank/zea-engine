@@ -25,7 +25,7 @@ Create an BaseEvent.
 
 | Name | Type |
 | :------ | :------ |
-| `controller` | [`VRController`](../../Renderer/VR/Renderer_VR_VRController.VRController) |
+| `controller` | [`XRController`](../../Renderer/VR/Renderer_VR_XRController.XRController) |
 
 #### Overrides
 
@@ -33,15 +33,15 @@ Create an BaseEvent.
 
 #### Defined in
 
-[Utilities/Events/ControllerAddedEvent.ts:7](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/Events/ControllerAddedEvent.ts#L7)
+[src/Utilities/Events/ControllerAddedEvent.ts:7](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ControllerAddedEvent.ts#L7)
 
 ## Properties
 
 ### controller
 
-• **controller**: [`VRController`](../../Renderer/VR/Renderer_VR_VRController.VRController)
+• **controller**: [`XRController`](../../Renderer/VR/Renderer_VR_XRController.XRController)
 
 #### Defined in
 
-[Utilities/Events/ControllerAddedEvent.ts:5](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/Events/ControllerAddedEvent.ts#L5)
+[src/Utilities/Events/ControllerAddedEvent.ts:5](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ControllerAddedEvent.ts#L5)
 

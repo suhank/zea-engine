@@ -21,22 +21,22 @@ Create a GL screen quad.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `gl` | `WebGL12RenderingContext` | The webgl rendering context. |
+| `gl` | [`WebGL12RenderingContext`](types/Renderer_types_webgl.WebGL12RenderingContext) | The webgl rendering context. |
 | `shaderopts` | `Record`<`string`, `any`\> | shader options |
 
 #### Defined in
 
-[Renderer/GLScreenQuad.ts:22](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/GLScreenQuad.ts#L22)
+[src/Renderer/GLScreenQuad.ts:24](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLScreenQuad.ts#L24)
 
 ## Properties
 
 ### \_\_gl
 
-• `Protected` **\_\_gl**: `WebGL12RenderingContext`
+• `Protected` **\_\_gl**: [`WebGL12RenderingContext`](types/Renderer_types_webgl.WebGL12RenderingContext)
 
 #### Defined in
 
-[Renderer/GLScreenQuad.ts:10](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/GLScreenQuad.ts#L10)
+[src/Renderer/GLScreenQuad.ts:12](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLScreenQuad.ts#L12)
 
 ___
 
@@ -46,7 +46,7 @@ ___
 
 #### Defined in
 
-[Renderer/GLScreenQuad.ts:14](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/GLScreenQuad.ts#L14)
+[src/Renderer/GLScreenQuad.ts:16](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLScreenQuad.ts#L16)
 
 ___
 
@@ -56,7 +56,7 @@ ___
 
 #### Defined in
 
-[Renderer/GLScreenQuad.ts:11](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/GLScreenQuad.ts#L11)
+[src/Renderer/GLScreenQuad.ts:13](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLScreenQuad.ts#L13)
 
 ___
 
@@ -66,7 +66,7 @@ ___
 
 #### Defined in
 
-[Renderer/GLScreenQuad.ts:15](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/GLScreenQuad.ts#L15)
+[src/Renderer/GLScreenQuad.ts:17](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLScreenQuad.ts#L17)
 
 ___
 
@@ -76,7 +76,7 @@ ___
 
 #### Defined in
 
-[Renderer/GLScreenQuad.ts:12](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/GLScreenQuad.ts#L12)
+[src/Renderer/GLScreenQuad.ts:14](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLScreenQuad.ts#L14)
 
 ___
 
@@ -86,7 +86,7 @@ ___
 
 #### Defined in
 
-[Renderer/GLScreenQuad.ts:13](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/GLScreenQuad.ts#L13)
+[src/Renderer/GLScreenQuad.ts:15](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLScreenQuad.ts#L15)
 
 ___
 
@@ -96,7 +96,7 @@ ___
 
 #### Defined in
 
-[Renderer/GLScreenQuad.ts:16](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/GLScreenQuad.ts#L16)
+[src/Renderer/GLScreenQuad.ts:18](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLScreenQuad.ts#L18)
 
 ## Methods
 
@@ -110,7 +110,7 @@ The bind method.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `renderstate` | `RenderState` | The object tracking the current state of the renderer |
+
 | `texture?` | [`GLTexture2D`](Renderer_GLTexture2D.GLTexture2D) | The texture param. |
 | `pos?` | [`Vec2`](../Math/Math_Vec2.Vec2) | The pos value. |
 | `size?` | [`Vec2`](../Math/Math_Vec2.Vec2) | The size value. |
@@ -121,7 +121,7 @@ The bind method.
 
 #### Defined in
 
-[Renderer/GLScreenQuad.ts:49](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/GLScreenQuad.ts#L49)
+[src/Renderer/GLScreenQuad.ts:51](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLScreenQuad.ts#L51)
 
 ___
 
@@ -135,7 +135,7 @@ The bindShader method.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `renderstate` | `RenderState` | The object tracking the current state of the renderer |
+
 
 #### Returns
 
@@ -145,7 +145,7 @@ The bindShader method.
 
 #### Defined in
 
-[Renderer/GLScreenQuad.ts:84](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/GLScreenQuad.ts#L84)
+[src/Renderer/GLScreenQuad.ts:86](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLScreenQuad.ts#L86)
 
 ___
 
@@ -162,7 +162,7 @@ Users should never need to call this method directly.
 
 #### Defined in
 
-[Renderer/GLScreenQuad.ts:105](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/GLScreenQuad.ts#L105)
+[src/Renderer/GLScreenQuad.ts:107](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLScreenQuad.ts#L107)
 
 ___
 
@@ -176,7 +176,7 @@ The draw method.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `renderstate` | `RenderState` | The object tracking the current state of the renderer |
+
 | `texture?` | [`GLTexture2D`](Renderer_GLTexture2D.GLTexture2D) | The texture value. |
 | `pos?` | [`Vec2`](../Math/Math_Vec2.Vec2) | The pos value. |
 | `size?` | [`Vec2`](../Math/Math_Vec2.Vec2) | The size value. |
@@ -187,5 +187,5 @@ The draw method.
 
 #### Defined in
 
-[Renderer/GLScreenQuad.ts:95](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Renderer/GLScreenQuad.ts#L95)
+[src/Renderer/GLScreenQuad.ts:97](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLScreenQuad.ts#L97)
 

@@ -17,7 +17,7 @@ custom_edit_url: null
 
 ### constructor
 
-• **new XRControllerEvent**(`button`, `controller`)
+• **new XRControllerEvent**(`viewport`, `controller`, `button`, `buttonPressed`)
 
 Create an BaseEvent.
 
@@ -25,8 +25,10 @@ Create an BaseEvent.
 
 | Name | Type |
 | :------ | :------ |
+| `viewport` | [`XRViewport`](../../Renderer/VR/Renderer_VR_XRViewport.XRViewport) |
+| `controller` | [`XRController`](../../Renderer/VR/Renderer_VR_XRController.XRController) |
 | `button` | `number` |
-| `controller` | [`VRController`](../../Renderer/VR/Renderer_VR_VRController.VRController) |
+| `buttonPressed` | `number` |
 
 #### Overrides
 
@@ -34,7 +36,7 @@ Create an BaseEvent.
 
 #### Defined in
 
-[Utilities/Events/XRControllerEvent.ts:8](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/Events/XRControllerEvent.ts#L8)
+[src/Utilities/Events/XRControllerEvent.ts:10](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/XRControllerEvent.ts#L10)
 
 ## Properties
 
@@ -44,27 +46,27 @@ Create an BaseEvent.
 
 #### Defined in
 
-[Utilities/Events/XRControllerEvent.ts:6](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/Events/XRControllerEvent.ts#L6)
+[src/Utilities/Events/XRControllerEvent.ts:8](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/XRControllerEvent.ts#L8)
 
 ___
 
 ### buttonPressed
 
-• **buttonPressed**: `boolean`
+• **buttonPressed**: `number` = `0`
 
 #### Defined in
 
-[Utilities/Events/XRControllerEvent.ts:7](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/Events/XRControllerEvent.ts#L7)
+[src/Utilities/Events/XRControllerEvent.ts:9](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/XRControllerEvent.ts#L9)
 
 ___
 
 ### controller
 
-• **controller**: [`VRController`](../../Renderer/VR/Renderer_VR_VRController.VRController)
+• **controller**: [`XRController`](../../Renderer/VR/Renderer_VR_XRController.XRController)
 
 #### Defined in
 
-[Utilities/Events/XRControllerEvent.ts:5](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/Events/XRControllerEvent.ts#L5)
+[src/Utilities/Events/XRControllerEvent.ts:7](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/XRControllerEvent.ts#L7)
 
 ___
 
@@ -78,7 +80,7 @@ ___
 
 #### Defined in
 
-[Utilities/Events/ZeaPointerEvent.ts:18](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/Events/ZeaPointerEvent.ts#L18)
+[src/Utilities/Events/ZeaPointerEvent.ts:22](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaPointerEvent.ts#L22)
 
 ___
 
@@ -92,7 +94,21 @@ ___
 
 #### Defined in
 
-[Utilities/Events/ZeaPointerEvent.ts:19](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/Events/ZeaPointerEvent.ts#L19)
+[src/Utilities/Events/ZeaPointerEvent.ts:23](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaPointerEvent.ts#L23)
+
+___
+
+### pointerRay
+
+• **pointerRay**: [`Ray`](../../Math/Math_Ray.Ray)
+
+#### Inherited from
+
+[ZeaPointerEvent](Utilities_Events_ZeaPointerEvent.ZeaPointerEvent).[pointerRay](Utilities_Events_ZeaPointerEvent.ZeaPointerEvent#pointerray)
+
+#### Defined in
+
+[src/Utilities/Events/ZeaPointerEvent.ts:18](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaPointerEvent.ts#L18)
 
 ___
 
@@ -106,7 +122,7 @@ ___
 
 #### Defined in
 
-[Utilities/Events/ZeaPointerEvent.ts:14](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/Events/ZeaPointerEvent.ts#L14)
+[src/Utilities/Events/ZeaPointerEvent.ts:17](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaPointerEvent.ts#L17)
 
 ___
 
@@ -120,7 +136,7 @@ ___
 
 #### Defined in
 
-[Utilities/Events/ZeaPointerEvent.ts:16](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/Events/ZeaPointerEvent.ts#L16)
+[src/Utilities/Events/ZeaPointerEvent.ts:20](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaPointerEvent.ts#L20)
 
 ___
 
@@ -134,7 +150,7 @@ ___
 
 #### Defined in
 
-[Utilities/Events/ZeaPointerEvent.ts:15](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/Events/ZeaPointerEvent.ts#L15)
+[src/Utilities/Events/ZeaPointerEvent.ts:19](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaPointerEvent.ts#L19)
 
 ## Methods
 
@@ -146,13 +162,13 @@ ___
 
 [`TreeItem`](../../SceneTree/SceneTree_TreeItem.TreeItem) \| [`default`](../../SceneTree/Manipulators/SceneTree_Manipulators_BaseTool.default)
 
-#### Inherited from
+#### Overrides
 
 [ZeaPointerEvent](Utilities_Events_ZeaPointerEvent.ZeaPointerEvent).[getCapture](Utilities_Events_ZeaPointerEvent.ZeaPointerEvent#getcapture)
 
 #### Defined in
 
-[Utilities/Events/ZeaPointerEvent.ts:34](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/Events/ZeaPointerEvent.ts#L34)
+[src/Utilities/Events/XRControllerEvent.ts:26](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/XRControllerEvent.ts#L26)
 
 ___
 
@@ -164,13 +180,13 @@ ___
 
 `void`
 
-#### Inherited from
+#### Overrides
 
 [ZeaPointerEvent](Utilities_Events_ZeaPointerEvent.ZeaPointerEvent).[releaseCapture](Utilities_Events_ZeaPointerEvent.ZeaPointerEvent#releasecapture)
 
 #### Defined in
 
-[Utilities/Events/ZeaPointerEvent.ts:38](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/Events/ZeaPointerEvent.ts#L38)
+[src/Utilities/Events/XRControllerEvent.ts:30](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/XRControllerEvent.ts#L30)
 
 ___
 
@@ -188,13 +204,13 @@ ___
 
 `void`
 
-#### Inherited from
+#### Overrides
 
 [ZeaPointerEvent](Utilities_Events_ZeaPointerEvent.ZeaPointerEvent).[setCapture](Utilities_Events_ZeaPointerEvent.ZeaPointerEvent#setcapture)
 
 #### Defined in
 
-[Utilities/Events/ZeaPointerEvent.ts:30](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/Events/ZeaPointerEvent.ts#L30)
+[src/Utilities/Events/XRControllerEvent.ts:22](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/XRControllerEvent.ts#L22)
 
 ___
 
@@ -206,11 +222,11 @@ ___
 
 `void`
 
-#### Inherited from
+#### Overrides
 
 [ZeaPointerEvent](Utilities_Events_ZeaPointerEvent.ZeaPointerEvent).[stopPropagation](Utilities_Events_ZeaPointerEvent.ZeaPointerEvent#stoppropagation)
 
 #### Defined in
 
-[Utilities/Events/ZeaPointerEvent.ts:26](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/Events/ZeaPointerEvent.ts#L26)
+[src/Utilities/Events/XRControllerEvent.ts:18](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/XRControllerEvent.ts#L18)
 

@@ -3,7 +3,7 @@ import { EnvMap, BaseImage, Scene } from '../SceneTree/index'
 import { GLRenderTarget } from './GLRenderTarget'
 import { GLHDRImage } from './GLHDRImage'
 import { GLEnvMap } from './GLEnvMap'
-import { GLBaseRenderer } from './GLBaseRenderer'
+import { GLBaseRenderer, RendererOptions } from './GLBaseRenderer'
 import { GLTexture2D } from './GLTexture2D'
 import { PassType } from './Passes/GLPass'
 import { EnvMapShader } from './Shaders/EnvMapShader'
@@ -16,6 +16,8 @@ import { GLViewport } from './GLViewport'
 import { IntersectionData } from '../Utilities/IntersectionData'
 import { GeomDataRenderState, ColorRenderState } from './types/renderer'
 import { WebGL12RenderingContext } from './types/webgl'
+
+
 
 const ALL_PASSES = PassType.OPAQUE | PassType.TRANSPARENT | PassType.OVERLAY
 // TODO: move this fn somewhere
@@ -54,7 +56,7 @@ class GLRenderer extends GLBaseRenderer {
    * @param $canvas - The $canvas value.
    * @param options - The dictionary of options.
    */
-  constructor($canvas: any, options: Record<string, any> = {}) {
+  constructor($canvas: HTMLCanvasElement, options: RendererOptions = {}) {
     // use HTMLCanvasElement?
     super($canvas, options)
 

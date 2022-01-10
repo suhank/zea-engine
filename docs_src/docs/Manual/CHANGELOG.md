@@ -5,7 +5,56 @@ sidebar_position: 5
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.0.1](https://github.com/ZeaInc/zea-engine/compare/v0.0.4...v4.0.1) (2021-11-25)
+
+
+### Bug Fixes
+
+* Cleaned up auto near/far plane auto adjust code so that the near plane gets moved away when zooming out. ([17f037e](https://github.com/ZeaInc/zea-engine/commit/17f037e95515c10778f8db5d703b4871a2bd6000))
+* Cleaned up regression when loading ZCAD files containing points materials. ([92ebb71](https://github.com/ZeaInc/zea-engine/commit/92ebb71807fa8435d235c87dcc063a089bb409c4))
+* ES modules support ([1d49056](https://github.com/ZeaInc/zea-engine/commit/1d4905648c8253aa66b749afef81e6ebd55b39ae))
+* KinematicGroup was not calling super.bindItem(), which meant pointer events were not propagating from members to the group. ([0e454dd](https://github.com/ZeaInc/zea-engine/commit/0e454dd60437036152e26db7c7792f5545f14b56))
+* Near and Far planes are now automatically adapted by 4 orders of magnitude. ([7000916](https://github.com/ZeaInc/zea-engine/commit/70009162e6e1fb662c9a373d9df90600ce0e76e0))
+* Parameter becomes dirty by setting 'clean' just prior to calling 'setDirty' to ensure a change in state. ([21b1440](https://github.com/ZeaInc/zea-engine/commit/21b1440f678a949000ae1f2811cf58b9a9faa571))
+* When an OperatorOutput with mode OP_READ_WRITE is connected to a parameter, the parameter should be dirtied back to the first OP_WRITE index. ([145c45a](https://github.com/ZeaInc/zea-engine/commit/145c45a77397e1f663a720eb3fb6ce3e3cabf58d))
+* When deleting the VAO, ensure to detach the indexBuffer first. ([991c2b1](https://github.com/ZeaInc/zea-engine/commit/991c2b1f9f26cc7400fbcf7df1e724196d4b7c69))
+
 ## [4.0.0](https://github.com/ZeaInc/zea-engine/compare/v3.12.3...v4.0.0) (2021-11-10)
+
+Version 4.0.0 is a major release for Zea Engine, as the entire codebase was ported and updated to work with TypeScript. This change caused a few breaking changes as TypeScript did not allow methods with any ambiguity in the signatures. 
+Porting to TypeScript addressed a wide range or minor issues, picked up by the strict typing of TypeScript. 
+
+A second and very important benefit of the port to TypeScript, is to provide TypeScript support within client developed applications.
+We highly recommend you install the engine and its libraries as dependencies using npm, yarn or your favorite package manager, and import the engine into your code using the bundler tools that come with React or Svelte. 
+
+### Old code
+Previously, our engine did not support module bundlers for a few technical reasons that have now been addressed. Instead, we recommended users load our engine using script tags, and then access the classes using a global variable. This approach had a few concerns and limitations. 
+
+* The engine code was not installed in a clients application, creating a dependency on servers such as jsdeliver.
+* using incomplete version numbers, like the one shown below, caused automatic and silent updates to the engine on already deployed applications. These updates sometimes had unintended negative consequences.
+* Any other resources in the module bundle were not available, such as TypeScript definitions.
+
+```html
+<script  src="https://cdn.jsdelivr.net/npm/@zeainc/zea-engine@3.11/dist/index.umd.js"></script>
+```
+
+```javascript
+// Load the classes out of the global variable.
+const { Scene, GLRenderer } = zeaEngine
+```
+
+### New code
+```bash
+npm install '@zeainc/zea-engine'
+```
+
+```javascript
+// Import the classes from the installed module
+import { Scene, GLRenderer } from '@zeainc/zea-engine'
+```
+
+We will continue to implement improvements in the typings and inline documentation. 
+Our commitment to our users from this version forward is to maintain a stable, backwards compatible and developer friendly API. 
 
 
 ### ⚠ BREAKING CHANGES
@@ -74,7 +123,6 @@ line.getVertexAttribute('positions').setValue(1, new Vec3(0, 0, 1))
 ```
 
 
-
 * VertexAttributes.length was removed and replaced with getCount
 
 Old code
@@ -126,7 +174,6 @@ envMap.load('data/pisa-webp.zenv').then(() => {
   ...
 })
 ```
-
 
 * EnvMap are now loaded using the 'load' method instead of using the 'FilePath' parameters.
 
@@ -184,10 +231,39 @@ New code
   }
 ```
 
+
+
+* Registry.getBlueprintName was Registry.getClassName 
+The registry, which stores all class definitions, and a mapping to the names they were registered under, can be used to retrieve the registered name of a class instance.
+Due to the strict typing of TypeScript, the interface needed to change. Instead of passing a class, you must pass the definition of the class to getClassName
+
+Old code
+```javascript
+  const myClassInst = ...
+  const className = Registry.getBlueprintName(myClassInst)
+  console.log("className:", className)
+```
+
+New code
+```javascript
+  const myClassInst = ...
+  const className = Registry.getClassName(Object.getPrototypeOf(myClassInst).constructor)
+  console.log("className:", className)
+```
+
 * The deprecated Group class was removed from the build. You must now use one of the specialized classes based on BaseGroup. e.g. SelectionSet, or KinematicGroup.
 
 ### Features
 
+* The engine and each library now logs it version to the console to let the user know the exact version of the engine or library that is installed.  ([8e35d43](https://github.com/ZeaInc/zea-engine/commit/8e35d43b9fbd18c2a73efaed86b9446122a51508))
+```bash
+Zea Engine v4.0.0
+main.js:16 Registered lib '@zeainc/zea-ux' v4.0.0
+main.js:16 Registered lib '@zeainc/zea-kinematics' v4.0.1
+main.js:16 Registered lib '@zeainc/zea-potree' v4.0.0
+```
+
+* The entire engine was ported to TypeScript with TypeDefinitions now being bundled in the package. ([e949662](https://github.com/ZeaInc/zea-engine/commit/e949662cab88f2b8e799c51e4995229a73bfd10f))
 * auto-position the canvas and its parent ([18b8a90](https://github.com/ZeaInc/zea-engine/commit/18b8a90d4b9da50e232dccc5d10cb1f8e773d5db))
 * The engine now provides various statically defined Materials. This simplifies the process of assigning materials to Geometries, as the parameters are exposed as public properties. ([ae92d20](https://github.com/ZeaInc/zea-engine/commit/ae92d20fae158c4f4fbb746227bc4ce8f04ef494))
 * zcad files when loading now construct statically defined materials when possible. ([4acad4e](https://github.com/ZeaInc/zea-engine/commit/4acad4e7aafd938aab58fa310a4e45be166f2cbd))
@@ -203,6 +279,15 @@ geomItem.getParameter('LocalXfo').setValue(xfo)
 The new, more convenient access looks like the following.
 ```javascript
 geomItem.localXfoParam.value = xfo
+```
+
+* SceneTree classes now all provide a .getClassName() method that returns the name of the class.  ([e949662](https://github.com/ZeaInc/zea-engine/commit/e949662cab88f2b8e799c51e4995229a73bfd10f
+
+New code
+```javascript
+  const treeItem = new TreeItem()
+  const className = treeItem.getClassName()
+  console.log("className:", className)
 ```
 
 ### Bug Fixes

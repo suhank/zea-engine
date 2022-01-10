@@ -7,7 +7,7 @@ slug: /
 
 ## Introduction
 
-Zea Engine is a web-based 3D rendering solution designed from the ground up for CAD and professional graphics, which provides the best in class power, speed and reach for the next generation of web applications. A 3D JavaScript library for innovative manufacturers and industry 4.0 supporters who need to build web applications.
+Zea Engine is a web-based 3D rendering solution designed from the ground up for CAD and professional graphics, which provides the best in class power, speed and reach for the next generation of web applications. A 3D TypeScript library for innovative manufacturers and industry 4.0 supporters who need to build web applications.
 
 - Power
   Designed with the highest requirements in mind, giving developers a suite of tools to address the toughest challenges in modern professional graphics app development. Zea Engine pushes the limits of what a developer can achieve in the browser by focusing on power and performance.
@@ -18,8 +18,11 @@ Zea Engine is a web-based 3D rendering solution designed from the ground up for 
 - Reach
   Applications that leverage the web browser are already available on all modern devices. These web applications provide a friction-free and straightforward way to deliver content without requiring users to install a player. Zea Engine is designed for the web and enables new categories of high performance and versatile web applications.
 
+<div class = "display-half">
+
 ![zea-hexagon-black](/img/misc/zea-hexagon-black.png)
 
+</div>
 No one size fits all. The Zea Engine is designed around a plugin architecture that enables anyone to build and publish plugins that expand capabilities of the engine. We provide a range of plugins and tools to make working with the engine easier and more productive.
 
 For more information on the templates and plugins see the page on [Templates and Plugins](../Plugins/plugins-templates-overview.md)
@@ -28,7 +31,7 @@ For more information on the templates and plugins see the page on [Templates and
 
 ## Why Zea Engine
 
-Zea Engine is for software developers who are dissatisfied with current tools and complex processes for building 3D web applications. It’s a powerful open-source WebGL2 javascript framework for rendering 3D scenes that combines the world’s fastest rendering engine with highly efficient server-side pre-processing. Unlike the leading commercial solution, Zea Engine provides a [10x performance](https://blog.zea.live/en/blog/cad-visualization-on-the-web-2021-benchmark-report) increase with simple subscription-based [pricing](https://www.zea.live/pricing), without complicated licensing agreements, or royalty payments.
+Zea Engine is for software developers who are dissatisfied with current tools and complex processes for building 3D web applications. It’s a powerful open-source WebGL2 TypeScript framework for rendering 3D scenes that combines the world’s fastest rendering engine with highly efficient server-side pre-processing. Unlike the leading commercial solution, Zea Engine provides a [10x performance](https://blog.zea.live/en/blog/cad-visualization-on-the-web-2021-benchmark-report) increase with simple subscription-based [pricing](https://www.zea.live/pricing), without complicated licensing agreements, or royalty payments.
 
 Zea Engine provides a streamlined development environment for working with 3D CAD in the browser. It provides out-of-the-box support for WebXR, plugins, product manufacturing information (PMI), metadata, measurements, multi-user collaboration, connectivity, model trees, two-way communication with host applications and the 3D scene, support for assemblies containing references to external parts and sub-assemblies, and more.
 

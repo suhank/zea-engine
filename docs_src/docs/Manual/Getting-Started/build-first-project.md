@@ -9,6 +9,13 @@ The Zea Engine enables you to build interactive 3D web apps.
 
 In this tutorial, we will learn how to load the Zea Engine in the browser and set up your first scene:
 
+:::tip
+
+This tutorial covers how to use UMD script tags to load the engine, it's now recommended that you install it using npm or yarn. 
+This can be done like any other dependency with npm install @zeainc/zea-engine or yarn add @zeainc/zea-engine.
+
+:::
+
 > Try: orbit the camera around the scene.
 
 <iframe 
@@ -31,6 +38,7 @@ Libraries hosted on npm can be accessed using various techniques. Among the easi
 ℹ️ For example, this is the unpkg URL for the Zea Engine: https://unpkg.com/@zeainc/zea-engine
 
 If you open that URL in your browser, you will see that it displays the compiled engine's file contents. You may also notice that the URL redirects to the full path and the latest version, and in that version, the UMD build of the engine.
+
 
 ## Accessing the latest UMD build
 
