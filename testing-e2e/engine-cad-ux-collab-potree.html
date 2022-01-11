@@ -67,13 +67,14 @@
         CameraManipulator,
         GLBoundingBoxPass,
         AssetLoadContext,
-        CADAsset, CADBody
+        CADAsset,
+        CADBody,
       } = zeaEngine
 
       const canvas = document.getElementById('viewport')
 
       const scene = new Scene()
-      const renderer = new GLRenderer(canvas, { debugGeomIds: false, antialias: false })
+      const renderer = new GLRenderer(canvas, { debugGeomIds: false, antialias: false, enableOcclusionCulling: true })
       renderer.setScene(scene)
       renderer.outlineThickness = 0.5
       renderer.outlineColor = new Color(0.2, 0.2, 0.2, 1)

@@ -215,14 +215,14 @@ let inFrustumDrawIdsBufferPopulated = false
 const generateInFrustumIndices = () => {
   let offset = 0
   outOfFrustum.forEach((value, index) => {
-    if (index > 0 && !value && geomItemsData[index].visible) offset++
+    if (index > 0 && !value && geomItemsData[index].visible && !geomItemsData[index].isTransparent) offset++
   })
   // Create a float array that can be used as an instances
   // attribute to pass into the drawing of the bounding boxes.
   const inFrustumIndices = new Float32Array(offset)
   offset = 0
   outOfFrustum.forEach((value, index) => {
-    if (index > 0 && !value && geomItemsData[index].visible) {
+    if (index > 0 && !value && geomItemsData[index].visible && !geomItemsData[index].isTransparent) {
       inFrustumIndices[offset] = index
       offset++
     }

@@ -733,6 +733,7 @@ class GLGeomItemLibrary extends EventEmitter {
       glGeomItem.materialId = this.renderer.glMaterialLibrary.addMaterial(material)
       material.on('transparencyChanged', geomItemChanged)
 
+      workerItemDataChanged()
       geomItemChanged()
     }
     materialParam.on('valueChanged', materialChanged)
@@ -743,7 +744,7 @@ class GLGeomItemLibrary extends EventEmitter {
     let geom = geomParam.value!
     const geomIndex = this.renderer.glGeomLibrary.addGeom(geom)
 
-    const geomChanged = (event: Record<string, any>) => {
+    const geomChanged = () => {
       this.renderer.glGeomLibrary.removeGeom(geom)
       geom = geomParam.value!
       glGeomItem.geomId = this.renderer.glGeomLibrary.addGeom(geom)

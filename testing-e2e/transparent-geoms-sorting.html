@@ -3,73 +3,41 @@
   <head>
     <title>Zea Engine - transparent-geoms-sorting</title>
     <link rel="stylesheet" href="styles/tailwind.min.css" />
+    <style>
+      #cull-stats {
+        position: fixed;
+        bottom: 10px;
+        left: 10px;
+      }
+    </style>
   </head>
   <body class="bg-blue-100 h-full">
     <div class="h-full">
       <canvas id="viewport"></canvas>
+      <div id="cull-stats" class="hud"></div>
     </div>
     <div class="fixed flex justify-center p-1 w-full top-0">
       <button
-        class="
-          bg-yellow-300
-          rounded
-          px-2 px-2
-          py-1
-          border border-yellow-400
-          shadow
-          mr-1
-          hover:bg-yellow-200
-          cursor-default
-        "
+        class="bg-yellow-300 rounded px-2 px-2 py-1 border border-yellow-400 shadow mr-1 hover:bg-yellow-200 cursor-default"
         id="variant-01"
       >
         variant-01
       </button>
 
       <button
-        class="
-          bg-yellow-300
-          rounded
-          px-2 px-2
-          py-1
-          border border-yellow-400
-          shadow
-          mr-1
-          hover:bg-yellow-200
-          cursor-default
-        "
+        class="bg-yellow-300 rounded px-2 px-2 py-1 border border-yellow-400 shadow mr-1 hover:bg-yellow-200 cursor-default"
         id="variant-02"
       >
         variant-02
       </button>
       <button
-        class="
-          bg-yellow-300
-          rounded
-          px-2 px-2
-          py-1
-          border border-yellow-400
-          shadow
-          mr-1
-          hover:bg-yellow-200
-          cursor-default
-        "
+        class="bg-yellow-300 rounded px-2 px-2 py-1 border border-yellow-400 shadow mr-1 hover:bg-yellow-200 cursor-default"
         id="variant-03"
       >
         variant-03
       </button>
       <button
-        class="
-          bg-yellow-300
-          rounded
-          px-2 px-2
-          py-1
-          border border-yellow-400
-          shadow
-          mr-1
-          hover:bg-yellow-200
-          cursor-default
-        "
+        class="bg-yellow-300 rounded px-2 px-2 py-1 border border-yellow-400 shadow mr-1 hover:bg-yellow-200 cursor-default"
         id="variant-04"
       >
         variant-04
@@ -100,7 +68,11 @@
 
       const scene = new Scene()
       const domElement = document.getElementById('viewport')
-      const renderer = new GLRenderer(domElement, { antialias: false })
+      const renderer = new GLRenderer(domElement, {
+        antialias: false,
+        enableOcclusionCulling: true,
+        debugOcclusionBuffer: true,
+      })
       renderer.setScene(scene)
 
       const envMap = new EnvMap()
@@ -189,6 +161,11 @@
         renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(25, 25, 13), new Vec3(10, 0, 0))
         renderer.frameAll()
         postMessage(`done-variant-04`)
+      })
+
+      const cullElement = document.getElementById('cull-stats')
+      renderer.on('CullingUpdated', (event) => {
+        cullElement.textContent = `visible: ${event.visible} / total: ${event.total}`
       })
     </script>
   </body>
