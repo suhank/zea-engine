@@ -274,7 +274,8 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
             drawElementOffsets[drawId] = offsetAndCount[0] + offsets[i] * elementSize
             drawElementCounts[drawId] = counts[i]
             drawIdsArray[drawId * 4 + 0] = glGeomItem.geomItemId
-            drawIdsArray[drawId * 4 + 1] = subIndex
+            // Note: a zero value means no sub-geom was being drawn.
+            drawIdsArray[drawId * 4 + 1] = subIndex + 1
             // drawIdsArray[drawId * 4 + 2] = subGeom.materialId ? subGeom.materialId : -1.0
             drawIdsArray[drawId * 4 + 3] = 0 // spare
             subIndex++
@@ -293,6 +294,7 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
           this.drawElementOffsets[key][drawId] = offsetAndCount[0] + offset * elementSize
           this.drawElementCounts[key][drawId] = count
           this.drawIdsArrays[key][drawId * 4 + 0] = glGeomItem.geomItemId
+          this.drawIdsArrays[key][drawId * 4 + 1] = 0
         }
       }
     })
@@ -380,6 +382,11 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
    */
   updateHighlightedIDsBuffer(renderstate: RenderState) {
     if (this.highlightedIdsBufferDirty) {
+      // Clear all previous highlight buffers.
+      // Note: we could considerably simplify the following code if we don't plan on
+      // incrementally updating the highlight code.
+      this.highlightedIdsArraysAllocators = {}
+      this.highlightedIdsArray = {}
       this.highlightElementOffsets = {}
       this.highlightElementCounts = {}
 
@@ -419,19 +426,19 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
             this.highlightedIdsArraysAllocators[key] = new Allocator1D()
           }
           const prevAllocation = this.highlightedIdsArraysAllocators[key].getAllocation(index)
-          if (drawCount == 0 && prevAllocation) {
-            this.highlightedIdsArraysAllocators[key].deallocate(index)
-          }
+          // if (drawCount == 0 && prevAllocation) {
+          //   this.highlightedIdsArraysAllocators[key].deallocate(index)
+          // }
 
           const newAllocation = this.highlightedIdsArraysAllocators[key].allocate(index, drawCount)
-          if (prevAllocation && prevAllocation.start != newAllocation.start && this.drawIdsArrays[key]) {
-            // Clear the previous allocation to remove any rendering.
-            for (let i = 0; i < prevAllocation.size; i++) {
-              this.highlightedIdsArray[key][prevAllocation.start + i] = 0
-              this.highlightElementOffsets[key][prevAllocation.start + i] = 0
-              this.highlightElementCounts[key][prevAllocation.start + i] = 0
-            }
-          }
+          // if (prevAllocation && prevAllocation.start != newAllocation.start && this.drawIdsArrays[key]) {
+          //   // Clear the previous allocation to remove any rendering.
+          //   for (let i = 0; i < prevAllocation.size; i++) {
+          //     this.highlightedIdsArray[key][prevAllocation.start + i] = 0
+          //     this.highlightElementOffsets[key][prevAllocation.start + i] = 0
+          //     this.highlightElementCounts[key][prevAllocation.start + i] = 0
+          //   }
+          // }
         }
         // } else {
         //   for (let key in this.highlightedIdsArraysAllocators) {
@@ -484,7 +491,7 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
             drawElementOffsets[drawId] = offsetAndCount[0] + offsets[subIndex] * elementSize
             drawElementCounts[drawId] = counts[subIndex]
             drawIdsArray[drawId * 4 + 0] = glGeomItem.geomItemId
-            drawIdsArray[drawId * 4 + 1] = subGeomIndex
+            drawIdsArray[drawId * 4 + 1] = subGeomIndex + 1
             // drawIdsArray[drawId * 4 + 2] = subGeom.materialId ? subGeom.materialId : -1.0
             drawIdsArray[drawId * 4 + 3] = 0.0 // spare
             //   subIndex++
@@ -826,7 +833,7 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
       if (drawIdsArray['TRIANGLES'] && allocators['TRIANGLES'].allocatedSpace > 0) {
         drawIdsTextures['TRIANGLES'].bindToUniform(renderstate, drawIdsTexture)
 
-        if (geomType) gl.uniform1i(geomType.location, 2)
+        if (geomType) gl.uniform1i(geomType.location, 0)
 
         this.multiDrawMeshes(
           renderstate,
@@ -852,7 +859,7 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
       if (drawIdsArray['POINTS'] && allocators['POINTS'].allocatedSpace > 0) {
         drawIdsTextures['POINTS'].bindToUniform(renderstate, drawIdsTexture)
 
-        if (geomType) gl.uniform1i(geomType.location, 0)
+        if (geomType) gl.uniform1i(geomType.location, 2)
 
         this.multiDrawPoints(
           renderstate,
@@ -863,6 +870,10 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
         )
       }
     })
+
+    // Reset to drawing triangles in case the shader is used
+    // to draw a regular mesh next.
+    if (geomType) gl.uniform1i(geomType.location, 0)
   }
 
   multiDrawMeshes(

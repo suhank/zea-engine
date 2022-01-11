@@ -85,10 +85,9 @@
         MeshProxy,
         CompoundGeomProxy,
         CADAsset,
+        CADPart,
         CADBody,
       } = zeaEngine
-
-      const { CADAsset, CADPart } = window.zeaCad
 
       const canvas = document.getElementById('viewport')
 
@@ -158,12 +157,13 @@
             let key
             if (event.intersectionData.componentId >= 0) {
               key = 'pointerOverGeom:' + event.intersectionData.componentId
+              if (key != highlightKey) {
+                highlightedItem.removeHighlight(highlightKey, true)
+                highlightKey = key
+                highlightedItem.addHighlight(highlightKey, new Color(0, 0.7, 0, 0.3), true)
+              }
             } else {
-              key = 'pointerOverGeom'
-            }
-            if (key != highlightKey) {
-              highlightedItem.removeHighlight(highlightKey, true)
-              highlightKey = key
+              highlightKey = 'pointerOverGeom'
               highlightedItem.addHighlight(highlightKey, new Color(0, 0.7, 0, 0.3), true)
             }
           }

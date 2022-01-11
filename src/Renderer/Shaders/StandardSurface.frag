@@ -147,7 +147,7 @@ void main(void) {
 #endif
 
 
-  if (geomType == 2) { // start 'TRIANGLES'
+  if (geomType == 0) { // start 'TRIANGLES'
 
   // Cutaways
   if (testFlag(flags, GEOMITEM_FLAG_CUTAWAY)) {
@@ -272,7 +272,7 @@ void main(void) {
 #endif // ENABLE_MULTI_DRAW
     fragColor = edgeColor;
   } // end 'LINES'
-  else if (geomType == 0) { // start 'POINTS'
+  else if (geomType == 2) { // start 'POINTS'
 #ifdef ENABLE_MULTI_DRAW
     vec4 pointColor      = getMaterialValue(materialCoords, 4);
 #else 
