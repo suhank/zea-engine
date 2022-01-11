@@ -53,7 +53,7 @@ class GLMaterial extends EventEmitter {
    * @param warnMissingUnifs - The renderstate value.
    * @return - The return value.
    */
-  bind(renderstate: RenderState, warnMissingUnifs: any): any { // TODO: fix type on __shaderBindigns
+  bind(renderstate: RenderState, warnMissingUnifs: any): boolean { // TODO: fix type on __shaderBindings
     this.__boundTexturesBeforeMaterial = renderstate.boundTextures
 
     let shaderBinding = this.__shaderBindings[renderstate.shaderkey!]
@@ -63,8 +63,6 @@ class GLMaterial extends EventEmitter {
       this.__shaderBindings[renderstate.shaderkey!] = shaderBinding
     }
     return shaderBinding.bind(renderstate)
-
-    return true
   }
 
   /**
