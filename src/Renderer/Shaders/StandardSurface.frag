@@ -279,6 +279,13 @@ void main(void) {
     discard;
     return;
   }
+  if (occlusionCulling != 0) {
+    // Transparent geoms do not render to the occlusion buffer
+    if (testFlag(flags, GEOMITEM_TRANSPARENT)) {
+      discard;
+      return;
+    }
+  }
   
   fragColor = setFragColor_geomData(v_viewPos, floatGeomBuffer, passId, v_drawItemId, isOrthographic);
 

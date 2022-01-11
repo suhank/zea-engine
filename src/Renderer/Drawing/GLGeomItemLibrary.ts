@@ -90,7 +90,7 @@ class GLGeomItemLibrary extends EventEmitter {
    * @param renderer - The renderer instance
    * @param options - The options object passed to the GLRenderer constructor.
    */
-  constructor(renderer: GLBaseRenderer, options: RendererOptions ) {
+  constructor(renderer: GLBaseRenderer, options: RendererOptions) {
     super()
 
     this.renderer = renderer
@@ -728,28 +728,31 @@ class GLGeomItemLibrary extends EventEmitter {
     const materialChanged = () => {
       // Ref count the materials in the material library.
       this.renderer.glMaterialLibrary.removeMaterial(material)
+      material.off('transparencyChanged', geomItemChanged)
       material = materialParam.value!
       glGeomItem.materialId = this.renderer.glMaterialLibrary.addMaterial(material)
+      material.on('transparencyChanged', geomItemChanged)
+
       geomItemChanged()
     }
     materialParam.on('valueChanged', materialChanged)
 
     // ///////////////////////////////////////////
     // Geometry
-    const geomParm = geomItem.geomParam
-    let geom = geomParm.value!
+    const geomParam = geomItem.geomParam
+    let geom = geomParam.value!
     const geomIndex = this.renderer.glGeomLibrary.addGeom(geom)
 
     const geomChanged = (event: Record<string, any>) => {
       this.renderer.glGeomLibrary.removeGeom(geom)
-      geom = geomParm.value!
+      geom = geomParam.value!
       glGeomItem.geomId = this.renderer.glGeomLibrary.addGeom(geom)
 
       if (this.enableFrustumCulling) this.dirtyWorkerItemIndices.add(index)
 
       geomItemChanged()
     }
-    geomParm.on('valueChanged', geomChanged)
+    geomParam.on('valueChanged', geomChanged)
 
     // ///////////////////////////////////////////
     // GeomItem
@@ -780,6 +783,7 @@ class GLGeomItemLibrary extends EventEmitter {
     geomItem.on('cutAwayChanged', geomItemChanged)
     geomItem.on('highlightChanged', geomItemChanged)
     geomItem.on('selectabilityChanged', geomItemChanged)
+    material.on('transparencyChanged', geomItemChanged)
 
     const workerItemDataChanged = () => {
       if (this.enableFrustumCulling) {
@@ -795,7 +799,7 @@ class GLGeomItemLibrary extends EventEmitter {
 
     geomItem.on('visibilityChanged', workerItemDataChanged)
     geomItem.geomMatParam.on('valueChanged', workerItemDataChanged)
-    geomParm.on('boundingBoxChanged', workerItemDataChanged)
+    geomParam.on('boundingBoxChanged', workerItemDataChanged)
 
     this.glGeomItems[index] = glGeomItem
     this.glGeomItemEventHandlers[index] = {
@@ -834,18 +838,21 @@ class GLGeomItemLibrary extends EventEmitter {
     this.renderer.glMaterialLibrary.removeMaterial(material)
 
     const handlers = this.glGeomItemEventHandlers[index]
+    const geomParam = geomItem.geomParam
+    const materialParam = geomItem.materialParam
 
-    geomItem.materialParam.off('valueChanged', handlers.materialChanged)
+    materialParam.off('valueChanged', handlers.materialChanged)
+    geomParam.off('valueChanged', handlers.geomChanged)
+
     geomItem.geomMatParam.off('valueChanged', handlers.geomItemChanged)
     geomItem.off('cutAwayChanged', handlers.geomItemChanged)
     geomItem.off('highlightChanged', handlers.geomItemChanged)
+    geomItem.off('selectabilityChanged', handlers.geomItemChanged)
+    material.off('transparencyChanged', handlers.geomItemChanged)
 
     geomItem.off('visibilityChanged', handlers.workerItemDataChanged)
-    geomItem.geomMatParam.off('valueChanged', handlers.workerItemDataChanged)
-
-    const geomParm = geomItem.geomParam
-    geomParm.off('valueChanged', handlers.geomChanged)
-    geomParm.off('boundingBoxChanged', handlers.workerItemDataChanged)
+    geomItem.geomMatParam.on('valueChanged', handlers.workerItemDataChanged)
+    geomParam.off('boundingBoxChanged', handlers.workerItemDataChanged)
 
     this.glGeomItems[index] = null
     this.glGeomItemEventHandlers[index] = null
@@ -902,6 +909,7 @@ class GLGeomItemLibrary extends EventEmitter {
     // and null this item in the array. skip over null items.
     if (!glGeomItem) return
     const { geomItem, geomId } = glGeomItem
+    const material = geomItem.materialParam.value!
 
     const stride = pixelsPerItem * 4 // The number of floats per draw item.
     const offset = subIndex * stride
@@ -912,14 +920,16 @@ class GLGeomItemLibrary extends EventEmitter {
     if (geomItem.isCutawayEnabled()) {
       flags |= GLGeomItemFlags.GEOMITEM_FLAG_CUTAWAY
     }
-    if (geomItem.isSelectable() == false) {
+    if (!geomItem.isSelectable()) {
       flags |= GLGeomItemFlags.GEOMITEM_INVISIBLE_IN_GEOMDATA
+    }
+    if (material.isTransparent()) {
+      flags |= GLGeomItemFlags.GEOMITEM_TRANSPARENT
     }
 
     const pix0 = new Vec4(new Float32Array(dataArray.buffer, (offset + 0) * 4, 4))
     pix0.set(flags, 0, 0, 0)
 
-    const material = geomItem.materialParam.value!
     const allocation = this.renderer.glMaterialLibrary.getMaterialAllocation(material)
     if (allocation) {
       pix0.z = allocation.start
@@ -1001,12 +1011,15 @@ class GLGeomItemLibrary extends EventEmitter {
       cullable = false
     }
 
+    const isTransparent = geomItem.materialParam.value.isTransparent()
+
     return {
       id: index,
       boundingRadius,
       pos: pos.asArray(),
       cullable,
       visible: geomItem.isVisible(),
+      isTransparent,
     }
   }
 

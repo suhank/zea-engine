@@ -283,7 +283,9 @@ const processOcclusionData = (data) => {
 
     if (!outOfFrustum[index]) {
       if (value == 0) {
-        if (!occluded[index] && geomItemsData[index].cullable) {
+        // Not transparent object can not be occlusion culled, because we do not render them to the
+        // occlusion buffer. This means they cannot occlude, or be considered occluded.
+        if (!occluded[index] && geomItemsData[index].cullable && !geomItemsData[index].isTransparent) {
           occluded[index] = true
           if (!outOfFrustum[index]) newlyCulled.push(index)
         }

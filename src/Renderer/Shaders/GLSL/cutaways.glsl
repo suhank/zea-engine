@@ -1,6 +1,7 @@
 
 const int GEOMITEM_FLAG_CUTAWAY = 1; // 1<<0;
 const int GEOMITEM_INVISIBLE_IN_GEOMDATA = 2; // 1<<1;
+const int GEOMITEM_TRANSPARENT = 4; // 1<<1;
 
 
 #define RAY_EPS 0.0000001

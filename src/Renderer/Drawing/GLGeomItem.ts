@@ -2,9 +2,9 @@ import { EventEmitter } from '../../Utilities/index'
 
 import '../../SceneTree/GeomItem'
 import { GeomItem } from '../../SceneTree/GeomItem'
-import { VisibilityChangedEvent } from '../../Utilities/Events/VisibilityChangedEvent'
 import { RenderState } from '../types/renderer'
 import { WebGL12RenderingContext } from '../types/webgl'
+import { VisibilityChangedEvent, TransparencyChangedEvent } from '../../Utilities/Events'
 
 const GLGeomItemChangeType = {
   GEOMITEM_CHANGED: 0,
@@ -15,7 +15,8 @@ const GLGeomItemChangeType = {
 
 const GLGeomItemFlags = {
   GEOMITEM_FLAG_CUTAWAY: 1, // 1<<0;
-  GEOMITEM_INVISIBLE_IN_GEOMDATA: 2, // 1<<0;
+  GEOMITEM_INVISIBLE_IN_GEOMDATA: 2, // 1<<1;
+  GEOMITEM_TRANSPARENT: 4, // 1<<1;
 }
 
 /** This class is responsible for managing a GeomItem within the renderer.
@@ -91,8 +92,11 @@ class GLGeomItem extends EventEmitter {
       if (this.geomItem.isCutawayEnabled()) {
         flags |= GLGeomItemFlags.GEOMITEM_FLAG_CUTAWAY
       }
-      if (geomItem.isSelectable() == false) {
+      if (!geomItem.isSelectable()) {
         flags |= GLGeomItemFlags.GEOMITEM_INVISIBLE_IN_GEOMDATA
+      }
+      if (geomItem.materialParam.value.isTransparent()) {
+        flags |= GLGeomItemFlags.GEOMITEM_TRANSPARENT
       }
 
       this.geomData = [flags, materialId, 0, 0]
@@ -106,6 +110,16 @@ class GLGeomItem extends EventEmitter {
         this.cutDataChanged = true
         this.emit('updated')
       })
+      this.listenerIDs['transparencyChanged'] = this.geomItem.materialParam.on(
+        'transparencyChanged',
+        (event: TransparencyChangedEvent) => {
+          let flags = this.geomData[0]
+          if (event.isTransparent) flags |= GLGeomItemFlags.GEOMITEM_TRANSPARENT
+          else flags &= ~GLGeomItemFlags.GEOMITEM_TRANSPARENT
+          this.geomData[0]
+          this.emit('updated')
+        }
+      )
     }
   }
 
