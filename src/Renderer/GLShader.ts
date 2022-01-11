@@ -401,12 +401,11 @@ class GLShader extends BaseItem {
     const shaderkey = key ? key : this.getId()
     let shaderCompilationResult = this.__shaderProgramHdls[shaderkey]
     if (!shaderCompilationResult) {
-      // TODO: are the below three lines necessary?
       shaderCompilationResult = this.__createProgram(shaderopts || {})
       shaderCompilationResult.shaderkey = shaderkey
       this.__shaderProgramHdls[shaderkey] = shaderCompilationResult
 
-      return null
+      return shaderCompilationResult
     }
     return shaderCompilationResult
   }
