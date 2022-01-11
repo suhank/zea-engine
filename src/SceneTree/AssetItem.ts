@@ -7,7 +7,8 @@ import { Registry } from '../Registry'
 import { GeomItem } from './GeomItem'
 import { BinReader } from './BinReader'
 import { AssetLoadContext } from './AssetLoadContext'
-import { BaseItem, Parameter } from '.'
+import { CloneContext } from './CloneContext'
+import { BaseGeomItem, BaseItem, Parameter } from '.'
 
 /**
  * Given a units string, load returns a factor relative to meters
@@ -161,7 +162,7 @@ class AssetItem extends TreeItem {
 
     let layerRoot: TreeItem
     const layers: Record<string, any> = {}
-    context.addGeomToLayer = (geomItem: GeomItem, layer: string) => {
+    context.addGeomToLayer = (geomItem: BaseGeomItem, layer: string) => {
       if (!layers[layer]) {
         if (!layerRoot) {
           layerRoot = new TreeItem('Layers')
@@ -315,7 +316,7 @@ class AssetItem extends TreeItem {
    * @param context - The context value.
    * @return - Returns a new cloned tree item.
    */
-  clone(context?: Record<string, unknown>): TreeItem {
+  clone(context?: CloneContext): TreeItem {
     const cloned = new AssetItem()
     cloned.copyFrom(this, context)
     return cloned
@@ -327,7 +328,7 @@ class AssetItem extends TreeItem {
    * @param src - The tree item to copy from.
    * @param context - The context value.
    */
-  copyFrom(src: AssetItem, context?: Record<string, any>): void {
+  copyFrom(src: AssetItem, context?: CloneContext): void {
     this.geomLibrary = src.geomLibrary
     this.materialLibrary = src.materialLibrary
     this.loaded = src.loaded

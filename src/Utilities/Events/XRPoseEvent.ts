@@ -1,5 +1,5 @@
-import { GeomItem, VRViewport, Xfo } from '../..'
-import { VRController } from '../../Renderer/VR/VRController'
+import { GeomItem, XRViewport, Xfo } from '../..'
+import { XRController } from '../../Renderer/VR/XRController'
 import { IntersectionData } from '../IntersectionData'
 import { ZeaPointerEvent, POINTER_TYPES } from './ZeaPointerEvent'
 
@@ -8,16 +8,16 @@ import { ZeaPointerEvent, POINTER_TYPES } from './ZeaPointerEvent'
 // into this struct. Untill then, we will just put the whole
 // controller.
 // class XRControllerPose {
-//   controller: VRController
-//   constructor(controller: VRController) {
+//   controller: XRController
+//   constructor(controller: XRController) {
 //     this.controller = controller
 //   }
 // }
 
 class XRPoseEvent extends ZeaPointerEvent {
   viewXfo: Xfo
-  controllers: VRController[] = []
-  constructor(viewport: VRViewport, viewXfo: Xfo, controllers: VRController[]) {
+  controllers: XRController[] = []
+  constructor(viewport: XRViewport, viewXfo: Xfo, controllers: XRController[]) {
     super(POINTER_TYPES.xr)
     this.viewport = viewport
     this.viewXfo = viewXfo

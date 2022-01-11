@@ -4,6 +4,7 @@ import { Box3 } from '../../Math/Box3'
 import { BinReader } from '../BinReader'
 import { TreeItem } from '../TreeItem'
 import { IBinaryReader } from '../../Utilities/IBinaryReader'
+import { AssetLoadContext } from '../AssetLoadContext'
 
 /**
  * Represents a specific type of parameter, that only stores `Box3` values.
@@ -73,7 +74,7 @@ class BoundingBoxParameter extends Parameter<Box3> implements IBinaryReader {
     this.__value?.fromJSON(j.value)
   }
 
-  readBinary(reader: BinReader, context?: Record<string, unknown>): void {
+  readBinary(reader: BinReader, context?: AssetLoadContext): void {
     throw new Error('Method not implemented.')
   }
 

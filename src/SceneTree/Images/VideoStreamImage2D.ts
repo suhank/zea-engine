@@ -1,19 +1,18 @@
 import { Registry } from '../../Registry'
-import { BaseImage } from '../BaseImage'
+import { BaseImage, ImageParams } from '../BaseImage'
 
 /** Class representing a 2D video stream image.
  * @private
  * @extends BaseImage
  */
 class VideoStreamImage2D extends BaseImage {
-  __data: any
-  __intervalId: any
+  __data: HTMLVideoElement
+  __intervalId: number
   /**
    * Create a 2D video stream image.
    */
   constructor() {
     super('')
-    this.loaded = false
   }
 
   /**
@@ -133,6 +132,7 @@ class VideoStreamImage2D extends BaseImage {
    * The start method.
    */
   start() {
+    // @ts-ignore
     this.__intervalId = setInterval(() => {
       this.emit('updated')
     }, 20) // Sample at 50fps.
@@ -150,7 +150,7 @@ class VideoStreamImage2D extends BaseImage {
    * The getParams method.
    * @return - The return value.
    */
-  getParams(): Record<string, any> {
+  getParams(): ImageParams {
     return {
       type: this.type,
       format: this.format,

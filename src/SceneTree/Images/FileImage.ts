@@ -1,4 +1,6 @@
+import { ImageParams } from '..'
 import { Registry } from '../../Registry'
+import { AssetLoadContext } from '../AssetLoadContext'
 import { BaseImage } from '../BaseImage'
 import { BinReader } from '../BinReader'
 
@@ -23,8 +25,6 @@ class FileImage extends BaseImage {
     super(name)
     this.type = 'UNSIGNED_BYTE'
     this.crossOrigin = 'anonymous'
-    this.loaded = false
-
     if (filePath && filePath != '') this.load(filePath)
   }
 
@@ -119,7 +119,7 @@ class FileImage extends BaseImage {
    * The getParams method.
    * @return - The return value.
    */
-  getParams() {
+  getParams(): ImageParams {
     const params = super.getParams()
     if (this.loaded) {
       params['data'] = this.__data
@@ -150,7 +150,7 @@ class FileImage extends BaseImage {
    * @param reader - The reader param.
    * @param context - The context param.
    */
-  readBinary(reader: BinReader, context: Record<string, any>) {
+  readBinary(reader: BinReader, context: AssetLoadContext) {
     // super.readBinary(reader, context);
     this.setName(reader.loadStr())
 

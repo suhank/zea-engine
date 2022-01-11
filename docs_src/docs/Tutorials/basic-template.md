@@ -3,6 +3,15 @@ sidebar_position: 0
 title: Basic Setup Template
 ---
 
+:::tip
+
+This page contains a basic template that uses UMD script tags to download and install the engine.
+It's now recommended that you manage Zea Engine by downloading and installing Zea Engine using Yarn or NPM.
+(i.e. npm install @zeainc/zea-engine)
+An example of this can be found in the React tutorial series found [here](react/react)
+
+:::
+
 Here is a minimal example you can copy into your favorite IDE.
 Create a directory structure like the following, then copy and paste the contents of index.html and main.js, found below, into your project.
 
@@ -22,9 +31,15 @@ An example of this setup can be found on [glitch](https://glitch.com/edit/#!/zea
 <!DOCTYPE html>
 <html>
   <!-- download Zea Engine -- this downloads the latest build from version 3 of the engine -->
-  <script crossorigin src="https://cdn.jsdelivr.net/npm/@zeainc/zea-engine@3/dist/index.umd.js"></script>
+  <script
+    crossorigin
+    src="https://cdn.jsdelivr.net/npm/@zeainc/zea-engine@3/dist/index.umd.js"
+  ></script>
   <!-- download our stylesheet -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.9/tailwind.min.css" />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.9/tailwind.min.css"
+  />
 
   <head>
     <title>Zea Engine App</title>
@@ -40,8 +55,8 @@ An example of this setup can be found on [glitch](https://glitch.com/edit/#!/zea
 
     <!-- Run your code here -->
     <script type="module">
-      import { main } from './main.js'
-      main() // modify this function in main.js
+      import { main } from "./main.js";
+      main(); // modify this function in main.js
     </script>
   </body>
 </html>
@@ -51,29 +66,41 @@ An example of this setup can be found on [glitch](https://glitch.com/edit/#!/zea
 
 ```javascript
 // Zea Engine dependencies stored in new const variables. View the API to see what you can include and use.
-const { Scene, GLRenderer, Vec3, Color, Xfo, Quat, GeomItem, Sphere, Material, Ray, MathFunctions } = window.zeaEngine
+const {
+  Scene,
+  GLRenderer,
+  Vec3,
+  Color,
+  Xfo,
+  Quat,
+  GeomItem,
+  Sphere,
+  Material,
+  Ray,
+  MathFunctions,
+} = window.zeaEngine;
 
 export function main() {
   // create a new scene
-  const scene = new Scene()
+  const scene = new Scene();
 
   // create a new renderer and attach it to our HTML Canvas
-  const renderer = new GLRenderer(document.getElementById('canvas'))
+  const renderer = new GLRenderer(document.getElementById("canvas"));
 
   // attach the scene to the renderer. Anything attached to this scene will now be rendererd.
-  renderer.setScene(scene)
+  renderer.setScene(scene);
 
   // get the camera from renderer
-  const camera = renderer.getViewport().getCamera()
+  const camera = renderer.getViewport().getCamera();
   // set camera's target and position.
-  camera.setPositionAndTarget(new Vec3(6, 6, 5), new Vec3(0, 0, 1.5))
+  camera.setPositionAndTarget(new Vec3(6, 6, 5), new Vec3(0, 0, 1.5));
 
   // These variables can be used later in our program
-  const grid_size = 10
-  const grid_div = 10
-  const grid_div_size = grid_size / grid_div
+  const grid_size = 10;
+  const grid_div = 10;
+  const grid_div_size = grid_size / grid_div;
 
-  scene.setupGrid(grid_size, grid_div)
+  scene.setupGrid(grid_size, grid_div);
 
   /*
       Write your code below

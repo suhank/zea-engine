@@ -71,6 +71,10 @@
         ObjAsset,
         Cylinder,
         Cuboid,
+        Lines,
+        Material,
+        BillboardItem,
+        Label,
       } = window.zeaEngine
 
       const canvas = document.getElementById('viewport')
@@ -84,10 +88,70 @@
       })
       renderer.outlineThickness = 1.5
       renderer.outlineSensitivity = 0.5
+      // renderer.getViewport().debugGeomShader = true
 
       renderer.setScene(scene)
 
       scene.setupGrid(10.0, 10, new Color())
+
+      //////////////////////////////////////////
+      // Hit Testing in VR
+      const sphere = new Sphere(0.1)
+      const material = new SimpleSurfaceMaterial('foo')
+      material.baseColorParam.value = new Color(1, 0, 0)
+      scene.getRoot().on('pointerDown', (event) => {
+        if (event.intersectionData) {
+          console.log('Hit:', event.intersectionData.dist)
+          const pos = event.pointerRay.start.add(event.pointerRay.dir.scale(event.intersectionData.dist))
+          const geomItem = new GeomItem('hit', sphere, material, new Xfo(pos))
+          // Make the ball invisible so subsequent pointer events don't see it.
+          geomItem.setSelectable(false)
+          scene.getRoot().addChild(geomItem)
+        }
+      })
+      //////////////////////////////////////////
+
+      let index = 0
+      const addLabel = (lineEndPos, pos, color, name, ppm, fixedSize = false) => {
+        const label = new Label(name)
+        label.fontSizeParam.value = 48
+        label.fontColorParam.value = color
+        label.backgroundColorParam.value = new Color(0.3, 0.3, 0.3)
+
+        const billboard = new BillboardItem('billboard' + index, label)
+        const xfo = new Xfo(pos)
+        billboard.localXfoParam.value = xfo
+        billboard.pixelsPerMeterParam.value = ppm
+        billboard.alignedToCameraParam.value = true
+        billboard.drawOnTopParam.value = true
+        billboard.fixedSizeOnscreenParam.value = fixedSize
+        billboard.alphaParam.value = 1
+        scene.getRoot().addChild(billboard)
+
+        index++
+
+        billboard.on('pointerEnter', (event) => {
+          billboard.addHighlight('pointerOver', new Color(1, 0, 0, 0.2), true)
+          console.log('pointerEnter', event)
+
+          // This should work, but it always fails. The screenshot taken does not contain the highlight.
+          // if (loaded) {
+          //   renderer.once('redrawOccurred', () => {
+          //     window.postMessage(`done-MouseOverLabel`)
+          //   })
+          // }
+        })
+        billboard.on('pointerLeave', (event) => {
+          billboard.removeHighlight('pointerOver', true)
+          console.log('pointerLeave', event)
+        })
+        billboard.on('pointerDown', (event) => {
+          console.log('pointerDown', event)
+        })
+        billboard.on('pointerUp', (event) => {
+          console.log('pointerUp', event)
+        })
+      }
 
       if (true) {
         renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(5, -5, 2), new Vec3(0, 1, 0.75))
@@ -123,6 +187,10 @@
         objAsset.on('loaded', () => {
           window.postMessage(`done-Loading`)
         })
+
+        addLabel(new Vec3(1, 0, 0), new Vec3(1, 1, 1), new Color(0, 1, 0), 'Front', 300, false)
+        addLabel(new Vec3(-1, 0, 0), new Vec3(-1, -1, 1), new Color(1, 1, 0), 'Back', 300, false)
+        addLabel(new Vec3(0, 0, 0), new Vec3(0, 0.05, 0.08), new Color(1, 1, 0), 'Fixed Size Label', 1600, true)
       } else {
         const urlParams = new URLSearchParams(window.location.search)
 
@@ -183,15 +251,15 @@
       })
       scene.getRoot().on('pointerDown', (event) => {
         if (event.intersectionData && event.intersectionData.geomItem) {
-          event.setCapture(geomItem)
+          // event.setCapture(geomItem)
           geomItem.addHighlight('pointerDown', new Color(0, 1, 0, 0.3))
           geomItem = event.intersectionData.geomItem
         }
       })
       scene.getRoot().on('pointerUp', (event) => {
-        if (event.getCapture() == geomItem) event.releaseCapture()
-        const intersectionData = event.controller ? event.controller.getGeomItemAtTip() : event.intersectionData
+        // if (event.getCapture() == geomItem) event.releaseCapture()
         geomItem.removeHighlight('pointerDown')
+        // event.stopPropagation()
       })
 
       // //////////////////////////////////////
@@ -223,6 +291,48 @@
           if (event.key == ' ') {
             xrvp.togglePresenting()
           }
+        })
+
+        const line = new Lines()
+        line.setNumVertices(2)
+        line.setNumSegments(1)
+        line.setSegmentVertexIndices(0, 0, 1)
+        const positions = line.getVertexAttribute('positions')
+        positions.getValueRef(0).set(0.0, 0.0, 0.0)
+        positions.getValueRef(1).set(0.0, 0.0, -1.0)
+        line.setBoundingBoxDirty()
+
+        const pointermat = new Material('pointermat', 'LinesShader')
+        pointermat.setSelectable(false)
+        pointermat.getParameter('BaseColor').value = new Color(0.2, 1.0, 0.2)
+
+        xrvp.on('controllerAdded', (event) => {
+          const controller = event.controller
+
+          controller.raycastDist = 20.0
+
+          // Remove the green ball added by the VRViewManipulator.
+          controller.tipItem.removeAllChildren()
+
+          const pointerItem = new GeomItem('PointerRay', line, pointermat)
+          pointerItem.setSelectable(false)
+          const pointerXfo = new Xfo()
+          pointerXfo.sc.set(1, 1, controller.raycastDist)
+          pointerItem.localXfoParam.value = pointerXfo
+          controller.tipItem.addChild(pointerItem, false)
+
+          // The tip items needs to be rotated down a little to make it
+          // point in the right direction.
+          const tipItemXfo = controller.tipItem.localXfoParam.value
+          tipItemXfo.ori.setFromAxisAndAngle(new Vec3(1, 0, 0), -0.8)
+          controller.tipItem.localXfoParam.value = tipItemXfo
+
+          controller.on('buttonPressed', (event) => {
+            console.log('buttonPressed', event)
+          })
+          controller.on('buttonReleased', (event) => {
+            console.log('buttonReleased', event)
+          })
         })
       })
 

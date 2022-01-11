@@ -11,6 +11,7 @@ import { Rect } from '../Geometry/Shapes/Rect'
 import { BaseGeomItem } from '../BaseGeomItem'
 import { CuttingPlaneOperator } from '../Operators/CuttingPlaneOperator'
 import { BaseItem } from '../BaseItem'
+import { CloneContext } from '../CloneContext'
 
 /**
  * Groups are a special type of `BaseGroup` that allows you to gather/classify/organize/modify
@@ -169,7 +170,7 @@ class CuttingPlane extends BaseGroup {
    * @param context - The context value.
    * @return - Returns a new cloned group.
    */
-  clone(context: Record<string, any>): CuttingPlane {
+  clone(context: CloneContext): CuttingPlane {
     const cloned = new CuttingPlane()
     cloned.copyFrom(this, context)
     return cloned

@@ -4,6 +4,12 @@ import { Xfo } from '../Math/index'
 import { TreeItem } from './TreeItem'
 import { Registry } from '../Registry'
 import { BinReader } from './BinReader'
+import { CloneContext } from './CloneContext'
+import { AssetLoadContext } from './AssetLoadContext'
+import { BaseItem } from './BaseItem'
+import { Parameter } from './Parameters/Parameter'
+import { ChildAddedEvent } from '..'
+import { BaseEvent } from '../Utilities/BaseEvent'
 
 /**
  * TreeItem type of class designed for making duplications of parts of the tree.
@@ -26,9 +32,10 @@ class InstanceItem extends TreeItem {
    *
    * @param treeItem - The treeItem value.
    */
-  setSrcTree(treeItem: TreeItem, context: Record<string, any>) {
+  setSrcTree(treeItem: TreeItem) {
     this.srcTree = treeItem
-    const clonedTree = this.srcTree.clone(context)
+    const clonedContext = new CloneContext()
+    const clonedTree = this.srcTree.clone(clonedContext)
     clonedTree.localXfoParam.value = new Xfo()
     this.addChild(clonedTree, false)
   }
@@ -51,7 +58,7 @@ class InstanceItem extends TreeItem {
    * @param reader - The reader value.
    * @param context - The context value.
    */
-  readBinary(reader: BinReader, context: Record<string, any> = {}) {
+  readBinary(reader: BinReader, context: AssetLoadContext) {
     super.readBinary(reader, context)
 
     // console.log("numTreeItems:", context.numTreeItems, " numGeomItems:", context.numGeomItems)
@@ -60,8 +67,8 @@ class InstanceItem extends TreeItem {
       try {
         context.resolvePath(
           this.srcTreePath,
-          (treeItem: TreeItem) => {
-            this.setSrcTree(treeItem, context)
+          (treeItem: BaseItem | Parameter<any>) => {
+            this.setSrcTree(<TreeItem>treeItem)
           },
           (error: Error) => {
             console.warn(
@@ -106,7 +113,7 @@ class InstanceItem extends TreeItem {
    * @param context - The context value.
    * @return - Returns a new cloned geom item.
    */
-  clone(context?: Record<string, any>) {
+  clone(context?: CloneContext) {
     const cloned = new InstanceItem()
     cloned.copyFrom(this, context)
 
@@ -119,15 +126,15 @@ class InstanceItem extends TreeItem {
    * @param src - The tree item to copy from.
    * @param context - The context value.
    */
-  copyFrom(src: TreeItem, context?: Record<string, any>): void {
+  copyFrom(src: TreeItem, context?: CloneContext): void {
     super.copyFrom(src, context)
 
     this.srcTreePath = (<InstanceItem>src).srcTreePath
     if (this.srcTreePath.length > 0 && this.getNumChildren() == 0) {
-      src.once('childAdded', (event) => {
-        // @ts-ignore
-        const childItem = <TreeItem>event.childItem
-        this.setSrcTree(childItem, context)
+      src.once('childAdded', (event: BaseEvent) => {
+        const childAddedEvent = event as ChildAddedEvent
+        const childItem = childAddedEvent.childItem
+        this.setSrcTree(childItem)
       })
     }
   }

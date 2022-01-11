@@ -42,6 +42,7 @@ import { GLBaseViewport } from '../Renderer/GLBaseViewport'
  * **Events**
  * * **projectionParamChanged:** When on of the parameters above change, the camera emits this event. Note: the Viewport listens to this event and triggers re-rendering.
  * * **movementFinished:** Triggered at the conclusion of some action. E.g. when a zoom action is finished, or when the mouse is released after an orbit action. The viewport listens to this event and triggers a re-rendering of the selection buffers.
+ *
  * @extends TreeItem
  */
 class Camera extends TreeItem {

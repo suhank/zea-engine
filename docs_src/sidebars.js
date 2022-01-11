@@ -47,6 +47,11 @@ module.exports = {
       label: 'Zea Potree', // The link label
       href: 'https://docs.zea.live/zea-potree/', // The external URL
     },
+    {
+      type: 'link',
+      label: 'Zea Engine Lib', // The link label
+      href: 'http://docs.zea.live/ZeaEngineLib/', // The external URL
+    },
   ],
   communitySidebar: [
     {

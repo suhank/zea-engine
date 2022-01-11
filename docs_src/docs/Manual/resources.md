@@ -32,6 +32,8 @@ title: Resources
 
 ## Useful Links
 
+#### Compatibility tools
+ - [CanIUse](https://caniuse.com/)
 #### WebGL Reference
 
 - [WebGL reference](https://www.khronos.org/files/webgl/webgl-reference-card-1_0.pdf) <!-- link taken from ThreeJS -->

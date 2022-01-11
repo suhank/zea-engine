@@ -4,6 +4,7 @@
 import { TreeItem } from '../../SceneTree/TreeItem'
 import { Registry } from '../../Registry'
 import { Parameter } from './Parameter'
+import { CloneContext } from '../CloneContext'
 
 /**
  * Represents a specific type of parameter, that only stores `TreeItem` values.
@@ -147,7 +148,7 @@ class TreeItemParameter extends Parameter<TreeItem | undefined> {
    *
    * @return - Returns a new tree item parameter.
    */
-  clone(context?: Record<string, unknown>) {
+  clone(context?: CloneContext) {
     const clonedParam = new TreeItemParameter(this.name, this.filterFn)
     if (this.__value) clonedParam.setValue(this.__value.clone(context))
     return clonedParam

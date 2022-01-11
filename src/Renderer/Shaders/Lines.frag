@@ -22,10 +22,9 @@ uniform float OccludedStippleValue;
 
 #if defined(DRAW_GEOMDATA)
 
-uniform int floatGeomBuffer;
-uniform int passId;
+uniform int isOrthographic;
 
-import 'GLSLBits.glsl'
+import 'surfaceGeomData.glsl'
 
 #elif defined(DRAW_HIGHLIGHT)
 
@@ -123,33 +122,14 @@ void main(void) {
   //////////////////////////////////////////////
   // GeomData
 #elif defined(DRAW_GEOMDATA)
-
+  // Cutaways
   if (testFlag(flags, GEOMITEM_INVISIBLE_IN_GEOMDATA)) {
     discard;
     return;
   }
   
-  float viewDist = length(v_viewPos);
-
-  if (floatGeomBuffer != 0) {
-    fragColor.r = float(passId); 
-    fragColor.g = float(v_geomItemId);
-    // Note: to make lines visually stand out from triangles
-    // this value is 0.0 in the surface shaders.
-    fragColor.b = 1.0;// TODO: store segment-id or something.
-    fragColor.a = viewDist;
-  } else {
-    ///////////////////////////////////
-    // UInt8 buffer
-    fragColor.r = mod(v_geomItemId, 256.) / 256.;
-    fragColor.g = (floor(v_geomItemId / 256.) + (float(passId) * 64.)) / 256.;
-
-    // encode the dist as a 16 bit float
-    vec2 float16bits = encode16BitFloatInto2xUInt8(viewDist);
-    fragColor.b = float16bits.x;
-    fragColor.a = float16bits.y;
-  }
-
+  fragColor = setFragColor_geomData(v_viewPos, floatGeomBuffer, passId, v_drawItemId, isOrthographic);
+  
   //////////////////////////////////////////////
   // Highlight
 #elif defined(DRAW_HIGHLIGHT)

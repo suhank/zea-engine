@@ -4,6 +4,8 @@ import { TreeItem } from './TreeItem'
 import { Material } from './Material'
 import { BinReader } from './BinReader'
 import { MaterialParameter } from '../SceneTree/Parameters/MaterialParameter'
+import { AssetLoadContext } from './AssetLoadContext'
+import { GeomItem } from './GeomItem'
 
 /**
  * Base class that represents geometry items with layering, overlaying and cut away features.
@@ -146,7 +148,7 @@ class BaseGeomItem extends TreeItem {
    * @param reader - The reader value.
    * @param context - The context value.
    */
-  readBinary(reader: BinReader, context: Record<string, any>): void {
+  readBinary(reader: BinReader, context: AssetLoadContext): void {
     super.readBinary(reader, context)
 
     if (context.versions['zea-engine'].compare([0, 0, 4]) >= 0) {

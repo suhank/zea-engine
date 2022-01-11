@@ -5,6 +5,7 @@
 import { ItemSetParameter, ItemEvent } from '../Parameters/index'
 import { TreeItem } from '../TreeItem'
 import { ZeaPointerEvent } from '../../Utilities/Events/ZeaPointerEvent'
+import { CloneContext } from '../CloneContext'
 
 /**
  * BaseGroup are a special type of `TreeItem` that allows you to gather/classify/organize/modify
@@ -257,7 +258,7 @@ class BaseGroup extends TreeItem {
    * @param src - The group to copy from.
    * @param context - The group to copy from.
    */
-  copyFrom(src: BaseGroup, context?: Record<string, any>): void {
+  copyFrom(src: BaseGroup, context?: CloneContext): void {
     super.copyFrom(src, context)
   }
 }

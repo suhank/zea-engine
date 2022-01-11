@@ -8,7 +8,7 @@
 
     float viewDist;
     if (isOrthographic > 0) {
-      viewDist = v_viewPos.z;
+      viewDist = abs(v_viewPos.z);
     } else {
       viewDist = length(v_viewPos);
     }

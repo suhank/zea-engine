@@ -13,11 +13,12 @@ import { BinReader } from './BinReader'
 import { Operator } from './Operators'
 import { Parameter } from './Parameters'
 import { ZeaPointerEvent } from '../Utilities/Events/ZeaPointerEvent'
-import { KeyboardEvent } from '../Utilities/Events/KeyboardEvent'
-import { ZeaMouseEvent } from '../Utilities/Events/ZeaMouseEvent'
 import { ZeaWheelEvent } from '../Utilities/Events/ZeaWheelEvent'
 import { BaseEvent } from '../Utilities/BaseEvent'
 import { ZeaTouchEvent } from '../Utilities/Events/ZeaTouchEvent'
+import { CloneContext } from './CloneContext'
+import { AssetLoadContext } from './AssetLoadContext'
+import { ChildAddedEvent } from '../Utilities/Events/ChildAddedEvent'
 
 /**
  * Class representing an Item in the scene tree with hierarchy capabilities (has children).
@@ -522,7 +523,7 @@ class TreeItem extends BaseItem {
     this.updateChildNameMapping(index)
     childItem.setOwner(this)
 
-    this.emit('childAdded', { childItem, index })
+    this.emit('childAdded', new ChildAddedEvent(index, childItem))
 
     return childItem
   }
@@ -1006,7 +1007,7 @@ class TreeItem extends BaseItem {
    * @param reader - The reader value.
    * @param context - The context value.
    */
-  readBinary(reader: BinReader, context: Record<string, any>): void {
+  readBinary(reader: BinReader, context: AssetLoadContext): void {
     super.readBinary(reader, context)
 
     context.numTreeItems++
@@ -1072,7 +1073,7 @@ class TreeItem extends BaseItem {
    * @param context - The context value.
    * @return - Returns a new cloned tree item.
    */
-  clone(context?: Record<string, unknown>): TreeItem {
+  clone(context?: CloneContext): TreeItem {
     const cloned = new TreeItem('')
     cloned.copyFrom(this, context)
     return cloned
@@ -1084,7 +1085,7 @@ class TreeItem extends BaseItem {
    * @param src - The tree item to copy from.
    * @param context - The context value.
    */
-  copyFrom(src: TreeItem, context?: Record<string, any>): void {
+  copyFrom(src: TreeItem, context?: CloneContext): void {
     super.copyFrom(src, context)
 
     // Share a local Xfo

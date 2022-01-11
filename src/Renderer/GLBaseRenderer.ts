@@ -8,7 +8,7 @@ import { create3DContext } from './GLContext'
 import { GLScreenQuad } from './GLScreenQuad'
 import { GLViewport } from './GLViewport'
 import { Registry } from '../Registry'
-import { VRViewport } from './VR/VRViewport'
+import { XRViewport } from './VR/XRViewport'
 import { GLMaterialLibrary } from './Drawing/GLMaterialLibrary'
 import { GLGeomLibrary } from './Drawing/GLGeomLibrary'
 import { GLGeomItemLibrary } from './Drawing/GLGeomItemLibrary'
@@ -26,11 +26,56 @@ import { KeyboardEvent } from '../Utilities/Events/KeyboardEvent'
 import { GLShader } from './GLShader'
 import { WebGL12RenderingContext } from './types/webgl'
 import { RenderState, Uniforms, GeomDataRenderState } from './types/renderer'
+import { StateChangedEvent } from '../Utilities/Events/StateChangedEvent'
+import { ChildAddedEvent } from '../Utilities/Events/ChildAddedEvent'
 
 let activeGLRenderer: GLBaseRenderer | undefined
 let pointerIsDown = false
 let pointerLeft = false
 const registeredPasses: Record<string, any> = {}
+
+/*
+ * WebGL context attributes:
+ *
+ * alpha: Boolean that indicates if the canvas contains an alpha buffer.
+ * depth: Boolean that indicates that the drawing buffer is requested to have a depth buffer of at least 16 bits.
+ * stencil: Boolean that indicates that the drawing buffer is requested to have a stencil buffer of at least 8 bits.
+ * desynchronized: Boolean that hints the user agent to reduce the latency by desynchronizing the canvas paint cycle from the event loop
+ * antialias: Boolean that indicates whether or not to perform anti-aliasing if possible.
+ * failIfMajorPerformanceCaveat: Boolean that indicates if a context will be created if the system performance is low or if no hardware GPU is available.
+ * powerPreference: A hint to the user agent indicating what configuration of GPU is suitable for the WebGL context. Possible values are:
+ *  - "default": Let the user agent decide which GPU configuration is most suitable. This is the default value.
+ *  - "high-performance": Prioritizes rendering performance over power consumption.
+ *  - "low-power": Prioritizes power saving over rendering performance.
+ * premultipliedAlpha: Boolean that indicates that the page compositor will assume the drawing buffer contains colors with pre-multiplied alpha.
+ * preserveDrawingBuffer: If the value is true the buffers will not be cleared and will preserve their values until cleared or overwritten by the author.
+ * xrCompatible: Boolean that hints to the user agent to use a compatible graphics adapter for an immersive XR device.
+ * Setting this synchronous flag at context creation is discouraged; rather call the asynchronous WebGLRenderingContext.makeXRCompatible()
+ *    method the moment you intend to start an XR session.
+ */
+export interface RendererOptions {
+  // GLBaseRenderer
+  supportXR?: boolean
+
+  // GLRenderer
+  disableTextures?: boolean
+  debugGeomIds?: boolean
+
+  // GLGeomItemLibrary. Set this to true to cull objects not within view of the camera.
+  enableFrustumCulling?: boolean
+
+  // webgl context attributes
+  alpha?: boolean
+  depth?: boolean
+  stencil?: boolean
+  antialias?: boolean
+  powerPreference?: string
+  preserveDrawingBuffer?: boolean
+  xrCompatible?: boolean
+
+  disableMultiDraw?: boolean
+  floatGeomBuffer?: boolean
+}
 
 /**
  * Class representing a GL base renderer.
@@ -63,8 +108,8 @@ class GLBaseRenderer extends ParameterOwner {
   floatGeomBuffer: boolean = true
 
   protected __supportXR: boolean = false
-  protected __xrViewport: VRViewport | undefined = undefined
-  protected __xrViewportPromise: Promise<VRViewport>
+  protected __xrViewport: XRViewport | undefined = undefined
+  protected __xrViewportPromise: Promise<XRViewport>
 
   glMaterialLibrary: GLMaterialLibrary
   glGeomItemLibrary: GLGeomItemLibrary
@@ -80,7 +125,7 @@ class GLBaseRenderer extends ParameterOwner {
    * @param $canvas - The canvas element.
    * @param options - The options value.
    */
-  constructor($canvas: HTMLCanvasElement, options: Record<string, any> = {}) {
+  constructor($canvas: HTMLCanvasElement, options: RendererOptions = {}) {
     super()
 
     if (!SystemDesc.gpuDesc) {
@@ -121,7 +166,7 @@ class GLBaseRenderer extends ParameterOwner {
 
     // ////////////////////////////////////////////
     // WebXR
-    this.__supportXR = options.supportXR !== undefined ? options.supportXR : true
+    this.__supportXR = options.supportXR ?? true
     this.__xrViewportPromise = new Promise((resolve, reject) => {
       if (this.__supportXR) {
         // if(!navigator.xr && window.WebVRPolyfill != undefined) {
@@ -374,7 +419,7 @@ class GLBaseRenderer extends ParameterOwner {
       if (childItem) this.addTreeItem(<TreeItem>childItem)
     }
 
-    listenerIDs['childAdded'] = treeItem.on('childAdded', (event) => {
+    listenerIDs['childAdded'] = treeItem.on('childAdded', (event: ChildAddedEvent) => {
       this.addTreeItem(event.childItem)
     })
     listenerIDs['childRemoved'] = treeItem.on('childRemoved', (event) => {
@@ -542,7 +587,7 @@ class GLBaseRenderer extends ParameterOwner {
    * @param $canvas - The $canvas element.
    * @param webglOptions - The webglOptions value.
    */
-  private setupWebGL($canvas: HTMLCanvasElement, webglOptions: Record<string, any>): WebGL12RenderingContext {
+  private setupWebGL($canvas: HTMLCanvasElement, webglOptions: RendererOptions = {}): WebGL12RenderingContext {
     const { tagName } = $canvas
 
     if (!['DIV', 'CANVAS'].includes(tagName)) {
@@ -619,10 +664,10 @@ class GLBaseRenderer extends ParameterOwner {
     this.handleResize(this.__glcanvas.parentElement.clientWidth, this.__glcanvas.parentElement.clientHeight)
 
     webglOptions.preserveDrawingBuffer = true
-    webglOptions.antialias = webglOptions.antialias != undefined ? webglOptions.antialias : true
+    webglOptions.antialias = webglOptions.antialias ?? true
     webglOptions.depth = true
     webglOptions.stencil = false
-    webglOptions.alpha = webglOptions.alpha ? webglOptions.alpha : false
+    webglOptions.alpha = webglOptions.alpha ?? false
     // Note: Due to a change in Chrome (version 88-89), providing true here caused a pause when creating
     // an WebGL context, if the XR device was unplugged. We also call 'makeXRCompatible' when setting
     // up the XRViewport, so we to get an XR Compatible context anyway.
@@ -660,8 +705,7 @@ class GLBaseRenderer extends ParameterOwner {
     if (SystemDesc.browserName == 'Safari' && gl.name == 'webgl') {
       this.floatGeomBuffer = false
     } else {
-      this.floatGeomBuffer =
-        webglOptions.floatGeomBuffer != undefined ? webglOptions.floatGeomBuffer : gl.floatTexturesSupported
+      this.floatGeomBuffer = webglOptions.floatGeomBuffer ?? gl.floatTexturesSupported
     }
     gl.floatGeomBuffer = this.floatGeomBuffer
     return gl
@@ -676,16 +720,18 @@ class GLBaseRenderer extends ParameterOwner {
     const isValidCanvas = () => this.getWidth() > 0 && this.getHeight()
 
     /** Mouse Events Start */
-    const isMobileSafariMouseEvent = (event: Record<string, any>) => {
-      if (SystemDesc.isMobileDevice && SystemDesc.browserName == 'Safari') {
-        console.warn('Mobile Safari is triggering mouse event:', event.type)
+    // Mobile devices emulate mouse events after emitting touch events
+    // which causes double taps and other weirdness.
+    const isMobileDeviceMouseEvent = (event: Record<string, any>) => {
+      if (SystemDesc.isMobileDevice) {
+        console.warn('Mobile device is triggering mouse event:', event.type)
         return true
       }
       return false
     }
 
     this.__glcanvas!.addEventListener('mousedown', (event: globalThis.MouseEvent) => {
-      if (isMobileSafariMouseEvent(event)) {
+      if (isMobileDeviceMouseEvent(event)) {
         return
       }
       const pointerEvent = new ZeaMouseEvent(event, this.__glcanvas!.getBoundingClientRect())
@@ -701,7 +747,7 @@ class GLBaseRenderer extends ParameterOwner {
     })
 
     document.addEventListener('mouseup', (event: globalThis.MouseEvent) => {
-      if (isMobileSafariMouseEvent(event)) {
+      if (isMobileDeviceMouseEvent(event)) {
         return
       }
 
@@ -723,7 +769,7 @@ class GLBaseRenderer extends ParameterOwner {
     })
 
     document.addEventListener('mousemove', (event: globalThis.MouseEvent) => {
-      if (isMobileSafariMouseEvent(event)) {
+      if (isMobileDeviceMouseEvent(event)) {
         return
       }
 
@@ -739,7 +785,7 @@ class GLBaseRenderer extends ParameterOwner {
     })
 
     this.__glcanvas!.addEventListener('mouseenter', (event: globalThis.MouseEvent) => {
-      if (isMobileSafariMouseEvent(event)) {
+      if (isMobileDeviceMouseEvent(event)) {
         return
       }
 
@@ -761,7 +807,7 @@ class GLBaseRenderer extends ParameterOwner {
     })
 
     this.__glcanvas!.addEventListener('mouseleave', (event: globalThis.MouseEvent) => {
-      if (isMobileSafariMouseEvent(event)) {
+      if (isMobileDeviceMouseEvent(event)) {
         return
       }
 
@@ -975,16 +1021,20 @@ class GLBaseRenderer extends ParameterOwner {
    * @return - The return value.
    * @private
    */
-  __setupXRViewport(): VRViewport {
+  __setupXRViewport(): XRViewport {
     // Always get the last display. Additional displays are added at the end.(e.g. [Polyfill, HMD])
-    const xrvp = new VRViewport(this)
+    const xrvp = new XRViewport(this)
 
-    const emitViewChanged = (event: Record<string, any>) => {
+    const emitViewChanged = (event: ViewChangedEvent) => {
       this.emit('viewChanged', event)
     }
 
-    xrvp.on('presentingChanged', (event: any) => {
+    xrvp.on('presentingChanged', (event: StateChangedEvent) => {
       const state = event.state
+
+      // Note: the WebXREmulator does a double emit and this causes issues.
+      if (this.__xrViewportPresenting == state) return
+
       this.__xrViewportPresenting = state
       if (state) {
         // Let the passes know that VR is starting.
@@ -1022,7 +1072,7 @@ class GLBaseRenderer extends ParameterOwner {
    * The getVRViewport method.
    * @return - The return value.
    */
-  getVRViewport(): VRViewport | undefined {
+  getVRViewport(): XRViewport | undefined {
     return this.__xrViewport
   }
 
@@ -1030,7 +1080,7 @@ class GLBaseRenderer extends ParameterOwner {
    * The getXRViewport method.
    * @return - The return value.
    */
-  getXRViewport(): Promise<VRViewport> {
+  getXRViewport(): Promise<XRViewport> {
     return this.__xrViewportPromise
   }
 

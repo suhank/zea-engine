@@ -7,6 +7,9 @@ custom_edit_url: null
 
 
 
+ZeaUIEvent are emitted from a 2D UI, such as from a HTMLCanvas element generated from
+a mouse or touch interaction.
+
 ## Hierarchy
 
 - [`ZeaPointerEvent`](Utilities_Events_ZeaPointerEvent.ZeaPointerEvent)
@@ -37,7 +40,7 @@ Create an BaseEvent.
 
 #### Defined in
 
-[Utilities/Events/ZeaUIEvent.ts:12](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/Events/ZeaUIEvent.ts#L12)
+[src/Utilities/Events/ZeaUIEvent.ts:14](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaUIEvent.ts#L14)
 
 ## Properties
 
@@ -47,7 +50,7 @@ Create an BaseEvent.
 
 #### Defined in
 
-[Utilities/Events/ZeaUIEvent.ts:8](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/Events/ZeaUIEvent.ts#L8)
+[src/Utilities/Events/ZeaUIEvent.ts:11](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaUIEvent.ts#L11)
 
 ___
 
@@ -61,7 +64,7 @@ ___
 
 #### Defined in
 
-[Utilities/Events/ZeaPointerEvent.ts:18](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/Events/ZeaPointerEvent.ts#L18)
+[src/Utilities/Events/ZeaPointerEvent.ts:22](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaPointerEvent.ts#L22)
 
 ___
 
@@ -75,7 +78,7 @@ ___
 
 #### Defined in
 
-[Utilities/Events/ZeaPointerEvent.ts:19](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/Events/ZeaPointerEvent.ts#L19)
+[src/Utilities/Events/ZeaPointerEvent.ts:23](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaPointerEvent.ts#L23)
 
 ___
 
@@ -85,7 +88,7 @@ ___
 
 #### Defined in
 
-[Utilities/Events/ZeaUIEvent.ts:9](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/Events/ZeaUIEvent.ts#L9)
+[src/Utilities/Events/ZeaUIEvent.ts:12](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaUIEvent.ts#L12)
 
 ___
 
@@ -93,9 +96,13 @@ ___
 
 • **pointerRay**: [`Ray`](../../Math/Math_Ray.Ray)
 
+#### Inherited from
+
+[ZeaPointerEvent](Utilities_Events_ZeaPointerEvent.ZeaPointerEvent).[pointerRay](Utilities_Events_ZeaPointerEvent.ZeaPointerEvent#pointerray)
+
 #### Defined in
 
-[Utilities/Events/ZeaUIEvent.ts:10](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/Events/ZeaUIEvent.ts#L10)
+[src/Utilities/Events/ZeaPointerEvent.ts:18](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaPointerEvent.ts#L18)
 
 ___
 
@@ -109,7 +116,7 @@ ___
 
 #### Defined in
 
-[Utilities/Events/ZeaPointerEvent.ts:14](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/Events/ZeaPointerEvent.ts#L14)
+[src/Utilities/Events/ZeaPointerEvent.ts:17](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaPointerEvent.ts#L17)
 
 ___
 
@@ -123,21 +130,21 @@ ___
 
 #### Defined in
 
-[Utilities/Events/ZeaPointerEvent.ts:16](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/Events/ZeaPointerEvent.ts#L16)
+[src/Utilities/Events/ZeaPointerEvent.ts:20](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaPointerEvent.ts#L20)
 
 ___
 
 ### viewport
 
-• **viewport**: [`GLViewport`](../../Renderer/Renderer_GLViewport.GLViewport)
+• **viewport**: [`GLBaseViewport`](../../Renderer/Renderer_GLBaseViewport.GLBaseViewport)
 
-#### Overrides
+#### Inherited from
 
 [ZeaPointerEvent](Utilities_Events_ZeaPointerEvent.ZeaPointerEvent).[viewport](Utilities_Events_ZeaPointerEvent.ZeaPointerEvent#viewport)
 
 #### Defined in
 
-[Utilities/Events/ZeaUIEvent.ts:7](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/Events/ZeaUIEvent.ts#L7)
+[src/Utilities/Events/ZeaPointerEvent.ts:19](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaPointerEvent.ts#L19)
 
 ## Methods
 
@@ -155,7 +162,7 @@ ___
 
 #### Defined in
 
-[Utilities/Events/ZeaPointerEvent.ts:34](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/Events/ZeaPointerEvent.ts#L34)
+[src/Utilities/Events/ZeaPointerEvent.ts:38](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaPointerEvent.ts#L38)
 
 ___
 
@@ -173,7 +180,7 @@ ___
 
 #### Defined in
 
-[Utilities/Events/ZeaPointerEvent.ts:38](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/Events/ZeaPointerEvent.ts#L38)
+[src/Utilities/Events/ZeaPointerEvent.ts:42](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaPointerEvent.ts#L42)
 
 ___
 
@@ -197,7 +204,7 @@ ___
 
 #### Defined in
 
-[Utilities/Events/ZeaPointerEvent.ts:30](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/Events/ZeaPointerEvent.ts#L30)
+[src/Utilities/Events/ZeaPointerEvent.ts:34](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaPointerEvent.ts#L34)
 
 ___
 
@@ -215,5 +222,5 @@ ___
 
 #### Defined in
 
-[Utilities/Events/ZeaPointerEvent.ts:26](https://github.com/ZeaInc/zea-engine/blob/edee5b48/src/Utilities/Events/ZeaPointerEvent.ts#L26)
+[src/Utilities/Events/ZeaPointerEvent.ts:30](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaPointerEvent.ts#L30)
 
