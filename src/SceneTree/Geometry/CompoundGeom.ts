@@ -4,6 +4,7 @@ import { BinReader } from '../BinReader'
 import { Vec3 } from '../../Math/Vec3'
 import { Quat } from '../../Math/Quat'
 import { Xfo } from '../../Math/Xfo'
+import { AssetLoadContext } from '../AssetLoadContext'
 // import { Box3 } from '../../Math/Box3'
 // import { Vec3Attribute } from './Vec3Attribute'
 
@@ -143,7 +144,7 @@ class CompoundGeom extends BaseGeom {
    * @param {BinReader} reader - The reader value.
    * @param {Record<string, unknown>} context - The context value.
    */
-  readBinary(reader: BinReader, context: Record<string, unknown>) {
+  readBinary(reader: BinReader, context: AssetLoadContext) {
     super.loadBaseGeomBinary(reader)
 
     const geomCountsByType = reader.loadUInt32Array(3)

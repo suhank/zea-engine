@@ -1,6 +1,7 @@
 import { Xfo, Box3, Vec3, Mat4, Color } from '../../Math/index'
 import { Registry } from '../../Registry'
 import { AssetLoadContext } from '../AssetLoadContext'
+import { BaseGeomItem } from '../BaseGeomItem'
 import { GeomItem } from '../GeomItem'
 import { BinReader } from '../BinReader'
 import { CloneContext } from '../CloneContext'
@@ -57,9 +58,8 @@ class CADBody extends GeomItem {
    * @param context - The context param.
    */
   readBinary(reader: BinReader, context: AssetLoadContext) {
-    super.readBinary(reader, context)
-
-    if (context.versions['zea-cad'].compare([3, 8, 2]) < 0) {\
+    if (context.versions['zea-cad'].compare([3, 8, 2]) < 0) {
+      BaseGeomItem.prototype.readBinary.call(this, reader, context)
       // Note: the bodyDescId is now deprecated as it is part of the parametric surface evaluation code.
       // The BinReader must read the value to continue loading others.
       /* const bodyDescId = */ reader.loadSInt32()
@@ -84,6 +84,8 @@ class CADBody extends GeomItem {
         // @ts-ignore
         for (const layer of this.__layers) context.addGeomToLayer(this, layer)
       }
+    } else {
+      super.readBinary(reader, context)
     }
   }
 }

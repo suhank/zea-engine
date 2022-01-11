@@ -128,7 +128,7 @@ void main(void) {
     return;
   }
   
-  fragColor = setFragColor_geomData(v_viewPos, floatGeomBuffer, passId, v_drawItemId, isOrthographic);
+  fragColor = setFragColor_geomData(v_viewPos, floatGeomBuffer, passId, v_geomItemId, 0.0, isOrthographic);
   
   //////////////////////////////////////////////
   // Highlight
