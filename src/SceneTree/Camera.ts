@@ -347,7 +347,7 @@ class Camera extends TreeItem {
    * @param viewport - The viewport value.
    * @param treeItems - The treeItems value.
    */
-  frameView(viewport: GLBaseViewport, treeItems: TreeItem[])  {
+  frameView(viewport: GLBaseViewport, treeItems: TreeItem[]): void {
     const focalDistance = this.focalDistanceParam.value
     const fovY = this.fovParam.value
 
