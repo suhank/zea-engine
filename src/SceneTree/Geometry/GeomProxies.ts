@@ -1,5 +1,7 @@
+import { Material } from '..'
 import { Box3 } from '../../Math/index'
 import { EventEmitter } from '../../Utilities/EventEmitter'
+import { MaterialLibrary } from '../MaterialLibrary'
 
 /** ProxyGeometries are pupulated from data unpacked using a webworker while loading zcad files.
  * These geometries represent readonly geometries with very basic topologies.
@@ -170,17 +172,29 @@ class CompoundGeomProxy extends BaseProxy {
   private counts: Record<string, number>
   private subGeomOffsets: Record<string, Uint32Array>
   private subGeomCounts: Record<string, Uint8Array | Uint16Array | Uint32Array>
+  private materials: Array<Material> = []
+  protected subGeomMaterialIndices: Uint8Array = new Uint8Array(0)
   /**
    * Create a mesh proxy.
    * @param data - The data value.
    */
-  constructor(data: any) {
+  constructor(data: any, materialLibrary: MaterialLibrary) {
     super(data)
 
     this.counts = data.geomBuffers.counts
     this.offsets = data.geomBuffers.offsets
     this.subGeomOffsets = data.geomBuffers.subGeomOffsets
     this.subGeomCounts = data.geomBuffers.subGeomCounts
+
+    // Now use the indices in the geom to look up the actual materials
+    // that will be used in rendering.
+    const materials = materialLibrary.getMaterials()
+    data.geomBuffers.materialLibraryIndices.forEach((materialIndex: number, index: number) => {
+      this.materials[index] = materials[materialIndex]
+    })
+    this.subGeomMaterialIndices = data.geomBuffers.subGeomMaterialIndices
+
+    this.__buffers.materials = this.materials
   }
 
   /**

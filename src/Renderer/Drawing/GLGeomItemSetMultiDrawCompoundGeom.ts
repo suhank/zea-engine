@@ -268,6 +268,8 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
           const drawElementCounts = this.drawElementCounts[type]
           const allocation = allocator.getAllocation(index)
 
+          const materials = geomBuffers.materials
+
           for (let i = 0; i < offsets.length; i++) {
             const drawId = allocation.start + subIndex
 
@@ -276,7 +278,23 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
             drawIdsArray[drawId * 4 + 0] = glGeomItem.geomItemId
             // Note: a zero value means no sub-geom was being drawn.
             drawIdsArray[drawId * 4 + 1] = subIndex + 1
-            // drawIdsArray[drawId * 4 + 2] = subGeom.materialId ? subGeom.materialId : -1.0
+
+            if (materials.length > 0) {
+              // Note: subGeomMaterialIndices is Uint8Array, and 0 means no custom
+              // material is assigned to the subGeom.
+              const materialId = geomBuffers.subGeomMaterialIndices[i] - 1
+              if (materialId >= 0) {
+                const material = geomBuffers.materials[materialId]
+                // @ts-ignore
+                this.renderer!.glMaterialLibrary.addMaterial(material)
+                const materialAddr = this.renderer!.glMaterialLibrary.getMaterialAllocation(material)
+                drawIdsArray[drawId * 4 + 2] = materialAddr.start
+              } else {
+                drawIdsArray[drawId * 4 + 2] = 0.0
+              }
+            } else {
+              drawIdsArray[drawId * 4 + 2] = 0.0
+            }
             drawIdsArray[drawId * 4 + 3] = 0 // spare
             subIndex++
           }

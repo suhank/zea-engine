@@ -19,6 +19,7 @@ import { StreamFileParsedEvent } from '../Utilities/Events/StreamFileParsedEvent
 import { RangeLoadedEvent } from '../Utilities/Events/RangeLoadedEvent'
 import { BaseGeom } from './Geometry/BaseGeom'
 import { AssetLoadContext } from './AssetLoadContext'
+import { AssetItem } from '.'
 
 const numCores = SystemDesc.hardwareConcurrency - 1 // always leave one main thread code spare.
 
@@ -77,6 +78,7 @@ interface StreamInfo {
 /** Class representing a geometry library.
  */
 class GeomLibrary extends EventEmitter {
+  protected assetItem: AssetItem
   protected listenerIDs: Record<string, number> = {}
   protected __streamInfos: Record<string, StreamInfo>
   protected __genBuffersOpts: Record<string, any>
@@ -90,9 +92,10 @@ class GeomLibrary extends EventEmitter {
   /**
    * Create a geom library.
    */
-  constructor() {
+  constructor(assetItem: AssetItem) {
     super()
 
+    this.assetItem = assetItem
     this.__streamInfos = {}
     this.__genBuffersOpts = {}
 
@@ -354,7 +357,7 @@ class GeomLibrary extends EventEmitter {
           proxy = new MeshProxy(geomData)
           break
         case 'CompoundGeom':
-          proxy = new CompoundGeomProxy(geomData)
+          proxy = new CompoundGeomProxy(geomData, this.assetItem.getMaterialLibrary())
           break
         default:
           throw new Error('Unsupported Geom type:')

@@ -45,7 +45,7 @@ const getUnitsFactor = (units: string) => {
  * @extends TreeItem
  */
 class AssetItem extends TreeItem {
-  geomLibrary: GeomLibrary = new GeomLibrary()
+  geomLibrary: GeomLibrary = new GeomLibrary(this)
   materialLibrary: MaterialLibrary = new MaterialLibrary()
   loaded: boolean = false
 

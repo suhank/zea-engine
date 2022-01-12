@@ -63,6 +63,9 @@ void main(void) {
 #ifdef ENABLE_MULTI_DRAW
 
   vec2 materialCoords = v_geomItemData.zw;
+  if (v_drawItemIds.z > 0.5) {
+    materialCoords.x = v_drawItemIds.z;
+  }
   vec4 baseColor = toLinear(getMaterialValue(materialCoords, 0));
 
 #else // ENABLE_MULTI_DRAW

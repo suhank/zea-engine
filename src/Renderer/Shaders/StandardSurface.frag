@@ -144,6 +144,9 @@ void main(void) {
 #if defined(DRAW_COLOR)
 #ifdef ENABLE_MULTI_DRAW
   vec2 materialCoords = v_geomItemData.zw;
+  if (v_drawItemIds.z > 0.5) {
+    materialCoords.x = v_drawItemIds.z;
+  }
 #endif
 
 

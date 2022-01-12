@@ -67,7 +67,7 @@ void main(void) {
     float overlay = 0.00001;
     gl_Position.z = mix(gl_Position.z, -gl_Position.w, overlay);
   } // end 'LINES'
-  else if (geomType == 0) { // start 'POINTS'
+  else if (geomType == 2) { // start 'POINTS'
     float overlay = 0.00003;
     gl_Position.z = mix(gl_Position.z, -gl_Position.w, overlay);
   }  // end 'POINTS'

@@ -55,11 +55,16 @@ interface SubGeomData {
  * @extends BaseGeom
  */
 class CompoundGeom extends BaseGeom {
+  protected numSubGeoms: number = 0
   protected indices: Uint8Array | Uint16Array | Uint32Array = new Uint8Array(0)
   private offsets: Record<string, number> = {}
   private counts: Record<string, number> = {}
   private subGeomOffsets: Record<string, Uint32Array> = {}
   private subGeomCounts: Record<string, Uint8Array | Uint16Array | Uint32Array> = {}
+
+  protected materialLibraryIndices: Uint32Array = new Uint32Array(0)
+  protected subGeomMaterialIndices: Uint8Array = new Uint8Array(0)
+
   protected subGeoms: Array<SubGeomData> = []
   /**
    * Create points.
@@ -131,6 +136,8 @@ class CompoundGeom extends BaseGeom {
       subGeomOffsets: this.subGeomOffsets,
       subGeomCounts: this.subGeomCounts,
       subGeoms: this.subGeoms,
+      materialLibraryIndices: this.materialLibraryIndices,
+      subGeomMaterialIndices: this.subGeomMaterialIndices,
     }
     return result
   }
@@ -196,6 +203,28 @@ class CompoundGeom extends BaseGeom {
     }
     this.subGeomOffsets['LINES'] = subGeomOffsetsLines
     this.subGeomCounts['LINES'] = subGeomCountsLines
+
+    // /////////////////////////////////
+    // POINTS subgeoms
+    const numPointsSubGeoms = reader.loadUInt32()
+    const subGeomOffsetsPoints = new Uint32Array(subGeomCountsLines.length)
+    const subGeomCountsPoints = new Uint32Array(subGeomCountsLines.length)
+    for (let i = 0; i < numPointsSubGeoms; i++) {
+      subGeomOffsetsPoints[i] = offset
+      subGeomCountsPoints[i] = 1
+      offset++
+    }
+    this.subGeomOffsets['POINTS'] = subGeomOffsetsPoints
+    this.subGeomCounts['POINTS'] = subGeomCountsPoints
+
+    this.numSubGeoms = subGeomCountsMesh.length + subGeomCountsLines.length + numPointsSubGeoms
+    // /////////////////////////////////
+    // Materials
+    const numMaterials = reader.loadUInt32()
+    if (numMaterials > 0) {
+      this.materialLibraryIndices = reader.loadUInt32Array(numMaterials)
+      this.subGeomMaterialIndices = reader.loadUInt8Array(this.numSubGeoms)
+    }
 
     this.emit('geomDataChanged', {})
   }

@@ -16,7 +16,8 @@ class MaterialLibrary extends EventEmitter implements Owner {
   protected lod: number
   protected __name: string
   protected __images: Record<string, BaseImage> = {}
-  protected __materials: Record<string, Material> = {}
+  protected __materials: Array<Material> = []
+  protected __materialsMap: Record<string, number> = {}
   protected name: string = ''
   /**
    * Create a material library.
@@ -28,18 +29,14 @@ class MaterialLibrary extends EventEmitter implements Owner {
 
     this.lod = 0
     if (SystemDesc.isMobileDevice) this.lod = 1
-    this.clear()
+
+    // this.defaultMaterial = new Material('Default', 'SimpleSurfaceShader')
   }
 
   /**
    * The clear method.
    */
-  clear() {
-    this.__images = {}
-    this.__materials = {
-      Default: new Material('Default', 'SimpleSurfaceShader'),
-    }
-  }
+  clear() {}
 
   /**
    * The getPath method.
@@ -67,7 +64,7 @@ class MaterialLibrary extends EventEmitter implements Owner {
    * @return - The return value.
    */
   getNumMaterials() {
-    return Object.keys(this.__materials).length
+    return this.__materials.length
   }
 
   /**
@@ -75,7 +72,7 @@ class MaterialLibrary extends EventEmitter implements Owner {
    * @return - The return value.
    */
   getMaterials() {
-    return Object.values(this.__materials)
+    return this.__materials
   }
 
   /**
@@ -83,11 +80,10 @@ class MaterialLibrary extends EventEmitter implements Owner {
    * @return - The return value.
    */
   getMaterialNames() {
-    const names = []
-    // eslint-disable-next-line guard-for-in
-    for (const name in this.__materials) {
-      names.push(name)
-    }
+    const names: Array<string> = []
+    this.__materials.forEach((material) => {
+      names.push(material.getName())
+    })
     return names
   }
 
@@ -97,7 +93,7 @@ class MaterialLibrary extends EventEmitter implements Owner {
    * @return - The return value.
    */
   hasMaterial(name: string) {
-    return name in this.__materials
+    return name in this.__materialsMap
   }
 
   /**
@@ -106,7 +102,8 @@ class MaterialLibrary extends EventEmitter implements Owner {
    */
   addMaterial(material: Material) {
     material.setOwner(this)
-    this.__materials[material.getName()] = material
+    this.__materialsMap[material.getName()] = this.__materials.length
+    this.__materials.push(material)
   }
 
   /**
@@ -116,11 +113,11 @@ class MaterialLibrary extends EventEmitter implements Owner {
    * @return - The return value.
    */
   getMaterial(name: string, assert = true) {
-    const res = this.__materials[name]
-    if (!res && assert) {
+    const index = this.__materialsMap[name]
+    if (index == undefined && assert) {
       throw new Error('Material:' + name + ' not found in library:' + this.getMaterialNames())
     }
-    return res
+    return this.__materials[index]
   }
 
   /**
@@ -277,7 +274,12 @@ class MaterialLibrary extends EventEmitter implements Owner {
         }
         reader.seek(toc[i]) // Reset the pointer to the start of the item data.
         material.readBinary(reader, context) // (reader, context, this.__images)
-        this.addMaterial(material)
+
+        // Note: the compound geom now looks up materials by indexes
+        // and so the index of the material in the zcad file must mow match
+        // the index in the MaterialLibrary. (GeomItem looks up materials by name.)
+        this.__materials[i] = material
+        this.__materialsMap[material.getName()] = i
       }
     }
 
