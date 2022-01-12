@@ -31,29 +31,6 @@ class CADPart extends TreeItem {
     cloned.copyFrom(this, context)
     return cloned
   }
-
-  /**
-   * The copyFrom method.
-   * @param {CADPart} src - The src param.
-   * @param {number} flags - The flags param.
-   * @private
-   */
-  copyFrom(src: CADPart, context?: CloneContext) {
-    super.copyFrom(src, context)
-  }
-
-  // ///////////////////////////
-  // Persistence
-
-  /**
-   * Initializes CADPart's asset, material, version and layers; adding current `CADPart` Geometry Item toall the layers in reader
-   *
-   * @param {BinReader} reader - The reader param.
-   * @param {object} context - The context param.
-   */
-  readBinary(reader: BinReader, context: AssetLoadContext): void {
-    super.readBinary(reader, context)
-  }
 }
 
 Registry.register('CADPart', CADPart)

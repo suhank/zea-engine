@@ -249,18 +249,6 @@ class BaseGroup extends TreeItem {
    * @private
    */
   protected loadDone(): void {}
-  // ////////////////////////////////////////
-  // Clone and Destroy
-
-  /**
-   * Copies current BaseGroup with all owned items.
-   *
-   * @param src - The group to copy from.
-   * @param context - The group to copy from.
-   */
-  copyFrom(src: BaseGroup, context?: CloneContext): void {
-    super.copyFrom(src, context)
-  }
 }
 
 export { BaseGroup }
