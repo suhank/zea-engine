@@ -461,7 +461,7 @@ class Color {
    *
    * @param other - The other color to add.
    */
-  addInPlace(other: Color) {
+  addInPlace(other: Color): void {
     this.r += other.r
     this.g += other.g
     this.b += other.b

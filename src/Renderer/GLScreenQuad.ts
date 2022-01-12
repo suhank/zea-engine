@@ -48,7 +48,7 @@ class GLScreenQuad {
    * @param pos - The pos value.
    * @param size - The size value.
    */
-  bind(renderstate: RenderState, texture?: GLTexture2D, pos?: Vec2, size?: Vec2) {
+  bind(renderstate: RenderState, texture?: GLTexture2D, pos?: Vec2, size?: Vec2): void {
     const unifs = renderstate.unifs
     if (texture) {
       texture.bindToUniform(renderstate, renderstate.unifs.image)
@@ -83,7 +83,7 @@ class GLScreenQuad {
    * @param renderstate - The object tracking the current state of the renderer
    * @return - The return value.
    */
-  bindShader(renderstate: RenderState) {
+  bindShader(renderstate: RenderState): boolean {
     return this.__glshader.bind(renderstate, 'GLScreenQuad')
   }
 
@@ -104,7 +104,7 @@ class GLScreenQuad {
    * The destroy is called by the system to cause explicit resources cleanup.
    * Users should never need to call this method directly.
    */
-  destroy() {}
+  destroy(): void {}
 }
 
 export { GLScreenQuad }

@@ -64,7 +64,7 @@ class ImagePyramid extends GLImageAtlas {
    * The generateAtlasLayout method.
    * @param minTileSize - The minTileSize value.
    */
-  generateAtlasLayout(minTileSize: any) {
+  generateAtlasLayout(minTileSize: any): void {
     const gl = this.__gl
 
     this.size = this.__srcGLTex.height
@@ -96,7 +96,7 @@ class ImagePyramid extends GLImageAtlas {
    * The renderAtlas method.
    * @param cleanup - The cleanup value.
    */
-  renderAtlas(cleanup = true) {
+  renderAtlas(cleanup = true): void {
     const renderstate: RenderState = <RenderState>{} // cast to allow empty initialization
     this.screenQuad.bindShader(renderstate)
 
@@ -112,7 +112,7 @@ class ImagePyramid extends GLImageAtlas {
    * The destroy is called by the system to cause explicit resources cleanup.
    * Users should never need to call this method directly.
    */
-  destroy() {
+  destroy(): void {
     super.destroy()
     for (const fbo of this.__fbos) {
       fbo.destroy()

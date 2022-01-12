@@ -105,7 +105,7 @@ class GLGeomLibrary extends EventEmitter {
    * @param geom - The geom value.
    * @return - The return value.
    */
-  constructGLGeom(geom: BaseGeom) {
+  constructGLGeom(geom: BaseGeom):GLGeom {
     let glgeom = this.glGeomsDict[geom.getId()]
     if (glgeom != undefined) {
       // Increment the ref count for the GLGeom
@@ -136,7 +136,7 @@ class GLGeomLibrary extends EventEmitter {
    * @param geom - The geom to be managed by this GLGeomLibrary.
    * @return - The index of the geom in the GLGeomLibrary
    */
-  addGeom(geom: BaseGeom) {
+  addGeom(geom: BaseGeom): number {
     let index = this.geomsDict[geom.getId()]
     if (index != undefined) {
       // Increment the ref count for the GLGeom
@@ -184,7 +184,7 @@ class GLGeomLibrary extends EventEmitter {
    * Removes a Geom managed by this GLGeomLibrary.
    * @param geom - The geom to remove
    */
-  removeGeom(geom: BaseGeom) {
+  removeGeom(geom: BaseGeom): void {
     const index = this.geomsDict[geom.getId()]
 
     this.geomRefCounts[index]--
@@ -223,7 +223,7 @@ class GLGeomLibrary extends EventEmitter {
    * @param index - The index of the geom to retrieve
    * @return - The return value.
    */
-  getGeom(index: number) {
+  getGeom(index: number): BaseGeom {
     return this.geoms[index]
   }
 
@@ -232,7 +232,7 @@ class GLGeomLibrary extends EventEmitter {
    * @param index - The index of the geom to retrieve
    * @return - The return value.
    */
-  getGeomOffsetAndCount(index: number) {
+  getGeomOffsetAndCount(index: number): number[] {
     return [this.indicesOffsets[index], this.indicesCounts[index]]
   }
 
@@ -252,7 +252,7 @@ class GLGeomLibrary extends EventEmitter {
    * Allocates space for the geomBuffers for the specified geometry
    * @param index - The index of the geom to upload
    */
-  allocateBuffers(index: number) {
+  allocateBuffers(index: number): void {
     const geom = this.geoms[index]
     if (!geom) return
     const geomBuffers = geom.genBuffers()
@@ -316,7 +316,7 @@ class GLGeomLibrary extends EventEmitter {
   /**
    * Generates the GPU buffers required to store all the geometries
    */
-  genBuffers() {
+  genBuffers(): void {
     const reservedSpace = this.attributesAllocator.reservedSpace
     // console.log('GeomSet GPU buffers resized:', reservedSpace)
     const gl = this.__gl
@@ -373,7 +373,7 @@ class GLGeomLibrary extends EventEmitter {
    * The uploadBuffers method.
    * @param index - The index of the geom to upload
    */
-  uploadBuffers(index: number) {
+  uploadBuffers(index: number): void {
     const gl = this.__gl
 
     // Note: when we allocate the buffers, we may resize the buffer, which
@@ -448,7 +448,7 @@ class GLGeomLibrary extends EventEmitter {
   /**
    * Cleans the state of this GeomSet during rendering.
    */
-  cleanGeomBuffers() {
+  cleanGeomBuffers(): void {
     // First we alocate all memory needed to clean the GeomSet,
     // and then we start uploading all the data.
     // Note: during allocation, some buffers that were not dirty may
@@ -492,7 +492,7 @@ class GLGeomLibrary extends EventEmitter {
    * @param renderstate - The renderstate value.
    * @return - Returns true if binding was successful
    */
-  bind(renderstate: RenderState) {
+  bind(renderstate: RenderState): boolean {
     if (this.dirtyGeomIndices.size > 0) {
       this.cleanGeomBuffers()
     }
@@ -512,7 +512,7 @@ class GLGeomLibrary extends EventEmitter {
    * The unbind method.
    * @param renderstate - The object tracking the current state of the renderer
    */
-  unbind(renderstate: RenderState) {
+  unbind(renderstate: RenderState): void {
     // Unbinding a geom is important as it puts back some important
     // GL state. (vertexAttribDivisor)
     const shaderBinding = this.shaderBindings[renderstate.shaderkey!]
@@ -527,7 +527,7 @@ class GLGeomLibrary extends EventEmitter {
   /**
    * The clearBuffers method.
    */
-  clearBuffers() {
+  clearBuffers(): void {
     const gl = this.__gl
     // eslint-disable-next-line guard-for-in
     for (const attrName in this.glattrbuffers) {
@@ -554,7 +554,7 @@ class GLGeomLibrary extends EventEmitter {
    * The destroy is called by the system to cause explicit resources cleanup.
    * Users should never need to call this method directly.
    */
-  destroy() {
+  destroy(): void {
     // this.geoms.forEach((geom) => this.removeGeom(geom))
 
     this.clearBuffers()

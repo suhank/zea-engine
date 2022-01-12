@@ -118,7 +118,7 @@ class TreeItem extends BaseItem {
    * Sets the owner (another TreeItem) of the current TreeItem.
    * @param parentItem - The parent item.
    */
-  setOwner(parentItem: TreeItem) {
+  setOwner(parentItem: TreeItem): void {
     if (this.__ownerItem) {
       const owner_TreeItem = <TreeItem>this.__ownerItem
       if (owner_TreeItem && owner_TreeItem instanceof TreeItem) {
@@ -771,7 +771,7 @@ class TreeItem extends BaseItem {
    *
    * @param event - The event value
    */
-  onPointerDown(event: ZeaPointerEvent) {
+  onPointerDown(event: ZeaPointerEvent): void {
     this.emit('pointerDown', event)
     const owner_TreeItem = <TreeItem>this.__ownerItem
     if (event.propagating && owner_TreeItem) {
@@ -788,7 +788,7 @@ class TreeItem extends BaseItem {
    *
    * @param event - The pointer event that was generated from the user interaction
    */
-  onPointerUp(event: ZeaPointerEvent) {
+  onPointerUp(event: ZeaPointerEvent): void {
     this.emit('pointerUp', event)
     const owner_TreeItem = <TreeItem>this.__ownerItem
     if (event.propagating && owner_TreeItem) {
@@ -805,7 +805,7 @@ class TreeItem extends BaseItem {
    *
    * @param event - The pointer event that was generated from the user interaction
    */
-  onPointerMove(event: ZeaPointerEvent) {
+  onPointerMove(event: ZeaPointerEvent): void {
     this.emit('pointerMove', event)
     const owner_TreeItem = <TreeItem>this.__ownerItem
     if (event.propagating && owner_TreeItem) {
@@ -822,7 +822,7 @@ class TreeItem extends BaseItem {
    *
    * @param event - The pointer event that was generated from the user interaction
    */
-  onPointerEnter(event: ZeaPointerEvent) {
+  onPointerEnter(event: ZeaPointerEvent): void {
     this.emit('pointerEnter', event)
     const owner_TreeItem = <TreeItem>this.__ownerItem
     if (event.propagating && owner_TreeItem) {
@@ -839,7 +839,7 @@ class TreeItem extends BaseItem {
    *
    * @param event - The pointer event that was generated from the user interaction
    */
-  onPointerLeave(event: ZeaPointerEvent) {
+  onPointerLeave(event: ZeaPointerEvent): void {
     this.emit('pointerLeave', event)
     const owner_TreeItem = <TreeItem>this.__ownerItem
     if (event.propagating && owner_TreeItem) {
@@ -853,7 +853,7 @@ class TreeItem extends BaseItem {
    *
    * @param event - The wheel event that occurs.
    */
-  onWheel(event: ZeaWheelEvent) {
+  onWheel(event: ZeaWheelEvent): void {
     this.emit('mouseWheel', event)
     const owner_TreeItem = <TreeItem>this.__ownerItem
     if (event.propagating && owner_TreeItem) {
@@ -867,7 +867,7 @@ class TreeItem extends BaseItem {
    *
    * @param event - The wheel event that occurs.
    */
-  onTouchCancel(event: ZeaTouchEvent) {
+  onTouchCancel(event: ZeaTouchEvent): void {
     this.emit('touchCancel', event)
     const owner_TreeItem = <TreeItem>this.__ownerItem
     if (event.propagating && owner_TreeItem) {

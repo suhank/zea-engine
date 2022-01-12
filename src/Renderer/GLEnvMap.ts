@@ -41,7 +41,7 @@ class GLEnvMap extends GLProbe {
   /**
    * @private
    */
-  init() {
+  init(): void {
     const gl = this.__renderer.gl
     if (!gl.__quadVertexIdsBuffer) gl.setupInstancedQuad()
 

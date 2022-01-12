@@ -49,11 +49,11 @@ class KeyboardEvent extends BaseEvent {
     this.which = sourceEvent.which
   }
 
-  stopPropagation() {
+  stopPropagation(): void {
     this.propagating = false
     if (this.sourceEvent) this.sourceEvent.stopPropagation()
   }
-  preventDefault() {
+  preventDefault(): void {
     if (this.sourceEvent) this.sourceEvent.preventDefault()
   }
 }

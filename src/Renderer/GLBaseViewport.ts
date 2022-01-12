@@ -160,7 +160,7 @@ class GLBaseViewport extends ParameterOwner {
    * @param canvasWidth - The canvasWidth value.
    * @param canvasHeight - The canvasHeight value.
    */
-  resize(canvasWidth: number, canvasHeight: number) {
+  resize(canvasWidth: number, canvasHeight: number): void {
     if (this.__canvasWidth == canvasWidth && this.__canvasHeight == canvasHeight) return
     this.__canvasWidth = canvasWidth
     this.__canvasHeight = canvasHeight

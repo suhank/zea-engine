@@ -41,7 +41,7 @@ class BaseTool extends ParameterOwner {
   /**
    * Enables tools usage. This method is called by either the Viewport when a tool is removed, or the ToolManage if it is installed.
    */
-  activateTool() {
+  activateTool(): void {
     if (this.__activated) throw new Error('Tool already activate')
     this.__activated = true
     this.emit('activatedChanged', { activated: this.__activated })
@@ -50,7 +50,7 @@ class BaseTool extends ParameterOwner {
   /**
    * Disables tool usage. This method is called by either the Viewport when a tool is removed, or the ToolManage if it is installed.
    */
-  deactivateTool() {
+  deactivateTool(): void {
     this.__activated = false
     this.emit('activatedChanged', { activated: this.__activated })
   }
@@ -63,7 +63,7 @@ class BaseTool extends ParameterOwner {
    *
    * @param event - The event param.
    */
-  onPointerDown(event: ZeaPointerEvent) {
+  onPointerDown(event: ZeaPointerEvent): void {
     // console.warn('Implement me')
   }
 
@@ -72,7 +72,7 @@ class BaseTool extends ParameterOwner {
    *
    * @param event - The event param.
    */
-  onPointerMove(event: ZeaPointerEvent) {
+  onPointerMove(event: ZeaPointerEvent): void {
     // console.warn('Implement me')
   }
 
@@ -81,7 +81,7 @@ class BaseTool extends ParameterOwner {
    *
    * @param event - The event param.
    */
-  onPointerUp(event: ZeaPointerEvent) {
+  onPointerUp(event: ZeaPointerEvent): void {
     // console.warn('Implement me')
   }
 
@@ -90,7 +90,7 @@ class BaseTool extends ParameterOwner {
    *
    * @param event - The event param.
    */
-  onPointerDoublePress(event: ZeaPointerEvent) {
+  onPointerDoublePress(event: ZeaPointerEvent): void {
     // console.warn('Implement me')
   }
 
@@ -99,7 +99,7 @@ class BaseTool extends ParameterOwner {
    *
    * @param event - The event param.
    */
-  onPointerEnter(event: ZeaPointerEvent) {
+  onPointerEnter(event: ZeaPointerEvent): void {
     // console.warn('Implement me')
   }
 
@@ -108,7 +108,7 @@ class BaseTool extends ParameterOwner {
    *
    * @param event - The event param.
    */
-  onPointerLeave(event: ZeaPointerEvent) {
+  onPointerLeave(event: ZeaPointerEvent): void {
     // console.warn('Implement me')
   }
 
@@ -117,7 +117,7 @@ class BaseTool extends ParameterOwner {
    *
    * @param event - The event param.
    */
-  onWheel(event: ZeaPointerEvent) {
+  onWheel(event: ZeaPointerEvent): void {
     // console.warn('Implement me')
   }
 
@@ -129,7 +129,7 @@ class BaseTool extends ParameterOwner {
    *
    * @param event - The event param.
    */
-  onKeyDown(event: KeyboardEvent) {
+  onKeyDown(event: KeyboardEvent): void {
     // console.warn('Implement me')
   }
 
@@ -138,7 +138,7 @@ class BaseTool extends ParameterOwner {
    *
    * @param event - The event param.
    */
-  onKeyUp(event: KeyboardEvent) {
+  onKeyUp(event: KeyboardEvent): void {
     // console.warn('Implement me')
   }
 
@@ -150,7 +150,7 @@ class BaseTool extends ParameterOwner {
    *
    * @param event - The event param.
    */
-  onTouchCancel(event: ZeaTouchEvent) {
+  onTouchCancel(event: ZeaTouchEvent): void {
     // console.warn('Implement me')
   }
 }

@@ -43,15 +43,15 @@ class BaseProxy extends EventEmitter {
    *
    * @return - The return value.
    */
-  getNumVertices() {
-    return this.__buffers.numVertices
+  getNumVertices(): number {
+    return <number>this.__buffers.numVertices // TODO: check cast
   }
 
   /**
    * Returns the bounding box for geometry.
    * @return - The return value.
    */
-  getBoundingBox() {
+  getBoundingBox(): Box3 {
     return this.boundingBox
   }
 
@@ -59,7 +59,7 @@ class BaseProxy extends EventEmitter {
    * The genBuffers method.
    * @return - The return value.
    */
-  genBuffers() {
+  genBuffers(): any {
     return this.__buffers
   }
 
@@ -71,7 +71,7 @@ class BaseProxy extends EventEmitter {
    * @param key - The key value.
    * @return - The return value.
    */
-  getMetadata(key: string) {
+  getMetadata(key: string): any {
     return this.__metaData.get(key)
   }
 
@@ -80,7 +80,7 @@ class BaseProxy extends EventEmitter {
    * @param key - The key value.
    * @return - The return value.
    */
-  hasMetadata(key: string) {
+  hasMetadata(key: string): any {
     return this.__metaData.has(key)
   }
 
@@ -89,7 +89,7 @@ class BaseProxy extends EventEmitter {
    * @param key - The key value.
    * @param metaData - The metaData value.
    */
-  setMetadata(key: string, metaData: any) {
+  setMetadata(key: string, metaData: any): void {
     this.__metaData.set(key, metaData)
   }
 
@@ -98,7 +98,7 @@ class BaseProxy extends EventEmitter {
    *
    * @param key - The key value.
    */
-  deleteMetadata(key: string) {
+  deleteMetadata(key: string): void {
     this.__metaData.delete(key)
   }
 }
@@ -135,7 +135,7 @@ class LinesProxy extends BaseProxy {
    *
    * @return - The return value.
    */
-  getNumLineSegments() {
+  getNumLineSegments(): number {
     return this.__buffers.indices.length / 2
   }
 }
@@ -158,7 +158,7 @@ class MeshProxy extends BaseProxy {
    *
    * @return - The return value.
    */
-  getNumTriangles() {
+  getNumTriangles(): number {
     return this.__buffers.indices.length / 3
   }
 }

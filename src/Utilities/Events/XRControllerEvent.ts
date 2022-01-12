@@ -15,19 +15,19 @@ class XRControllerEvent extends ZeaPointerEvent {
     this.buttonPressed = buttonPressed
   }
 
-  stopPropagation() {
+  stopPropagation(): void {
     this.propagating = false
   }
 
-  setCapture(item: TreeItem | BaseTool) {
+  setCapture(item: TreeItem | BaseTool): void {
     this.controller.capturedItem = item
   }
 
-  getCapture() {
+  getCapture(): TreeItem | BaseTool{ 
     return this.controller.capturedItem
   }
 
-  releaseCapture() {
+  releaseCapture(): void {
     this.controller.capturedItem = null
   }
 }

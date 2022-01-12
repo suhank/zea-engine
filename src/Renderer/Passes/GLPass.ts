@@ -41,7 +41,7 @@ abstract class GLPass extends ParameterOwner {
    * @param event - The event object.
    * @private
    */
-  parameterValueChanged(event: Record<string, any>) {
+  parameterValueChanged(event: Record<string, any>): void {
     super.parameterValueChanged(event)
     if (this.renderer) this.renderer.requestRedraw()
   }
@@ -51,7 +51,7 @@ abstract class GLPass extends ParameterOwner {
    * @param renderer - The renderer value.
    * @param passIndex - The index of the pass in the GLBAseRenderer
    */
-  init(renderer: GLBaseRenderer, passIndex: number) {
+  init(renderer: GLBaseRenderer, passIndex: number): void {
     if (passIndex == undefined) throw new Error('Missing constructor argument.') // Type checking. Seomthing that TypeScript will do for us.
 
     this.__gl = renderer.gl
@@ -64,7 +64,7 @@ abstract class GLPass extends ParameterOwner {
    * The setPassIndex method.
    * @param passIndex - The index of the pass in the GLBAseRenderer
    */
-  setPassIndex(passIndex: number) {
+  setPassIndex(passIndex: number): void {
     this.passIndex = passIndex
   }
 
@@ -98,7 +98,7 @@ abstract class GLPass extends ParameterOwner {
    * @param rargs - Extra return values are passed back in this object.
    * @return - The return value.
    */
-  itemRemovedFromScene(treeItem: TreeItem, rargs: Record<string, any>) {
+  itemRemovedFromScene(treeItem: TreeItem, rargs: Record<string, any>): boolean {
     throw Error(`${this.constructor.name} must implement itemAddedToScene and itemRemovedFromScene`)
     return false
   }

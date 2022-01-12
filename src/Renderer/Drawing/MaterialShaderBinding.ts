@@ -126,7 +126,7 @@ class SimpleUniformBinding extends ParamUniformBinding {
     let boundImage: BaseImage
     let imageLoadedId: number
 
-    this.update = () => {
+    this.update = (): void => {
       try {
         // Sometimes the value of a color param is an image.
         if (boundImage) {
@@ -190,7 +190,7 @@ class SimpleUniformBinding extends ParamUniformBinding {
    * The bindValue method.
    * @param renderstate - The object tracking the current state of the renderer
    */
-  bindValue(renderstate: RenderState) {
+  bindValue(renderstate: RenderState): void {
     if (this.dirty) {
       this.update()
       this.dirty = false
@@ -203,7 +203,7 @@ class SimpleUniformBinding extends ParamUniformBinding {
    * The bindTexture method.
    * @param renderstate - The object tracking the current state of the renderer
    */
-  bindTexture(renderstate: RenderState) {
+  bindTexture(renderstate: RenderState): void {
     if (this.dirty) {
       this.update()
       this.dirty = false
@@ -257,7 +257,7 @@ class ComplexUniformBinding extends ParamUniformBinding {
    * The bind method.
    * @param renderstate - The object tracking the current state of the renderer
    */
-  bind(renderstate: RenderState) {
+  bind(renderstate: RenderState): void {
     if (this.dirty) {
       this.values = <Float32Array>this.param.value.asArray()
       this.dirty = false
@@ -268,12 +268,12 @@ class ComplexUniformBinding extends ParamUniformBinding {
   /**
    * The unbind method.
    */
-  unbind() {}
+  unbind(): void {}
 
   /**
    * The destroy method.
    */
-  destroy() {}
+  destroy(): void {}
 }
 
 /** Class representing material uniform binding.
@@ -314,7 +314,7 @@ class MatrixUniformBinding extends ParamUniformBinding {
    * The bind method.
    * @param renderstate - The object tracking the current state of the renderer
    */
-  bind(renderstate: RenderState) {
+  bind(renderstate: RenderState): void {
     if (this.dirty) {
       this.values = (<Mat4>this.param.value).asArray()
       this.dirty = false
@@ -325,12 +325,12 @@ class MatrixUniformBinding extends ParamUniformBinding {
   /**
    * The unbind method.
    */
-  unbind() {}
+  unbind(): void {}
 
   /**
    * The destroy method.
    */
-  destroy() {}
+  destroy(): void {}
 }
 
 /** Class representing color uniform binding.
@@ -461,7 +461,7 @@ class ColorUniformBinding extends ParamUniformBinding {
    * The bindValue method.
    * @param renderstate - The object tracking the current state of the renderer
    */
-  bindValue(renderstate?: RenderState) {
+  bindValue(renderstate?: RenderState): void {
     if (!this.unif) return // Note: Normals parms have no unif and can only be bound to a texture.
     if (this.dirty) {
       this.update()
@@ -475,7 +475,7 @@ class ColorUniformBinding extends ParamUniformBinding {
    * The bindTexture method.
    * @param renderstate - The object tracking the current state of the renderer
    */
-  bindTexture(renderstate: RenderState) {
+  bindTexture(renderstate: RenderState): void {
     if (this.dirty) {
       this.update()
       this.dirty = false
@@ -580,7 +580,7 @@ class MaterialShaderBinding {
    * @param renderstate - The object tracking the current state of the renderer
    * @return - The return value.
    */
-  bind(renderstate: RenderState) {
+  bind(renderstate: RenderState): boolean {
     for (const uniformBinding of this.uniformBindings) {
       uniformBinding.bind(renderstate)
     }
@@ -590,7 +590,7 @@ class MaterialShaderBinding {
   /**
    * The unbind method.
    */
-  unbind(renderstate: RenderState) {
+  unbind(renderstate: RenderState): void {
     for (const uniformBinding of this.uniformBindings) {
       uniformBinding.unbind(renderstate)
     }
@@ -600,7 +600,7 @@ class MaterialShaderBinding {
    * The destroy is called by the system to cause explicit resources cleanup.
    * Users should never need to call this method directly.
    */
-  destroy() {
+  destroy(): void {
     for (const uniformBinding of this.uniformBindings) {
       uniformBinding.destroy()
     }

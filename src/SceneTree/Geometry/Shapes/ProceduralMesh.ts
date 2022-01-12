@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { Vec3Attribute } from '..'
+import { Vec3 } from '../../..'
 import { Box3 } from '../../../Math/Box3'
 import { Mesh } from '../Mesh'
 
@@ -90,7 +92,7 @@ abstract class ProceduralMesh extends Mesh {
    * @param hardAngle - The hardAngle value in radians.
    * @return - The return value.
    */
-  computeVertexNormals(hardAngle = 1.0 /* radians */) {
+  computeVertexNormals(hardAngle = 1.0 /* radians */): Vec3Attribute {
     this.update()
     return super.computeVertexNormals(hardAngle)
   }
@@ -100,7 +102,7 @@ abstract class ProceduralMesh extends Mesh {
    * @param hardAngle - The hardAngle value in radians.
    * @return - The return value.
    */
-  computeHardEdgesIndices(hardAngle = 1.0) {
+  computeHardEdgesIndices(hardAngle = 1.0): Uint32Array {
     this.update()
     return super.computeHardEdgesIndices(hardAngle)
   }

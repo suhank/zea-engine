@@ -31,7 +31,7 @@ class RefCounted extends EventEmitter {
    * identifier which is based on a counter that is incremented.
    * @return - The return value.
    */
-  getId() {
+  getId(): number {
     return this.__id
   }
 
@@ -39,7 +39,7 @@ class RefCounted extends EventEmitter {
    * The numRefs method.
    * @return - The return value.
    */
-  numRefs() {
+  numRefs(): number {
     return this.__refs.length
   }
 
@@ -48,7 +48,7 @@ class RefCounted extends EventEmitter {
    * @param referer - The referer value.
    * @return - The return value.
    */
-  addRef(referer: BaseClass) {
+  addRef(referer: BaseClass): boolean {
     if (!referer) throw new Error('Error in RefCounted.addRef: Must provide a referer')
 
     // Note: an object can be reffeed multiple times.
@@ -61,7 +61,7 @@ class RefCounted extends EventEmitter {
    * The removeRef method.
    * @param referer - The referer value.
    */
-  removeRef(referer: BaseClass) {
+  removeRef(referer: BaseClass): void {
     if (!referer) throw new Error('Error in RefCounted.removeRef: Must provide a referer')
     const index = this.__refs.indexOf(referer)
     if (index == -1) throw new Error('Error in RefCounted.removeRef: referer not found in refs list.')
@@ -77,7 +77,7 @@ class RefCounted extends EventEmitter {
    * @param index - The index value.
    * @return - The return value.
    */
-  getRefer(index: number) {
+  getRefer(index: number): BaseClass {
     return this.__refs[index]
   }
 
@@ -86,7 +86,7 @@ class RefCounted extends EventEmitter {
    * @param referer - The referer value.
    * @return - The return value.
    */
-  getRefIndex(referer: BaseClass) {
+  getRefIndex(referer: BaseClass): number {
     return this.__refs.indexOf(referer)
   }
 
@@ -94,7 +94,7 @@ class RefCounted extends EventEmitter {
    * Returns true if this object has already been destroyed.
    * @return - Returns true or false.
    */
-  isDestroyed() {
+  isDestroyed(): boolean {
     return this.__destroyed
   }
 
@@ -105,7 +105,7 @@ class RefCounted extends EventEmitter {
    * The destructing signal is triggered so observers can
    * respond to this objects destruction.
    */
-  destroy() {
+  destroy(): void {
     this.__destroyed = true
     // console.log(this.constructor.name + " destructing");
     this.emit('destructing')

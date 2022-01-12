@@ -33,7 +33,7 @@ class ShaderLibrary {
    * @param shaderName - The shader name.
    * @param shader - The unparsed shader GLSL.
    */
-  setShaderModule(shaderName: string, shader: string) {
+  setShaderModule(shaderName: string, shader: string): void {
     if (!(shaderName in this.__shaderModules)) {
       this.__shaderModules[shaderName] = shader
       return
@@ -47,7 +47,7 @@ class ShaderLibrary {
    * @param shaderName - The shader name.
    * @return - The return value.
    */
-  getShaderModule(shaderName: string) {
+  getShaderModule(shaderName: string): string {
     return this.__shaderModules[shaderName]
   }
 
@@ -55,7 +55,7 @@ class ShaderLibrary {
    * The getShaderModuleNames method.
    * @return - The return value.
    */
-  getShaderModuleNames() {
+  getShaderModuleNames(): string[] {
     const shaderNames = []
     // eslint-disable-next-line guard-for-in
     for (const shaderName in this.__shaderModules) shaderNames.push(shaderName)
@@ -68,7 +68,7 @@ class ShaderLibrary {
    * @param instanced - instanced
    * @param result - result object to store parsed data
    */
-  parseAttr(parts: string[], instanced: boolean, result: ShaderParseResult, line: string) {
+  parseAttr(parts: string[], instanced: boolean, result: ShaderParseResult, line: string): void {
     // see if type is valid
     if (!(parts[1] in GlslTypes)) {
       throw new Error('Error while parsing \nType not recognized:' + parts[1])
@@ -101,7 +101,7 @@ class ShaderLibrary {
     includeFile: string,
     includes: string[],
     lineNumber: number
-  ) {
+  ): void {
     if (includeFile in this.__shaderModules) {
       const includedGLSL = this.__shaderModules[includeFile] // get glsl snippet code to add
       if (!includedGLSL) throw Error('snippet not loaded or does not exists!')

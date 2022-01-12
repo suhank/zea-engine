@@ -28,7 +28,7 @@ class PMIItem extends TreeItem {
    * @param {number} flags - The flags param.
    * @return {PMIItem} - The return value.
    */
-  clone(context?: CloneContext) {
+  clone(context?: CloneContext): PMIItem {
     const cloned = new PMIItem()
     cloned.copyFrom(this, context)
     return cloned
@@ -41,7 +41,7 @@ class PMIItem extends TreeItem {
    * @emits `selectedChanged` with selected state
    * @param sel - Boolean indicating the new selection state.
    */
-  setSelected(sel: boolean) {
+  setSelected(sel: boolean): void {
     super.setSelected(sel)
     if (sel) this.activate()
     else this.deactivate()
@@ -50,12 +50,12 @@ class PMIItem extends TreeItem {
   /**
    * Activates the PMIView, adjusting visibility of the PMI items and the camera Xfo
    */
-  activate() {}
+  activate():void {}
 
   /**
    * Deactivates the PMIItem
    */
-  deactivate() {}
+  deactivate():void {}
 
   /**
    * Adds a highlight to the tree item.
@@ -64,7 +64,7 @@ class PMIItem extends TreeItem {
    * @param {Color} color - The color of the highlight.
    * @param {boolean} propagateToChildren - A boolean indicating whether to propagate to children.
    */
-  addHighlight(name?: string, color?: Color, propagateToChildren = false) {
+  addHighlight(name?: string, color?: Color, propagateToChildren = false):void {
     super.addHighlight(name, color, propagateToChildren)
 
     const pmiContainer = (this.getOwner() as TreeItem).getOwner() // TODO: check
@@ -96,7 +96,7 @@ class PMIItem extends TreeItem {
    * @param {string} name - The name of the tree item.
    * @param {boolean} propagateToChildren - A boolean indicating whether to propagate to children.
    */
-  removeHighlight(name: string, propagateToChildren = false) {
+  removeHighlight(name: string, propagateToChildren = false):void {
     super.removeHighlight(name, propagateToChildren)
     const pmiContainer = (this.getOwner() as TreeItem).getOwner()
     const pmiOwner = (pmiContainer as TreeItem).getOwner()

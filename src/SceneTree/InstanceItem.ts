@@ -32,7 +32,7 @@ class InstanceItem extends TreeItem {
    *
    * @param treeItem - The treeItem value.
    */
-  setSrcTree(treeItem: TreeItem) {
+  setSrcTree(treeItem: TreeItem): void {
     this.srcTree = treeItem
     const clonedContext = new CloneContext()
     const clonedTree = this.srcTree.clone(clonedContext)
@@ -45,7 +45,7 @@ class InstanceItem extends TreeItem {
    *
    * @return - The return value.
    */
-  getSrcTree() {
+  getSrcTree(): TreeItem {
     return this.srcTree
   }
 
@@ -58,7 +58,7 @@ class InstanceItem extends TreeItem {
    * @param reader - The reader value.
    * @param context - The context value.
    */
-  readBinary(reader: BinReader, context: AssetLoadContext) {
+  readBinary(reader: BinReader, context: AssetLoadContext): void {
     super.readBinary(reader, context)
 
     // console.log("numTreeItems:", context.numTreeItems, " numGeomItems:", context.numGeomItems)
@@ -101,7 +101,7 @@ class InstanceItem extends TreeItem {
    * @param context - The context value.
    * @param onDone - The onDone value.
    */
-  fromJSON(j: Record<string, any>, context: Record<string, any> = {}) {}
+  fromJSON(j: Record<string, any>, context: Record<string, any> = {}): void {}
 
   // ////////////////////////////////////////
   // Clone and Destroy
@@ -113,7 +113,7 @@ class InstanceItem extends TreeItem {
    * @param context - The context value.
    * @return - Returns a new cloned geom item.
    */
-  clone(context?: CloneContext) {
+  clone(context?: CloneContext): InstanceItem {
     const cloned = new InstanceItem()
     cloned.copyFrom(this, context)
 

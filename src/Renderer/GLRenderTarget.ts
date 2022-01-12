@@ -49,7 +49,7 @@ class GLRenderTarget extends EventEmitter {
    * The configure method.
    * @param params - The params param.
    */
-  configure(params: Record<string, any>) {
+  configure(params: Record<string, any>): void {
     const gl = this.__gl
 
     const p: Record<string, any> = processTextureParams(gl, params) // TODO: review
@@ -151,7 +151,7 @@ class GLRenderTarget extends EventEmitter {
   /**
    * The checkFramebuffer method.
    */
-  checkFramebuffer() {
+  checkFramebuffer(): void {
     this.bindForWriting() // TODO
 
     const gl = this.__gl
@@ -185,7 +185,7 @@ class GLRenderTarget extends EventEmitter {
    * @param renderstate - The object tracking the current state of the renderer
    * @param clear - The clear value.
    */
-  bindForWriting(renderstate?: RenderState, clear = false) {
+  bindForWriting(renderstate?: RenderState, clear = false): void{
     if (renderstate) {
       this.__prevBoundFbo = renderstate.boundRendertarget
       renderstate.boundRendertarget = this.frameBuffer
@@ -201,7 +201,7 @@ class GLRenderTarget extends EventEmitter {
    * The unbindForWriting method.
    * @param renderstate - The object tracking the current state of the renderer
    */
-  unbindForWriting(renderstate?: RenderState) {
+  unbindForWriting(renderstate?: RenderState): void {
     if (renderstate) renderstate.boundRendertarget = this.__prevBoundFbo
     const gl = this.__gl
     if (gl.name == 'webgl2') gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, this.__prevBoundFbo)
@@ -227,7 +227,7 @@ class GLRenderTarget extends EventEmitter {
   /**
    * Binds the render target in preparation for 'readPixels' calls to pull data back to main memory.
    */
-  bindForReading() {
+  bindForReading(): void {
     const gl = this.__gl
     if (gl.name == 'webgl2') gl.bindFramebuffer(gl.READ_FRAMEBUFFER, this.frameBuffer)
     else gl.bindFramebuffer(gl.FRAMEBUFFER, this.frameBuffer)
@@ -236,7 +236,7 @@ class GLRenderTarget extends EventEmitter {
   /**
    * The unbindForReading method.
    */
-  unbindForReading() {
+  unbindForReading(): void {
     const gl = this.__gl
     if (gl.name == 'webgl2') gl.bindFramebuffer(gl.READ_FRAMEBUFFER, null)
     else gl.bindFramebuffer(gl.FRAMEBUFFER, null)
@@ -275,7 +275,7 @@ class GLRenderTarget extends EventEmitter {
   /**
    * The unbind method.
    */
-  unbind(renderstate?: RenderState) {
+  unbind(renderstate?: RenderState): void {
     this.unbindForWriting(renderstate)
   }
 
@@ -285,7 +285,7 @@ class GLRenderTarget extends EventEmitter {
    * @param height - The height value.
    * @param preserveData - The preserveData value.
    */
-  resize(width: number, height: number, preserveData = false) {
+  resize(width: number, height: number, preserveData = false): void {
     const gl = this.__gl
     const sizeChanged = this.width != width || this.height != height
     if (sizeChanged) {
@@ -424,7 +424,7 @@ class GLRenderTarget extends EventEmitter {
    * @param bindings - The bindings param.
    * @return - The return value.
    */
-  bindToUniform(renderstate: RenderState, unif: Uniform, bindings?: any) {
+  bindToUniform(renderstate: RenderState, unif: Uniform, bindings?: any): boolean {
     // if (!this.__loaded) {
     //   return false
     // }
@@ -456,7 +456,7 @@ class GLRenderTarget extends EventEmitter {
    * The destroy is called by the system to cause explicit resources cleanup.
    * Users should never need to call this method directly.
    */
-  destroy() {
+  destroy(): void {
     const gl = this.__gl
     this.textureTargets.forEach((colorTexture) => {
       gl.deleteTexture(colorTexture)

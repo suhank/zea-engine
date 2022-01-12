@@ -31,7 +31,7 @@ class BinReader {
    *
    * @return - Returns true is a mobile device is detected.
    */
-  get isMobileDevice() {
+  get isMobileDevice(): boolean {
     return this.__isMobileDevice
   }
 
@@ -40,7 +40,7 @@ class BinReader {
    *
    * @return - The data buffer we are reading from,
    */
-  get data() {
+  get data(): ArrayBuffer {
     return this.__data
   }
 
@@ -49,7 +49,7 @@ class BinReader {
    *
    * @return - The total length of the buffer
    */
-  get byteLength() {
+  get byteLength(): number {
     return this.__dataView.byteLength
   }
 
@@ -58,7 +58,7 @@ class BinReader {
    *
    * @return - The remaining length of the buffer to read.
    */
-  get remainingByteLength() {
+  get remainingByteLength(): number {
     return this.__dataView.byteLength - this.__byteOffset
   }
 
@@ -167,7 +167,7 @@ class BinReader {
    *
    * @return - The return value.
    */
-  loadFloat16From2xUInt8() {
+  loadFloat16From2xUInt8(): void {
     throw Error('loadFloat16From2xUInt8 not implemented!')
     // const result = this.__dataView.getFloat16(this.__byteOffset, true)
     // const uint8s = this.loadUInt8Array(2);

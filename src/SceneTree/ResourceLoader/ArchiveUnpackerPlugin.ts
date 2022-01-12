@@ -7,7 +7,7 @@ import ArchiveUnpackerWorker from 'web-worker:./ArchiveUnpacker-worker.js'
 //     ResourceLoaderWorker_onmessage
 // } from './ArchiveUnpackerWorker';
 
-function checkStatus(response: any) {
+function checkStatus(response: any): any {
   if (!response.ok) {
     return false
   }
@@ -32,7 +32,7 @@ class ArchiveUnpackerPlugin {
     this.__nextWorker = 0
   }
 
-  init(resourceLoader: any) {
+  init(resourceLoader: any): void {
     this.resourceLoader = resourceLoader
   }
 
@@ -40,7 +40,7 @@ class ArchiveUnpackerPlugin {
    * The type of file this plugin handles.
    * @return The type of file.
    */
-  getType() {
+  getType(): string {
     return 'archive'
   }
 
@@ -49,7 +49,7 @@ class ArchiveUnpackerPlugin {
    * @return - The return value.
    * @private
    */
-  __getWorker() {
+  __getWorker(): any {
     const __constructWorker = () => {
       return new Promise((resolve, reject) => {
         //@ts-ignore
@@ -91,7 +91,7 @@ class ArchiveUnpackerPlugin {
    * The __terminateWorkers value.
    * @private
    */
-  __terminateWorkers() {
+  __terminateWorkers(): void {
     for (const worker of this.__workers) worker.terminate()
     this.__workers = []
   }
@@ -102,7 +102,7 @@ class ArchiveUnpackerPlugin {
    * @param url - The url of the data to load.
    * @return - The promise value.
    */
-  loadFile(url: string) {
+  loadFile(url: string): Promise<unknown> {
     this.resourceLoader.incrementWorkload(1) //  start loading.
 
     const promise = new Promise(
@@ -143,7 +143,7 @@ class ArchiveUnpackerPlugin {
    * @param fileData - The fileData value.
    * @private
    */
-  __onFinishedReceiveFileData(fileData: Record<string, any>) {
+  __onFinishedReceiveFileData(fileData: Record<string, any>): void {
     const resourceId = fileData.resourceId
     const callbacks = this.__callbacks[resourceId]
     if (callbacks) {
@@ -154,7 +154,7 @@ class ArchiveUnpackerPlugin {
     }
   }
 
-  shutDownWorkers() {
+  shutDownWorkers(): void {
     this.__workers.forEach((workerPromise) => {
       workerPromise.then((worker: Worker) => {
         worker.terminate()

@@ -7,7 +7,7 @@ import { Version } from '../Version'
 import { CompoundGeom } from './CompoundGeom'
 
 // key, toc, geomIndexOffset, geomsRange, isMobileDevice, bufferSlice, genBuffersOpts, context
-const parseGeomsBinary = (data: any, callback: any) => {
+const parseGeomsBinary = (data: any, callback: any): void => {
   // eslint-disable-next-line guard-for-in
   for (const key in data.context.versions) {
     const v = data.context.versions[key]

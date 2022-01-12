@@ -8,6 +8,7 @@ import { AssetLoadContext, BinReader } from '..'
 import { BaseImage } from './BaseImage'
 import { Parameter } from './Parameters/Parameter'
 import { Owner } from './Owner'
+import { BaseGeom } from '.'
 
 /** Class representing a material library in a scene tree.
  * @private
@@ -36,13 +37,17 @@ class MaterialLibrary extends EventEmitter implements Owner {
   /**
    * The clear method.
    */
-  clear() {}
+  clear(): void {
+    this.__images = {}
+    this.__materials = []
+    this.__materialsMap = {}
+  }
 
   /**
    * The getPath method.
    * @return - The return value.
    */
-  getPath() {
+  getPath(): string[] {
     return [this.__name]
   }
 
@@ -63,7 +68,7 @@ class MaterialLibrary extends EventEmitter implements Owner {
    * The getNumMaterials method.
    * @return - The return value.
    */
-  getNumMaterials() {
+  getNumMaterials(): number {
     return this.__materials.length
   }
 
@@ -71,7 +76,7 @@ class MaterialLibrary extends EventEmitter implements Owner {
    * The getMaterials method.
    * @return - The return value.
    */
-  getMaterials() {
+  getMaterials(): Material[] {
     return this.__materials
   }
 
@@ -79,7 +84,7 @@ class MaterialLibrary extends EventEmitter implements Owner {
    * The getMaterialNames method.
    * @return - The return value.
    */
-  getMaterialNames() {
+  getMaterialNames(): string[] {
     const names: Array<string> = []
     this.__materials.forEach((material) => {
       names.push(material.getName())
@@ -92,7 +97,7 @@ class MaterialLibrary extends EventEmitter implements Owner {
    * @param name - The name value.
    * @return - The return value.
    */
-  hasMaterial(name: string) {
+  hasMaterial(name: string): boolean {
     return name in this.__materialsMap
   }
 
@@ -100,7 +105,7 @@ class MaterialLibrary extends EventEmitter implements Owner {
    * Add a material.
    * @param material - The material value.
    */
-  addMaterial(material: Material) {
+  addMaterial(material: Material): void {
     material.setOwner(this)
     this.__materialsMap[material.getName()] = this.__materials.length
     this.__materials.push(material)
@@ -112,7 +117,7 @@ class MaterialLibrary extends EventEmitter implements Owner {
    * @param assert - The assert value.
    * @return - The return value.
    */
-  getMaterial(name: string, assert = true) {
+  getMaterial(name: string, assert = true): Material {
     const index = this.__materialsMap[name]
     if (index == undefined && assert) {
       throw new Error('Material:' + name + ' not found in library:' + this.getMaterialNames())
@@ -125,7 +130,7 @@ class MaterialLibrary extends EventEmitter implements Owner {
    * @param name - The material name.
    * @return - The return value.
    */
-  hasImage(name: string) {
+  hasImage(name: string): boolean {
     return name in this.__images
   }
 
@@ -133,7 +138,7 @@ class MaterialLibrary extends EventEmitter implements Owner {
    * The addImage method.
    * @param image - The image value.
    */
-  addImage(image: BaseImage) {
+  addImage(image: BaseImage): void {
     image.setOwner(this)
     this.__images[image.getName()] = image
   }
@@ -144,7 +149,7 @@ class MaterialLibrary extends EventEmitter implements Owner {
    * @param assert - The assert value.
    * @return - The return value.
    */
-  getImage(name: string, assert = true) {
+  getImage(name: string, assert = true): BaseImage {
     const res = this.__images[name]
     if (!res && assert) {
       throw new Error('Image:' + name + ' not found in library:' + this.getImageNames())
@@ -156,7 +161,7 @@ class MaterialLibrary extends EventEmitter implements Owner {
    * The getImageNames method.
    * @return - The return value.
    */
-  getImageNames() {
+  getImageNames(): string[] {
     const names = []
     // eslint-disable-next-line guard-for-in
     for (const name in this.__images) {
@@ -172,7 +177,7 @@ class MaterialLibrary extends EventEmitter implements Owner {
    * The load method.
    * @param filePath - The file path.
    */
-  load(filePath: string) {
+  load(filePath: string): void {
     const xhr = new XMLHttpRequest()
     xhr.open('GET', filePath, true)
     xhr.ontimeout = () => {
@@ -195,7 +200,7 @@ class MaterialLibrary extends EventEmitter implements Owner {
    * @param context - The context value.
    * @return - Returns the json object.
    */
-  toJSON(context: Record<string, any> = {}) {
+  toJSON(context: Record<string, any> = {}): Record<string, any> {
     return {
       numMaterials: this.getNumMaterials(),
     }
@@ -206,7 +211,7 @@ class MaterialLibrary extends EventEmitter implements Owner {
    * @param j - The json object this item must decode.
    * @param context - The context value.
    */
-  fromJSON(j: Record<string, any>, context: Record<string, any> = {}) {
+  fromJSON(j: Record<string, any>, context: Record<string, any> = {}): void {
     context.lod = this.lod
     // eslint-disable-next-line guard-for-in
     for (const name in j.textures) {
@@ -227,7 +232,7 @@ class MaterialLibrary extends EventEmitter implements Owner {
    * @param reader - The reader value.
    * @param context - The context value.
    */
-  readBinary(reader: BinReader, context: AssetLoadContext) {
+  readBinary(reader: BinReader, context: AssetLoadContext): void {
     // if (context.version == undefined) context.version = 0
 
     this.name = reader.loadStr()
@@ -290,7 +295,7 @@ class MaterialLibrary extends EventEmitter implements Owner {
    * The toString method.
    * @return - The return value.
    */
-  toString() {
+  toString(): string {
     return JSON.stringify(this.toJSON(), null, 2)
   }
 }

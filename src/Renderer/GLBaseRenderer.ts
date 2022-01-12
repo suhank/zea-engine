@@ -209,7 +209,7 @@ class GLBaseRenderer extends ParameterOwner {
    * @param name - The name value.
    * @param value - The value param.
    */
-  addShaderPreprocessorDirective(name: string, value?: string) {
+  addShaderPreprocessorDirective(name: string, value?: string): void {
     // const gl = this.__gl
     if (value) this.__shaderDirectives[name] = '#define ' + name + ' = ' + value
     else this.__shaderDirectives[name] = '#define ' + name
@@ -301,7 +301,7 @@ class GLBaseRenderer extends ParameterOwner {
    *
    * @param vp - The viewport.
    */
-  activateViewport(vp: GLViewport) {
+  activateViewport(vp: GLViewport): void {
     if (this.__activeViewport == vp) return
 
     this.__activeViewport = vp
@@ -368,7 +368,7 @@ class GLBaseRenderer extends ParameterOwner {
    *
    * @return - The return value.
    */
-  getScene() {
+  getScene(): Scene {
     return this.__scene
   }
 
@@ -390,7 +390,7 @@ class GLBaseRenderer extends ParameterOwner {
    *
    * @param treeItem - The tree item to add.
    */
-  addTreeItem(treeItem: TreeItem) {
+  addTreeItem(treeItem: TreeItem): void {
     // Note: we can have BaseItems in the tree now.
     if (!(treeItem instanceof TreeItem)) return
 
@@ -434,7 +434,7 @@ class GLBaseRenderer extends ParameterOwner {
    *
    * @param treeItem - The tree item to assign.
    */
-  assignTreeItemToGLPass(treeItem: TreeItem) {
+  assignTreeItemToGLPass(treeItem: TreeItem): void {
     if (treeItem instanceof GeomItem) {
       const geomItem = treeItem
       this.glGeomItemLibrary.addGeomItem(geomItem)
@@ -532,7 +532,7 @@ class GLBaseRenderer extends ParameterOwner {
   /**
    * Getter for gl.
    */
-  get gl() {
+  get gl(): WebGL12RenderingContext {
     return this.__gl
   }
 
@@ -1106,7 +1106,7 @@ class GLBaseRenderer extends ParameterOwner {
   /**
    * The startContinuousDrawing method.
    */
-  startContinuousDrawing() {
+  startContinuousDrawing(): void {
     if (this.isContinuouslyDrawing() || this.__xrViewportPresenting) return
 
     const onAnimationFrame = () => {
@@ -1189,7 +1189,7 @@ class GLBaseRenderer extends ParameterOwner {
    * The bindGLBaseRenderer method.
    * @param renderstate - The renderstate value.
    */
-  bindGLBaseRenderer(renderstate: RenderState) {
+  bindGLBaseRenderer(renderstate: RenderState): void {
     renderstate.gl = this.__gl
     renderstate.shaderopts = { directives: this.directives } // we will start deprecating this in favor os a simpler directives
 

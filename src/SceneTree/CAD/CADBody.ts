@@ -32,7 +32,7 @@ class CADBody extends GeomItem {
    * @param {object} context - The context value.
    * @return {CADBody} - The return value.
    */
-  clone(context: CloneContext) {
+  clone(context: CloneContext): CADBody {
     const cloned = new CADBody()
     cloned.copyFrom(this, context)
     return cloned
@@ -44,7 +44,7 @@ class CADBody extends GeomItem {
    * @param {object} context - The context value.
    * @private
    */
-  copyFrom(src: CADBody, context: CloneContext) {
+  copyFrom(src: CADBody, context: CloneContext): void {
     super.copyFrom(src, context)
   }
 
@@ -57,7 +57,7 @@ class CADBody extends GeomItem {
    * @param reader - The reader param.
    * @param context - The context param.
    */
-  readBinary(reader: BinReader, context: AssetLoadContext) {
+  readBinary(reader: BinReader, context: AssetLoadContext): void {
     if (context.versions['zea-cad'].compare([3, 8, 2]) < 0) {
       BaseGeomItem.prototype.readBinary.call(this, reader, context)
       // Note: the bodyDescId is now deprecated as it is part of the parametric surface evaluation code.

@@ -45,7 +45,7 @@ class BaseGeomItem extends TreeItem {
    * @todo Need to find the layer and add this item to it.
    * @param val - `true` to enable it.
    */
-  setOverlay(val: boolean) {
+  setOverlay(val: boolean): void  {
     // TODO: need to find the layer and add this item to it.
     this.overlay = val
   }
@@ -65,7 +65,7 @@ class BaseGeomItem extends TreeItem {
    * @todo Need to find the layer and add this item to it.
    * @param name - The name of the layer.
    */
-  addLayer(name: string) {
+  addLayer(name: string): void  {
     // TODO: need to find the layer and add this item to it.
     this.__layers.push(name)
   }

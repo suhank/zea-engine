@@ -114,7 +114,7 @@ class Camera extends TreeItem {
    *
    * @param value - The near value.
    */
-  setNear(value: number) {
+  setNear(value: number): void {
     this.nearParam.value = value
   }
 
@@ -132,7 +132,7 @@ class Camera extends TreeItem {
    *
    * @param value - The far value.
    */
-  setFar(value: number) {
+  setFar(value: number): void {
     this.farParam.value = value
   }
 
@@ -155,7 +155,7 @@ class Camera extends TreeItem {
    *
    * @param value - The new FOV value.
    */
-  setFov(value: number) {
+  setFov(value: number): void {
     this.fovParam.value = value
   }
 
@@ -175,7 +175,7 @@ class Camera extends TreeItem {
    *
    * @param value - The new Frustum Height value.
    */
-  setFrustumHeight(value: number) {
+  setFrustumHeight(value: number): void {
     this.viewHeight = value
     this.emit('projectionParamChanged')
   }
@@ -192,7 +192,7 @@ class Camera extends TreeItem {
    *
    * @param value - The lens focal length value.
    */
-  setLensFocalLength(value: string) {
+  setLensFocalLength(value: string): void {
     // https://www.nikonians.org/reviews/fov-tables
     const mapping: { [key: string]: number } = {
       '10mm': 100.4,
@@ -244,7 +244,7 @@ class Camera extends TreeItem {
    *
    * @return - Returns the lens focal length value..
    */
-  getFocalDistance() {
+  getFocalDistance(): number {
     return this.focalDistanceParam.value
   }
 
@@ -254,7 +254,7 @@ class Camera extends TreeItem {
    * @errors on dist value lower or less than zero.
    * @param dist - The focal distance value.
    */
-  setFocalDistance(dist: number) {
+  setFocalDistance(dist: number): void {
     if (dist < 0.0001) console.error('Never set focal distance to zero')
     this.focalDistanceParam.value = dist
     if (this.adjustNearAndFarPlanesToFocalDist) {
@@ -267,7 +267,7 @@ class Camera extends TreeItem {
    * Returns true if the camera is providing an orthographic projection.
    * @return - true if orthographic else false
    */
-  isOrthographic() {
+  isOrthographic(): boolean {
     return this.isOrthographicParam.value == 1.0
   }
 
@@ -279,7 +279,7 @@ class Camera extends TreeItem {
    * @param value - The value param.
    * @param duration - The duration in milliseconds to change the projection.
    */
-  setIsOrthographic(value: number, duration = 0) {
+  setIsOrthographic(value: number, duration = 0): void {
     if (this.__orthoIntervalId) clearInterval(this.__orthoIntervalId)
     if (value > 0.5) {
       const fov = this.fovParam.value
@@ -317,7 +317,7 @@ class Camera extends TreeItem {
    * @param position - The position of the camera.
    * @param target - The target of the camera.
    */
-  setPositionAndTarget(position: Vec3, target: Vec3) {
+  setPositionAndTarget(position: Vec3, target: Vec3): void {
     this.setFocalDistance(position.distanceTo(target))
     const xfo = new Xfo()
     xfo.setLookAt(position, target, new Vec3(0.0, 0.0, 1.0))
@@ -329,7 +329,7 @@ class Camera extends TreeItem {
    * Getter for the target position.
    * @return - Returns the target position.
    */
-  getTargetPosition() {
+  getTargetPosition(): Vec3 {
     const focalDistance = this.focalDistanceParam.value
     const xfo = this.globalXfoParam.value
     const target = xfo.ori.getZaxis()
@@ -347,7 +347,7 @@ class Camera extends TreeItem {
    * @param viewport - The viewport value.
    * @param treeItems - The treeItems value.
    */
-  frameView(viewport: GLBaseViewport, treeItems: TreeItem[]) {
+  frameView(viewport: GLBaseViewport, treeItems: TreeItem[]): void {
     const focalDistance = this.focalDistanceParam.value
     const fovY = this.fovParam.value
 
@@ -568,7 +568,7 @@ class Camera extends TreeItem {
    * @param mat - The mat value.
    * @param aspect - The aspect value.
    */
-  updateProjectionMatrix(mat: Mat4, aspect: number) {
+  updateProjectionMatrix(mat: Mat4, aspect: number): void {
     const isOrthographic = this.isOrthographicParam.value
     const fov = this.fovParam.value
     const near = this.nearParam.value

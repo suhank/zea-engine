@@ -116,7 +116,7 @@ class GeomLibrary extends EventEmitter {
   /**
    * The clear method.
    */
-  clear() {
+  clear(): void {
     this.__loadedCount = 0
     this.__numGeoms = -1
     this.geoms = []
@@ -126,7 +126,7 @@ class GeomLibrary extends EventEmitter {
    * The returns true if all the geometries have been loaded and the loaded event has already been emitted.
    * @return - True if all geometries are already loaded, else false.
    */
-  isLoaded() {
+  isLoaded(): boolean {
     return this.__loadedCount == this.__numGeoms
   }
 
@@ -174,7 +174,7 @@ class GeomLibrary extends EventEmitter {
    * @param basePath - The base path of the file. (this is theURL of the zcad file without its extension.)
    * @param context - The value param.
    */
-  loadGeomFilesStream(geomLibraryJSON: Record<string, any>, basePath: string, context: AssetLoadContext) {
+  loadGeomFilesStream(geomLibraryJSON: Record<string, any>, basePath: string, context: AssetLoadContext): void {
     const numGeomFiles = geomLibraryJSON.numGeomsPerFile.length
     resourceLoader.incrementWorkload(numGeomFiles)
 
@@ -192,7 +192,7 @@ class GeomLibrary extends EventEmitter {
    * @param key - The key value.
    * @param value - The value param.
    */
-  setGenBufferOption(key: string, value: any) {
+  setGenBufferOption(key: string, value: any): void {
     this.__genBuffersOpts[key] = value
   }
 
@@ -200,7 +200,7 @@ class GeomLibrary extends EventEmitter {
    * The setNumGeoms method.
    * @param expectedNumGeoms - The expectedNumGeoms value.
    */
-  setNumGeoms(expectedNumGeoms: number) {
+  setNumGeoms(expectedNumGeoms: number): void {
     this.__numGeoms = expectedNumGeoms
   }
 
@@ -208,7 +208,7 @@ class GeomLibrary extends EventEmitter {
    * Returns the number of geometries the GeomLibrary has, or will have at the end of loading.
    * @return - The number of geometries.
    */
-  getNumGeoms() {
+  getNumGeoms(): number {
     return this.__numGeoms
   }
 
@@ -217,7 +217,8 @@ class GeomLibrary extends EventEmitter {
    * @param index - The index value.
    * @return - The stored geometry
    */
-  getGeom(index: number) {
+  getGeom(index: number): BaseProxy | BaseGeom
+  {
     if (index >= this.geoms.length) {
       // console.warn("Geom index invalid:" + index);
       return null
@@ -231,7 +232,7 @@ class GeomLibrary extends EventEmitter {
    * @param buffer - The buffer value.
    * @param context - The context value.
    */
-  readBinaryBuffer(geomFileID: string, buffer: ArrayBuffer, context: Record<string, any>) {
+  readBinaryBuffer(geomFileID: string, buffer: ArrayBuffer, context: Record<string, any>): void {
     const reader = new BinReader(buffer, 0, SystemDesc.isMobileDevice)
     const numGeoms = reader.loadUInt32()
 
@@ -329,7 +330,7 @@ class GeomLibrary extends EventEmitter {
    * @param data - The data received back from the web worker
    * @return - returns true once all data for this geom library has been loaded.
    */
-  __receiveGeomDatas(data: object) {
+  __receiveGeomDatas(data: object): boolean {
     const { geomLibraryId, geomFileID, geomDatas, geomIndexOffset, geomsRange } = <any>data
     if (geomLibraryId != this.getId()) throw new Error('Receiving workload for a different GeomLibrary')
     // We are storing a subset of the geoms from a binary file
@@ -411,11 +412,11 @@ class GeomLibrary extends EventEmitter {
    * The toString method.
    * @return - The return value.
    */
-  toString() {
+  toString(): string {
     return JSON.stringify(this.toJSON(), null, 2)
   }
 
-  static shutDownWorkers() {
+  static shutDownWorkers(): void {
     workers.forEach((worker, index) => {
       worker.terminate()
     })
