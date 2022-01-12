@@ -107,27 +107,6 @@ class CADBody extends BaseGeomItem {
       for (const layer of this.__layers) context.addGeomToLayer(this, layer)
     }
   }
-
-  /**
-   * The toJSON method encodes this type as a json object for persistences.
-   *
-   * @param {number} flags - The flags param.
-   * @return {object} - The return value.
-   */
-  toJSON(context: Record<string, any>): Record<string, any> {
-    const j = super.toJSON()
-    return j
-  }
-
-  /**
-   * The fromJSON method decodes a json object for this type.
-   *
-   * @param {object} j - The j param.
-   * @param {number} flags - The flags param.
-   */
-  fromJSON(j: Record<string, any>): void{
-    super.fromJSON(j)
-  }
 }
 
 Registry.register('CADBody', CADBody)

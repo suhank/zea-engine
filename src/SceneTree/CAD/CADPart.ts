@@ -54,27 +54,6 @@ class CADPart extends TreeItem {
   readBinary(reader: BinReader, context: AssetLoadContext): void {
     super.readBinary(reader, context)
   }
-
-  /**
-   * The toJSON method encodes this type as a json object for persistences.
-   *
-   * @param {number} flags - The flags param.
-   * @return {object} - The return value.
-   */
-  toJSON(context?: Record<string, any>): Record<string, any> {
-    const j = super.toJSON(context)
-    return j
-  }
-
-  /**
-   * The fromJSON method decodes a json object for this type.
-   *
-   * @param {object} j - The j param.
-   * @param {number} flags - The flags param.
-   */
-  fromJSON(j?: Record<string, any>): void {
-    super.fromJSON(j)
-  }
 }
 
 Registry.register('CADPart', CADPart)

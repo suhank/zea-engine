@@ -161,25 +161,6 @@ class HDRImage extends BaseImage {
   // Persistence
 
   /**
-   * The toJSON method encodes this type as a json object for persistence.
-   *
-   * @param context - The context value.
-   */
-  toJSON(context?: Record<string, any>): Record<string, any> {
-    return {}
-  }
-
-  /**
-   * The fromJSON method decodes a json object for this type.
-   *
-   * @param json - The json object this item must decode.
-   * @param context - The context value.
-   */
-  fromJSON(json: Record<string, any>, context: Record<string, any>): Record<string, any> {
-    return {}
-  }
-
-  /**
    * Sets state of current Image using a binary reader object, and adds it to the resource loader.
    *
    * @param reader - The reader value.

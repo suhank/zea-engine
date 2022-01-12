@@ -163,19 +163,7 @@ class CADAsset extends AssetItem {
 
   // ////////////////////////////////////////
   // Persistence
-
-  /**
-   * The toJSON method encodes this type as a json object for persistences.
-   *
-   * @param {object} context - The context param.
-   * @param {number} flags - The flags param.
-   * @return {object} - The return value.
-   */
-  toJSON(context: Record<string, any>): Record<string, any> {
-    const j = super.toJSON(context)
-    return j 
-  }
-
+  
   /**
    * The fromJSON method decodes a json object for this type.
    *

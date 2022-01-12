@@ -30,31 +30,6 @@ class CADAssembly extends TreeItem {
     return cloned
   }
 
-  // ////////////////////////////////////////
-  // Persistence
-
-  /**
-   * The toJSON method encodes this type as a json object for persistences.
-   *
-   * @param {object} context - The context param.
-   * @param {number} flags - The flags param.
-   * @return {object} - Returns the json object.
-   */
-  toJSON(context: Record<string, any>) {
-    const j = super.toJSON(context)
-    return j
-  }
-
-  /**
-   * The fromJSON method decodes a json object for this type.
-   *
-   * @param {object} j - The json object this item must decode.
-   * @param {object} context - The context param.
-   * @param {number} flags - The flags param.
-   */
-  fromJSON(j: Record<string, any>, context: Record<string, any>): void {
-    super.fromJSON(j, context)
-  }
 }
 
 Registry.register('CADAssembly', CADAssembly)
