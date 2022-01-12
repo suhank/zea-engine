@@ -271,7 +271,8 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
           const materials = geomBuffers.materials
 
           for (let i = 0; i < offsets.length; i++) {
-            const drawId = allocation.start + subIndex
+            // The draw id within this element type. (e.g. TRIANGLES, LINES, POINTS)
+            const drawId = allocation.start + i
 
             drawElementOffsets[drawId] = offsetAndCount[0] + offsets[i] * elementSize
             drawElementCounts[drawId] = counts[i]
