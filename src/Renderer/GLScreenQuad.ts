@@ -99,12 +99,6 @@ class GLScreenQuad {
     const gl = this.__gl
     gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0)
   }
-
-  /**
-   * The destroy is called by the system to cause explicit resources cleanup.
-   * Users should never need to call this method directly.
-   */
-  destroy(): void {}
 }
 
 export { GLScreenQuad }

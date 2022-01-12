@@ -645,12 +645,6 @@ class GLGeomItemLibrary extends EventEmitter {
       gl.uniform1i(instancesTextureSize.location, this.glGeomItemsTexture!.width)
     }
   }
-
-  /**
-   * The destroy is called by the system to cause explicit resources cleanup.
-   * Users should never need to call this method directly.
-   */
-  destroy(): void {}
 }
 
 export { GLGeomItemLibrary }

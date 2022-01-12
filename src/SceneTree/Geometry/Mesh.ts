@@ -66,12 +66,6 @@ class Mesh extends BaseGeom {
   }
 
   /**
-   * The init method.
-   * @private
-   */
-  init():void {}
-
-  /**
    * The clear method.
    */
   clear(): void {

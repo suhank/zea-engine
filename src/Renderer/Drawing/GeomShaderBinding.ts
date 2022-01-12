@@ -184,12 +184,6 @@ class GeomShaderBinding extends IGeomShaderBinding {
 
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null)
   }
-
-  /**
-   * The destroy is called by the system to cause explicit resources cleanup.
-   * Users should never need to call this method directly.
-   */
-  destroy() {}
 }
 
 /** Class representing vertex array objects (VAO) geom shader binding.
