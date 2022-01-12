@@ -2,7 +2,7 @@ import { PassType } from './GLPass'
 import { GLOpaqueGeomsPass } from './GLOpaqueGeomsPass'
 import { GLRenderer } from '../GLRenderer'
 import { GeomItem } from '../../SceneTree/GeomItem'
-import { RenderState, GeomDataRenderState } from '../types/renderer'
+import { RenderState, GeomDataRenderState, ColorRenderState } from '../types/renderer'
 
 /** Class representing a GL overlay pass.
  * @extends GLOpaqueGeomsPass
@@ -45,7 +45,7 @@ class GLOverlayPass extends GLOpaqueGeomsPass {
    * The draw method.
    * @param renderstate - The object tracking the current state of the renderer
    */
-  draw(renderstate: RenderState) {
+  draw(renderstate: ColorRenderState) {
     const gl = this.__gl!
 
     // Clear the depth buffer so handls are always drawn over the top.

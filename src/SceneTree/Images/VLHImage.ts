@@ -1,6 +1,6 @@
 /* eslint-disable require-jsdoc */
 import { Registry } from '../../Registry'
-import { FileImage } from './FileImage'
+import { HDRImage } from './HDRImage'
 
 /**
  * Class representing a LDR (low dynamic range) image.
@@ -18,9 +18,9 @@ import { FileImage } from './FileImage'
  *
  * **File Types:** jpg, jpeg, png
  *
- * @extends FileImage
+ * @extends HDRImage
  */
-class VLHImage extends FileImage {
+class VLHImage extends HDRImage {
   /**
    * Create a LDR image.
    * @param name - The name value.
@@ -28,7 +28,8 @@ class VLHImage extends FileImage {
    * @param params - The params value.
    */
   constructor(name?: string, filePath?: string, params?: Record<string, any>) {
-    super(name, filePath, params)
+    super(name, params)
+    console.warn('Deprecated class. Please use HDRImage instead.')
   }
 }
 Registry.register('VLHImage', VLHImage)

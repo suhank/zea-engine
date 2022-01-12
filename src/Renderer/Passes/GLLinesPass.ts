@@ -7,7 +7,7 @@ import { FattenLinesShader } from '../Shaders/FattenLinesShader'
 import { Plane } from '../../SceneTree/index'
 import { GLMesh } from '../Drawing/GLMesh'
 import { GLBaseRenderer } from '../GLBaseRenderer'
-import { RenderState, GeomDataRenderState } from '../types/renderer'
+import { RenderState, GeomDataRenderState, ColorRenderState } from '../types/renderer'
 import { checkFramebuffer } from '../GLFbo'
 
 /** Class representing a GL opaque geoms pass.
@@ -51,7 +51,7 @@ class GLLinesPass extends GLOpaqueGeomsPass {
    * The draw method.
    * @param renderstate - The object tracking the current state of the renderer
    */
-  draw(renderstate: RenderState) {
+  draw(renderstate: ColorRenderState) {
     const gl = this.__gl!
 
     gl.enable(gl.BLEND)

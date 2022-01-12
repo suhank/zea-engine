@@ -8,7 +8,7 @@ import { GLShaderGeomSets } from '../Drawing/GLShaderGeomSets'
 import { GLMaterialGeomItemSets } from '../Drawing/GLMaterialGeomItemSets'
 import { GLBaseRenderer } from '../GLBaseRenderer'
 import { GLGeomItem } from '../Drawing'
-import { RenderState, GeomDataRenderState } from '../types/renderer'
+import { RenderState, GeomDataRenderState, ColorRenderState } from '../types/renderer'
 
 /** Class representing a GL opaque geoms pass.
  * @extends GLStandardGeomsPass
@@ -201,7 +201,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
    * @param renderstate - The renderstate value.
    * @private
    */
-  __traverseTreeAndDraw(renderstate: RenderState) {
+  __traverseTreeAndDraw(renderstate: ColorRenderState) {
     // eslint-disable-next-line guard-for-in
     for (const shaderName in this.__glShaderGeomSets) {
       this.__glShaderGeomSets[shaderName].draw(renderstate)
@@ -220,7 +220,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
    * The draw method.
    * @param renderstate - The object tracking the current state of the renderer
    */
-  draw(renderstate: RenderState): void {
+  draw(renderstate: ColorRenderState): void {
     const gl = this.__gl!
     gl.disable(gl.BLEND)
 

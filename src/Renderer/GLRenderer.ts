@@ -390,6 +390,7 @@ class GLRenderer extends GLBaseRenderer {
         pointerRay: ray,
         intersectionPos,
         geomItem: geomItemAndDist.geomItem,
+        componentId: -1,
         dist: geomItemAndDist.dist,
         geomData,
       }
@@ -487,6 +488,7 @@ class GLRenderer extends GLBaseRenderer {
               pointerRay: ray,
               intersectionPos,
               geomItem: geomItemAndDist.geomItem,
+              componentId: -1,
               dist: geomItemAndDist.dist,
               geomData,
             })
