@@ -295,7 +295,7 @@ class Mat3 {
   /**
    * Sets state of the Mat3 with the identity  Matrix
    */
-  setIdentity() {
+  setIdentity(): void {
     this.set()
   }
 
@@ -306,7 +306,7 @@ class Mat3 {
    *
    * @param mat - The mat value.
    */
-  setFromMat(mat: Mat3) {
+  setFromMat(mat: Mat3): void {
     this.__data[0] = mat.m00
     this.__data[1] = mat.m01
     this.__data[2] = mat.m02
@@ -532,7 +532,7 @@ class Mat3 {
    *
    * @return - The return value.
    */
-  toString() {
+  toString(): string {
     // eslint-disable-next-line new-cap
     return StringFunctions.stringifyJSONWithFixedPrecision(this.toJSON())
   }

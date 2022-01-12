@@ -34,7 +34,7 @@ export class LinesMaterial extends Material {
    * @param context - The context value.
    * @return - Returns a new cloned material.
    */
-  clone(context?: CloneContext) {
+  clone(context?: CloneContext): LinesMaterial {
     const cloned = new LinesMaterial()
     cloned.copyFrom(this, context)
     return cloned

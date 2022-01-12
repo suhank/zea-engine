@@ -27,19 +27,19 @@ class ZeaPointerEvent extends BaseEvent {
     this.pointerType = pointerType
   }
 
-  stopPropagation() {
+  stopPropagation(): void {
     this.propagating = false
   }
 
-  setCapture(item: TreeItem | BaseTool) {
+  setCapture(item: TreeItem | BaseTool): void {
     capturedItem = item
   }
 
-  getCapture() {
+  getCapture(): TreeItem | BaseTool {
     return capturedItem
   }
 
-  releaseCapture() {
+  releaseCapture(): void {
     capturedItem = null
   }
 }

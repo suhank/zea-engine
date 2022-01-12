@@ -144,7 +144,7 @@ class HDRImage extends BaseImage {
    * @private
    * @param hdrTint - The hdrTint value.
    */
-  setHDRTint(hdrTint: Color) {
+  setHDRTint(hdrTint: Color): void {
     this.hdrTint = hdrTint
   }
 

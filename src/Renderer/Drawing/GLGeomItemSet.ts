@@ -71,7 +71,7 @@ class GLGeomItemSet extends EventEmitter {
    * The addGLGeomItem method.
    * @param glGeomItem - The glGeomItem value.
    */
-  addGLGeomItem(glGeomItem: GLGeomItem) {
+  addGLGeomItem(glGeomItem: GLGeomItem): void {
     let index: number
     if (this.glgeomItems_freeIndices.length > 0) {
       index = this.glgeomItems_freeIndices.pop()!
@@ -136,7 +136,7 @@ class GLGeomItemSet extends EventEmitter {
    * The removeGLGeomItem method.
    * @param glGeomItem - The glGeomItem value.
    */
-  removeGLGeomItem(glGeomItem: GLGeomItem) {
+  removeGLGeomItem(glGeomItem: GLGeomItem): void {
     const index = this.glGeomItems.indexOf(glGeomItem)
     const eventHandlers = this.glgeomItemEventHandlers[index]
     glGeomItem.geomItem.off('highlightChanged', eventHandlers.highlightChanged)
@@ -173,7 +173,7 @@ class GLGeomItemSet extends EventEmitter {
    * The culling system will specify a subset of the total number of items for
    * drawing.
    */
-  updateDrawIDsBuffer() {
+  updateDrawIDsBuffer(): void {
     const gl = this.gl
     if (!gl.floatTexturesSupported) {
       this.drawIdsBufferDirty = false
@@ -198,7 +198,7 @@ class GLGeomItemSet extends EventEmitter {
    * The getDrawIdsArray method.
    * @return - The drawIds for each GeomItem packed into a Float32Array
    */
-  getDrawIdsArray() {
+  getDrawIdsArray(): Float32Array {
     if (this.drawIdsBufferDirty) {
       if (!this.drawIdsArray || this.glGeomItems.length != this.drawIdsArray.length) {
         this.drawIdsArray = new Float32Array(this.glGeomItems.length)
@@ -222,7 +222,7 @@ class GLGeomItemSet extends EventEmitter {
   /**
    * The updateHighlightedIDsBuffer method.
    */
-  updateHighlightedIDsBuffer() {
+  updateHighlightedIDsBuffer(): void {
     const gl = this.gl
     if (!gl.floatTexturesSupported) {
       this.highlightedIdsBufferDirty = false
@@ -245,7 +245,7 @@ class GLGeomItemSet extends EventEmitter {
    * The getHighlightedIdsArray method.
    * @return - The drawIds for each GeomItem packed into a Float32Array
    */
-  getHighlightedIdsArray() {
+  getHighlightedIdsArray(): Float32Array {
     if (this.highlightedIdsBufferDirty) {
       if (!this.highlightedIdsArray || this.highlightedItems.length > this.highlightedIdsArray.length) {
         this.highlightedIdsArray = new Float32Array(this.glGeomItems.length)
@@ -270,7 +270,7 @@ class GLGeomItemSet extends EventEmitter {
    * The draw method.
    * @param renderstate - The object tracking the current state of the renderer
    */
-  draw(renderstate: RenderState) {
+  draw(renderstate: RenderState): void {
     if (this.visibleItems.length == 0) {
       return
     }
@@ -285,7 +285,7 @@ class GLGeomItemSet extends EventEmitter {
    * The drawHighlighted method.
    * @param renderstate - The object tracking the current state of the renderer
    */
-  drawHighlighted(renderstate: RenderState) {
+  drawHighlighted(renderstate: RenderState): void {
     if (this.highlightedItems.length == 0) {
       return
     }
@@ -303,7 +303,7 @@ class GLGeomItemSet extends EventEmitter {
    * @param drawIdsBuffer - The drawIdsBuffer value.
    * @private
    */
-  __bindAndRender(renderstate: RenderState, itemIndices: number[], drawIdsBuffer: WebGLBuffer | null) {
+  __bindAndRender(renderstate: RenderState, itemIndices: number[], drawIdsBuffer: WebGLBuffer | null): void {
     const gl = this.gl
     const unifs = renderstate.unifs
 
@@ -351,7 +351,7 @@ class GLGeomItemSet extends EventEmitter {
    * The destroy is called by the system to cause explicit resources cleanup.
    * Users should never need to call this method directly.
    */
-  destroy() {
+  destroy(): void {
     if (this.drawIdsBuffer) {
       this.gl.deleteBuffer(this.drawIdsBuffer)
       this.drawIdsBuffer = null

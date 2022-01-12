@@ -89,7 +89,7 @@ class GIFImage extends FileImage {
    * @param index - The index value.
    * @return - The return value.
    */
-  getFrameDelay(index: number) {
+  getFrameDelay(index: number): number {
     // Note: Frame delays are in centisecs (not millisecs which the timers will require.)
     return this.__unpackedData.frameDelays[index] * 10
   }

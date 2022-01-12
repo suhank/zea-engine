@@ -63,7 +63,7 @@ class GLGeomItemLibrary extends EventEmitter {
    * Sets up the Culling Worker to start calculating frustum culling.
    * @param renderer - The renderer instance
    */
-  setupCullingWorker(renderer: GLBaseRenderer) {
+  setupCullingWorker(renderer: GLBaseRenderer): void {
     // this.worker = {
     //   postMessage: (message) => {},
     // }
@@ -308,7 +308,7 @@ class GLGeomItemLibrary extends EventEmitter {
    * Handles applying the culling results received from the GLGeomItemLibraryCullingWorker
    * @param data - The object containing the newlyCulled and newlyUnCulled results.
    */
-  applyCullResults(data: Record<string, any>) {
+  applyCullResults(data: Record<string, any>): void {
     const { newlyCulled, newlyUnCulled } = data
     if (newlyCulled.length == 0 && newlyUnCulled.length == 0) return
     // console.log('applyCullResults newlyCulled', newlyCulled.length, 'newlyUnCulled', newlyUnCulled.length)
@@ -419,7 +419,7 @@ class GLGeomItemLibrary extends EventEmitter {
    * @param dataArray - The dataArray value.
    * @private
    */
-  populateDrawItemDataArray(index: number, subIndex: number, dataArray: Float32Array) {
+  populateDrawItemDataArray(index: number, subIndex: number, dataArray: Float32Array): void {
     const glGeomItem = this.glGeomItems[index]
     // When an item is deleted, we allocate its index to the free list
     // and null this item in the array. skip over null items.
@@ -520,7 +520,7 @@ class GLGeomItemLibrary extends EventEmitter {
   /**
    * Any items that need to be updated on the worker are now pushed.
    */
-  uploadGeomItemsToWorker() {
+  uploadGeomItemsToWorker(): void {
     if (this.enableFrustumCulling) {
       const geomItemsUpdateToCullingWorker: any[] = []
       this.dirtyWorkerItemIndices.forEach((index) => {
@@ -550,7 +550,7 @@ class GLGeomItemLibrary extends EventEmitter {
    * The uploadGeomItems method.
    * @param renderstate - The object tracking the current state of the renderer
    */
-  uploadGeomItems(renderstate: RenderState) {
+  uploadGeomItems(renderstate: RenderState): void {
     const gl = this.renderer.gl
     if (!gl.floatTexturesSupported) {
       return
@@ -630,7 +630,7 @@ class GLGeomItemLibrary extends EventEmitter {
    * Updates the GPU state if any update is needed.
    * @param renderstate - The object tracking the current state of the renderer
    */
-  bind(renderstate: RenderState) {
+  bind(renderstate: RenderState): void {
     if (this.dirtyWorkerItemIndices.size > 0 || this.removedItemIndices.length > 0) {
       this.uploadGeomItemsToWorker()
     }
@@ -650,7 +650,7 @@ class GLGeomItemLibrary extends EventEmitter {
    * The destroy is called by the system to cause explicit resources cleanup.
    * Users should never need to call this method directly.
    */
-  destroy() {}
+  destroy(): void {}
 }
 
 export { GLGeomItemLibrary }

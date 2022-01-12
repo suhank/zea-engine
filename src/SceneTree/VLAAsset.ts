@@ -41,7 +41,7 @@ class VLAAsset extends AssetItem {
    * @param context - The context value.
    * @return - The return value.
    */
-  readBinary(reader: BinReader, context: AssetLoadContext) {
+  readBinary(reader: BinReader, context: AssetLoadContext): number {
     if (context.versions['zea-engine']) {
       // Necessary for the smart lok
     } else {

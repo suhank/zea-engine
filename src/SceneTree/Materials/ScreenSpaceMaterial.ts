@@ -19,7 +19,7 @@ export class ScreenSpaceMaterial extends Material {
    * @param context - The context value.
    * @return - Returns a new cloned material.
    */
-  clone(context?: CloneContext) {
+  clone(context?: CloneContext): ScreenSpaceMaterial {
     const cloned = new ScreenSpaceMaterial()
     cloned.copyFrom(this, context)
     return cloned

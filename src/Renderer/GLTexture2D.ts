@@ -143,7 +143,7 @@ class GLTexture2D extends RefCounted {
    *
    * @return - The return value.
    */
-  getMipMapped() {
+  getMipMapped(): boolean {
     return this.__mipMapped
   }
 
@@ -155,7 +155,7 @@ class GLTexture2D extends RefCounted {
    *
    * @param emit - The emit value.
    */
-  configure(params: Record<string, any>) {
+  configure(params: Record<string, any>): void {
     const gl = this.__gl
     const p: Record<string, any> = processTextureParams(gl, params) // TODO: check method
 
@@ -206,7 +206,7 @@ class GLTexture2D extends RefCounted {
    * The __updateGLTexParams method.
    * @private
    */
-  __updateGLTexParams() {
+  __updateGLTexParams(): void {
     const gl = this.__gl
 
     // Load the image into the GPU for rendering.
@@ -232,7 +232,7 @@ class GLTexture2D extends RefCounted {
    */
 
   // TODO: type Image doesn't exist.
-  bufferData(data: any, width = -1, height = -1, bind = true, emit = true) {
+  bufferData(data: any, width = -1, height = -1, bind = true, emit = true): void {
     const gl = this.__gl
     if (bind) {
       gl.bindTexture(gl.TEXTURE_2D, this.__gltex)
@@ -345,7 +345,7 @@ class GLTexture2D extends RefCounted {
   /**
    * Clears the buffers to preset values
    */
-  clear() {
+  clear(): void {
     const gl = this.__gl
     const numPixels = this.width * this.height
     let numChannels
@@ -419,7 +419,7 @@ class GLTexture2D extends RefCounted {
    * @param preserveData - The preserveData value.
    * @param emit - The emit value.
    */
-  resize(width: number, height: number, preserveData = false, emit = true) {
+  resize(width: number, height: number, preserveData = false, emit = true): void {
     const gl = this.__gl
     const sizeChanged = this.width != width || this.height != height
     if (sizeChanged) {
@@ -485,7 +485,7 @@ class GLTexture2D extends RefCounted {
     offsetX = 0,
     offsetY = 0,
     bind = true
-  ) {
+  ): void {
     const gl = this.__gl
     if (bind) gl.bindTexture(gl.TEXTURE_2D, this.__gltex)
     gl.texSubImage2D(gl.TEXTURE_2D, 0, offsetX, offsetY, width, height, this.__format, this.__type, dataArray)
@@ -539,7 +539,7 @@ class GLTexture2D extends RefCounted {
    * @param bindings - The bindings value.
    * @return - The return value.
    */
-  bindToUniform(renderstate: RenderState, unif: Uniform, bindings?: Record<string, any>) {
+  bindToUniform(renderstate: RenderState, unif: Uniform, bindings?: Record<string, any>): boolean {
     if (!this.__loaded) {
       return false
     }
@@ -570,7 +570,7 @@ class GLTexture2D extends RefCounted {
    * The destroy is called by the system to cause explicit resources cleanup.
    * Users should never need to call this method directly.
    */
-  destroy() {
+  destroy(): void {
     super.destroy()
     if (this.__image) {
       this.__image.setMetadata('gltexture', undefined)

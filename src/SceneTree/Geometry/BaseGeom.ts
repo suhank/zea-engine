@@ -37,7 +37,7 @@ class BaseGeom extends ParameterOwner {
   /**
    * The clear method.
    */
-  clear() {
+  clear(): void {
     this.setNumVertices(0)
   }
 

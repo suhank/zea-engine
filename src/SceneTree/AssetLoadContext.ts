@@ -55,7 +55,7 @@ export class AssetLoadContext extends EventEmitter {
    * As each external reference starts to load, it increments this counter, letting the owning
    * Asset know to wait till the children are loaded before emitting its own 'loaded' event.
    */
-  incrementAsync() {
+  incrementAsync(): void  {
     this.asyncCount++
   }
 
@@ -63,7 +63,7 @@ export class AssetLoadContext extends EventEmitter {
    * As each external reference completes loading, it decrements this counter allowing the owning
    * asset to know that the subtrees are loaded.
    */
-  decrementAsync() {
+  decrementAsync(): void  {
     this.asyncCount--
 
     // Wait for all nested XRefs to load before considering this asset loaded.
@@ -79,7 +79,7 @@ export class AssetLoadContext extends EventEmitter {
    * @param onSucceed called with the successful result of the path resolution.
    * @param onFail called when the path resolution fails.
    */
-  resolvePath(path: Array<string>, onSucceed: (result: BaseItem | Parameter<any>) => void, onFail: (e: Error) => void) {
+  resolvePath(path: Array<string>, onSucceed: (result: BaseItem | Parameter<any>) => void, onFail: (e: Error) => void): void  {
     // Note: Why not return a Promise here?
     // Promise evaluation is always async, so
     // all promises will be resolved after the current call stack
@@ -113,7 +113,7 @@ export class AssetLoadContext extends EventEmitter {
    * e.g. an instance will
    * @param postLoadCallback
    */
-  addPLCB(postLoadCallback: () => void) {
+  addPLCB(postLoadCallback: () => void): void  {
     this.postLoadCallbacks.push(postLoadCallback)
   }
 }

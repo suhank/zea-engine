@@ -30,7 +30,7 @@ class GLLinesPass extends GLOpaqueGeomsPass {
    * @param renderer - The renderer value.
    * @param passIndex - The index of the pass in the GLBAseRenderer
    */
-  init(renderer: GLBaseRenderer, passIndex: number) {
+  init(renderer: GLBaseRenderer, passIndex: number): void {
     super.init(renderer, passIndex)
   }
   /**
@@ -50,7 +50,7 @@ class GLLinesPass extends GLOpaqueGeomsPass {
    * The __checkFramebuffer method.
    * @private
    */
-  __checkFramebuffer(width: number, height: number) {
+  __checkFramebuffer(width: number, height: number): void {
     const gl = this.__gl!
 
     let check
@@ -86,7 +86,7 @@ class GLLinesPass extends GLOpaqueGeomsPass {
    * The draw method.
    * @param renderstate - The object tracking the current state of the renderer
    */
-  draw(renderstate: RenderState) {
+  draw(renderstate: RenderState): void {
     const gl = this.__gl!
 
     gl.enable(gl.BLEND)
@@ -104,7 +104,7 @@ class GLLinesPass extends GLOpaqueGeomsPass {
    * The drawGeomData method.
    * @param renderstate - The object tracking the current state of the renderer
    */
-  drawGeomData(renderstate: GeomDataRenderState) {
+  drawGeomData(renderstate: GeomDataRenderState): void {
     const gl = this.__gl!
     //  Note: lines in VR are not fattened...
     if (renderstate.geomDataFbo) {

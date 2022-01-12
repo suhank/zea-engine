@@ -444,7 +444,7 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
    * @param reader - The reader value.
    * @param context - The context value.
    */
-  destroy() {
+  destroy(): void {
     console.warn('nothing destroyed. This method was not overwritten in subclass')
   }
 }

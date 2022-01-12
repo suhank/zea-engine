@@ -168,7 +168,7 @@ class GeomShaderBinding extends IGeomShaderBinding {
   /**
    * The unbind method.
    */
-  unbind() {
+  unbind(): void {
     const gl = this.gl
     for (const attrName in this.shaderAttrs) {
       const shaderAttrDesc = this.shaderAttrs[attrName]

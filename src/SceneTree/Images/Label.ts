@@ -232,7 +232,7 @@ class Label extends DataImage {
    * @param event - The event object.
    * @private
    */
-  __parameterValueChanged(event: Record<string, any>) {
+  __parameterValueChanged(event: Record<string, any>): void {
     super.parameterValueChanged(event)
     if (!this.requestedReRender) {
       this.requestedReRender = true
@@ -243,7 +243,7 @@ class Label extends DataImage {
   /**
    * Method in charge of basically do everything, set text, load/update it, get the library, load the font, etc.
    */
-  loadLabelData() {
+  loadLabelData(): void {
     const onLoaded = () => {
       this.requestedReRender = false
       this.needsRender = true
@@ -312,7 +312,7 @@ class Label extends DataImage {
    * Here is where all parameters are applied to the canvas containing the text,
    * then the image data is extracted from the canvas context.
    */
-  renderLabelToImage() {
+  renderLabelToImage(): void {
     // console.log("renderLabelToImage")
     const ctx2d = this.canvasElem.getContext('2d', {
       alpha: true,
@@ -415,7 +415,7 @@ class Label extends DataImage {
    * @param context - The context value.
    * @return - Returns the json object.
    */
-  toJSON(context: Record<string, any>) {
+  toJSON(context: Record<string, any>): Record<string, any> {
     const j = super.toJSON(context)
     return j
   }
@@ -426,7 +426,7 @@ class Label extends DataImage {
    * @param j - The json object this item must decode.
    * @param context - The context value.
    */
-  fromJSON(j: Record<string, any>, context: Record<string, any>) {
+  fromJSON(j: Record<string, any>, context: Record<string, any>): void {
     super.fromJSON(j, context)
   }
 }

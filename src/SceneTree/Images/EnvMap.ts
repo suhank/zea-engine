@@ -66,7 +66,7 @@ class EnvMap extends HDRImage {
    * @param dir - The dir value.
    * @return - The return value.
    */
-  dirToLuminance(dir: Vec3) {
+  dirToLuminance(dir: Vec3): any {
     // normal is assumed to have unit length
     const x = dir.x
     const y = dir.y

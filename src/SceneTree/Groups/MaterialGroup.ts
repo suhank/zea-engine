@@ -81,7 +81,7 @@ class MaterialGroup extends BaseGroup {
    *
    * @param sel - Boolean indicating the new selection state.
    */
-  setSelected(sel: boolean) {
+  setSelected(sel: boolean): void {
     super.setSelected(sel)
     this.updateHighlight()
   }
@@ -107,7 +107,7 @@ class MaterialGroup extends BaseGroup {
    * The __updateMaterial method.
    * @private
    */
-  __updateMaterialHelper() {
+  __updateMaterialHelper(): void {
     const material = this.materialParam.value
 
     // TODO: Bind an operator
@@ -140,7 +140,7 @@ class MaterialGroup extends BaseGroup {
    * @param index - The index value.
    * @private
    */
-  bindItem(item: BaseItem, index: number) {
+  bindItem(item: BaseItem, index: number): void {
     super.bindItem(<TreeItem>item, index)
 
     if (!(item instanceof TreeItem)) return
@@ -183,7 +183,7 @@ class MaterialGroup extends BaseGroup {
    * @param index - The index value.
    * @private
    */
-  __unbindItem(item: BaseItem, index: number) {
+  __unbindItem(item: BaseItem, index: number): void {
     super.unbindItem(<TreeItem>item, index)
     if (!(item instanceof TreeItem)) return
 
@@ -203,7 +203,7 @@ class MaterialGroup extends BaseGroup {
    * @param context - The context value.
    * @return - Returns a new cloned group.
    */
-  clone(context: CloneContext) {
+  clone(context: CloneContext): MaterialGroup {
     const cloned = new MaterialGroup(this.__name + 'clone')
     cloned.copyFrom(this, context)
     return cloned

@@ -80,7 +80,7 @@ class GridTreeItem extends TreeItem {
    * @param bBox
    * @return - Reset Bounding Box
    */
-  _cleanBoundingBox(bBox: Box3) {
+  _cleanBoundingBox(bBox: Box3): Box3 {
     bBox.reset()
     return bBox
   }

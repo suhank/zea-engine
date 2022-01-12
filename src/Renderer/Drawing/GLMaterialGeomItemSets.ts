@@ -49,7 +49,7 @@ class GLMaterialGeomItemSets extends EventEmitter {
    * The getGLMaterial method.
    * @return - The return value.
    */
-  getGLMaterial() {
+  getGLMaterial(): GLMaterial {
     return this.glMaterial
   }
 
@@ -59,7 +59,7 @@ class GLMaterialGeomItemSets extends EventEmitter {
    * @param glGeom - The glGeomItem value.
    * @private
    */
-  addGLGeomItem(glGeomItem: GLGeomItem, glGeom: GLGeom) {
+  addGLGeomItem(glGeomItem: GLGeomItem, glGeom: GLGeom): void {
     const id = glGeom.getGeom().getId()
     let geomItemSet = this.glGeomItemSets[id]
     if (!geomItemSet) {
@@ -74,7 +74,7 @@ class GLMaterialGeomItemSets extends EventEmitter {
    * @param event - The change value.
    * @private
    */
-  drawCountChanged(event: Record<string, any>) {
+  drawCountChanged(event: Record<string, any>): void {
     this.drawCount += event.change
     this.emit('updated')
   }
@@ -83,7 +83,7 @@ class GLMaterialGeomItemSets extends EventEmitter {
    * The __materialChanged method.
    * @private
    */
-  __materialChanged() {
+  __materialChanged(): void {
     const material = this.glMaterial.getMaterial()
     if (!this.pass.checkMaterial(material)) {
       for (const key in this.glGeomItemSets) {
@@ -101,7 +101,7 @@ class GLMaterialGeomItemSets extends EventEmitter {
    * The addGeomItemSet method.
    * @param glGeomItemSet - The glGeomItemSet value.
    */
-  addGeomItemSet(glGeomItemSet: any) {
+  addGeomItemSet(glGeomItemSet: any): void {
     const id = glGeomItemSet.getGLGeom().getGeom().getId()
     this.glGeomItemSets[id] = glGeomItemSet
     const listenerID = glGeomItemSet.on('drawCountChanged', (event: any) => {
@@ -131,7 +131,7 @@ class GLMaterialGeomItemSets extends EventEmitter {
    * Draws all elements, binding the shader and continuing into the GLGeomItemSet
    * @param renderstate - The render state for the current draw traversal
    */
-  draw(renderstate: RenderState) {
+  draw(renderstate: RenderState): void {
     if (this.drawCount == 0) return
     const warnMissingUnifs = true
     this.glMaterial.bind(renderstate, warnMissingUnifs)
@@ -146,7 +146,7 @@ class GLMaterialGeomItemSets extends EventEmitter {
    * The drawHighlighted method.
    * @param renderstate - The object tracking the current state of the renderer
    */
-  drawHighlighted(renderstate: RenderState) {
+  drawHighlighted(renderstate: RenderState): void {
     this.glMaterial.bind(renderstate, false)
     for (const key in this.glGeomItemSets) {
       const glGeomItemSet = this.glGeomItemSets[key]
@@ -159,7 +159,7 @@ class GLMaterialGeomItemSets extends EventEmitter {
    * The drawHighlightedGeoms method.
    * @param renderstate - The object tracking the current state of the renderer
    */
-  drawGeomData(renderstate: GeomDataRenderState) {
+  drawGeomData(renderstate: GeomDataRenderState): void {
     this.glMaterial.bind(renderstate, false)
     for (const key in this.glGeomItemSets) {
       const glGeomItemSet = this.glGeomItemSets[key]

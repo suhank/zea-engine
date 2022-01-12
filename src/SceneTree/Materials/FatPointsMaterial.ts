@@ -29,7 +29,7 @@ export class FatPointsMaterial extends Material {
    * @param context - The context value.
    * @return - Returns a new cloned material.
    */
-  clone(context?: CloneContext) {
+  clone(context?: CloneContext): FatPointsMaterial {
     const cloned = new FatPointsMaterial()
     cloned.copyFrom(this, context)
     return cloned

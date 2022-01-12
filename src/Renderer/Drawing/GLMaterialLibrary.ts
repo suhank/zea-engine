@@ -49,7 +49,7 @@ class GLMaterialLibrary extends EventEmitter {
    * @param material - The material object.
    * @return - The index of GLMaterial
    */
-  addMaterial(material: Material) {
+  addMaterial(material: Material): number {
     let index = this.materialIndices[material.getId()]
     if (index != undefined) {
       // Increment the ref count for the Material
@@ -93,7 +93,7 @@ class GLMaterialLibrary extends EventEmitter {
    * @param material - The material value.
    * @return - The constructed GLMaterial.
    */
-  getGLMaterial(material: Material) {
+  getGLMaterial(material: Material): GLMaterial {
     if (this.glMaterials[material.getId()]) {
       return this.glMaterials[material.getId()]
     }
@@ -123,7 +123,7 @@ class GLMaterialLibrary extends EventEmitter {
    * The removeMaterial method.
    * @param material - The material object.
    */
-  removeMaterial(material: Material) {
+  removeMaterial(material: Material): void {
     const index = this.materialIndices[material.getId()]
     this.refCounts[index]--
 
@@ -147,7 +147,7 @@ class GLMaterialLibrary extends EventEmitter {
    * The uploadMaterials method.
    * @param renderstate - The render state for the current draw traversal
    */
-  uploadMaterials(renderstate: RenderState) {
+  uploadMaterials(renderstate: RenderState): void {
     const gl = this.renderer.__gl
 
     const materialsTextureSize = MathFunctions.nextPow2(Math.ceil(Math.sqrt(this.materialsAllocator.reservedSpace)))
@@ -216,7 +216,7 @@ class GLMaterialLibrary extends EventEmitter {
    * Updates the GPU state if any update is needed.
    * @param renderstate - The object tracking the current state of the renderer
    */
-  update(renderstate: RenderState) {
+  update(renderstate: RenderState): void {
     if (this.dirtyItemIndices.length > 0) this.uploadMaterials(renderstate)
     renderstate.drawItemsTexture = this.glGeomItemsTexture
   }

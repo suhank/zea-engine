@@ -24,7 +24,7 @@ export class SimpleSurfaceMaterial extends Material {
    * @param context - The context value.
    * @return - Returns a new cloned material.
    */
-  clone(context?: CloneContext) {
+  clone(context?: CloneContext): SimpleSurfaceMaterial {
     const cloned = new SimpleSurfaceMaterial()
     cloned.copyFrom(this, context)
     return cloned

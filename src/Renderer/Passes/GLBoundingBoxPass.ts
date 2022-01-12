@@ -48,7 +48,7 @@ class GLBoundingBoxPass extends GLPass {
    * The getPassType method.
    * @return - The pass type value.
    */
-  getPassType() {
+  getPassType(): number {
     return PassType.OPAQUE
   }
 
@@ -57,7 +57,7 @@ class GLBoundingBoxPass extends GLPass {
    * @param renderer - The renderer value.
    * @param passIndex - The index of the pass in the GLBAseRenderer
    */
-  init(renderer: GLBaseRenderer, passIndex: number) {
+  init(renderer: GLBaseRenderer, passIndex: number): void {
     super.init(renderer, passIndex)
 
     const gl = this.__renderer!.gl
@@ -75,7 +75,7 @@ class GLBoundingBoxPass extends GLPass {
    * so the subtree of this node will not be traversed after this node is handled.
    * @return - The return value.
    */
-  itemAddedToScene(treeItem: TreeItem, rargs: Record<string, any>) {
+  itemAddedToScene(treeItem: TreeItem, rargs: Record<string, any>): boolean {
     // if (treeItem instanceof TreeItem) {
     //   this.bindTreeItem(treeItem)
     //   return false
@@ -90,7 +90,7 @@ class GLBoundingBoxPass extends GLPass {
    * @param rargs - Extra return values are passed back in this object.
    * @return - The return value.
    */
-  itemRemovedFromScene(treeItem: TreeItem, rargs: Record<string, any>) {
+  itemRemovedFromScene(treeItem: TreeItem, rargs: Record<string, any>): boolean {
     // if (treeItem instanceof TreeItem) {
     //   this.unbindTreeItem(treeItem)
     //   return true
@@ -106,7 +106,7 @@ class GLBoundingBoxPass extends GLPass {
    *
    * @param treeItem - The tree item to add.
    */
-  addTreeItem(treeItem: TreeItem, continueIntoSubTree = true) {
+  addTreeItem(treeItem: TreeItem, continueIntoSubTree = true): void {
     // Note: we can have BaseItems in the tree now.
     if (!(treeItem instanceof TreeItem)) return
 
@@ -131,7 +131,7 @@ class GLBoundingBoxPass extends GLPass {
    * The bindTreeItem method.
    * @param treeitem - The treeitem value.
    */
-  bindTreeItem(treeitem: TreeItem) {
+  bindTreeItem(treeitem: TreeItem): void {
     let index: number
     let index_check = this.freeIndices.pop()
     if (index_check) index = index_check
@@ -175,7 +175,7 @@ class GLBoundingBoxPass extends GLPass {
    * The unbindTreeItem method.
    * @param treeitem - The treeitem value.
    */
-  unbindTreeItem(treeitem: TreeItem) {
+  unbindTreeItem(treeitem: TreeItem): void {
     if (!(treeitem.getId() in this.idToIndex)) {
       console.warn('Billboard already removed.')
       return
@@ -206,7 +206,7 @@ class GLBoundingBoxPass extends GLPass {
    * @param dataArray - The dataArray value.
    * @private
    */
-  __populateBoxesDataArray(treeitemData: any, index: number, dataArray: any) {
+  __populateBoxesDataArray(treeitemData: any, index: number, dataArray: any): void {
     const treeitem = treeitemData.treeitem
     const globalXfoParam = treeitem.globalXfoParam
     const geomMatParam = treeitem.geomMatParam
@@ -231,7 +231,7 @@ class GLBoundingBoxPass extends GLPass {
   }
 
   // eslint-disable-next-line require-jsdoc
-  __updateIndexArray() {
+  __updateIndexArray(): void {
     const gl = this.__gl!
     // Note: When the camera moves, this array is sorted and re-upload.
     if (this.__indexArray && this.__indexArray.length != this.drawCount) {
@@ -258,7 +258,7 @@ class GLBoundingBoxPass extends GLPass {
    * The __updateBoxes method.
    * @private
    */
-  __updateBoxes() {
+  __updateBoxes(): void {
     if (this.indexArrayUpdateNeeded) this.__updateIndexArray()
 
     const gl = this.__renderer!.gl
@@ -308,7 +308,7 @@ class GLBoundingBoxPass extends GLPass {
    * @param index - The index value.
    * @private
    */
-  __updateBox(index: number) {
+  __updateBox(index: number): void {
     if (this.drawCount == 0 || !this.__drawItemsTexture) {
       return
     }
@@ -342,7 +342,7 @@ class GLBoundingBoxPass extends GLPass {
    * The sort method.
    * @param renderstate - The object tracking the current state of the renderer
    */
-  draw(renderstate: RenderState) {
+  draw(renderstate: RenderState): void {
     if (this.drawCount == 0) {
       return
     }

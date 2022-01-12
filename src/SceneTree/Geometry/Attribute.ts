@@ -6,7 +6,7 @@ import { MathFunctions } from '../../Utilities/MathFunctions'
 import { Mesh } from './Mesh'
 import { BinReader } from '../../SceneTree/BinReader'
 
-function approxEqual(a: Float32Array, b: Float32Array) {
+function approxEqual(a: Float32Array, b: Float32Array): boolean {
   return !a.some((value, index) => Math.abs(b[index] - value) > 0.001)
 }
 function isInitialized(a: Float32Array) {
@@ -45,7 +45,7 @@ class Attribute extends BaseClass {
    *
    * @param mesh - The mesh object
    */
-  setMesh(mesh: Mesh) {
+  setMesh(mesh: Mesh): void {
     this.mesh = mesh
   }
 
@@ -54,7 +54,7 @@ class Attribute extends BaseClass {
    *
    * @return - The return value.
    */
-  asArray() {
+  asArray(): Float32Array {
     return this.data
   }
 
@@ -63,7 +63,7 @@ class Attribute extends BaseClass {
    *
    * @return - The return value.
    */
-  getDataTypeName() {
+  getDataTypeName(): string {
     return this.dataTypeName
   }
 
@@ -332,7 +332,7 @@ class Attribute extends BaseClass {
    * The loadSplitValues method.
    * @param reader - The reader value.
    */
-  loadSplitValues(reader: BinReader) {
+  loadSplitValues(reader: BinReader): void {
     const splitIndices = reader.loadUInt32Array()
     if (splitIndices.length == 0) return
     let offset = 0

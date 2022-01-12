@@ -173,7 +173,7 @@ class Sphere extends ProceduralMesh {
    * The resize method.
    * @private
    */
-  resize() {
+  resize(): void{
     const radius = this.radiusParam.value
     const nbSides = this.sidesParam.value
     const nbLoops = this.loopsParam.value

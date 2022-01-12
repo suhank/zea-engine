@@ -100,7 +100,7 @@ class GeometryParameter extends Parameter<BaseGeom | undefined> {
    * from this parameter and returns it.
    * @return - Returns a new geometry parameter.
    */
-  clone() {
+  clone():  GeometryParameter {
     const clonedParam = new GeometryParameter(this.name, this.__value)
     return clonedParam
   }

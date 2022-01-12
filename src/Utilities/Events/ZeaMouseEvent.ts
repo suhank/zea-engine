@@ -38,11 +38,11 @@ class ZeaMouseEvent extends ZeaUIEvent {
     this.shiftKey = sourceEvent.shiftKey
   }
 
-  stopPropagation() {
+  stopPropagation(): void {
     super.stopPropagation()
     if (this.sourceEvent) this.sourceEvent.stopPropagation()
   }
-  preventDefault() {
+  preventDefault(): void{
     if (this.sourceEvent) this.sourceEvent.preventDefault()
   }
 }

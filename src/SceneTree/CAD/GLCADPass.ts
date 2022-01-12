@@ -29,7 +29,7 @@ class GLCADPass extends GLPass {
    * so the subtree of this node will not be traversed after this node is handled.
    * @return {Boolean} - The return value.
    */
-  itemAddedToScene(treeItem: TreeItem, rargs: Record<string, any>) {
+  itemAddedToScene(treeItem: TreeItem, rargs: Record<string, any>): boolean {
     return false
   }
 
@@ -40,7 +40,7 @@ class GLCADPass extends GLPass {
    * @param {object} rargs - Extra return values are passed back in this object.
    * @return {Boolean} - The return value.
    */
-  itemRemovedFromScene(treeItem: TreeItem, rargs: Record<string, any>) {
+  itemRemovedFromScene(treeItem: TreeItem, rargs: Record<string, any>): boolean {
     return false
   }
 }

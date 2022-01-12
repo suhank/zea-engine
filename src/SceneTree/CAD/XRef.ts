@@ -41,7 +41,7 @@ class XRef extends CADAsset {
    * @param {XRef} src - The XRef to copy from.
    * @param {object} context - The context value.
    */
-  copyFrom(src?: XRef, context?: CloneContext) {
+  copyFrom(src?: XRef, context?: CloneContext):void {
     // Note: the XRef has a localXfo that positions it relative
     // to the parent assembly. We need to avoid losing that values
     // when cloning all the others.
@@ -59,7 +59,7 @@ class XRef extends CADAsset {
    * @paramreader - The reader param.
    * @param context - The load context param.
    */
-  readBinary(reader: BinReader, context: AssetLoadContext) {
+  readBinary(reader: BinReader, context: AssetLoadContext):void {
     reader.loadStr() // read type
     const name = reader.loadStr() // read name
     this.setName(name)

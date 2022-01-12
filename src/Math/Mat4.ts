@@ -667,7 +667,7 @@ class Mat4 {
    *
    * @return - The return value.
    */
-  invertInPlace() {
+  invertInPlace(): boolean {
     const a00 = this.__data[0]
     const a01 = this.__data[1]
     const a02 = this.__data[2]
@@ -1390,7 +1390,7 @@ class Mat4 {
    *
    * @return - The return value.
    */
-  toString() {
+  toString(): string {
     // eslint-disable-next-line new-cap
     return StringFunctions.stringifyJSONWithFixedPrecision(this.toJSON())
   }

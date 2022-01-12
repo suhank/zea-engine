@@ -37,7 +37,7 @@ class StructParameter extends Parameter<Record<string, unknown>> {
    * @return - The return value.
    * @private
    */
-  protected addMember(parameter: Parameter<any>) {
+  protected addMember(parameter: Parameter<any>): Parameter<any> {
     if (this.__value) this.__value[parameter.getName()] = parameter.value
 
     parameter.on('valueChanged', () => {
@@ -69,7 +69,7 @@ class StructParameter extends Parameter<Record<string, unknown>> {
    * @param name - The parameter name.
    * @return - The return value.
    */
-  getMember(name: string) {
+  getMember(name: string): Parameter<unknown> {
     return this.getParameter(name)
   }
 

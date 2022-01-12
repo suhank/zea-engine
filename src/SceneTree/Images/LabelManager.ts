@@ -8,7 +8,7 @@ declare global {
 }
 
 // eslint-disable-next-line require-jsdoc
-function getLanguage() {
+function getLanguage(): string {
   if (!globalThis.navigator) return 'en'
 
   // Check if a language is explicitly selected.
@@ -72,7 +72,7 @@ class LabelManager extends EventEmitter {
    * @param name - The name of the library.
    * @param url- The json data of of the library.
    */
-  loadLibrary(name: string, url: string) {
+  loadLibrary(name: string, url: string): void {
     const stem = name.substring(0, name.lastIndexOf('.'))
     this.__foundLabelLibraries[stem] = url
 
@@ -118,7 +118,7 @@ class LabelManager extends EventEmitter {
    * @param name - The name of the library.
    * @return - Returns true if the library is found.
    */
-  isLibraryFound(name: string) {
+  isLibraryFound(name: string): boolean {
     return name in this.__foundLabelLibraries
   }
 
@@ -127,7 +127,7 @@ class LabelManager extends EventEmitter {
    * @param name - The name of the library.
    * @return - Returns true if the library is loaded.
    */
-  isLibraryLoaded(name: string) {
+  isLibraryLoaded(name: string): boolean {
     return name in this.__labelLibraries
   }
 
@@ -137,7 +137,7 @@ class LabelManager extends EventEmitter {
    * @param labelName - The name of the label.
    * @return - The return value.
    */
-  getLabelText(libraryName: string, labelName: string) {
+  getLabelText(libraryName: string, labelName: string): any {
     const library = this.__labelLibraries[libraryName]
     if (!library) {
       throw new Error(
@@ -174,7 +174,7 @@ class LabelManager extends EventEmitter {
    * @param labelName - The name of the label.
    * @param labelText - The text of the label.
    */
-  setLabelText(libraryName: string, labelName: string, labelText: string) {
+  setLabelText(libraryName: string, labelName: string, labelText: string): void {
     let library = this.__labelLibraries[libraryName]
     if (!library) {
       library = {}
@@ -189,7 +189,7 @@ class LabelManager extends EventEmitter {
     // TODO: Push to server.
   }
 
-  setLanguage(ln: any) {
+  setLanguage(ln: any): void {
     this.__language = ln
   }
 }

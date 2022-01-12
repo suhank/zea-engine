@@ -19,7 +19,7 @@ export class FlatSurfaceMaterial extends Material {
    * @param context - The context value.
    * @return - Returns a new cloned material.
    */
-  clone(context?: CloneContext) {
+  clone(context?: CloneContext): FlatSurfaceMaterial {
     const cloned = new FlatSurfaceMaterial()
     cloned.copyFrom(this, context)
     return cloned

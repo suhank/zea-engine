@@ -46,7 +46,7 @@ class FlatSurfaceShader extends GLShader {
    * @param renderstate - The object tracking the current state of the renderer
    * @return - The return value.
    */
-  unbind(renderstate: RenderState) {
+  unbind(renderstate: RenderState): boolean {
     super.unbind(renderstate)
 
     const gl = this.__gl!

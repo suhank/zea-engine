@@ -47,7 +47,7 @@ class CalcGeomMatOperator extends Operator {
   /**
    * The evaluate method.
    */
-  evaluate() {
+  evaluate(): void {
     const globalMat4 = this.globalXfo.getValue().toMat4()
     const geomOffsetMat4 = this.geomOffsetXfo.getValue().toMat4()
     this.geomMat.setClean(globalMat4.multiply(geomOffsetMat4))
@@ -121,7 +121,7 @@ class GeomItem extends BaseGeomItem {
    * @return - The return value.
    * @private
    */
-  _cleanBoundingBox(bbox: Box3) {
+  _cleanBoundingBox(bbox: Box3): Box3 {
     if (this.disableBoundingBox) return bbox
     bbox = super._cleanBoundingBox(bbox)
     if (this.geomBBox) {
@@ -192,7 +192,7 @@ class GeomItem extends BaseGeomItem {
    * @param reader - The reader value.
    * @param context - The context value.
    */
-  readBinary(reader: BinReader, context: AssetLoadContext) {
+  readBinary(reader: BinReader, context: AssetLoadContext): void {
     super.readBinary(reader, context)
 
     context.numGeomItems++
@@ -265,7 +265,7 @@ class GeomItem extends BaseGeomItem {
    * @param context
    * @return - The return value.
    */
-  toString(context: Record<string, any>) {
+  toString(context: Record<string, any>): string {
     return JSON.stringify(this.toJSON(context), null, 2)
   }
 
@@ -279,7 +279,7 @@ class GeomItem extends BaseGeomItem {
    * @param context - The context value.
    * @return - Returns a new cloned geom item.
    */
-  clone(context?: CloneContext) {
+  clone(context?: CloneContext): GeomItem {
     const cloned = new GeomItem()
     cloned.copyFrom(this, context)
     return cloned
@@ -291,7 +291,7 @@ class GeomItem extends BaseGeomItem {
    * @param src - The geom item to copy from.
    * @param context - The context value.
    */
-  copyFrom(src: GeomItem, context?: CloneContext) {
+  copyFrom(src: GeomItem, context?: CloneContext): void {
     super.copyFrom(src, context)
 
     if (!src.geomParam.value && src.geomIndex != -1) {
@@ -328,7 +328,7 @@ class GeomItem extends BaseGeomItem {
    * from zcad files.
    * @param value - true for precise bounding boxes, else false for faster approximate bounding boxes.
    */
-  static setCalculatePreciseBoundingBoxes(value: boolean) {
+  static setCalculatePreciseBoundingBoxes(value: boolean): void {
     calculatePreciseBoundingBoxes = value
   }
 }

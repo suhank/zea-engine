@@ -35,7 +35,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
    * @param renderer - The renderer value.
    * @param passIndex - The index of the pass in the GLBAseRenderer
    */
-  init(renderer: GLBaseRenderer, passIndex: number) {
+  init(renderer: GLBaseRenderer, passIndex: number): void {
     super.init(renderer, passIndex)
   }
 
@@ -43,7 +43,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
    * Returns the pass type. OPAQUE passes are always rendered first, followed by TRANSPARENT passes, and finally OVERLAY.
    * @return - The pass type value.
    */
-  getPassType() {
+  getPassType(): number {
     return PassType.OPAQUE
   }
 
@@ -55,7 +55,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
    * @param geomItem - The geomItem value.
    * @return - The return value.
    */
-  filterGeomItem(geomItem: GeomItem) {
+  filterGeomItem(geomItem: GeomItem): boolean {
     const material = geomItem.materialParam.value
     return this.checkMaterial(material)
   }
@@ -65,7 +65,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
    * @param material - The geomItem value.
    * @return - The return value.
    */
-  checkMaterial(material: Material) {
+  checkMaterial(material: Material): boolean {
     return !material.isTransparent()
   }
 
@@ -73,7 +73,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
    * Removes the GeomITem from this pass, and then asks the renderer to re-add it.
    * @param geomItem - The geomItem value.
    */
-  removeAndReAddGeomItem(geomItem: GeomItem) {
+  removeAndReAddGeomItem(geomItem: GeomItem): void {
     this.removeGeomItem(geomItem)
     this.__renderer!.assignTreeItemToGLPass(geomItem)
   }
@@ -83,7 +83,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
    * @param geomItem - The geomItem value.
    * @return - The return value.
    */
-  addGeomItem(geomItem: GeomItem) {
+  addGeomItem(geomItem: GeomItem): boolean {
     const materialParam = geomItem.materialParam
     const material = materialParam.value
     const glGeomLibrary = this.renderer!.glGeomLibrary
@@ -153,7 +153,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
    * @param geomItem - The geomItem value.
    * @return - The return value.
    */
-  removeGeomItem(geomItem: GeomItem) {
+  removeGeomItem(geomItem: GeomItem): boolean {
     const glGeomItem = (<Record<string, any>>this).renderer.glGeomItemLibrary.getGLGeomItem(geomItem)
 
     if (glGeomItem.GLShaderGeomSets) {
@@ -184,7 +184,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
    * The removeMaterial method.
    * @param material - The material value.
    */
-  removeMaterial(material: Material) {
+  removeMaterial(material: Material): void {
     const shaderName = material.getShaderName()
     const glshaderMaterials = this.__glshadermaterials[shaderName]
     if (!glshaderMaterials || glshaderMaterials != material.getMetadata('glshaderMaterials')) {
@@ -201,7 +201,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
    * @param renderstate - The renderstate value.
    * @private
    */
-  __traverseTreeAndDraw(renderstate: RenderState) {
+  __traverseTreeAndDraw(renderstate: RenderState): void {
     // eslint-disable-next-line guard-for-in
     for (const shaderName in this.__glShaderGeomSets) {
       this.__glShaderGeomSets[shaderName].draw(renderstate)
