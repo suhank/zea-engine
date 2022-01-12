@@ -103,6 +103,16 @@ abstract class GLPass extends ParameterOwner {
     return false
   }
 
+  /**
+   * The startPresenting method.
+   */
+  startPresenting(): void {}
+
+  /**
+   * The stopPresenting method.
+   */
+  stopPresenting(): void {}
+
   // ///////////////////////////////////
   // Rendering
 

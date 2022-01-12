@@ -27,6 +27,21 @@ class ParamUniformBinding extends BaseClass {
     super()
     this.unif = unif
   }
+
+  /**
+   * The unbind method.
+   */
+  bind(renderstate?: RenderState): void {}
+
+  /**
+   * The unbind method.
+   */
+  unbind(renderstate?: RenderState): void {}
+
+  /**
+   * The destroy method.
+   */
+  destroy(): void {}
 }
 
 /** Class representing simple uniform binding.
@@ -249,6 +264,16 @@ class ComplexUniformBinding extends ParamUniformBinding {
     }
     this.uniformXX(this.unif.location, this.values)
   }
+
+  /**
+   * The unbind method.
+   */
+  unbind(): void {}
+
+  /**
+   * The destroy method.
+   */
+  destroy(): void {}
 }
 
 /** Class representing material uniform binding.
@@ -296,6 +321,16 @@ class MatrixUniformBinding extends ParamUniformBinding {
     }
     this.uniformMatrixXXX(this.unif.location, false, this.values)
   }
+
+  /**
+   * The unbind method.
+   */
+  unbind(): void {}
+
+  /**
+   * The destroy method.
+   */
+  destroy(): void {}
 }
 
 /** Class representing color uniform binding.
