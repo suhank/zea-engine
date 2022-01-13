@@ -207,8 +207,8 @@ class CompoundGeom extends BaseGeom {
     // /////////////////////////////////
     // POINTS subgeoms
     const numPointsSubGeoms = reader.loadUInt32()
-    const subGeomOffsetsPoints = new Uint32Array(subGeomCountsLines.length)
-    const subGeomCountsPoints = new Uint32Array(subGeomCountsLines.length)
+    const subGeomOffsetsPoints = new Uint32Array(numPointsSubGeoms)
+    const subGeomCountsPoints = new Uint8Array(numPointsSubGeoms)
     for (let i = 0; i < numPointsSubGeoms; i++) {
       subGeomOffsetsPoints[i] = offset
       subGeomCountsPoints[i] = 1
