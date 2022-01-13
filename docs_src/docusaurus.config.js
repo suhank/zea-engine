@@ -15,28 +15,30 @@ module.exports = {
   projectName: "Zea Engine Docs", // Usually your repo name.
   trailingSlash: false,
 
-  plugins: [
-    [
-      "docusaurus-plugin-typedoc",
-      {
-        out: "../typedoc-out",
-        sidebar: {
-          categoryLabel: "API",
-          position: 0,
-          fullNames: false,
-        },
-        entryPoints: ["../src/"],
-        entryPointStrategy: "expand",
-        exclude: [
-          "**/*+(**Impl|**PostCommand|**WsCommand|**index).ts",
-          "**/decoders/*",
-          "**/*+(**Utils).ts",
-          "**/*.test.ts",
-        ],
-        // excludePrivate: true,
-      },
-    ],
-  ],
+  // plugins: [
+  //   [
+  //     "docusaurus-plugin-typedoc",
+  //     {
+  //       out: "../typedoc-out",
+  //       sidebar: {
+  //         categoryLabel: "API",
+  //         position: 0,
+  //         fullNames: false,
+  //       },
+  //       entryPoints: ["../src/"],
+  //       entryPointStrategy: "expand",
+  //       exclude: [
+  //         "**/*+(**Impl|**PostCommand|**WsCommand|**index).ts",
+  //         "**/decoders/*",
+  //         "**/*+(**Utils).ts",
+  //         "**/*.test.ts",
+  //         "**/*.snap",
+  //         "**/*.js",
+  //       ],
+  //       // excludePrivate: true,
+  //     },
+  //   ],
+  // ],
   presets: [
     [
       "@docusaurus/preset-classic",
