@@ -29,7 +29,7 @@ Create a Vec4Attribute.
 
 #### Defined in
 
-[src/SceneTree/Geometry/Vec4Attribute.ts:12](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/SceneTree/Geometry/Vec4Attribute.ts#L12)
+[src/SceneTree/Geometry/Vec4Attribute.ts:12](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/SceneTree/Geometry/Vec4Attribute.ts#L12)
 
 ## Properties
 
@@ -43,7 +43,7 @@ Create a Vec4Attribute.
 
 #### Defined in
 
-[src/Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/Utilities/BaseClass.ts#L11)
+[src/Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/Utilities/BaseClass.ts#L11)
 
 ___
 
@@ -57,7 +57,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/Geometry/Attribute.ts:23](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/SceneTree/Geometry/Attribute.ts#L23)
+[src/SceneTree/Geometry/Attribute.ts:23](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/SceneTree/Geometry/Attribute.ts#L23)
 
 ___
 
@@ -71,7 +71,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/Geometry/Attribute.ts:20](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/SceneTree/Geometry/Attribute.ts#L20)
+[src/SceneTree/Geometry/Attribute.ts:20](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/SceneTree/Geometry/Attribute.ts#L20)
 
 ___
 
@@ -85,7 +85,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/Geometry/Attribute.ts:25](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/SceneTree/Geometry/Attribute.ts#L25)
+[src/SceneTree/Geometry/Attribute.ts:25](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/SceneTree/Geometry/Attribute.ts#L25)
 
 ___
 
@@ -99,7 +99,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/Geometry/Attribute.ts:22](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/SceneTree/Geometry/Attribute.ts#L22)
+[src/SceneTree/Geometry/Attribute.ts:22](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/SceneTree/Geometry/Attribute.ts#L22)
 
 ___
 
@@ -113,7 +113,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/Geometry/Attribute.ts:26](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/SceneTree/Geometry/Attribute.ts#L26)
+[src/SceneTree/Geometry/Attribute.ts:26](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/SceneTree/Geometry/Attribute.ts#L26)
 
 ___
 
@@ -127,7 +127,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/Geometry/Attribute.ts:27](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/SceneTree/Geometry/Attribute.ts#L27)
+[src/SceneTree/Geometry/Attribute.ts:27](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/SceneTree/Geometry/Attribute.ts#L27)
 
 ___
 
@@ -141,7 +141,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/Geometry/Attribute.ts:21](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/SceneTree/Geometry/Attribute.ts#L21)
+[src/SceneTree/Geometry/Attribute.ts:21](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/SceneTree/Geometry/Attribute.ts#L21)
 
 ## Accessors
 
@@ -163,7 +163,7 @@ Attribute.numElements
 
 #### Defined in
 
-[src/SceneTree/Geometry/Attribute.ts:120](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/SceneTree/Geometry/Attribute.ts#L120)
+[src/SceneTree/Geometry/Attribute.ts:120](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/SceneTree/Geometry/Attribute.ts#L120)
 
 ## Methods
 
@@ -185,7 +185,7 @@ Returns the backing array for this attribute
 
 #### Defined in
 
-[src/SceneTree/Geometry/Attribute.ts:57](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/SceneTree/Geometry/Attribute.ts#L57)
+[src/SceneTree/Geometry/Attribute.ts:57](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/SceneTree/Geometry/Attribute.ts#L57)
 
 ___
 
@@ -211,7 +211,7 @@ The fromJSON method decodes a json object for this type.
 
 #### Defined in
 
-[src/SceneTree/Geometry/Attribute.ts:324](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/SceneTree/Geometry/Attribute.ts#L324)
+[src/SceneTree/Geometry/Attribute.ts:324](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/SceneTree/Geometry/Attribute.ts#L324)
 
 ___
 
@@ -233,7 +233,7 @@ Returns vertex attributes buffers and its count.
 
 #### Defined in
 
-[src/SceneTree/Geometry/Attribute.ts:380](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/SceneTree/Geometry/Attribute.ts#L380)
+[src/SceneTree/Geometry/Attribute.ts:380](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/SceneTree/Geometry/Attribute.ts#L380)
 
 ___
 
@@ -262,7 +262,7 @@ The generateSplitValues method.
 
 #### Defined in
 
-[src/SceneTree/Geometry/Attribute.ts:268](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/SceneTree/Geometry/Attribute.ts#L268)
+[src/SceneTree/Geometry/Attribute.ts:268](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/SceneTree/Geometry/Attribute.ts#L268)
 
 ___
 
@@ -284,7 +284,7 @@ Returns the unmangled name of the class.
 
 #### Defined in
 
-[src/Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/Utilities/BaseClass.ts#L33)
+[src/Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/Utilities/BaseClass.ts#L33)
 
 ___
 
@@ -306,7 +306,7 @@ Returns the count of attribute values in the data.
 
 #### Defined in
 
-[src/SceneTree/Geometry/Attribute.ts:75](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/SceneTree/Geometry/Attribute.ts#L75)
+[src/SceneTree/Geometry/Attribute.ts:75](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/SceneTree/Geometry/Attribute.ts#L75)
 
 ___
 
@@ -328,7 +328,7 @@ Returns the name of the math type this attribute stores.
 
 #### Defined in
 
-[src/SceneTree/Geometry/Attribute.ts:66](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/SceneTree/Geometry/Attribute.ts#L66)
+[src/SceneTree/Geometry/Attribute.ts:66](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/SceneTree/Geometry/Attribute.ts#L66)
 
 ___
 
@@ -356,7 +356,7 @@ Gets the value of a corner vertex of a face.
 
 #### Defined in
 
-[src/SceneTree/Geometry/Vec4Attribute.ts:74](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/SceneTree/Geometry/Vec4Attribute.ts#L74)
+[src/SceneTree/Geometry/Vec4Attribute.ts:74](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/SceneTree/Geometry/Vec4Attribute.ts#L74)
 
 ___
 
@@ -385,7 +385,7 @@ Gets the value of a corner vertex of a face.
 
 #### Defined in
 
-[src/SceneTree/Geometry/Attribute.ts:161](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/SceneTree/Geometry/Attribute.ts#L161)
+[src/SceneTree/Geometry/Attribute.ts:161](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/SceneTree/Geometry/Attribute.ts#L161)
 
 ___
 
@@ -413,7 +413,7 @@ Returns data value of the specified index.
 
 #### Defined in
 
-[src/SceneTree/Geometry/Attribute.ts:130](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/SceneTree/Geometry/Attribute.ts#L130)
+[src/SceneTree/Geometry/Attribute.ts:130](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/SceneTree/Geometry/Attribute.ts#L130)
 
 ___
 
@@ -437,7 +437,7 @@ Returns the unique id of the object.
 
 #### Defined in
 
-[src/Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/Utilities/BaseClass.ts#L25)
+[src/Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/Utilities/BaseClass.ts#L25)
 
 ___
 
@@ -459,7 +459,7 @@ The getSplits method.
 
 #### Defined in
 
-[src/SceneTree/Geometry/Attribute.ts:151](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/SceneTree/Geometry/Attribute.ts#L151)
+[src/SceneTree/Geometry/Attribute.ts:151](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/SceneTree/Geometry/Attribute.ts#L151)
 
 ___
 
@@ -483,7 +483,7 @@ Vec4 - The value at the specified index.
 
 #### Defined in
 
-[src/SceneTree/Geometry/Vec4Attribute.ts:42](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/SceneTree/Geometry/Vec4Attribute.ts#L42)
+[src/SceneTree/Geometry/Vec4Attribute.ts:42](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/SceneTree/Geometry/Vec4Attribute.ts#L42)
 
 ___
 
@@ -511,7 +511,7 @@ Vec4 - The value at the specified index.
 
 #### Defined in
 
-[src/SceneTree/Geometry/Vec4Attribute.ts:27](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/SceneTree/Geometry/Vec4Attribute.ts#L27)
+[src/SceneTree/Geometry/Vec4Attribute.ts:27](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/SceneTree/Geometry/Vec4Attribute.ts#L27)
 
 ___
 
@@ -537,7 +537,7 @@ The loadSplitValues method.
 
 #### Defined in
 
-[src/SceneTree/Geometry/Attribute.ts:335](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/SceneTree/Geometry/Attribute.ts#L335)
+[src/SceneTree/Geometry/Attribute.ts:335](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/SceneTree/Geometry/Attribute.ts#L335)
 
 ___
 
@@ -563,7 +563,7 @@ Sets the count of attribute values in the data.
 
 #### Defined in
 
-[src/SceneTree/Geometry/Attribute.ts:84](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/SceneTree/Geometry/Attribute.ts#L84)
+[src/SceneTree/Geometry/Attribute.ts:84](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/SceneTree/Geometry/Attribute.ts#L84)
 
 ___
 
@@ -587,7 +587,7 @@ Sets the value of a corner vertex of a face.
 
 #### Defined in
 
-[src/SceneTree/Geometry/Vec4Attribute.ts:85](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/SceneTree/Geometry/Vec4Attribute.ts#L85)
+[src/SceneTree/Geometry/Vec4Attribute.ts:85](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/SceneTree/Geometry/Vec4Attribute.ts#L85)
 
 ___
 
@@ -615,7 +615,7 @@ The setFaceVertexValue_ByVertexIndex method.
 
 #### Defined in
 
-[src/SceneTree/Geometry/Attribute.ts:186](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/SceneTree/Geometry/Attribute.ts#L186)
+[src/SceneTree/Geometry/Attribute.ts:186](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/SceneTree/Geometry/Attribute.ts#L186)
 
 ___
 
@@ -643,7 +643,7 @@ Sets the value of a corner vertex of a face.
 
 #### Defined in
 
-[src/SceneTree/Geometry/Attribute.ts:175](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/SceneTree/Geometry/Attribute.ts#L175)
+[src/SceneTree/Geometry/Attribute.ts:175](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/SceneTree/Geometry/Attribute.ts#L175)
 
 ___
 
@@ -670,7 +670,7 @@ Sets data value in the specified index.
 
 #### Defined in
 
-[src/SceneTree/Geometry/Attribute.ts:140](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/SceneTree/Geometry/Attribute.ts#L140)
+[src/SceneTree/Geometry/Attribute.ts:140](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/SceneTree/Geometry/Attribute.ts#L140)
 
 ___
 
@@ -698,7 +698,7 @@ assigned to meshes, and is used to calculate face vertex indices.
 
 #### Defined in
 
-[src/SceneTree/Geometry/Attribute.ts:48](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/SceneTree/Geometry/Attribute.ts#L48)
+[src/SceneTree/Geometry/Attribute.ts:48](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/SceneTree/Geometry/Attribute.ts#L48)
 
 ___
 
@@ -722,7 +722,7 @@ The setSplitVertexValue method.
 
 #### Defined in
 
-[src/SceneTree/Geometry/Vec4Attribute.ts:95](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/SceneTree/Geometry/Vec4Attribute.ts#L95)
+[src/SceneTree/Geometry/Vec4Attribute.ts:95](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/SceneTree/Geometry/Vec4Attribute.ts#L95)
 
 ___
 
@@ -750,7 +750,7 @@ The setSplitVertexValue method.
 
 #### Defined in
 
-[src/SceneTree/Geometry/Attribute.ts:230](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/SceneTree/Geometry/Attribute.ts#L230)
+[src/SceneTree/Geometry/Attribute.ts:230](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/SceneTree/Geometry/Attribute.ts#L230)
 
 ___
 
@@ -778,7 +778,7 @@ The setSplitVertexValues method.
 
 #### Defined in
 
-[src/SceneTree/Geometry/Attribute.ts:247](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/SceneTree/Geometry/Attribute.ts#L247)
+[src/SceneTree/Geometry/Attribute.ts:247](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/SceneTree/Geometry/Attribute.ts#L247)
 
 ___
 
@@ -801,7 +801,7 @@ Sets Vec4 at the specified index.
 
 #### Defined in
 
-[src/SceneTree/Geometry/Vec4Attribute.ts:57](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/SceneTree/Geometry/Vec4Attribute.ts#L57)
+[src/SceneTree/Geometry/Vec4Attribute.ts:57](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/SceneTree/Geometry/Vec4Attribute.ts#L57)
 
 ___
 
@@ -829,7 +829,7 @@ The toJSON method encodes this type as a json object for persistence.
 
 #### Defined in
 
-[src/SceneTree/Geometry/Attribute.ts:311](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/SceneTree/Geometry/Attribute.ts#L311)
+[src/SceneTree/Geometry/Attribute.ts:311](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/SceneTree/Geometry/Attribute.ts#L311)
 
 ___
 
@@ -851,5 +851,5 @@ Returns the string representation of the object's state.
 
 #### Defined in
 
-[src/SceneTree/Geometry/Attribute.ts:368](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/SceneTree/Geometry/Attribute.ts#L368)
+[src/SceneTree/Geometry/Attribute.ts:368](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/SceneTree/Geometry/Attribute.ts#L368)
 

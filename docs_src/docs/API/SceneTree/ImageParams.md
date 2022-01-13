@@ -15,7 +15,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[src/SceneTree/BaseImage.ts:15](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/SceneTree/BaseImage.ts#L15)
+[src/SceneTree/BaseImage.ts:15](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/SceneTree/BaseImage.ts#L15)
 
 ___
 
@@ -25,7 +25,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/BaseImage.ts:16](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/SceneTree/BaseImage.ts#L16)
+[src/SceneTree/BaseImage.ts:16](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/SceneTree/BaseImage.ts#L16)
 
 ___
 
@@ -35,7 +35,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/BaseImage.ts:18](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/SceneTree/BaseImage.ts#L18)
+[src/SceneTree/BaseImage.ts:18](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/SceneTree/BaseImage.ts#L18)
 
 ___
 
@@ -45,7 +45,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/BaseImage.ts:5](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/SceneTree/BaseImage.ts#L5)
+[src/SceneTree/BaseImage.ts:5](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/SceneTree/BaseImage.ts#L5)
 
 ___
 
@@ -55,7 +55,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/BaseImage.ts:7](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/SceneTree/BaseImage.ts#L7)
+[src/SceneTree/BaseImage.ts:7](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/SceneTree/BaseImage.ts#L7)
 
 ___
 
@@ -65,7 +65,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/BaseImage.ts:12](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/SceneTree/BaseImage.ts#L12)
+[src/SceneTree/BaseImage.ts:12](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/SceneTree/BaseImage.ts#L12)
 
 ___
 
@@ -75,7 +75,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/BaseImage.ts:11](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/SceneTree/BaseImage.ts#L11)
+[src/SceneTree/BaseImage.ts:11](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/SceneTree/BaseImage.ts#L11)
 
 ___
 
@@ -85,7 +85,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/BaseImage.ts:13](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/SceneTree/BaseImage.ts#L13)
+[src/SceneTree/BaseImage.ts:13](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/SceneTree/BaseImage.ts#L13)
 
 ___
 
@@ -95,7 +95,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/BaseImage.ts:4](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/SceneTree/BaseImage.ts#L4)
+[src/SceneTree/BaseImage.ts:4](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/SceneTree/BaseImage.ts#L4)
 
 ___
 
@@ -105,7 +105,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/BaseImage.ts:6](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/SceneTree/BaseImage.ts#L6)
+[src/SceneTree/BaseImage.ts:6](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/SceneTree/BaseImage.ts#L6)
 
 ___
 
@@ -115,7 +115,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/BaseImage.ts:9](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/SceneTree/BaseImage.ts#L9)
+[src/SceneTree/BaseImage.ts:9](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/SceneTree/BaseImage.ts#L9)
 
 ___
 
@@ -125,5 +125,5 @@ ___
 
 #### Defined in
 
-[src/SceneTree/BaseImage.ts:10](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/SceneTree/BaseImage.ts#L10)
+[src/SceneTree/BaseImage.ts:10](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/SceneTree/BaseImage.ts#L10)
 
