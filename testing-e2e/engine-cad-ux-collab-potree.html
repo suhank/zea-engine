@@ -152,6 +152,9 @@
           if (item) {
             if (highlightedItem && highlightedItem != item) {
               highlightedItem.removeHighlight(highlightKey, true)
+              if (highlightedItem instanceof CADBody) {
+                highlightedItem.setShatterState(false)
+              }
             }
             highlightedItem = item
             let key
@@ -163,6 +166,10 @@
                 highlightedItem.addHighlight(highlightKey, new Color(0, 0.7, 0, 0.3), true)
               }
             } else {
+              if (item instanceof CADBody) {
+                item.setShatterState(true)
+                return
+              }
               highlightKey = 'pointerOverGeom'
               highlightedItem.addHighlight(highlightKey, new Color(0, 0.7, 0, 0.3), true)
             }
@@ -170,6 +177,9 @@
         } else {
           if (highlightedItem) {
             highlightedItem.removeHighlight(highlightKey, true)
+            if (highlightedItem instanceof CADBody) {
+              highlightedItem.setShatterState(false)
+            }
             highlightedItem = null
           }
         }

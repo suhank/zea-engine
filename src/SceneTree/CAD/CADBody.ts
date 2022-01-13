@@ -7,6 +7,7 @@ import { BinReader } from '../BinReader'
 import { CloneContext } from '../CloneContext'
 import { Material } from '../Material'
 import { CADAsset } from './CADAsset'
+import { StateChangedEvent } from '../..'
 
 /**
  * Represents a Body within a CAD Part. A Body is made up of either a single mesh or a collection of meshes, one for each surface.
@@ -15,6 +16,7 @@ import { CADAsset } from './CADAsset'
  * @extends GeomItem
  */
 class CADBody extends GeomItem {
+  shattered: boolean = false
   /**
    * Creates an instance of CADBody setting up the initial configuration for Material and Color parameters.
    *
@@ -23,6 +25,20 @@ class CADBody extends GeomItem {
    */
   constructor(name?: string) {
     super(name)
+  }
+
+  /**
+   * Sets the state of this CADBody whether the geometry isdisplayed as
+   * 'shattered', meaning that each face, edge and vertex can be selected
+   * individually.
+   *
+   * @param state - The state value.
+   */
+  setShatterState(state: boolean) {
+    if (this.shattered != state) {
+      this.shattered = state
+      this.emit('shatterStateChanged', new StateChangedEvent(state))
+    }
   }
 
   /**

@@ -5,6 +5,7 @@ import { GeomItem } from '../../SceneTree/GeomItem'
 import { VisibilityChangedEvent } from '../../Utilities/Events/VisibilityChangedEvent'
 import { RenderState } from '../types/renderer'
 import { WebGL12RenderingContext } from '../types/webgl'
+import { CADBody, StateChangedEvent } from '../..'
 
 const GLGeomItemChangeType = {
   GEOMITEM_CHANGED: 0,
@@ -39,12 +40,13 @@ class GLGeomItem extends EventEmitter {
   protected supportInstancing: boolean
   protected geomVisible: boolean
   visible: boolean
-  protected culled: boolean
+  shattered: boolean = false
+  protected culled: boolean = false
   protected cutDataChanged: boolean = false
   protected cutData: number[] = []
   protected geomData: any
   protected geomMatrixDirty: boolean = false
-  protected modelMatrixArray: any
+  protected modelMatrixArray: Float32Array
 
   protected geomMatrixChanged: any
   protected cutAwayChanged: any
@@ -80,6 +82,12 @@ class GLGeomItem extends EventEmitter {
 
     this.listenerIDs['visibilityChanged'] = this.geomItem.on('visibilityChanged', (event) => {
       this.updateVisibility()
+    })
+
+    if (geomItem instanceof CADBody) this.shattered = geomItem.shattered
+    this.listenerIDs['shatterStateChanged'] = this.geomItem.on('shatterStateChanged', (event: StateChangedEvent) => {
+      this.shattered = event.state
+      this.emit('shatterStateChanged', event)
     })
 
     if (!this.supportInstancing) {

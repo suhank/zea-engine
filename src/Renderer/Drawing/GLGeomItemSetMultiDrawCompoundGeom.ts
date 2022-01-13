@@ -143,6 +143,18 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
     }
     glGeomItem.geomItem.on('highlightChanged', eventHandlers.highlightChanged)
 
+    // //////////////////////////////
+    // ShatterState
+    eventHandlers.shatterStateChanged = () => {
+      this.dirtyGeomItems.add(index)
+      this.drawIdsBufferDirty = true
+
+      // We need the new GeomData Fbos written so we can
+      // detect these subgeoms.
+      this.renderer.renderGeomDataFbos()
+    }
+    glGeomItem.on('shatterStateChanged', eventHandlers.shatterStateChanged)
+
     this.glGeomItems[index] = glGeomItem
     this.glgeomItemEventHandlers[index] = eventHandlers
 
@@ -174,6 +186,13 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
     delete this.drawElementCounts[index]
     this.freeIndices.push(index)
 
+    for (let key in this.drawIdsArraysAllocators) {
+      const prevAllocation = this.drawIdsArraysAllocators[key].getAllocation(index)
+      if (prevAllocation) {
+        this.drawIdsArraysAllocators[key].deallocate(index)
+      }
+    }
+
     if (glGeomItem.isVisible()) {
       const visibleItemIndex = this.visibleItems.indexOf(glGeomItem)
       this.visibleItems.splice(visibleItemIndex, 1)
@@ -202,10 +221,11 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
       if (glGeomItem.isVisible()) {
         const geomBuffers = this.renderer.glGeomLibrary.getGeomBuffers(glGeomItem.geomId)
         let drawCounts: Record<string, number> = {}
-        if (true) {
+        if (glGeomItem.shattered) {
           // for shattered geoms, we draw once for each subgeom for each element type
           drawCounts['TRIANGLES'] = geomBuffers.subGeomCounts['TRIANGLES'].length
           drawCounts['LINES'] = geomBuffers.subGeomCounts['LINES'].length
+          drawCounts['POINTS'] = geomBuffers.subGeomCounts['POINTS'].length
         } else {
           // for non-shattered geoms, we just draw once for each element type per GeomItem.
           for (let key in geomBuffers.counts) {
@@ -219,21 +239,28 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
           if (!this.drawIdsArraysAllocators[key]) {
             this.drawIdsArraysAllocators[key] = new Allocator1D()
           }
+          // This happens when an item drawing changes. e.g. it becomes shattered.
           const prevAllocation = this.drawIdsArraysAllocators[key].getAllocation(index)
-          const newAllocation = this.drawIdsArraysAllocators[key].allocate(index, drawCount)
-          if (prevAllocation && prevAllocation.start != newAllocation.start && this.drawIdsArrays[key]) {
-            // Clear the previous allocation to remove any rendering.
+          if (prevAllocation) {
+            // Zero the previous allocation to remove any rendering.
             for (let i = 0; i < prevAllocation.size; i++) {
-              this.drawIdsArrays[key][prevAllocation.start + i] = 0
               this.drawElementOffsets[key][prevAllocation.start + i] = 0
               this.drawElementCounts[key][prevAllocation.start + i] = 0
             }
           }
+          const newAllocation = this.drawIdsArraysAllocators[key].allocate(index, drawCount)
         }
       } else {
         for (let key in this.drawIdsArraysAllocators) {
           if (this.drawIdsArraysAllocators[key]) {
-            this.drawIdsArraysAllocators[key].deallocate(index)
+            const prevAllocation = this.drawIdsArraysAllocators[key].getAllocation(index)
+            if (prevAllocation) {
+              // Clear the previous allocation to remove any rendering.
+              for (let i = 0; i < prevAllocation.size; i++) {
+                this.drawElementOffsets[key][prevAllocation.start + i] = 0
+                this.drawElementCounts[key][prevAllocation.start + i] = 0
+              }
+            }
           }
         }
       }
@@ -256,10 +283,11 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
     const elementSize = 4 //  Uint32Array for UNSIGNED_INT
     this.dirtyGeomItems.forEach((index) => {
       const glGeomItem = this.glGeomItems[index]!
+      if (!glGeomItem.isVisible()) return
       const offsetAndCount = this.renderer.glGeomLibrary.getGeomOffsetAndCount(glGeomItem.geomId)
       const geomBuffers = this.renderer.glGeomLibrary.getGeomBuffers(glGeomItem.geomId)
 
-      if (true) {
+      if (glGeomItem.shattered) {
         let subIndex = 0
         const addSubGeoms = (offsets: Uint32Array, counts: Uint8Array | Uint16Array | Uint32Array, type: string) => {
           const allocator = this.drawIdsArraysAllocators[type]
@@ -302,6 +330,7 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
         }
         addSubGeoms(geomBuffers.subGeomOffsets['TRIANGLES'], geomBuffers.subGeomCounts['TRIANGLES'], 'TRIANGLES')
         addSubGeoms(geomBuffers.subGeomOffsets['LINES'], geomBuffers.subGeomCounts['LINES'], 'LINES')
+        addSubGeoms(geomBuffers.subGeomOffsets['POINTS'], geomBuffers.subGeomCounts['POINTS'], 'POINTS')
       } else {
         for (let key in geomBuffers.offsets) {
           const count = geomBuffers.counts[key]
@@ -342,8 +371,12 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
           mipMapped: false,
         })
         this.drawIdsTextures[key] = drawIdsTexture
+        regen = true
       } else if (drawIdsTexture.width < drawIdsTextureSize || drawIdsTexture.height < drawIdsTextureSize) {
         drawIdsTexture.resize(drawIdsTextureSize, drawIdsTextureSize)
+
+        for (let i = 0; i < this.visibleItems.length; i++) this.dirtyGeomItems.add(i)
+        regen = true
       }
       {
         const tex = drawIdsTexture
@@ -354,30 +387,61 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
         const height = 1
         const format = tex.getFormat()
         const type = tex.getType()
+        if (regen) {
+          const drawCount = this.drawIdsArraysAllocators[key].allocatedSpace
+          const rows = Math.ceil((xoffset + drawCount) / texWidth)
 
-        const drawCount = this.drawIdsArraysAllocators[key].allocatedSpace
-        const rows = Math.ceil((xoffset + drawCount) / texWidth)
+          let consumed = 0
+          let remaining = drawCount
+          let rowStart = xoffset
+          for (let i = 0; i < rows; i++) {
+            let width
+            if (rowStart + remaining > texWidth) {
+              width = texWidth - rowStart
+              rowStart = 0
+            } else {
+              width = remaining
+            }
+            const x = consumed % texWidth
+            const y = Math.floor(consumed / texWidth)
+            const data = drawIdsArray.subarray(consumed * 4, (consumed + width) * 4)
+            if (data.length != width * 4) {
+              throw new Error('Invalid drawIds subarray :' + data.length + ' width:' + width)
+            }
+            gl.texSubImage2D(gl.TEXTURE_2D, level, x, y, width, height, format, type, data)
+            consumed += width
+            remaining -= width
+          }
+        } else {
+          this.dirtyGeomItems.forEach((index) => {
+            const allocation = this.drawIdsArraysAllocators[key].getAllocation(index)
+            const start = allocation.start
+            const drawCount = allocation.size
 
-        let consumed = 0
-        let remaining = drawCount
-        let rowStart = xoffset
-        for (let i = 0; i < rows; i++) {
-          let width
-          if (rowStart + remaining > texWidth) {
-            width = texWidth - rowStart
-            rowStart = 0
-          } else {
-            width = remaining
-          }
-          const x = consumed % texWidth
-          const y = Math.floor(consumed / texWidth)
-          const data = drawIdsArray.subarray(consumed * 4, (consumed + width) * 4)
-          if (data.length != width * 4) {
-            throw new Error('Invalid drawIds subarray :' + data.length + ' width:' + width)
-          }
-          gl.texSubImage2D(gl.TEXTURE_2D, level, x, y, width, height, format, type, data)
-          consumed += width
-          remaining -= width
+            const xoffset = start % texWidth
+            const rows = Math.ceil((xoffset + drawCount) / texWidth)
+            let consumed = 0
+            let remaining = drawCount
+            let rowStart = xoffset
+            for (let i = 0; i < rows; i++) {
+              let width
+              if (rowStart + remaining > texWidth) {
+                width = texWidth - rowStart
+                rowStart = 0
+              } else {
+                width = remaining
+              }
+              const x = (start + consumed) % texWidth
+              const y = Math.floor((start + consumed) / texWidth)
+              const data = drawIdsArray.subarray((start + consumed) * 4, (start + consumed + width) * 4)
+              if (data.length != width * 4) {
+                throw new Error('Invalid drawIds subarray :' + data.length + ' width:' + width)
+              }
+              gl.texSubImage2D(gl.TEXTURE_2D, level, x, y, width, height, format, type, data)
+              consumed += width
+              remaining -= width
+            }
+          })
         }
       }
 
@@ -388,7 +452,7 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
       // TODO: Only re-upload the dirty items.
       updateDrawIdsTexture(key)
     }
-
+    this.dirtyGeomItems = new Set()
     this.drawIdsBufferDirty = false
   }
 
@@ -659,6 +723,10 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
    * @param renderstate - The object tracking the current state of the renderer
    */
   drawGeomData(renderstate: GeomDataRenderState) {
+    if (this.drawIdsBufferDirty) {
+      this.updateDrawIDsBuffer(renderstate)
+    }
+
     const gl = this.renderer.gl
     const unifs = renderstate.unifs
 
@@ -692,6 +760,7 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
     })
 
     //  Note: lines in VR are not fattened...
+
     if (renderstate.geomDataFbo) {
       if (!this.linesGeomDataBuffer) {
         this.linesGeomDataBuffer = new GLTexture2D(gl, {
@@ -738,7 +807,7 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
 
       gl.colorMask(true, true, true, true)
       gl.clearColor(0, 0, 0, 0)
-      gl.clear(gl.COLOR_BUFFER_BIT)
+      gl.clear(gl.COLOR_BUFFER_BIT) // do not clear depth
     }
 
     // this.bindAndRender(
@@ -754,6 +823,11 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
         drawIdsTextures['LINES'].bindToUniform(renderstate, drawIdsTexture)
 
         if (geomType) gl.uniform1i(geomType.location, 1)
+
+        const { passId } = renderstate.unifs
+        if (passId) {
+          gl.uniform1i(passId.location, 3)
+        }
 
         this.multiDrawLines(
           renderstate,
@@ -778,18 +852,24 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
       }
     })
 
-    if (renderstate.geomDataFbo) {
+    if (this.linesGeomDataBuffer && renderstate.geomDataFbo) {
+      renderstate.boundRendertarget = null
       renderstate.geomDataFbo.bindForWriting(renderstate)
 
-      this.fattenLinesShader!.bind(renderstate)
+      // this.fattenLinesShader!.bind(renderstate)
+      // gl.disable(gl.DEPTH_TEST)
+      // const { colorTexture, screenSize } = renderstate.unifs
+      // this.linesGeomDataBuffer!.bindToUniform(renderstate, colorTexture)
 
-      const { colorTexture, screenSize } = renderstate.unifs
-      this.linesGeomDataBuffer!.bindToUniform(renderstate, colorTexture)
+      // const geomDataFbo = renderstate.geomDataFbo
+      // gl.uniform2f(screenSize.location, geomDataFbo.width, geomDataFbo.height)
 
-      const geomDataFbo = renderstate.geomDataFbo
-      gl.uniform2f(screenSize.location, geomDataFbo.width, geomDataFbo.height)
+      // this.quad!.bindAndDraw(renderstate)
+      // gl.enable(gl.DEPTH_TEST)
 
-      this.quad!.bindAndDraw(renderstate)
+      const screenQuad = this.renderer.screenQuad!
+      screenQuad.bindShader(renderstate)
+      screenQuad.draw(renderstate, this.linesGeomDataBuffer)
     }
   }
 
