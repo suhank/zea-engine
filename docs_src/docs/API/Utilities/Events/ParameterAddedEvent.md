@@ -33,7 +33,7 @@ Create an BaseEvent.
 
 #### Defined in
 
-[src/Utilities/Events/ParameterAddedEvent.ts:5](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ParameterAddedEvent.ts#L5)
+[src/Utilities/Events/ParameterAddedEvent.ts:5](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/Utilities/Events/ParameterAddedEvent.ts#L5)
 
 ## Properties
 
@@ -43,5 +43,5 @@ Create an BaseEvent.
 
 #### Defined in
 
-[src/Utilities/Events/ParameterAddedEvent.ts:4](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ParameterAddedEvent.ts#L4)
+[src/Utilities/Events/ParameterAddedEvent.ts:4](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/Utilities/Events/ParameterAddedEvent.ts#L4)
 

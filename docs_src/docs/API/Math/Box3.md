@@ -32,7 +32,7 @@ p1 is a Vec2 with [`Number.NEGATIVE_INFINITY`](https://developer.mozilla.org/en-
 
 #### Defined in
 
-[src/Math/Box3.ts:28](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Box3.ts#L28)
+[src/Math/Box3.ts:28](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/Math/Box3.ts#L28)
 
 ## Properties
 
@@ -42,7 +42,7 @@ p1 is a Vec2 with [`Number.NEGATIVE_INFINITY`](https://developer.mozilla.org/en-
 
 #### Defined in
 
-[src/Math/Box3.ts:14](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Box3.ts#L14)
+[src/Math/Box3.ts:14](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/Math/Box3.ts#L14)
 
 ___
 
@@ -52,7 +52,7 @@ ___
 
 #### Defined in
 
-[src/Math/Box3.ts:15](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Box3.ts#L15)
+[src/Math/Box3.ts:15](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/Math/Box3.ts#L15)
 
 ## Accessors
 
@@ -70,7 +70,7 @@ Getter for the upper (x, y, z) boundary of the box.
 
 #### Defined in
 
-[src/Math/Box3.ts:60](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Box3.ts#L60)
+[src/Math/Box3.ts:60](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/Math/Box3.ts#L60)
 
 ___
 
@@ -88,7 +88,7 @@ Getter for the lower (x, y, z) boundary of the box.
 
 #### Defined in
 
-[src/Math/Box3.ts:51](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Box3.ts#L51)
+[src/Math/Box3.ts:51](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/Math/Box3.ts#L51)
 
 ## Methods
 
@@ -112,7 +112,7 @@ it proceeds to apply the transform for the Vec3.
 
 #### Defined in
 
-[src/Math/Box3.ts:130](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Box3.ts#L130)
+[src/Math/Box3.ts:130](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/Math/Box3.ts#L130)
 
 ___
 
@@ -134,7 +134,7 @@ Expands the Box3 to contain the new point.
 
 #### Defined in
 
-[src/Math/Box3.ts:108](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Box3.ts#L108)
+[src/Math/Box3.ts:108](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/Math/Box3.ts#L108)
 
 ___
 
@@ -152,7 +152,7 @@ Returns the center point of a Box3.
 
 #### Defined in
 
-[src/Math/Box3.ts:170](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Box3.ts#L170)
+[src/Math/Box3.ts:170](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/Math/Box3.ts#L170)
 
 ___
 
@@ -170,7 +170,7 @@ Clones this Box3 and returns a new Box3.
 
 #### Defined in
 
-[src/Math/Box3.ts:276](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Box3.ts#L276)
+[src/Math/Box3.ts:276](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/Math/Box3.ts#L276)
 
 ___
 
@@ -188,7 +188,7 @@ Returns the diagonal vector of the B=box from p0 to p1.
 
 #### Defined in
 
-[src/Math/Box3.ts:161](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Box3.ts#L161)
+[src/Math/Box3.ts:161](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/Math/Box3.ts#L161)
 
 ___
 
@@ -210,7 +210,7 @@ Decodes a JSON object to set the state of this class.
 
 #### Defined in
 
-[src/Math/Box3.ts:300](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Box3.ts#L300)
+[src/Math/Box3.ts:300](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/Math/Box3.ts#L300)
 
 ___
 
@@ -228,7 +228,7 @@ Calculates and returns the bounding Sphere of the Box3
 
 #### Defined in
 
-[src/Math/Box3.ts:194](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Box3.ts#L194)
+[src/Math/Box3.ts:194](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/Math/Box3.ts#L194)
 
 ___
 
@@ -252,7 +252,7 @@ Determines if this Box3 intersects a given box value.
 
 #### Defined in
 
-[src/Math/Box3.ts:204](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Box3.ts#L204)
+[src/Math/Box3.ts:204](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/Math/Box3.ts#L204)
 
 ___
 
@@ -276,7 +276,7 @@ Determines if this Box3 intersects a plane.
 
 #### Defined in
 
-[src/Math/Box3.ts:238](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Box3.ts#L238)
+[src/Math/Box3.ts:238](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/Math/Box3.ts#L238)
 
 ___
 
@@ -300,7 +300,7 @@ Determines if this Box3 intersects a sphere.
 
 #### Defined in
 
-[src/Math/Box3.ts:222](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Box3.ts#L222)
+[src/Math/Box3.ts:222](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/Math/Box3.ts#L222)
 
 ___
 
@@ -318,7 +318,7 @@ Returns `true` if the box has been expanded to contain a point.
 
 #### Defined in
 
-[src/Math/Box3.ts:92](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Box3.ts#L92)
+[src/Math/Box3.ts:92](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/Math/Box3.ts#L92)
 
 ___
 
@@ -334,7 +334,7 @@ Resets the box3 back to an uninitialized state.
 
 #### Defined in
 
-[src/Math/Box3.ts:78](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Box3.ts#L78)
+[src/Math/Box3.ts:78](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/Math/Box3.ts#L78)
 
 ___
 
@@ -357,7 +357,7 @@ Sets both Vec3 points
 
 #### Defined in
 
-[src/Math/Box3.ts:70](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Box3.ts#L70)
+[src/Math/Box3.ts:70](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/Math/Box3.ts#L70)
 
 ___
 
@@ -379,7 +379,7 @@ The setFromFloat32Array method.
 
 #### Defined in
 
-[src/Math/Box3.ts:322](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Box3.ts#L322)
+[src/Math/Box3.ts:322](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/Math/Box3.ts#L322)
 
 ___
 
@@ -397,7 +397,7 @@ Returns the length of the diagonal of the box.
 
 #### Defined in
 
-[src/Math/Box3.ts:152](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Box3.ts#L152)
+[src/Math/Box3.ts:152](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/Math/Box3.ts#L152)
 
 ___
 
@@ -415,7 +415,7 @@ Encodes `Box3` Class as a JSON object for persistence.
 
 #### Defined in
 
-[src/Math/Box3.ts:288](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Box3.ts#L288)
+[src/Math/Box3.ts:288](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/Math/Box3.ts#L288)
 
 ___
 
@@ -433,7 +433,7 @@ Converts this Box3 to a Mat4 (a 4x4 matrix). The returned mat4 would transform a
 
 #### Defined in
 
-[src/Math/Box3.ts:182](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Box3.ts#L182)
+[src/Math/Box3.ts:182](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/Math/Box3.ts#L182)
 
 ___
 
@@ -451,5 +451,5 @@ Calls `toJSON` method and stringifies it.
 
 #### Defined in
 
-[src/Math/Box3.ts:332](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Box3.ts#L332)
+[src/Math/Box3.ts:332](https://github.com/ZeaInc/zea-engine/blob/1fac85723/src/Math/Box3.ts#L332)
 
