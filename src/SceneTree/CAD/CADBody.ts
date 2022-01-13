@@ -7,7 +7,7 @@ import { BinReader } from '../BinReader'
 import { CloneContext } from '../CloneContext'
 import { Material } from '../Material'
 import { CADAsset } from './CADAsset'
-import { StateChangedEvent } from '../..'
+import { StateChangedEvent } from '../../Utilities/Events/StateChangedEvent'
 
 /**
  * Represents a Body within a CAD Part. A Body is made up of either a single mesh or a collection of meshes, one for each surface.
