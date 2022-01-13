@@ -142,6 +142,7 @@ class Xfo {
       const resM4 = rot4.multiply(sclM4)
       this_sc = new Vec3(resM4.xAxis.length(), resM4.yAxis.length(), resM4.zAxis.length())
     }
+
     const result = new Xfo(
       this.tr.add(this.ori.rotateVec3(this_sc.multiply(xfo.tr))),
       this.ori.multiply(xfo.ori),
