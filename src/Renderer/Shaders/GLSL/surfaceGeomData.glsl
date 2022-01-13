@@ -32,3 +32,7 @@
 
     return fragColor;
   }
+
+  vec4 setFragColor_geomData(vec3 v_viewPos, int floatGeomBuffer, int passId, float v_geomItemId, int isOrthographic){
+    return setFragColor_geomData(v_viewPos, floatGeomBuffer, passId, v_geomItemId, -1.0, isOrthographic);
+  }

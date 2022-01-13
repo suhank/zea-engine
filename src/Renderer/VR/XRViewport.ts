@@ -657,4 +657,5 @@ class XRViewport extends GLBaseViewport {
   }
 }
 
-export { XRViewport }
+class VRViewport extends XRViewport {}
+export { XRViewport, VRViewport }

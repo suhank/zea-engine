@@ -7,6 +7,7 @@ import constants from './constants.glsl'
 import convolveHelpers from './convolve-helpers.glsl'
 import cutaways from './cutaways.glsl'
 import debugColors from './debugColors.glsl'
+import drawItemId from './drawItemId.glsl' //
 import geomItemId from './geomItemId.glsl'
 import drawItemTexture from './drawItemTexture.glsl'
 import envmapDualfisheye from './envmap-dualfisheye.glsl'
@@ -39,6 +40,7 @@ shaderLibrary.setShaderModule('constants.glsl', constants)
 shaderLibrary.setShaderModule('convolve-helpers.glsl', convolveHelpers)
 shaderLibrary.setShaderModule('cutaways.glsl', cutaways)
 shaderLibrary.setShaderModule('debugColors.glsl', debugColors)
+shaderLibrary.setShaderModule('drawItemId.glsl', drawItemId) // Needed for backwards compatiblity with older versions of ux.
 shaderLibrary.setShaderModule('geomItemId.glsl', geomItemId)
 shaderLibrary.setShaderModule('drawItemTexture.glsl', drawItemTexture)
 shaderLibrary.setShaderModule('envmap-dualfisheye.glsl', envmapDualfisheye)

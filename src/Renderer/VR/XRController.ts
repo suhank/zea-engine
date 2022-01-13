@@ -234,7 +234,7 @@ class XRController extends EventEmitter {
    * The getId method.
    * @return - The return value.
    */
-  getId(): number{
+  getId(): number {
     return this.id
   }
 
@@ -250,7 +250,7 @@ class XRController extends EventEmitter {
    * The getTipItem method.
    * @return - The return value.
    */
-  getTipItem(): TreeItem{
+  getTipItem(): TreeItem {
     return this.tipItem
   }
 
@@ -413,4 +413,5 @@ class XRController extends EventEmitter {
   }
 }
 
-export { XRController }
+class VRController extends XRController {}
+export { XRController, VRController }

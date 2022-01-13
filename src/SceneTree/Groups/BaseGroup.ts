@@ -25,6 +25,9 @@ class BaseGroup extends TreeItem {
    */
   itemsParam: ItemSetParameter = new ItemSetParameter('Items', (item: TreeItem) => item instanceof TreeItem)
 
+  // backwards compatiblity naming for older libraries.
+  __itemsParam: ItemSetParameter
+
   protected __itemsEventHandlers: Array<Record<string, number>> = []
   searchRoot?: TreeItem
 
@@ -37,6 +40,8 @@ class BaseGroup extends TreeItem {
     super(name)
 
     this.addParameter(this.itemsParam)
+
+    this.__itemsParam = this.itemsParam
 
     this.itemsParam.on('itemAdded', (event: ItemEvent) => {
       this.bindItem(event.item, event.index)

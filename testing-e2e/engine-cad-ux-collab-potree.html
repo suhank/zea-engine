@@ -58,7 +58,7 @@
     <script src="https://www.gstatic.com/draco/v1/decoders/draco_decoder_gltf.js"></script> -->
     <script type="module">
       import '../dist/index.umd.js'
-      // import '../node_modules/@zeainc/zea-ux/dist/index.umd.js'
+      import '../node_modules/@zeainc/zea-ux/dist/index.umd.js'
       // import '../node_modules/@zeainc/zea-potree/dist/index.umd.js'
 
       // // import 'https://websocket-staging.zea.live/socket.io/socket.io.js'
@@ -202,7 +202,7 @@
       })
       /** HIGHLIGHT START */
 
-      /** UX START * /
+      /** UX START */
       const { SelectionManager, UndoRedoManager, ToolManager, SelectionTool, CreateFreehandLineTool } = window.zeaUx
 
       const appData = { scene, renderer }
@@ -211,16 +211,15 @@
       cameraManipulator.setDefaultManipulationMode(CameraManipulator.MANIPULATION_MODES.tumbler)
       appData.cameraManipulator = cameraManipulator
 
-
       /** UNDO START * /
       const undoRedoManager = UndoRedoManager.getInstance()
       appData.undoRedoManager = undoRedoManager
       /** UNDO END */
 
-      /** SELECTION START * /
+      /** SELECTION START */
 
       const selectionManager = new SelectionManager(appData, {
-        enableXfoHandles: true
+        enableXfoHandles: true,
       })
       appData.selectionManager = selectionManager
 
@@ -228,7 +227,7 @@
       selectionManager.showHandles(false)
 
       const selectionTool = new SelectionTool(appData)
-      const filterItemSelection = item => {
+      const filterItemSelection = (item) => {
         return item
       }
       selectionTool.setSelectionFilter(filterItemSelection)
@@ -238,17 +237,13 @@
       selectionColor.a = 0.1
       const subtreeColor = selectionColor //.lerp(new Color(1, 1, 1, 0), 0.5)
       selectionManager.selectionGroup.highlightColorParam.value = selectionColor
-      selectionManager.selectionGroup.subtreeHighlightColorParam.value = subtreeColor
+      // selectionManager.selectionGroup.subtreeHighlightColorParam.value = subtreeColor
 
       // Color the selection rect.
       const selectionRectColor = new Color(0, 0, 0, 1)
-      selectionTool.rectItem
-        .materialParam
-        .getValue()
-        .baseColorParam
-        .value = selectionRectColor
+      selectionTool.rectItem.materialParam.value.getParameter('BaseColor').value = selectionRectColor
 
-      /** SELECTION END * /
+      /** SELECTION END */
 
       /** FREEHAND LINES TOOL START * /
       const freeHandLineTool = new CreateFreehandLineTool(appData)
