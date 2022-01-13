@@ -532,6 +532,5 @@ class GLShader extends BaseItem {
     this.__shaderProgramHdls = {}
   }
 }
-const materialTemplate = new Material()
 
 export { GLShader }
