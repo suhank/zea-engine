@@ -124,7 +124,7 @@ class MaterialParameter extends Parameter<Material | undefined> {
         }
       }
     } else {
-      const material = new Material()
+      const material = <Material>Registry.constructClass(j.value.type)
       if (j.value) material.fromJSON(j.value, context)
       this.loadValue(material)
     }
