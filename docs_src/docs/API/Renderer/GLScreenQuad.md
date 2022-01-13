@@ -26,7 +26,7 @@ Create a GL screen quad.
 
 #### Defined in
 
-[src/Renderer/GLScreenQuad.ts:24](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLScreenQuad.ts#L24)
+[src/Renderer/GLScreenQuad.ts:24](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLScreenQuad.ts#L24)
 
 ## Properties
 
@@ -36,7 +36,7 @@ Create a GL screen quad.
 
 #### Defined in
 
-[src/Renderer/GLScreenQuad.ts:12](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLScreenQuad.ts#L12)
+[src/Renderer/GLScreenQuad.ts:12](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLScreenQuad.ts#L12)
 
 ___
 
@@ -46,7 +46,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLScreenQuad.ts:16](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLScreenQuad.ts#L16)
+[src/Renderer/GLScreenQuad.ts:16](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLScreenQuad.ts#L16)
 
 ___
 
@@ -56,7 +56,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLScreenQuad.ts:13](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLScreenQuad.ts#L13)
+[src/Renderer/GLScreenQuad.ts:13](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLScreenQuad.ts#L13)
 
 ___
 
@@ -66,7 +66,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLScreenQuad.ts:17](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLScreenQuad.ts#L17)
+[src/Renderer/GLScreenQuad.ts:17](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLScreenQuad.ts#L17)
 
 ___
 
@@ -76,7 +76,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLScreenQuad.ts:14](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLScreenQuad.ts#L14)
+[src/Renderer/GLScreenQuad.ts:14](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLScreenQuad.ts#L14)
 
 ___
 
@@ -86,7 +86,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLScreenQuad.ts:15](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLScreenQuad.ts#L15)
+[src/Renderer/GLScreenQuad.ts:15](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLScreenQuad.ts#L15)
 
 ___
 
@@ -96,7 +96,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLScreenQuad.ts:18](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLScreenQuad.ts#L18)
+[src/Renderer/GLScreenQuad.ts:18](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLScreenQuad.ts#L18)
 
 ## Methods
 
@@ -121,7 +121,7 @@ The bind method.
 
 #### Defined in
 
-[src/Renderer/GLScreenQuad.ts:51](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLScreenQuad.ts#L51)
+[src/Renderer/GLScreenQuad.ts:51](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLScreenQuad.ts#L51)
 
 ___
 
@@ -145,7 +145,7 @@ The bindShader method.
 
 #### Defined in
 
-[src/Renderer/GLScreenQuad.ts:86](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLScreenQuad.ts#L86)
+[src/Renderer/GLScreenQuad.ts:86](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLScreenQuad.ts#L86)
 
 ___
 
@@ -162,7 +162,7 @@ Users should never need to call this method directly.
 
 #### Defined in
 
-[src/Renderer/GLScreenQuad.ts:107](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLScreenQuad.ts#L107)
+[src/Renderer/GLScreenQuad.ts:107](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLScreenQuad.ts#L107)
 
 ___
 
@@ -187,5 +187,5 @@ The draw method.
 
 #### Defined in
 
-[src/Renderer/GLScreenQuad.ts:97](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLScreenQuad.ts#L97)
+[src/Renderer/GLScreenQuad.ts:97](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLScreenQuad.ts#L97)
 

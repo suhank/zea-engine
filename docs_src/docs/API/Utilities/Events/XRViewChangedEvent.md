@@ -33,7 +33,7 @@ Create an BaseEvent.
 
 #### Defined in
 
-[src/Utilities/Events/XRViewChangedEvent.ts:11](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/XRViewChangedEvent.ts#L11)
+[src/Utilities/Events/XRViewChangedEvent.ts:11](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Utilities/Events/XRViewChangedEvent.ts#L11)
 
 ## Properties
 
@@ -43,7 +43,7 @@ Create an BaseEvent.
 
 #### Defined in
 
-[src/Utilities/Events/XRViewChangedEvent.ts:8](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/XRViewChangedEvent.ts#L8)
+[src/Utilities/Events/XRViewChangedEvent.ts:8](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Utilities/Events/XRViewChangedEvent.ts#L8)
 
 ___
 
@@ -53,7 +53,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/Events/XRViewChangedEvent.ts:7](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/XRViewChangedEvent.ts#L7)
+[src/Utilities/Events/XRViewChangedEvent.ts:7](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Utilities/Events/XRViewChangedEvent.ts#L7)
 
 ___
 
@@ -67,7 +67,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/Events/ViewChangedEvent.ts:6](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ViewChangedEvent.ts#L6)
+[src/Utilities/Events/ViewChangedEvent.ts:6](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Utilities/Events/ViewChangedEvent.ts#L6)
 
 ___
 
@@ -81,7 +81,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/Events/ViewChangedEvent.ts:7](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ViewChangedEvent.ts#L7)
+[src/Utilities/Events/ViewChangedEvent.ts:7](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Utilities/Events/ViewChangedEvent.ts#L7)
 
 ___
 
@@ -95,7 +95,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/Events/ViewChangedEvent.ts:8](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ViewChangedEvent.ts#L8)
+[src/Utilities/Events/ViewChangedEvent.ts:8](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Utilities/Events/ViewChangedEvent.ts#L8)
 
 ___
 
@@ -105,5 +105,5 @@ ___
 
 #### Defined in
 
-[src/Utilities/Events/XRViewChangedEvent.ts:9](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/XRViewChangedEvent.ts#L9)
+[src/Utilities/Events/XRViewChangedEvent.ts:9](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Utilities/Events/XRViewChangedEvent.ts#L9)
 

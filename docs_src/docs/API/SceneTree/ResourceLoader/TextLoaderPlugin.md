@@ -23,7 +23,7 @@ Text loader plugin.
 
 #### Defined in
 
-[src/SceneTree/ResourceLoader/TextLoaderPlugin.ts:13](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ResourceLoader/TextLoaderPlugin.ts#L13)
+[src/SceneTree/ResourceLoader/TextLoaderPlugin.ts:13](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/ResourceLoader/TextLoaderPlugin.ts#L13)
 
 ## Methods
 
@@ -41,7 +41,7 @@ The type of file.
 
 #### Defined in
 
-[src/SceneTree/ResourceLoader/TextLoaderPlugin.ts:22](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ResourceLoader/TextLoaderPlugin.ts#L22)
+[src/SceneTree/ResourceLoader/TextLoaderPlugin.ts:22](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/ResourceLoader/TextLoaderPlugin.ts#L22)
 
 ___
 
@@ -61,7 +61,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/ResourceLoader/TextLoaderPlugin.ts:14](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ResourceLoader/TextLoaderPlugin.ts#L14)
+[src/SceneTree/ResourceLoader/TextLoaderPlugin.ts:14](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/ResourceLoader/TextLoaderPlugin.ts#L14)
 
 ___
 
@@ -81,5 +81,5 @@ ___
 
 #### Defined in
 
-[src/SceneTree/ResourceLoader/TextLoaderPlugin.ts:26](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ResourceLoader/TextLoaderPlugin.ts#L26)
+[src/SceneTree/ResourceLoader/TextLoaderPlugin.ts:26](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/ResourceLoader/TextLoaderPlugin.ts#L26)
 

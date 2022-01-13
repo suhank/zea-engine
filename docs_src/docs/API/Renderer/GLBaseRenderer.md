@@ -30,7 +30,7 @@ Create a GL base renderer.
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `$canvas` | `HTMLCanvasElement` | The canvas element. |
-| `options` | `Record`<`string`, `any`\> | The options value. |
+| `options` | [`RendererOptions`](Renderer_GLBaseRenderer.RendererOptions) | The options value. |
 
 #### Overrides
 
@@ -38,7 +38,7 @@ Create a GL base renderer.
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:85](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L85)
+[src/Renderer/GLBaseRenderer.ts:128](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L128)
 
 ## Properties
 
@@ -48,7 +48,7 @@ Create a GL base renderer.
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:59](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L59)
+[src/Renderer/GLBaseRenderer.ts:102](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L102)
 
 ___
 
@@ -58,7 +58,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:60](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L60)
+[src/Renderer/GLBaseRenderer.ts:103](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L103)
 
 ___
 
@@ -68,7 +68,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:63](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L63)
+[src/Renderer/GLBaseRenderer.ts:106](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L106)
 
 ___
 
@@ -78,7 +78,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:47](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L47)
+[src/Renderer/GLBaseRenderer.ts:90](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L90)
 
 ___
 
@@ -88,7 +88,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:48](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L48)
+[src/Renderer/GLBaseRenderer.ts:91](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L91)
 
 ___
 
@@ -102,7 +102,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/BaseClass.ts#L11)
+[src/Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Utilities/BaseClass.ts#L11)
 
 ___
 
@@ -112,7 +112,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:62](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L62)
+[src/Renderer/GLBaseRenderer.ts:105](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L105)
 
 ___
 
@@ -122,7 +122,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:56](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L56)
+[src/Renderer/GLBaseRenderer.ts:99](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L99)
 
 ___
 
@@ -132,7 +132,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:54](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L54)
+[src/Renderer/GLBaseRenderer.ts:97](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L97)
 
 ___
 
@@ -142,7 +142,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:55](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L55)
+[src/Renderer/GLBaseRenderer.ts:98](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L98)
 
 ___
 
@@ -152,7 +152,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:61](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L61)
+[src/Renderer/GLBaseRenderer.ts:104](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L104)
 
 ___
 
@@ -162,7 +162,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:52](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L52)
+[src/Renderer/GLBaseRenderer.ts:95](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L95)
 
 ___
 
@@ -172,7 +172,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:49](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L49)
+[src/Renderer/GLBaseRenderer.ts:92](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L92)
 
 ___
 
@@ -182,7 +182,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:51](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L51)
+[src/Renderer/GLBaseRenderer.ts:94](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L94)
 
 ___
 
@@ -192,7 +192,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:53](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L53)
+[src/Renderer/GLBaseRenderer.ts:96](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L96)
 
 ___
 
@@ -202,7 +202,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:67](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L67)
+[src/Renderer/GLBaseRenderer.ts:110](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L110)
 
 ___
 
@@ -212,7 +212,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:58](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L58)
+[src/Renderer/GLBaseRenderer.ts:101](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L101)
 
 ___
 
@@ -222,7 +222,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:68](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L68)
+[src/Renderer/GLBaseRenderer.ts:111](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L111)
 
 ___
 
@@ -232,7 +232,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:64](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L64)
+[src/Renderer/GLBaseRenderer.ts:107](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L107)
 
 ___
 
@@ -242,7 +242,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:69](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L69)
+[src/Renderer/GLBaseRenderer.ts:112](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L112)
 
 ___
 
@@ -256,7 +256,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:25](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L25)
+[src/SceneTree/ParameterOwner.ts:25](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/ParameterOwner.ts#L25)
 
 ___
 
@@ -266,7 +266,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:44](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L44)
+[src/Renderer/GLBaseRenderer.ts:87](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L87)
 
 ___
 
@@ -276,7 +276,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:65](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L65)
+[src/Renderer/GLBaseRenderer.ts:108](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L108)
 
 ___
 
@@ -286,7 +286,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:72](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L72)
+[src/Renderer/GLBaseRenderer.ts:115](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L115)
 
 ___
 
@@ -296,7 +296,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:73](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L73)
+[src/Renderer/GLBaseRenderer.ts:116](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L116)
 
 ___
 
@@ -306,7 +306,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:71](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L71)
+[src/Renderer/GLBaseRenderer.ts:114](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L114)
 
 ___
 
@@ -316,7 +316,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:43](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L43)
+[src/Renderer/GLBaseRenderer.ts:86](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L86)
 
 ___
 
@@ -330,7 +330,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/EventEmitter.ts#L26)
+[src/Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Utilities/EventEmitter.ts#L26)
 
 ___
 
@@ -344,7 +344,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:22](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L22)
+[src/SceneTree/ParameterOwner.ts:22](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/ParameterOwner.ts#L22)
 
 ___
 
@@ -358,7 +358,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:23](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L23)
+[src/SceneTree/ParameterOwner.ts:23](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/ParameterOwner.ts#L23)
 
 ___
 
@@ -372,7 +372,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:24](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L24)
+[src/SceneTree/ParameterOwner.ts:24](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/ParameterOwner.ts#L24)
 
 ___
 
@@ -382,7 +382,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:78](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L78)
+[src/Renderer/GLBaseRenderer.ts:121](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L121)
 
 ___
 
@@ -392,7 +392,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:75](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L75)
+[src/Renderer/GLBaseRenderer.ts:118](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L118)
 
 ___
 
@@ -402,7 +402,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:45](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L45)
+[src/Renderer/GLBaseRenderer.ts:88](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L88)
 
 ## Accessors
 
@@ -418,7 +418,7 @@ Getter for gl.
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:492](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L492)
+[src/Renderer/GLBaseRenderer.ts:535](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L535)
 
 ## Methods
 
@@ -436,7 +436,7 @@ The __setupXRViewport method.
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:980](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L980)
+[src/Renderer/GLBaseRenderer.ts:1025](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L1025)
 
 ___
 
@@ -458,7 +458,7 @@ Sets as `active` the specified viewport.
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:261](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L261)
+[src/Renderer/GLBaseRenderer.ts:304](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L304)
 
 ___
 
@@ -481,7 +481,7 @@ Sets as àctive` the viewport under the specified XY coordinates.
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:273](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L273)
+[src/Renderer/GLBaseRenderer.ts:316](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L316)
 
 ___
 
@@ -511,7 +511,7 @@ Adds `Parameter` object to the owner's parameter list.
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:135](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L135)
+[src/SceneTree/ParameterOwner.ts:135](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/ParameterOwner.ts#L135)
 
 ___
 
@@ -541,7 +541,7 @@ This is used to handle migrating parameters to new names.
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:92](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L92)
+[src/SceneTree/ParameterOwner.ts:92](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/ParameterOwner.ts#L92)
 
 ___
 
@@ -567,7 +567,7 @@ The addPass method.
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:909](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L909)
+[src/Renderer/GLBaseRenderer.ts:954](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L954)
 
 ___
 
@@ -590,7 +590,7 @@ The addShaderPreprocessorDirective method.
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:169](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L169)
+[src/Renderer/GLBaseRenderer.ts:212](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L212)
 
 ___
 
@@ -612,7 +612,7 @@ Adds tree items to the renderer, selecting the correct pass to delegate renderin
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:350](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L350)
+[src/Renderer/GLBaseRenderer.ts:393](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L393)
 
 ___
 
@@ -636,7 +636,7 @@ Adds a new viewport(viewing region) to the scene.
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:207](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L207)
+[src/Renderer/GLBaseRenderer.ts:250](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L250)
 
 ___
 
@@ -658,7 +658,7 @@ Searches through the passes and finds the appropriate pass to draw the given tre
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:394](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L394)
+[src/Renderer/GLBaseRenderer.ts:437](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L437)
 
 ___
 
@@ -674,7 +674,7 @@ Binds IO event handlers to the canvas
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:675](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L675)
+[src/Renderer/GLBaseRenderer.ts:718](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L718)
 
 ___
 
@@ -696,7 +696,7 @@ The bindGLBaseRenderer method.
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:1148](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L1148)
+[src/Renderer/GLBaseRenderer.ts:1193](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L1193)
 
 ___
 
@@ -723,7 +723,7 @@ Copies Parameters from another `ParameterOwner` to current object.
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:316](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L316)
+[src/SceneTree/ParameterOwner.ts:316](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/ParameterOwner.ts#L316)
 
 ___
 
@@ -740,7 +740,7 @@ Users should never need to call this method directly.
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:1297](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L1297)
+[src/Renderer/GLBaseRenderer.ts:1342](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L1342)
 
 ___
 
@@ -762,7 +762,7 @@ The drawHighlightedGeoms method.
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:1240](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L1240)
+[src/Renderer/GLBaseRenderer.ts:1285](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L1285)
 
 ___
 
@@ -778,7 +778,7 @@ The drawItemChanged method.
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:1098](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L1098)
+[src/Renderer/GLBaseRenderer.ts:1143](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L1143)
 
 ___
 
@@ -800,7 +800,7 @@ The drawScene method.
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:1222](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L1222)
+[src/Renderer/GLBaseRenderer.ts:1267](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L1267)
 
 ___
 
@@ -823,7 +823,7 @@ The drawSceneGeomData method.
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:1259](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L1259)
+[src/Renderer/GLBaseRenderer.ts:1304](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L1304)
 
 ___
 
@@ -850,7 +850,7 @@ Triggers all listener functions in an event.
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/EventEmitter.ts#L154)
+[src/Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Utilities/EventEmitter.ts#L154)
 
 ___
 
@@ -866,7 +866,7 @@ Forces a redraw of the viewports
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:1132](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L1132)
+[src/Renderer/GLBaseRenderer.ts:1177](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L1177)
 
 ___
 
@@ -889,7 +889,7 @@ Frames the specified viewport to the entire scene.
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:878](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L878)
+[src/Renderer/GLBaseRenderer.ts:923](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L923)
 
 ___
 
@@ -916,7 +916,7 @@ The fromJSON method decodes a json object for this type.
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:241](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L241)
+[src/SceneTree/ParameterOwner.ts:241](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/ParameterOwner.ts#L241)
 
 ___
 
@@ -934,7 +934,7 @@ Returns current active viewport.
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:284](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L284)
+[src/Renderer/GLBaseRenderer.ts:327](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L327)
 
 ___
 
@@ -956,7 +956,7 @@ Returns the unmangled name of the class.
 
 #### Defined in
 
-[src/Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/BaseClass.ts#L33)
+[src/Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Utilities/BaseClass.ts#L33)
 
 ___
 
@@ -974,7 +974,7 @@ Returns host div of the canvas element.
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:537](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L537)
+[src/Renderer/GLBaseRenderer.ts:580](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L580)
 
 ___
 
@@ -992,7 +992,7 @@ The getGL method.
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:500](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L500)
+[src/Renderer/GLBaseRenderer.ts:543](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L543)
 
 ___
 
@@ -1010,7 +1010,7 @@ Returns canvas that was used to generate the gl context.
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:869](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L869)
+[src/Renderer/GLBaseRenderer.ts:914](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L914)
 
 ___
 
@@ -1028,7 +1028,7 @@ Returns HTMLCanvasElement's Height
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:194](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L194)
+[src/Renderer/GLBaseRenderer.ts:237](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L237)
 
 ___
 
@@ -1052,7 +1052,7 @@ Returns the unique id of the object.
 
 #### Defined in
 
-[src/Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/BaseClass.ts#L25)
+[src/Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Utilities/BaseClass.ts#L25)
 
 ___
 
@@ -1074,7 +1074,7 @@ Returns the number of parameters current object has.
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:41](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L41)
+[src/SceneTree/ParameterOwner.ts:41](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/ParameterOwner.ts#L41)
 
 ___
 
@@ -1098,7 +1098,7 @@ A factory function used to construct new shader objects. If that specified shade
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:890](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L890)
+[src/Renderer/GLBaseRenderer.ts:935](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L935)
 
 ___
 
@@ -1126,7 +1126,7 @@ Returns `Parameter` object using the given name
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:102](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L102)
+[src/SceneTree/ParameterOwner.ts:102](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/ParameterOwner.ts#L102)
 
 ___
 
@@ -1154,7 +1154,7 @@ Returns `Parameter` object in a given index
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:70](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L70)
+[src/SceneTree/ParameterOwner.ts:70](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/ParameterOwner.ts#L70)
 
 ___
 
@@ -1182,7 +1182,7 @@ Returns the index of a parameter in parameter list.
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:60](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L60)
+[src/SceneTree/ParameterOwner.ts:60](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/ParameterOwner.ts#L60)
 
 ___
 
@@ -1204,7 +1204,7 @@ Returns all the parameters of the object.
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:50](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L50)
+[src/SceneTree/ParameterOwner.ts:50](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/ParameterOwner.ts#L50)
 
 ___
 
@@ -1228,7 +1228,7 @@ The getPass method.
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:953](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L953)
+[src/Renderer/GLBaseRenderer.ts:998](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L998)
 
 ___
 
@@ -1246,7 +1246,7 @@ Returns current scene(Environment where all assets live) object.
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:328](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L328)
+[src/Renderer/GLBaseRenderer.ts:371](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L371)
 
 ___
 
@@ -1264,7 +1264,7 @@ The getVRViewport method.
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:1031](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L1031)
+[src/Renderer/GLBaseRenderer.ts:1076](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L1076)
 
 ___
 
@@ -1288,7 +1288,7 @@ Returns a viewport element by specifying its index in the list of viewports.
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:234](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L234)
+[src/Renderer/GLBaseRenderer.ts:277](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L277)
 
 ___
 
@@ -1313,7 +1313,7 @@ Returns a viewport element under the specified XY coordinates.
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:245](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L245)
+[src/Renderer/GLBaseRenderer.ts:288](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L288)
 
 ___
 
@@ -1331,7 +1331,7 @@ Returns HTMLCanvasElement's width
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:186](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L186)
+[src/Renderer/GLBaseRenderer.ts:229](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L229)
 
 ___
 
@@ -1349,7 +1349,7 @@ The getXRViewport method.
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:1039](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L1039)
+[src/Renderer/GLBaseRenderer.ts:1084](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L1084)
 
 ___
 
@@ -1372,7 +1372,7 @@ Handle the canvas's parent resizing.
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:512](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L512)
+[src/Renderer/GLBaseRenderer.ts:555](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L555)
 
 ___
 
@@ -1400,7 +1400,7 @@ Validates if the specified parameter exists in the object.
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:80](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L80)
+[src/SceneTree/ParameterOwner.ts:80](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/ParameterOwner.ts#L80)
 
 ___
 
@@ -1432,7 +1432,7 @@ It replaces the event in the specified index.
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:149](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L149)
+[src/SceneTree/ParameterOwner.ts:149](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/ParameterOwner.ts#L149)
 
 ___
 
@@ -1450,7 +1450,7 @@ The isContinuouslyDrawing method.
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:1058](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L1058)
+[src/Renderer/GLBaseRenderer.ts:1103](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L1103)
 
 ___
 
@@ -1468,7 +1468,7 @@ The isXRViewportPresenting method.
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:1047](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L1047)
+[src/Renderer/GLBaseRenderer.ts:1092](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L1092)
 
 ___
 
@@ -1495,7 +1495,7 @@ Removes a listener function from the specified event, using either the function 
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/EventEmitter.ts#L97)
+[src/Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Utilities/EventEmitter.ts#L97)
 
 ___
 
@@ -1524,7 +1524,7 @@ Adds a listener function for a given event name.
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/EventEmitter.ts#L44)
+[src/Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Utilities/EventEmitter.ts#L44)
 
 ___
 
@@ -1562,7 +1562,7 @@ asset.once('loaded', () => {
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/EventEmitter.ts#L82)
+[src/Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Utilities/EventEmitter.ts#L82)
 
 ___
 
@@ -1589,7 +1589,7 @@ to perform general updates (see GLPass or BaseItem).
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:124](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L124)
+[src/SceneTree/ParameterOwner.ts:124](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/ParameterOwner.ts#L124)
 
 ___
 
@@ -1621,7 +1621,7 @@ used to build the right `Parameter` class. Then all of them are added to the obj
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:276](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L276)
+[src/SceneTree/ParameterOwner.ts:276](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/ParameterOwner.ts#L276)
 
 ___
 
@@ -1648,7 +1648,7 @@ remove listener by ID returned from #on
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/EventEmitter.ts#L134)
+[src/Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Utilities/EventEmitter.ts#L134)
 
 ___
 
@@ -1676,7 +1676,7 @@ Removes `Parameter` from owner, by using parameter's name.
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:176](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L176)
+[src/SceneTree/ParameterOwner.ts:176](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/ParameterOwner.ts#L176)
 
 ___
 
@@ -1698,7 +1698,7 @@ Remove tree items from the scene.
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:433](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L433)
+[src/Renderer/GLBaseRenderer.ts:476](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L476)
 
 ___
 
@@ -1714,7 +1714,7 @@ The renderGeomDataFbos method. Frame buffer (FBO).
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:309](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L309)
+[src/Renderer/GLBaseRenderer.ts:352](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L352)
 
 ___
 
@@ -1742,7 +1742,7 @@ Replaces old `Parameter` by passing a new one with the same name.
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:198](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L198)
+[src/SceneTree/ParameterOwner.ts:198](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/ParameterOwner.ts#L198)
 
 ___
 
@@ -1760,7 +1760,7 @@ Request a single redraw, usually in response to a signal/event.
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:1107](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L1107)
+[src/Renderer/GLBaseRenderer.ts:1152](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L1152)
 
 ___
 
@@ -1776,7 +1776,7 @@ The resumeDrawing method.
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:298](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L298)
+[src/Renderer/GLBaseRenderer.ts:341](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L341)
 
 ___
 
@@ -1798,13 +1798,13 @@ Sets scene to the renderer.
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:337](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L337)
+[src/Renderer/GLBaseRenderer.ts:380](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L380)
 
 ___
 
 ### setupWebGL
 
-▸ `Private` **setupWebGL**(`$canvas`, `webglOptions`): [`WebGL12RenderingContext`](types/Renderer_types_webgl.WebGL12RenderingContext)
+▸ `Private` **setupWebGL**(`$canvas`, `webglOptions?`): [`WebGL12RenderingContext`](types/Renderer_types_webgl.WebGL12RenderingContext)
 
 Setups the WebGL configuration for the renderer, specifying the canvas element where our
 
@@ -1813,7 +1813,7 @@ Setups the WebGL configuration for the renderer, specifying the canvas element w
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `$canvas` | `HTMLCanvasElement` | The $canvas element. |
-| `webglOptions` | `Record`<`string`, `any`\> | The webglOptions value. |
+| `webglOptions` | [`RendererOptions`](Renderer_GLBaseRenderer.RendererOptions) | The webglOptions value. |
 
 #### Returns
 
@@ -1821,7 +1821,7 @@ Setups the WebGL configuration for the renderer, specifying the canvas element w
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:547](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L547)
+[src/Renderer/GLBaseRenderer.ts:590](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L590)
 
 ___
 
@@ -1837,7 +1837,7 @@ The startContinuousDrawing method.
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:1065](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L1065)
+[src/Renderer/GLBaseRenderer.ts:1110](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L1110)
 
 ___
 
@@ -1853,7 +1853,7 @@ The stopContinuousDrawing method.
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:1080](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L1080)
+[src/Renderer/GLBaseRenderer.ts:1125](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L1125)
 
 ___
 
@@ -1871,7 +1871,7 @@ The supportsVR method.
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:970](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L970)
+[src/Renderer/GLBaseRenderer.ts:1015](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L1015)
 
 ___
 
@@ -1887,7 +1887,7 @@ The suspendDrawing method.
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:291](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L291)
+[src/Renderer/GLBaseRenderer.ts:334](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L334)
 
 ___
 
@@ -1915,7 +1915,7 @@ The toJSON method encodes this type as a json object for persistence.
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:218](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L218)
+[src/SceneTree/ParameterOwner.ts:218](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/ParameterOwner.ts#L218)
 
 ___
 
@@ -1943,7 +1943,7 @@ Converts object's JSON value and converts it to a string.
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:303](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L303)
+[src/SceneTree/ParameterOwner.ts:303](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/ParameterOwner.ts#L303)
 
 ___
 
@@ -1959,7 +1959,7 @@ The toggleContinuousDrawing method.
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:1087](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L1087)
+[src/Renderer/GLBaseRenderer.ts:1132](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L1132)
 
 ___
 
@@ -1982,5 +1982,5 @@ The registerPass method.
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:1288](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/GLBaseRenderer.ts#L1288)
+[src/Renderer/GLBaseRenderer.ts:1333](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/GLBaseRenderer.ts#L1333)
 

@@ -33,7 +33,7 @@ Class representing a view tool
 
 #### Defined in
 
-[src/Renderer/VR/XRViewManipulator.ts:30](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/VR/XRViewManipulator.ts#L30)
+[src/Renderer/VR/XRViewManipulator.ts:30](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/VR/XRViewManipulator.ts#L30)
 
 ## Properties
 
@@ -47,7 +47,7 @@ Class representing a view tool
 
 #### Defined in
 
-[src/SceneTree/Manipulators/BaseTool.ts:33](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Manipulators/BaseTool.ts#L33)
+[src/SceneTree/Manipulators/BaseTool.ts:33](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/Manipulators/BaseTool.ts#L33)
 
 ___
 
@@ -57,7 +57,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/VR/XRViewManipulator.ts:18](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/VR/XRViewManipulator.ts#L18)
+[src/Renderer/VR/XRViewManipulator.ts:18](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/VR/XRViewManipulator.ts#L18)
 
 ___
 
@@ -67,7 +67,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/VR/XRViewManipulator.ts:24](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/VR/XRViewManipulator.ts#L24)
+[src/Renderer/VR/XRViewManipulator.ts:24](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/VR/XRViewManipulator.ts#L24)
 
 ___
 
@@ -77,7 +77,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/VR/XRViewManipulator.ts:27](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/VR/XRViewManipulator.ts#L27)
+[src/Renderer/VR/XRViewManipulator.ts:27](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/VR/XRViewManipulator.ts#L27)
 
 ___
 
@@ -87,7 +87,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/VR/XRViewManipulator.ts:22](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/VR/XRViewManipulator.ts#L22)
+[src/Renderer/VR/XRViewManipulator.ts:22](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/VR/XRViewManipulator.ts#L22)
 
 ___
 
@@ -97,7 +97,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/VR/XRViewManipulator.ts:25](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/VR/XRViewManipulator.ts#L25)
+[src/Renderer/VR/XRViewManipulator.ts:25](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/VR/XRViewManipulator.ts#L25)
 
 ___
 
@@ -111,7 +111,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/BaseClass.ts#L11)
+[src/Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Utilities/BaseClass.ts#L11)
 
 ___
 
@@ -121,7 +121,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/VR/XRViewManipulator.ts:26](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/VR/XRViewManipulator.ts#L26)
+[src/Renderer/VR/XRViewManipulator.ts:26](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/VR/XRViewManipulator.ts#L26)
 
 ___
 
@@ -135,7 +135,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:25](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L25)
+[src/SceneTree/ParameterOwner.ts:25](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/ParameterOwner.ts#L25)
 
 ___
 
@@ -145,7 +145,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/VR/XRViewManipulator.ts:17](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/VR/XRViewManipulator.ts#L17)
+[src/Renderer/VR/XRViewManipulator.ts:17](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/VR/XRViewManipulator.ts#L17)
 
 ___
 
@@ -159,7 +159,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/EventEmitter.ts#L26)
+[src/Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Utilities/EventEmitter.ts#L26)
 
 ___
 
@@ -173,7 +173,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:22](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L22)
+[src/SceneTree/ParameterOwner.ts:22](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/ParameterOwner.ts#L22)
 
 ___
 
@@ -187,7 +187,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:23](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L23)
+[src/SceneTree/ParameterOwner.ts:23](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/ParameterOwner.ts#L23)
 
 ___
 
@@ -201,7 +201,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:24](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L24)
+[src/SceneTree/ParameterOwner.ts:24](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/ParameterOwner.ts#L24)
 
 ___
 
@@ -211,7 +211,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/VR/XRViewManipulator.ts:23](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/VR/XRViewManipulator.ts#L23)
+[src/Renderer/VR/XRViewManipulator.ts:23](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/VR/XRViewManipulator.ts#L23)
 
 ___
 
@@ -221,7 +221,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/VR/XRViewManipulator.ts:20](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/VR/XRViewManipulator.ts#L20)
+[src/Renderer/VR/XRViewManipulator.ts:20](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/VR/XRViewManipulator.ts#L20)
 
 ___
 
@@ -231,7 +231,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/VR/XRViewManipulator.ts:21](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/VR/XRViewManipulator.ts#L21)
+[src/Renderer/VR/XRViewManipulator.ts:21](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/VR/XRViewManipulator.ts#L21)
 
 ___
 
@@ -241,7 +241,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/VR/XRViewManipulator.ts:19](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/VR/XRViewManipulator.ts#L19)
+[src/Renderer/VR/XRViewManipulator.ts:19](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/VR/XRViewManipulator.ts#L19)
 
 ## Methods
 
@@ -255,7 +255,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/VR/XRViewManipulator.ts:87](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/VR/XRViewManipulator.ts#L87)
+[src/Renderer/VR/XRViewManipulator.ts:87](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/VR/XRViewManipulator.ts#L87)
 
 ___
 
@@ -275,7 +275,7 @@ The activateTool method.
 
 #### Defined in
 
-[src/Renderer/VR/XRViewManipulator.ts:60](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/VR/XRViewManipulator.ts#L60)
+[src/Renderer/VR/XRViewManipulator.ts:60](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/VR/XRViewManipulator.ts#L60)
 
 ___
 
@@ -297,7 +297,7 @@ Adds the icon to the tip of the VR Controller
 
 #### Defined in
 
-[src/Renderer/VR/XRViewManipulator.ts:50](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/VR/XRViewManipulator.ts#L50)
+[src/Renderer/VR/XRViewManipulator.ts:50](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/VR/XRViewManipulator.ts#L50)
 
 ___
 
@@ -327,7 +327,7 @@ Adds `Parameter` object to the owner's parameter list.
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:135](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L135)
+[src/SceneTree/ParameterOwner.ts:135](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/ParameterOwner.ts#L135)
 
 ___
 
@@ -357,7 +357,7 @@ This is used to handle migrating parameters to new names.
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:92](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L92)
+[src/SceneTree/ParameterOwner.ts:92](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/ParameterOwner.ts#L92)
 
 ___
 
@@ -384,7 +384,7 @@ Copies Parameters from another `ParameterOwner` to current object.
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:316](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L316)
+[src/SceneTree/ParameterOwner.ts:316](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/ParameterOwner.ts#L316)
 
 ___
 
@@ -404,7 +404,7 @@ The deactivateTool method.
 
 #### Defined in
 
-[src/Renderer/VR/XRViewManipulator.ts:74](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/VR/XRViewManipulator.ts#L74)
+[src/Renderer/VR/XRViewManipulator.ts:74](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/VR/XRViewManipulator.ts#L74)
 
 ___
 
@@ -431,7 +431,7 @@ Triggers all listener functions in an event.
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/EventEmitter.ts#L154)
+[src/Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Utilities/EventEmitter.ts#L154)
 
 ___
 
@@ -458,7 +458,7 @@ The fromJSON method decodes a json object for this type.
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:241](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L241)
+[src/SceneTree/ParameterOwner.ts:241](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/ParameterOwner.ts#L241)
 
 ___
 
@@ -480,7 +480,7 @@ Returns the unmangled name of the class.
 
 #### Defined in
 
-[src/Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/BaseClass.ts#L33)
+[src/Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Utilities/BaseClass.ts#L33)
 
 ___
 
@@ -504,7 +504,7 @@ Returns the unique id of the object.
 
 #### Defined in
 
-[src/Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/BaseClass.ts#L25)
+[src/Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Utilities/BaseClass.ts#L25)
 
 ___
 
@@ -526,7 +526,7 @@ Returns the number of parameters current object has.
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:41](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L41)
+[src/SceneTree/ParameterOwner.ts:41](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/ParameterOwner.ts#L41)
 
 ___
 
@@ -554,7 +554,7 @@ Returns `Parameter` object using the given name
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:102](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L102)
+[src/SceneTree/ParameterOwner.ts:102](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/ParameterOwner.ts#L102)
 
 ___
 
@@ -582,7 +582,7 @@ Returns `Parameter` object in a given index
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:70](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L70)
+[src/SceneTree/ParameterOwner.ts:70](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/ParameterOwner.ts#L70)
 
 ___
 
@@ -610,7 +610,7 @@ Returns the index of a parameter in parameter list.
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:60](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L60)
+[src/SceneTree/ParameterOwner.ts:60](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/ParameterOwner.ts#L60)
 
 ___
 
@@ -632,7 +632,7 @@ Returns all the parameters of the object.
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:50](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L50)
+[src/SceneTree/ParameterOwner.ts:50](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/ParameterOwner.ts#L50)
 
 ___
 
@@ -660,7 +660,7 @@ Validates if the specified parameter exists in the object.
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:80](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L80)
+[src/SceneTree/ParameterOwner.ts:80](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/ParameterOwner.ts#L80)
 
 ___
 
@@ -692,7 +692,7 @@ It replaces the event in the specified index.
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:149](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L149)
+[src/SceneTree/ParameterOwner.ts:149](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/ParameterOwner.ts#L149)
 
 ___
 
@@ -719,7 +719,7 @@ Removes a listener function from the specified event, using either the function 
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/EventEmitter.ts#L97)
+[src/Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Utilities/EventEmitter.ts#L97)
 
 ___
 
@@ -748,7 +748,7 @@ Adds a listener function for a given event name.
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/EventEmitter.ts#L44)
+[src/Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Utilities/EventEmitter.ts#L44)
 
 ___
 
@@ -774,7 +774,7 @@ Event fired when the user presses down a key on the keyboard.
 
 #### Defined in
 
-[src/SceneTree/Manipulators/BaseTool.ts:132](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Manipulators/BaseTool.ts#L132)
+[src/SceneTree/Manipulators/BaseTool.ts:132](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/Manipulators/BaseTool.ts#L132)
 
 ___
 
@@ -800,7 +800,7 @@ Event fired when the user releases a key on the keyboard.
 
 #### Defined in
 
-[src/SceneTree/Manipulators/BaseTool.ts:141](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Manipulators/BaseTool.ts#L141)
+[src/SceneTree/Manipulators/BaseTool.ts:141](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/Manipulators/BaseTool.ts#L141)
 
 ___
 
@@ -826,7 +826,7 @@ Event fired when a pointing device button is double clicked on the tool.
 
 #### Defined in
 
-[src/Renderer/VR/XRViewManipulator.ts:258](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/VR/XRViewManipulator.ts#L258)
+[src/Renderer/VR/XRViewManipulator.ts:258](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/VR/XRViewManipulator.ts#L258)
 
 ___
 
@@ -852,7 +852,7 @@ Event fired when a pointing device button is pressed while the pointer is over t
 
 #### Defined in
 
-[src/Renderer/VR/XRViewManipulator.ts:225](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/VR/XRViewManipulator.ts#L225)
+[src/Renderer/VR/XRViewManipulator.ts:225](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/VR/XRViewManipulator.ts#L225)
 
 ___
 
@@ -878,7 +878,7 @@ Event fired when a mouse pointer enters the viewport
 
 #### Defined in
 
-[src/SceneTree/Manipulators/BaseTool.ts:102](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Manipulators/BaseTool.ts#L102)
+[src/SceneTree/Manipulators/BaseTool.ts:102](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/Manipulators/BaseTool.ts#L102)
 
 ___
 
@@ -904,7 +904,7 @@ Event fired when a mouse pointer leaves the viewport
 
 #### Defined in
 
-[src/SceneTree/Manipulators/BaseTool.ts:111](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Manipulators/BaseTool.ts#L111)
+[src/SceneTree/Manipulators/BaseTool.ts:111](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/Manipulators/BaseTool.ts#L111)
 
 ___
 
@@ -930,7 +930,7 @@ Event fired when a pointing device is moved while the cursor's hotspot is inside
 
 #### Defined in
 
-[src/Renderer/VR/XRViewManipulator.ts:236](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/VR/XRViewManipulator.ts#L236)
+[src/Renderer/VR/XRViewManipulator.ts:236](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/VR/XRViewManipulator.ts#L236)
 
 ___
 
@@ -956,7 +956,7 @@ Event fired when a pointing device button is released while the pointer is over 
 
 #### Defined in
 
-[src/Renderer/VR/XRViewManipulator.ts:247](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/VR/XRViewManipulator.ts#L247)
+[src/Renderer/VR/XRViewManipulator.ts:247](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/VR/XRViewManipulator.ts#L247)
 
 ___
 
@@ -982,7 +982,7 @@ Event fired when one or more touch points have been disrupted in an implementati
 
 #### Defined in
 
-[src/SceneTree/Manipulators/BaseTool.ts:153](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Manipulators/BaseTool.ts#L153)
+[src/SceneTree/Manipulators/BaseTool.ts:153](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/Manipulators/BaseTool.ts#L153)
 
 ___
 
@@ -1006,7 +1006,7 @@ The return value.
 
 #### Defined in
 
-[src/Renderer/VR/XRViewManipulator.ts:110](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/VR/XRViewManipulator.ts#L110)
+[src/Renderer/VR/XRViewManipulator.ts:110](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/VR/XRViewManipulator.ts#L110)
 
 ___
 
@@ -1030,7 +1030,7 @@ The return value.
 
 #### Defined in
 
-[src/Renderer/VR/XRViewManipulator.ts:125](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/VR/XRViewManipulator.ts#L125)
+[src/Renderer/VR/XRViewManipulator.ts:125](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/VR/XRViewManipulator.ts#L125)
 
 ___
 
@@ -1052,7 +1052,7 @@ The onVRControllerDoubleClicked method.
 
 #### Defined in
 
-[src/Renderer/VR/XRViewManipulator.ts:139](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/VR/XRViewManipulator.ts#L139)
+[src/Renderer/VR/XRViewManipulator.ts:139](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/VR/XRViewManipulator.ts#L139)
 
 ___
 
@@ -1074,7 +1074,7 @@ The onVRPoseChanged method.
 
 #### Defined in
 
-[src/Renderer/VR/XRViewManipulator.ts:151](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/VR/XRViewManipulator.ts#L151)
+[src/Renderer/VR/XRViewManipulator.ts:151](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Renderer/VR/XRViewManipulator.ts#L151)
 
 ___
 
@@ -1100,7 +1100,7 @@ Event fired when the user rotates the pointing device wheel.
 
 #### Defined in
 
-[src/SceneTree/Manipulators/BaseTool.ts:120](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Manipulators/BaseTool.ts#L120)
+[src/SceneTree/Manipulators/BaseTool.ts:120](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/Manipulators/BaseTool.ts#L120)
 
 ___
 
@@ -1138,7 +1138,7 @@ asset.once('loaded', () => {
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/EventEmitter.ts#L82)
+[src/Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Utilities/EventEmitter.ts#L82)
 
 ___
 
@@ -1165,7 +1165,7 @@ to perform general updates (see GLPass or BaseItem).
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:124](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L124)
+[src/SceneTree/ParameterOwner.ts:124](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/ParameterOwner.ts#L124)
 
 ___
 
@@ -1197,7 +1197,7 @@ used to build the right `Parameter` class. Then all of them are added to the obj
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:276](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L276)
+[src/SceneTree/ParameterOwner.ts:276](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/ParameterOwner.ts#L276)
 
 ___
 
@@ -1224,7 +1224,7 @@ remove listener by ID returned from #on
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/EventEmitter.ts#L134)
+[src/Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Utilities/EventEmitter.ts#L134)
 
 ___
 
@@ -1252,7 +1252,7 @@ Removes `Parameter` from owner, by using parameter's name.
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:176](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L176)
+[src/SceneTree/ParameterOwner.ts:176](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/ParameterOwner.ts#L176)
 
 ___
 
@@ -1280,7 +1280,7 @@ Replaces old `Parameter` by passing a new one with the same name.
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:198](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L198)
+[src/SceneTree/ParameterOwner.ts:198](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/ParameterOwner.ts#L198)
 
 ___
 
@@ -1308,7 +1308,7 @@ The toJSON method encodes this type as a json object for persistence.
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:218](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L218)
+[src/SceneTree/ParameterOwner.ts:218](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/ParameterOwner.ts#L218)
 
 ___
 
@@ -1336,5 +1336,5 @@ Converts object's JSON value and converts it to a string.
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:303](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L303)
+[src/SceneTree/ParameterOwner.ts:303](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/ParameterOwner.ts#L303)
 

@@ -53,7 +53,7 @@ Initializes the allocator ready to start work
 
 #### Defined in
 
-[src/Utilities/Allocator1D.ts:70](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Allocator1D.ts#L70)
+[src/Utilities/Allocator1D.ts:70](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Utilities/Allocator1D.ts#L70)
 
 ## Properties
 
@@ -67,7 +67,7 @@ Initializes the allocator ready to start work
 
 #### Defined in
 
-[src/Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/BaseClass.ts#L11)
+[src/Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Utilities/BaseClass.ts#L11)
 
 ___
 
@@ -77,7 +77,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/Allocator1D.ts:64](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Allocator1D.ts#L64)
+[src/Utilities/Allocator1D.ts:64](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Utilities/Allocator1D.ts#L64)
 
 ___
 
@@ -87,7 +87,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/Allocator1D.ts:62](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Allocator1D.ts#L62)
+[src/Utilities/Allocator1D.ts:62](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Utilities/Allocator1D.ts#L62)
 
 ___
 
@@ -97,7 +97,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/Allocator1D.ts:63](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Allocator1D.ts#L63)
+[src/Utilities/Allocator1D.ts:63](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Utilities/Allocator1D.ts#L63)
 
 ___
 
@@ -107,7 +107,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/Allocator1D.ts:61](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Allocator1D.ts#L61)
+[src/Utilities/Allocator1D.ts:61](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Utilities/Allocator1D.ts#L61)
 
 ___
 
@@ -117,7 +117,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/Allocator1D.ts:66](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Allocator1D.ts#L66)
+[src/Utilities/Allocator1D.ts:66](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Utilities/Allocator1D.ts#L66)
 
 ___
 
@@ -131,7 +131,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/EventEmitter.ts#L26)
+[src/Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Utilities/EventEmitter.ts#L26)
 
 ___
 
@@ -141,7 +141,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/Allocator1D.ts:65](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Allocator1D.ts#L65)
+[src/Utilities/Allocator1D.ts:65](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Utilities/Allocator1D.ts#L65)
 
 ## Methods
 
@@ -164,7 +164,7 @@ Adds a new block
 
 #### Defined in
 
-[src/Utilities/Allocator1D.ts:202](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Allocator1D.ts#L202)
+[src/Utilities/Allocator1D.ts:202](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Utilities/Allocator1D.ts#L202)
 
 ___
 
@@ -190,7 +190,7 @@ track allocations.
 
 #### Defined in
 
-[src/Utilities/Allocator1D.ts:98](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Allocator1D.ts#L98)
+[src/Utilities/Allocator1D.ts:98](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Utilities/Allocator1D.ts#L98)
 
 ___
 
@@ -212,7 +212,7 @@ Deallocate space for an existing item, making it free for other uses.
 
 #### Defined in
 
-[src/Utilities/Allocator1D.ts:274](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Allocator1D.ts#L274)
+[src/Utilities/Allocator1D.ts:274](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Utilities/Allocator1D.ts#L274)
 
 ___
 
@@ -229,7 +229,7 @@ TODO: Implement this method.
 
 #### Defined in
 
-[src/Utilities/Allocator1D.ts:296](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Allocator1D.ts#L296)
+[src/Utilities/Allocator1D.ts:296](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Utilities/Allocator1D.ts#L296)
 
 ___
 
@@ -256,7 +256,7 @@ Triggers all listener functions in an event.
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/EventEmitter.ts#L154)
+[src/Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Utilities/EventEmitter.ts#L154)
 
 ___
 
@@ -278,7 +278,7 @@ Frees a block by either growing neighboring blocks or adding a new free block
 
 #### Defined in
 
-[src/Utilities/Allocator1D.ts:242](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Allocator1D.ts#L242)
+[src/Utilities/Allocator1D.ts:242](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Utilities/Allocator1D.ts#L242)
 
 ___
 
@@ -302,7 +302,7 @@ Returns the Allocates for the given Id.
 
 #### Defined in
 
-[src/Utilities/Allocator1D.ts:86](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Allocator1D.ts#L86)
+[src/Utilities/Allocator1D.ts:86](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Utilities/Allocator1D.ts#L86)
 
 ___
 
@@ -324,7 +324,7 @@ Returns the unmangled name of the class.
 
 #### Defined in
 
-[src/Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/BaseClass.ts#L33)
+[src/Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Utilities/BaseClass.ts#L33)
 
 ___
 
@@ -342,7 +342,7 @@ The fragmentation ratio. Between 0 and some value less than 1
 
 #### Defined in
 
-[src/Utilities/Allocator1D.ts:288](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Allocator1D.ts#L288)
+[src/Utilities/Allocator1D.ts:288](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Utilities/Allocator1D.ts#L288)
 
 ___
 
@@ -366,7 +366,7 @@ Returns the unique id of the object.
 
 #### Defined in
 
-[src/Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/BaseClass.ts#L25)
+[src/Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Utilities/BaseClass.ts#L25)
 
 ___
 
@@ -393,7 +393,7 @@ Removes a listener function from the specified event, using either the function 
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/EventEmitter.ts#L97)
+[src/Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Utilities/EventEmitter.ts#L97)
 
 ___
 
@@ -422,7 +422,7 @@ Adds a listener function for a given event name.
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/EventEmitter.ts#L44)
+[src/Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Utilities/EventEmitter.ts#L44)
 
 ___
 
@@ -460,7 +460,7 @@ asset.once('loaded', () => {
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/EventEmitter.ts#L82)
+[src/Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Utilities/EventEmitter.ts#L82)
 
 ___
 
@@ -482,7 +482,7 @@ Remove a new block
 
 #### Defined in
 
-[src/Utilities/Allocator1D.ts:222](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Allocator1D.ts#L222)
+[src/Utilities/Allocator1D.ts:222](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Utilities/Allocator1D.ts#L222)
 
 ___
 
@@ -509,7 +509,7 @@ remove listener by ID returned from #on
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/EventEmitter.ts#L134)
+[src/Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Utilities/EventEmitter.ts#L134)
 
 ___
 
@@ -525,5 +525,5 @@ Checks that the allocations are consistent and not corrupt in any way.
 
 #### Defined in
 
-[src/Utilities/Allocator1D.ts:304](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Allocator1D.ts#L304)
+[src/Utilities/Allocator1D.ts:304](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/Utilities/Allocator1D.ts#L304)
 

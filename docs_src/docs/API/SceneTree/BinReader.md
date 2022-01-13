@@ -27,7 +27,7 @@ Create a bin reader.
 
 #### Defined in
 
-[src/SceneTree/BinReader.ts:21](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinReader.ts#L21)
+[src/SceneTree/BinReader.ts:21](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/BinReader.ts#L21)
 
 ## Properties
 
@@ -37,7 +37,7 @@ Create a bin reader.
 
 #### Defined in
 
-[src/SceneTree/BinReader.ts:10](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinReader.ts#L10)
+[src/SceneTree/BinReader.ts:10](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/BinReader.ts#L10)
 
 ___
 
@@ -47,7 +47,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/BinReader.ts:9](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinReader.ts#L9)
+[src/SceneTree/BinReader.ts:9](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/BinReader.ts#L9)
 
 ___
 
@@ -57,7 +57,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/BinReader.ts:11](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinReader.ts#L11)
+[src/SceneTree/BinReader.ts:11](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/BinReader.ts#L11)
 
 ___
 
@@ -67,7 +67,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/BinReader.ts:12](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinReader.ts#L12)
+[src/SceneTree/BinReader.ts:12](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/BinReader.ts#L12)
 
 ___
 
@@ -77,7 +77,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/BinReader.ts:13](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinReader.ts#L13)
+[src/SceneTree/BinReader.ts:13](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/BinReader.ts#L13)
 
 ## Accessors
 
@@ -95,7 +95,7 @@ Returns the length of the buffer.
 
 #### Defined in
 
-[src/SceneTree/BinReader.ts:52](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinReader.ts#L52)
+[src/SceneTree/BinReader.ts:52](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/BinReader.ts#L52)
 
 ___
 
@@ -113,7 +113,7 @@ Returns the data buffer we're reading from.
 
 #### Defined in
 
-[src/SceneTree/BinReader.ts:43](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinReader.ts#L43)
+[src/SceneTree/BinReader.ts:43](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/BinReader.ts#L43)
 
 ___
 
@@ -131,7 +131,7 @@ Returns state of whether or not the `BinReader` object was instantiated from a m
 
 #### Defined in
 
-[src/SceneTree/BinReader.ts:34](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinReader.ts#L34)
+[src/SceneTree/BinReader.ts:34](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/BinReader.ts#L34)
 
 ___
 
@@ -149,7 +149,7 @@ Returns remaining length of the buffer to read.
 
 #### Defined in
 
-[src/SceneTree/BinReader.ts:61](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinReader.ts#L61)
+[src/SceneTree/BinReader.ts:61](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/BinReader.ts#L61)
 
 ## Methods
 
@@ -171,7 +171,7 @@ Adds offset bytes to current offset value.
 
 #### Defined in
 
-[src/SceneTree/BinReader.ts:86](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinReader.ts#L86)
+[src/SceneTree/BinReader.ts:86](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/BinReader.ts#L86)
 
 ___
 
@@ -190,7 +190,7 @@ Next four because it creates two Vec2.
 
 #### Defined in
 
-[src/SceneTree/BinReader.ts:480](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinReader.ts#L480)
+[src/SceneTree/BinReader.ts:480](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/BinReader.ts#L480)
 
 ___
 
@@ -209,7 +209,7 @@ Next four because it creates two Vec3.
 
 #### Defined in
 
-[src/SceneTree/BinReader.ts:490](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinReader.ts#L490)
+[src/SceneTree/BinReader.ts:490](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/BinReader.ts#L490)
 
 ___
 
@@ -228,7 +228,7 @@ and adds four bytes to the offset.
 
 #### Defined in
 
-[src/SceneTree/BinReader.ts:144](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinReader.ts#L144)
+[src/SceneTree/BinReader.ts:144](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/BinReader.ts#L144)
 
 ___
 
@@ -247,7 +247,7 @@ and adds two bytes to the offset.
 
 #### Defined in
 
-[src/SceneTree/BinReader.ts:170](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinReader.ts#L170)
+[src/SceneTree/BinReader.ts:170](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/BinReader.ts#L170)
 
 ___
 
@@ -265,7 +265,7 @@ Creates and returns a `Quat` object with the next four Float16 values in the buf
 
 #### Defined in
 
-[src/SceneTree/BinReader.ts:407](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinReader.ts#L407)
+[src/SceneTree/BinReader.ts:407](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/BinReader.ts#L407)
 
 ___
 
@@ -283,7 +283,7 @@ Creates and returns a `Vec2` object with the next two Float16 values in the buff
 
 #### Defined in
 
-[src/SceneTree/BinReader.ts:362](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinReader.ts#L362)
+[src/SceneTree/BinReader.ts:362](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/BinReader.ts#L362)
 
 ___
 
@@ -301,7 +301,7 @@ Creates and returns a `Vec3` object with the next three Float16 values in the bu
 
 #### Defined in
 
-[src/SceneTree/BinReader.ts:383](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinReader.ts#L383)
+[src/SceneTree/BinReader.ts:383](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/BinReader.ts#L383)
 
 ___
 
@@ -320,7 +320,7 @@ and adds four bytes to the offset.
 
 #### Defined in
 
-[src/SceneTree/BinReader.ts:205](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinReader.ts#L205)
+[src/SceneTree/BinReader.ts:205](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/BinReader.ts#L205)
 
 ___
 
@@ -347,7 +347,7 @@ Byte offset is increased by the specified byte size x 4.
 
 #### Defined in
 
-[src/SceneTree/BinReader.ts:290](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinReader.ts#L290)
+[src/SceneTree/BinReader.ts:290](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/BinReader.ts#L290)
 
 ___
 
@@ -365,7 +365,7 @@ Creates and returns a `Quat` object with the next four Float32 values in the buf
 
 #### Defined in
 
-[src/SceneTree/BinReader.ts:419](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinReader.ts#L419)
+[src/SceneTree/BinReader.ts:419](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/BinReader.ts#L419)
 
 ___
 
@@ -383,7 +383,7 @@ Creates and returns a `Vec2` object with the next two Float32 values in the buff
 
 #### Defined in
 
-[src/SceneTree/BinReader.ts:372](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinReader.ts#L372)
+[src/SceneTree/BinReader.ts:372](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/BinReader.ts#L372)
 
 ___
 
@@ -401,7 +401,7 @@ Creates and returns a `Vec3` object with the next three Float32 values in the bu
 
 #### Defined in
 
-[src/SceneTree/BinReader.ts:395](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinReader.ts#L395)
+[src/SceneTree/BinReader.ts:395](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/BinReader.ts#L395)
 
 ___
 
@@ -419,7 +419,7 @@ Creates and returns a RGBA `Color` object with the next four Float32 values in t
 
 #### Defined in
 
-[src/SceneTree/BinReader.ts:443](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinReader.ts#L443)
+[src/SceneTree/BinReader.ts:443](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/BinReader.ts#L443)
 
 ___
 
@@ -437,7 +437,7 @@ Creates and returns a RGBA `Color` object with the next four unsigned Int8 value
 
 #### Defined in
 
-[src/SceneTree/BinReader.ts:466](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinReader.ts#L466)
+[src/SceneTree/BinReader.ts:466](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/BinReader.ts#L466)
 
 ___
 
@@ -455,7 +455,7 @@ Creates and returns a `Color` object with the next three Float32 values in the b
 
 #### Defined in
 
-[src/SceneTree/BinReader.ts:432](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinReader.ts#L432)
+[src/SceneTree/BinReader.ts:432](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/BinReader.ts#L432)
 
 ___
 
@@ -473,7 +473,7 @@ Creates and returns a `Color` object with the next three unsigned Int8 values in
 
 #### Defined in
 
-[src/SceneTree/BinReader.ts:455](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinReader.ts#L455)
+[src/SceneTree/BinReader.ts:455](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/BinReader.ts#L455)
 
 ___
 
@@ -492,7 +492,7 @@ and adds four bytes to the offset.
 
 #### Defined in
 
-[src/SceneTree/BinReader.ts:132](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinReader.ts#L132)
+[src/SceneTree/BinReader.ts:132](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/BinReader.ts#L132)
 
 ___
 
@@ -510,7 +510,7 @@ Loads and returns a single Signed integer value from 2 signed Float16 values.
 
 #### Defined in
 
-[src/SceneTree/BinReader.ts:193](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinReader.ts#L193)
+[src/SceneTree/BinReader.ts:193](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/BinReader.ts#L193)
 
 ___
 
@@ -528,7 +528,7 @@ Creates and returns a `Vec2` object with the next two signed Int32 values in the
 
 #### Defined in
 
-[src/SceneTree/BinReader.ts:341](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinReader.ts#L341)
+[src/SceneTree/BinReader.ts:341](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/BinReader.ts#L341)
 
 ___
 
@@ -547,7 +547,7 @@ First looks for the string length description in the next four bytes in the buff
 
 #### Defined in
 
-[src/SceneTree/BinReader.ts:314](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinReader.ts#L314)
+[src/SceneTree/BinReader.ts:314](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/BinReader.ts#L314)
 
 ___
 
@@ -566,7 +566,7 @@ First reading the size of the array then reading each string.
 
 #### Defined in
 
-[src/SceneTree/BinReader.ts:327](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinReader.ts#L327)
+[src/SceneTree/BinReader.ts:327](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/BinReader.ts#L327)
 
 ___
 
@@ -585,7 +585,7 @@ and adds two bytes to the offset.
 
 #### Defined in
 
-[src/SceneTree/BinReader.ts:155](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinReader.ts#L155)
+[src/SceneTree/BinReader.ts:155](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/BinReader.ts#L155)
 
 ___
 
@@ -604,7 +604,7 @@ and adds two bytes to the offset.
 
 #### Defined in
 
-[src/SceneTree/BinReader.ts:108](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinReader.ts#L108)
+[src/SceneTree/BinReader.ts:108](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/BinReader.ts#L108)
 
 ___
 
@@ -631,7 +631,7 @@ Byte offset is increased by the specified byte size x 2.
 
 #### Defined in
 
-[src/SceneTree/BinReader.ts:236](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinReader.ts#L236)
+[src/SceneTree/BinReader.ts:236](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/BinReader.ts#L236)
 
 ___
 
@@ -650,7 +650,7 @@ and adds four bytes to the offset.
 
 #### Defined in
 
-[src/SceneTree/BinReader.ts:120](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinReader.ts#L120)
+[src/SceneTree/BinReader.ts:120](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/BinReader.ts#L120)
 
 ___
 
@@ -677,7 +677,7 @@ Byte offset is increased by the specified byte size x 4.
 
 #### Defined in
 
-[src/SceneTree/BinReader.ts:263](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinReader.ts#L263)
+[src/SceneTree/BinReader.ts:263](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/BinReader.ts#L263)
 
 ___
 
@@ -695,7 +695,7 @@ Loads and returns a single Signed integer value from 2 Unsigned Float16 values.
 
 #### Defined in
 
-[src/SceneTree/BinReader.ts:183](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinReader.ts#L183)
+[src/SceneTree/BinReader.ts:183](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/BinReader.ts#L183)
 
 ___
 
@@ -713,7 +713,7 @@ Creates and returns a `Vec2` object with the next two unsigned Int32 values in t
 
 #### Defined in
 
-[src/SceneTree/BinReader.ts:351](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinReader.ts#L351)
+[src/SceneTree/BinReader.ts:351](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/BinReader.ts#L351)
 
 ___
 
@@ -732,7 +732,7 @@ and adds one byte to the offset.
 
 #### Defined in
 
-[src/SceneTree/BinReader.ts:96](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinReader.ts#L96)
+[src/SceneTree/BinReader.ts:96](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/BinReader.ts#L96)
 
 ___
 
@@ -759,7 +759,7 @@ Byte offset is increased by the specified byte size.
 
 #### Defined in
 
-[src/SceneTree/BinReader.ts:220](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinReader.ts#L220)
+[src/SceneTree/BinReader.ts:220](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/BinReader.ts#L220)
 
 ___
 
@@ -777,7 +777,7 @@ Returns current byte offset in the buffer.
 
 #### Defined in
 
-[src/SceneTree/BinReader.ts:69](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinReader.ts#L69)
+[src/SceneTree/BinReader.ts:69](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/BinReader.ts#L69)
 
 ___
 
@@ -799,7 +799,7 @@ Given a stridee value, advance the pointer to the end of the current stride.
 
 #### Defined in
 
-[src/SceneTree/BinReader.ts:498](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinReader.ts#L498)
+[src/SceneTree/BinReader.ts:498](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/BinReader.ts#L498)
 
 ___
 
@@ -821,5 +821,5 @@ Sets the byte offset value.
 
 #### Defined in
 
-[src/SceneTree/BinReader.ts:77](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/BinReader.ts#L77)
+[src/SceneTree/BinReader.ts:77](https://github.com/ZeaInc/zea-engine/blob/22cb841fb/src/SceneTree/BinReader.ts#L77)
 
