@@ -273,7 +273,8 @@ class GLLines extends GLGeom {
 
       return true
     } else {
-      return super.bind(renderstate)
+      super.bind(renderstate)
+      return true
     }
   }
 

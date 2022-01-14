@@ -97,7 +97,8 @@ class GLPoints extends GLGeom {
       shaderBinding.bind(renderstate)
       return true
     } else {
-      return super.bind(renderstate)
+      super.bind(renderstate)
+      return true
     }
   }
 
