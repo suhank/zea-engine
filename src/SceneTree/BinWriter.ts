@@ -27,7 +27,7 @@ class BinWriter {
    *
    * @return - The return value.
    */
-  pos() {
+  pos(): number {
     return this.__byteOffset
   }
 
@@ -36,14 +36,14 @@ class BinWriter {
    *
    * @param byteOffset - The byteOffset value.
    */
-  seek(byteOffset: number) {
+  seek(byteOffset: number): void {
     this.__byteOffset = byteOffset
   }
 
   /**
    * The seekEnd method.
    */
-  seekEnd() {
+  seekEnd(): void {
     this.__byteOffset = this.__reserved
   }
 
@@ -52,7 +52,7 @@ class BinWriter {
    *
    * @return - Returns an array buffer.
    */
-  getBuffer() {
+  getBuffer(): ArrayBuffer {
     if (this.__data.byteLength == this.__byteOffset) {
       return this.__data
     } else {
@@ -65,7 +65,7 @@ class BinWriter {
    * The __grow method.
    * @private
    */
-  __grow() {
+  __grow(): void {
     const newSize = (this.__reserved > 0 ? this.__reserved : 1) * 2
     const data = new ArrayBuffer(newSize)
     const unit8Array = new Uint8Array(data)
@@ -81,7 +81,7 @@ class BinWriter {
    * @param offset - The offset value.
    * @private
    */
-  __reserve(offset: number) {
+  __reserve(offset: number): void {
     if (this.__byteOffset + offset > this.__reserved) {
       this.__grow()
     }
@@ -92,7 +92,7 @@ class BinWriter {
    * @param byteCount - The byteCount value.
    * @private
    */
-  __offset(byteCount: number) {
+  __offset(byteCount: number): void {
     this.__byteOffset += byteCount
     if (this.__byteOffset > this.__reserved) {
       this.__grow()
@@ -104,7 +104,7 @@ class BinWriter {
    *
    * @param value - The value param.
    */
-  writeUInt8(value: number) {
+  writeUInt8(value: number): void {
     this.__reserve(1)
     this.__dataView.setUint8(this.__byteOffset, value)
     this.__offset(1)
@@ -114,7 +114,7 @@ class BinWriter {
    * Writes an unsigned Int16 value in current byte offset.
    * @param value - The value param.
    */
-  writeUInt16(value: number) {
+  writeUInt16(value: number): void {
     this.__reserve(2)
     this.__dataView.setUint16(this.__byteOffset, value, true)
     this.__offset(2)
@@ -124,7 +124,7 @@ class BinWriter {
    * Writes an unsigned Int32 value in current byte offset.
    * @param value - The value param.
    */
-  writeUInt32(value: number) {
+  writeUInt32(value: number): void {
     this.__reserve(4)
     this.__dataView.setUint32(this.__byteOffset, value, true)
     this.__offset(4)
@@ -134,7 +134,7 @@ class BinWriter {
    * Writes a signed Int32 value in current byte offset.
    * @param value - The value param.
    */
-  writeSInt32(value: number) {
+  writeSInt32(value: number): void {
     this.__reserve(4)
     this.__dataView.setInt32(this.__byteOffset, value, true)
     this.__offset(4)
@@ -145,7 +145,7 @@ class BinWriter {
    *
    * @param value - The value param.
    */
-  writeFloat16(value: number) {
+  writeFloat16(value: number): void {
     const uint16 = MathFunctions.encode16BitFloat(value)
     this.writeUInt16(uint16)
   }
@@ -155,7 +155,7 @@ class BinWriter {
    *
    * @param value - The value param.
    */
-  writeFloat32(value: number) {
+  writeFloat32(value: number): void {
     this.__reserve(4)
     this.__dataView.setFloat32(this.__byteOffset, value, true)
     this.__offset(4)
@@ -167,7 +167,7 @@ class BinWriter {
    * @param value - The value param.
    * @param writeSize - The writeSize value.
    */
-  writeUInt8Array(value: Uint8Array, writeSize: boolean = true) {
+  writeUInt8Array(value: Uint8Array, writeSize: boolean = true): void {
     const count = value.length ? value.length : value.length
     this.__reserve(count + (writeSize ? 4 : 0))
     if (writeSize) this.writeUInt32(count)
@@ -182,7 +182,7 @@ class BinWriter {
    * @param value - The value param.
    * @param writeSize - The writeSize value.
    */
-  writeUInt16Array(value: Uint16Array, writeSize: boolean = true) {
+  writeUInt16Array(value: Uint16Array, writeSize: boolean = true): void {
     const count = value.length ? value.length : value.length
     this.__reserve(count * 2 + (writeSize ? 4 : 0))
     if (writeSize) this.writeUInt32(count)
@@ -197,7 +197,7 @@ class BinWriter {
    * @param value - The value param.
    * @param writeSize - The writeSize value.
    */
-  writeUInt32Array(value: Uint32Array, writeSize = true) {
+  writeUInt32Array(value: Uint32Array, writeSize = true): void {
     const count = value.length ? value.length : value.length
     this.__reserve(count * 4 + (writeSize ? 4 : 0))
     if (writeSize) this.writeUInt32(count)
@@ -212,7 +212,7 @@ class BinWriter {
    * @param value - The value param.
    * @param writeSize - The writeSize value.
    */
-  writeFloat32Array(value: Float32Array, writeSize = true) {
+  writeFloat32Array(value: Float32Array, writeSize = true): void {
     const count = value.length ? value.length : value.length
     this.__reserve(count * 4 + (writeSize ? 4 : 0))
     if (writeSize) this.writeUInt32(count)
@@ -227,7 +227,7 @@ class BinWriter {
    * @param str - The str value.
    * @param writeSize - The writeSize value.
    */
-  writeStr(str: string, writeSize = true) {
+  writeStr(str: string, writeSize = true): void {
     const count = str.length
     this.__reserve(count * 4 + (writeSize ? 4 : 0))
     if (writeSize) this.writeUInt32(count)
@@ -240,7 +240,7 @@ class BinWriter {
    * Writes a `Vec2` in the buffer using signed Int32 values(In `x,y` order).
    * @param value - The Vec2 to write.
    */
-  writeSInt32Vec2(value: Vec2) {
+  writeSInt32Vec2(value: Vec2): void {
     this.writeSInt32(value.x)
     this.writeSInt32(value.y)
   }
@@ -250,7 +250,7 @@ class BinWriter {
    *
    * @param value - The Vec2 to write.
    */
-  writeUInt32Vec2(value: Vec2) {
+  writeUInt32Vec2(value: Vec2): void {
     this.writeUInt32(value.x)
     this.writeUInt32(value.y)
   }
@@ -259,7 +259,7 @@ class BinWriter {
    * Writes a `Vec2` in the buffer using Float16 values(In `x,y` order).
    * @param value - The Vec2 to write.
    */
-  writeFloat16Vec2(value: Vec2) {
+  writeFloat16Vec2(value: Vec2): void {
     this.writeFloat16(value.x)
     this.writeFloat16(value.y)
   }
@@ -269,7 +269,7 @@ class BinWriter {
    *
    * @param value - The Vec2 to write.
    */
-  writeFloat32Vec2(value: Vec2) {
+  writeFloat32Vec2(value: Vec2): void {
     this.writeFloat32(value.x)
     this.writeFloat32(value.y)
   }
@@ -279,7 +279,7 @@ class BinWriter {
    *
    * @param value - The Vec3 to write.
    */
-  writeFloat16Vec3(value: Vec3) {
+  writeFloat16Vec3(value: Vec3): void {
     this.writeFloat16(value.x)
     this.writeFloat16(value.y)
     this.writeFloat16(value.z)
@@ -289,7 +289,7 @@ class BinWriter {
    * Writes a `Vec3` in the buffer using Float32 values(In `x,y,z` order).
    * @param value - The Vec3 to write.
    */
-  writeFloat32Vec3(value: Vec3) {
+  writeFloat32Vec3(value: Vec3): void {
     this.writeFloat32(value.x)
     this.writeFloat32(value.y)
     this.writeFloat32(value.z)
@@ -300,7 +300,7 @@ class BinWriter {
    *
    * @param value - The Quat to write.
    */
-  writeFloat16Quat(value: Quat) {
+  writeFloat16Quat(value: Quat): void {
     this.writeFloat16(value.x)
     this.writeFloat16(value.y)
     this.writeFloat16(value.z)
@@ -312,7 +312,7 @@ class BinWriter {
    *
    * @param value - The Quat to write.
    */
-  writeFloat32Quat(value: Quat) {
+  writeFloat32Quat(value: Quat): void {
     this.writeFloat32(value.x)
     this.writeFloat32(value.y)
     this.writeFloat32(value.z)
@@ -324,7 +324,7 @@ class BinWriter {
    *
    * @param value - The Color to write.
    */
-  writeRGBFloat32Color(value: Color) {
+  writeRGBFloat32Color(value: Color): void {
     this.writeFloat32(value.r)
     this.writeFloat32(value.g)
     this.writeFloat32(value.b)
@@ -335,7 +335,7 @@ class BinWriter {
    *
    * @param value - The Color to write.
    */
-  writeRGBAFloat32Color(value: Color) {
+  writeRGBAFloat32Color(value: Color): void {
     this.writeFloat32(value.r)
     this.writeFloat32(value.g)
     this.writeFloat32(value.b)
@@ -347,7 +347,7 @@ class BinWriter {
    *
    * @param value - The Color to write.
    */
-  writeRGBUInt8Color(value: Color) {
+  writeRGBUInt8Color(value: Color): void {
     this.writeUInt8(value.r)
     this.writeUInt8(value.g)
     this.writeUInt8(value.b)
@@ -358,7 +358,7 @@ class BinWriter {
    *
    * @param value - The Color to write.
    */
-  writeRGBAUInt8Color(value: Color) {
+  writeRGBAUInt8Color(value: Color): void {
     this.writeUInt8(value.r)
     this.writeUInt8(value.g)
     this.writeUInt8(value.b)
@@ -370,7 +370,7 @@ class BinWriter {
    *
    * @param value - The Box2 to write.
    */
-  writeBox2(value: Box2) {
+  writeBox2(value: Box2): void {
     this.writeFloat32Vec2(value.p0)
     this.writeFloat32Vec2(value.p1)
   }
@@ -380,7 +380,7 @@ class BinWriter {
    *
    * @param value - The Box3 to write.
    */
-  writeBox3(value: Box3) {
+  writeBox3(value: Box3): void {
     this.writeFloat32Vec3(value.p0)
     this.writeFloat32Vec3(value.p1)
   }
@@ -389,7 +389,7 @@ class BinWriter {
    * The writePadd method.
    * @param size - The size value.
    */
-  writePadd(size: number) {
+  writePadd(size: number): void {
     const bytes = size - this.__byteOffset
     this.__reserve(bytes)
     this.__offset(bytes)
@@ -399,7 +399,7 @@ class BinWriter {
    * The writeAlignment method.
    * @param numBytes - The numBytes value.
    */
-  writeAlignment(numBytes: number) {
+  writeAlignment(numBytes: number): void {
     const bytes = this.__byteOffset % numBytes
     if (bytes != 0) {
       this.__reserve(numBytes - bytes)

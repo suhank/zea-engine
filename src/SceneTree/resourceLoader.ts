@@ -133,7 +133,7 @@ class ResourceLoader extends EventEmitter {
    * @param resourceId - The resourceId value.
    * @param resource - The common resource to store
    */
-  setCommonResource(resourceId: string, resource: TreeItem) {
+  setCommonResource(resourceId: string, resource: TreeItem): void {
     this.commonResources[resourceId] = resource
   }
 
@@ -161,7 +161,7 @@ class ResourceLoader extends EventEmitter {
    *
    * @param amount - The amount value.
    */
-  incrementWorkDone(amount = 1) {
+  incrementWorkDone(amount = 1): void {
     this.__doneWork += amount
 
     const percent = (this.__doneWork / this.__totalWork) * 100

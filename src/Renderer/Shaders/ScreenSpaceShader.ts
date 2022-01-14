@@ -26,7 +26,7 @@ class ScreenSpaceShader extends GLShader {
     this.setShaderStage('FRAGMENT_SHADER', frag)
   }
 
-  static isOverlay() {
+  static isOverlay(): boolean {
     return true
   }
 

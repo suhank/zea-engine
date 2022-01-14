@@ -32,6 +32,8 @@ module.exports = {
           "**/decoders/*",
           "**/*+(**Utils).ts",
           "**/*.test.ts",
+          "**/*.js",
+          "**/*.snap",
         ],
         // excludePrivate: true,
       },

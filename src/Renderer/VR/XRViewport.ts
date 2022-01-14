@@ -15,6 +15,7 @@ import { XRControllerEvent } from '../../Utilities/Events/XRControllerEvent'
 import { XRPoseEvent } from '../../Utilities/Events/XRPoseEvent'
 import { ColorRenderState, GeomDataRenderState, RenderState } from '../types/renderer'
 import { GLViewport } from '../GLViewport'
+import { GLRenderer } from '..'
 
 /** This Viewport class is used for rendering stereoscopic views to VR controllers using the WebXR api.
  *  When the GLRenderer class detects a valid WebXF capable device is plugged in, this class is automatically
@@ -94,7 +95,7 @@ class XRViewport extends GLBaseViewport {
     this.setManipulator(new XRViewManipulator(this))
   }
 
-  getRenderer() {
+  getRenderer(): GLRenderer {
     return this.renderer
   }
 
@@ -102,7 +103,7 @@ class XRViewport extends GLBaseViewport {
    * The getAsset method.
    * @return - The return value.
    */
-  getAsset() {
+  getAsset(): VLAAsset {
     return this.__vrAsset
   }
 
@@ -110,7 +111,7 @@ class XRViewport extends GLBaseViewport {
    * The getTreeItem method.
    * @return - The return value.
    */
-  getTreeItem() {
+  getTreeItem(): TreeItem {
     return this.__stageTreeItem
   }
 
@@ -118,7 +119,7 @@ class XRViewport extends GLBaseViewport {
    * The getVRHead method.
    * @return - The return value.
    */
-  getVRHead() {
+  getVRHead(): XRHead {
     return this.__xrhead
   }
 
@@ -126,7 +127,7 @@ class XRViewport extends GLBaseViewport {
    * The getXfo method.
    * @return - The return value.
    */
-  getXfo() {
+  getXfo(): Xfo {
     return this.stageXfo
   }
 
@@ -135,7 +136,7 @@ class XRViewport extends GLBaseViewport {
    * The local displacement of the user within their volume is applied on top of this Xfo.
    * @param xfo - The xfo value.
    */
-  setXfo(xfo: Xfo) {
+  setXfo(xfo: Xfo): void {
     this.stageXfo = xfo
     this.__stageTreeItem.globalXfoParam.value = xfo
     this.invStageMatrix = xfo.inverse().toMat4()
@@ -166,7 +167,7 @@ class XRViewport extends GLBaseViewport {
    * The isPresenting method.
    * @return - The return value.
    */
-  isPresenting() {
+  isPresenting(): boolean {
     return this.session != null
   }
 
@@ -175,7 +176,7 @@ class XRViewport extends GLBaseViewport {
    * Note: specator mode renders the scene an extra time to our regular viewport.
    * @param state -  true for enabling spectator mode, else false
    */
-  setSpectatorMode(state: boolean) {
+  setSpectatorMode(state: boolean): void {
     if (!state) {
       // when disabling spectator mode, clear the screen to the background color.
       const gl = this.__renderer.gl
@@ -193,7 +194,7 @@ class XRViewport extends GLBaseViewport {
    * The __startSession method.
    * @private
    */
-  __startSession() {
+  __startSession(): void {
     const onAnimationFrame = (t: any, frame: any) => {
       if (this.session) {
         this.session.requestAnimationFrame(onAnimationFrame)
@@ -418,7 +419,7 @@ class XRViewport extends GLBaseViewport {
   /**
    * The stopPresenting method.
    */
-  stopPresenting() {
+  stopPresenting(): void {
     if (!this.session) return
 
     this.session.end()
@@ -427,7 +428,7 @@ class XRViewport extends GLBaseViewport {
   /**
    * The togglePresenting method.
    */
-  togglePresenting() {
+  togglePresenting(): void {
     if (this.session) this.stopPresenting()
     else this.startPresenting()
   }
@@ -440,7 +441,7 @@ class XRViewport extends GLBaseViewport {
    * @param xrFrame - The xrFrame value.
    * @param event - The pose changed event object that will be emitted for observers such as collab.
    */
-  updateControllers(xrFrame: any) {
+  updateControllers(xrFrame: any): void {
     const inputSources = this.session.inputSources
     for (let i = 0; i < inputSources.length; i++) {
       const inputSource = inputSources[i]
@@ -481,7 +482,7 @@ class XRViewport extends GLBaseViewport {
    * The drawXRFrame method.
    * @param xrFrame - The xrFrame value.
    */
-  drawXRFrame(xrFrame: any) {
+  drawXRFrame(xrFrame: any): void {
     const session = xrFrame.session
 
     const layer = session.renderState.baseLayer
@@ -601,7 +602,7 @@ class XRViewport extends GLBaseViewport {
    *
    * @param event - The DOM event produced by a pointer
    */
-  onPointerDown(event: XRControllerEvent) {
+  onPointerDown(event: XRControllerEvent): void {
     event.intersectionData = event.controller.getGeomItemAtTip()
     event.pointerRay = event.controller.pointerRay
 
@@ -650,7 +651,7 @@ class XRViewport extends GLBaseViewport {
    *
    * @param event - The event that occurs.
    */
-  onPointerUp(event: XRControllerEvent) {
+  onPointerUp(event: XRControllerEvent): void {
     this.controllerPointerDownTime[event.controller.id] = 0
     event.pointerRay = event.controller.pointerRay
 

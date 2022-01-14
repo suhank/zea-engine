@@ -24,7 +24,7 @@ class CADAssembly extends TreeItem {
    * @param {number} flags - The flags param.
    * @return {CADAssembly} - The return value.
    */
-  clone(context: CloneContext) {
+  clone(context: CloneContext): CADAssembly {
     const cloned = new CADAssembly()
     cloned.copyFrom(this, context)
     return cloned
@@ -52,7 +52,7 @@ class CADAssembly extends TreeItem {
    * @param {object} context - The context param.
    * @param {number} flags - The flags param.
    */
-  fromJSON(j: Record<string, any>, context: Record<string, any>) {
+  fromJSON(j: Record<string, any>, context: Record<string, any>): void {
     super.fromJSON(j, context)
   }
 }

@@ -136,11 +136,11 @@ class Xfo {
    */
   multiply(xfo: Xfo): Xfo {
     let this_sc = this.sc
-    if (this.sc.x != this.sc.y || this.sc.x != this.sc.z) {
-      this_sc = xfo.ori.rotateVec3(this.sc)
-      if (Math.sign(this_sc.x) != Math.sign(this.sc.x)) this_sc.x = -this_sc.x
-      if (Math.sign(this_sc.y) != Math.sign(this.sc.y)) this_sc.y = -this_sc.y
-      if (Math.sign(this_sc.z) != Math.sign(this.sc.z)) this_sc.z = -this_sc.z
+    if (!this.sc.is111()) {
+      const rot4 = this.ori.toMat4()
+      const sclM4 = new Mat4(this.sc.x, 0, 0, 0, 0, this.sc.y, 0, 0, 0, 0, this.sc.z, 0, 0, 0, 0, 1.0)
+      const resM4 = rot4.multiply(sclM4)
+      this_sc = new Vec3(resM4.xAxis.length(), resM4.yAxis.length(), resM4.zAxis.length())
     }
     const result = new Xfo(
       this.tr.add(this.ori.rotateVec3(this_sc.multiply(xfo.tr))),
@@ -159,17 +159,11 @@ class Xfo {
     const result = new Xfo()
     result.ori = this.ori.inverse()
 
-    if (this.sc.x != this.sc.y || this.sc.x != this.sc.z) {
-      // Note: the following code has not been tested and
-      // may not be quite correct. We need to setup
-      // unit tests for this kind of sample.
-      // An example would be to lay out some boxes on different rotations
-      // and with non-uniform scale. Then parent them together. If they
-      // remain stationary, after parenting, then this math is correct.
-      result.sc = result.ori.rotateVec3(this.sc)
-      if (Math.sign(result.sc.x) != Math.sign(this.sc.x)) result.sc.x = -result.sc.x
-      if (Math.sign(result.sc.y) != Math.sign(this.sc.y)) result.sc.y = -result.sc.y
-      if (Math.sign(result.sc.z) != Math.sign(this.sc.z)) result.sc.z = -result.sc.z
+    if (!this.sc.is111()) {
+      const rot4 = result.ori.toMat4()
+      const sclM4 = new Mat4(this.sc.x, 0, 0, 0, 0, this.sc.y, 0, 0, 0, 0, this.sc.z, 0, 0, 0, 0, 1.0)
+      const resM4 = rot4.multiply(sclM4)
+      result.sc = new Vec3(resM4.xAxis.length(), resM4.yAxis.length(), resM4.zAxis.length())
     } else {
       result.sc = this.sc.inverse()
     }

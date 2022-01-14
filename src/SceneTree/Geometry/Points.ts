@@ -29,7 +29,7 @@ class Points extends BaseGeom {
   /**
    * The clear method.
    */
-  clear() {
+  clear(): void {
     this.setNumVertices(0)
     this.emit('geomDataTopologyChanged')
   }
@@ -39,7 +39,7 @@ class Points extends BaseGeom {
    *
    * @param reader - The reader value.
    */
-  loadBin(reader: BinReader) {
+  loadBin(reader: BinReader): void {
     this.name = reader.loadStr()
     const numVerts = reader.loadUInt32()
     this.__boundingBox.set(reader.loadFloat32Vec3(), reader.loadFloat32Vec3())
@@ -97,7 +97,7 @@ class Points extends BaseGeom {
    * @param reader - The reader value.
    * @param context - The context value.
    */
-  readBinary(reader: BinReader, context: AssetLoadContext) {
+  readBinary(reader: BinReader, context: AssetLoadContext): void {
     super.loadBaseGeomBinary(reader)
 
     // this.computeVertexNormals();

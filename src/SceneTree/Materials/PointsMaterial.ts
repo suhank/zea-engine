@@ -27,7 +27,7 @@ export class PointsMaterial extends Material {
    * @param context - The context value.
    * @return - Returns a new cloned material.
    */
-  clone(context?: CloneContext) {
+  clone(context?: CloneContext): PointsMaterial {
     const cloned = new PointsMaterial()
     cloned.copyFrom(this, context)
     return cloned

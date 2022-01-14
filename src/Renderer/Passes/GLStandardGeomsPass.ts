@@ -21,7 +21,7 @@ class GLStandardGeomsPass extends GLPass {
    * @param renderer - The renderer value.
    * @param passIndex - The index of the pass in the GLBAseRenderer
    */
-  init(renderer: GLBaseRenderer, passIndex: number) {
+  init(renderer: GLBaseRenderer, passIndex: number): void {
     super.init(renderer, passIndex)
   }
 
@@ -35,7 +35,7 @@ class GLStandardGeomsPass extends GLPass {
    * so the subtree of this node will not be traversed after this node is handled.
    * @return - Returns true if the item is now added to the pass.
    */
-  itemAddedToScene(treeItem: TreeItem, rargs: Record<string, any>) {
+  itemAddedToScene(treeItem: TreeItem, rargs: Record<string, any>): boolean {
     if (treeItem instanceof GeomItem) {
       const geomItem = treeItem
       {
@@ -74,7 +74,7 @@ class GLStandardGeomsPass extends GLPass {
    * @param geomItem - The geomItem value.
    * @return - The return value.
    */
-  filterGeomItem(geomItem: GeomItem) {
+  filterGeomItem(geomItem: GeomItem): boolean {
     return true
   }
 
@@ -82,7 +82,7 @@ class GLStandardGeomsPass extends GLPass {
    * The addGeomItem method.
    * @param geomItem - The geomItem value.
    */
-  addGeomItem(geomItem: GeomItem) {}
+  addGeomItem(geomItem: GeomItem): void {}
 
   /**
    * The removeGeomItem method.

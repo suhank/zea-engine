@@ -63,7 +63,7 @@ class GLBillboardsPass extends GLPass {
    * @param renderer - The renderer value.
    * @param passIndex - The index of the pass in the GLBAseRenderer
    */
-  init(renderer: GLBaseRenderer, passIndex: number) {
+  init(renderer: GLBaseRenderer, passIndex: number): void {
     super.init(renderer, passIndex)
 
     // TODO: this.atlas = new GLImageAtlas(this.renderer.gl, 'Billboards', 'RGBA', 'UNSIGNED_BYTE', [1, 1, 1, 0]) // TODO: Check if last arg was for color
@@ -79,7 +79,7 @@ class GLBillboardsPass extends GLPass {
    * Returns the pass type. OPAQUE passes are always rendered first, followed by TRANSPARENT passes, and finally OVERLAY.
    * @return - The pass type value.
    */
-  getPassType() {
+  getPassType(): number {
     return PassType.TRANSPARENT
   }
 
@@ -122,13 +122,13 @@ class GLBillboardsPass extends GLPass {
   /**
    * The filterRenderTree method.
    */
-  filterRenderTree() {}
+  filterRenderTree(): void {}
 
   /**
    * The addBillboard method.
    * @param billboard - The billboard value.
    */
-  addBillboard(billboard: any) {
+  addBillboard(billboard: any): void {
     const imageParam = billboard.imageParam
     const image = imageParam.value
     if (!image) {
@@ -180,7 +180,7 @@ class GLBillboardsPass extends GLPass {
    * The removeBillboard method.
    * @param billboard - The billboard value.
    */
-  removeBillboard(billboard: any) {
+  removeBillboard(billboard: any): void {
     const index = billboard.getMetadata('GLBillboardsPass_Index')
     if (index == -1) {
       console.warn('Billboard already removed.')
@@ -218,7 +218,7 @@ class GLBillboardsPass extends GLPass {
    * @param dataArray - The dataArray value.
    * @private
    */
-  populateBillboardDataArray(billboardData: any, index: number, dataArray: any) {
+  populateBillboardDataArray(billboardData: any, index: number, dataArray: any): void {
     const billboard = billboardData.billboard
     const mat4 = billboard.globalXfoParam.value.toMat4()
     const ppm = billboard.pixelsPerMeterParam.value
@@ -262,7 +262,7 @@ class GLBillboardsPass extends GLPass {
    * The requestUpdate method.
    * @private
    */
-  requestUpdate() {
+  requestUpdate(): void {
     if (!this.updateRequested) {
       this.updateRequested = true
       this.emit('updated')
@@ -273,14 +273,14 @@ class GLBillboardsPass extends GLPass {
    * The reqUpdateIndexArray method.
    * @private
    */
-  reqUpdateIndexArray() {
+  reqUpdateIndexArray(): void{
     if (this.indexArrayUpdateNeeded) return
     this.indexArrayUpdateNeeded = true
     this.emit('updated')
   }
 
   // eslint-disable-next-line require-jsdoc
-  updateIndexArray() {
+  updateIndexArray(): void {
     const gl = this.__gl!
     // Note: When the camera moves, this array is sorted and re-upload.
     if (this.indexArray && this.indexArray.length != this.drawCount) {
@@ -308,7 +308,7 @@ class GLBillboardsPass extends GLPass {
    * @param renderstate - The object tracking the current state of the renderer
    * @private
    */
-  updateBillboards(renderstate: RenderState) {
+  updateBillboards(renderstate: RenderState): void {
     const doIt = () => {
       if (this.indexArrayUpdateNeeded) this.updateIndexArray()
 
@@ -406,7 +406,7 @@ class GLBillboardsPass extends GLPass {
    * @param index - The index of the Billboard to update .
    * @private
    */
-  updateBillboard(index: number) {
+  updateBillboard(index: number): void {
     if (this.drawCount == 0 || !this.drawItemsTexture) {
       return
     }
@@ -440,7 +440,7 @@ class GLBillboardsPass extends GLPass {
    * The sort method.
    * @param cameraPos - The cameraPos value.
    */
-  sort(cameraPos: any) {
+  sort(cameraPos: any): void {
     for (const billboardData of this.billboards) {
       const { billboard } = billboardData
       if (billboard && billboard.isVisible()) {
@@ -470,7 +470,7 @@ class GLBillboardsPass extends GLPass {
    * @param renderstate - The object tracking the current state of the renderer
    * @param key - The key to cache the compiler results against.
    */
-  __draw(renderstate: RenderState, key: string) {
+  __draw(renderstate: RenderState, key: string): void {
     const gl = this.__gl
     if (!this.glshader) return
     this.glshader.bind(renderstate, key)
@@ -531,7 +531,7 @@ class GLBillboardsPass extends GLPass {
    * The sort method.
    * @param renderstate - The object tracking the current state of the renderer
    */
-  draw(renderstate: RenderState) {
+  draw(renderstate: RenderState): void {
     if (this.drawCount == 0) return
     if (this.updateRequested) {
       this.updateBillboards(renderstate)
@@ -586,7 +586,7 @@ class GLBillboardsPass extends GLPass {
    * The drawHighlightedGeoms method.
    * @param renderstate - The object tracking the current state of the renderer
    */
-  drawHighlightedGeoms(renderstate: RenderState) {
+  drawHighlightedGeoms(renderstate: RenderState): void {
     if (this.drawCount == 0) return
     this.__draw(renderstate, 'DRAW_HIGHLIGHT')
   }
@@ -595,7 +595,7 @@ class GLBillboardsPass extends GLPass {
    * The drawGeomData method.
    * @param renderstate - The object tracking the current state of the renderer
    */
-  drawGeomData(renderstate: GeomDataRenderState) {
+  drawGeomData(renderstate: GeomDataRenderState): void {
     if (this.drawCount == 0) return
     this.__draw(renderstate, 'DRAW_GEOMDATA')
   }

@@ -56,7 +56,7 @@ class DataImage extends BaseImage {
     width: number,
     height: number,
     data: Uint8Array | Uint8ClampedArray | Uint16Array | Float32Array | ImageData | WebGLTexture
-  ) {
+  ): void {
     if (this.__data == data) return
     this.width = width
     this.height = height

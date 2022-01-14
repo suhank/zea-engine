@@ -199,7 +199,7 @@ class Allocator1D extends EventEmitter {
    * @param index - The index where the block should be inserted.
    * @param allocation - The allocation to insert
    */
-  addBlock(index: number, allocation: Allocation1D) {
+  addBlock(index: number, allocation: Allocation1D): void {
     this.allocations.splice(index, 0, allocation)
     for (const id in this.allocationsMap) {
       if (this.allocationsMap[id] >= index) {
@@ -219,7 +219,7 @@ class Allocator1D extends EventEmitter {
    *
    * @param index - The index where the block should be removed
    */
-  removeBlock(index: number) {
+  removeBlock(index: number): void {
     this.allocations.splice(index, 1)
     for (const id in this.allocationsMap) {
       if (this.allocationsMap[id] > index) {
@@ -239,7 +239,7 @@ class Allocator1D extends EventEmitter {
    *
    * @param index - The index of the block to free.
    */
-  freeBlock(index: number) {
+  freeBlock(index: number): void {
     const allocation = this.allocations[index]
     this.freeSpace += allocation.size
 
@@ -271,7 +271,7 @@ class Allocator1D extends EventEmitter {
    *
    * @param id - The unique numerical identifer for the block.
    */
-  deallocate(id: number) {
+  deallocate(id: number): void {
     const index = this.allocationsMap[id]
     if (index == undefined) {
       throw new Error(`allocation ${id} does not exist.`)
@@ -293,7 +293,7 @@ class Allocator1D extends EventEmitter {
    * Defragment the memory space reducing memory requirements.
    * TODO: Implement this method.
    */
-  defragment() {
+  defragment(): void {
     // move the freeblocks to the end of the memory so that
     // we can then reduce the memory used.
   }
@@ -301,7 +301,7 @@ class Allocator1D extends EventEmitter {
   /**
    * Checks that the allocations are consistent and not corrupt in any way.
    */
-  verifyConsistency() {
+  verifyConsistency(): void {
     if (Object.keys(this.allocationsMap).length + this.freeList.length != this.allocations.length) {
       throw new Error('number of blocks does not match the number of allocations')
     }

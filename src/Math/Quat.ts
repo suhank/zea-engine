@@ -167,7 +167,7 @@ class Quat {
    *
    * @param eulerAngles - The euler angles rotation.
    */
-  setFromEulerAngles(eulerAngles: EulerAngles) {
+  setFromEulerAngles(eulerAngles: EulerAngles): void {
     const ordered = new Vec3()
 
     switch (eulerAngles.order) {
@@ -1039,7 +1039,7 @@ class Quat {
    *
    * @return - The return value.
    */
-  toString() {
+  toString(): string {
     // eslint-disable-next-line new-cap
     return StringFunctions.stringifyJSONWithFixedPrecision(this.toJSON())
   }

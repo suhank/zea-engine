@@ -69,12 +69,12 @@ class Mesh extends BaseGeom {
    * The init method.
    * @private
    */
-  init() {}
+  init():void {}
 
   /**
    * The clear method.
    */
-  clear() {
+  clear(): void {
     super.clear()
     //this.init()
     //this.setNumVertices(0)
@@ -274,7 +274,7 @@ class Mesh extends BaseGeom {
    * @param faceVertex - The face vertex is the index within the face. So the first vertex index is 0.
    * @return - The vertex index
    */
-  getFaceVertexIndex(faceIndex: number, faceVertex: number) {
+  getFaceVertexIndex(faceIndex: number, faceVertex: number): number {
     const offset = this.getFaceVertexOffset(faceIndex)
     return this.__faceVertexIndices[offset + faceVertex]
   }
@@ -298,7 +298,7 @@ class Mesh extends BaseGeom {
    * @param name - The name of the face attribute.
    * @return - The return value.
    */
-  hasFaceAttribute(name: string) {
+  hasFaceAttribute(name: string): boolean {
     return this.__faceAttributes.has(name)
   }
 
@@ -319,7 +319,7 @@ class Mesh extends BaseGeom {
    * @param name - The name of the edge attribute to add.
    * @param attr - The attr value
    */
-  addEdgeAttribute(name: string, attr: Attribute) {
+  addEdgeAttribute(name: string, attr: Attribute): void {
     attr.setCount(this.numEdges)
     this.__edgeAttributes.set(name, attr)
   }
@@ -511,7 +511,7 @@ class Mesh extends BaseGeom {
    * @param hardAngle - The hardAngle value in radians.
    * @return - The return value.
    */
-  computeVertexNormals(hardAngle = 1.0 /* radians */) {
+  computeVertexNormals(hardAngle = 1.0 /* radians */): Vec3Attribute {
     this.calculateEdgeAngles()
 
     const faceNormals = this.getFaceAttribute('normals') as Vec3Attribute

@@ -57,7 +57,7 @@ class StringListParameter extends Parameter<Array<string>> implements IBinaryRea
    *
    * @return {StringListParameter} - Returns a new string parameter.
    */
-  clone() {
+  clone(): StringListParameter {
     const clonedParam = new StringListParameter(this.name, this.__value)
     return clonedParam
   }

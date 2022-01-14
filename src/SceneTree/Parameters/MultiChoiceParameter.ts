@@ -46,7 +46,7 @@ class MultiChoiceParameter extends NumberParameter {
    *
    * @param value - The value param.
    */
-  setValue(value: any) {
+  setValue(value: any): void {
     if (typeof value === 'string') {
       super.setValue(this.choices.indexOf(value))
     } else {

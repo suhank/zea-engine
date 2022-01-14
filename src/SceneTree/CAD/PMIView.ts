@@ -49,7 +49,7 @@ class PMIView extends PMIItem {
    * @emits `selectedChanged` with selected state
    * @param sel - Boolean indicating the new selection state.
    */
-  setSelected(sel: boolean) {
+  setSelected(sel: boolean):void {
     super.setSelected(sel)
     if (sel) this.activate()
     else this.deactivate()
@@ -58,7 +58,7 @@ class PMIView extends PMIItem {
   /**
    * Activates the PMIView, adjusting visibility of the PMI items and the camera Xfo
    */
-  activate() {
+  activate():void {
     super.activate()
 
     if (this.hasParameter('GraphicalElements')) {
@@ -99,7 +99,7 @@ class PMIView extends PMIItem {
   /**
    * Deactivates the PMIItem
    */
-  deactivate() {
+  deactivate():void {
     super.deactivate()
 
     if (this.hasParameter('GraphicalElements')) {
@@ -129,7 +129,7 @@ class PMIView extends PMIItem {
    * @param reader - The reader param.
    * @param context - The context param.
    */
-  readBinary(reader: BinReader, context: AssetLoadContext) {
+  readBinary(reader: BinReader, context: AssetLoadContext):void {
     super.readBinary(reader, context)
 
     // @ts-ignore

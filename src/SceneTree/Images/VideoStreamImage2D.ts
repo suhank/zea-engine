@@ -107,7 +107,7 @@ class VideoStreamImage2D extends BaseImage {
    * The setVideoStream method.
    * @param video - The video value.
    */
-  setVideoStream(video: HTMLVideoElement) {
+  setVideoStream(video: HTMLVideoElement): void {
     this.loaded = false
     this.width = video.videoWidth
     this.height = video.videoHeight
@@ -124,14 +124,14 @@ class VideoStreamImage2D extends BaseImage {
   /**
    * The stop method.
    */
-  stop() {
+  stop(): void {
     clearInterval(this.__intervalId)
   }
 
   /**
    * The start method.
    */
-  start() {
+  start(): void {
     // @ts-ignore
     this.__intervalId = setInterval(() => {
       this.emit('updated')
@@ -142,7 +142,7 @@ class VideoStreamImage2D extends BaseImage {
    * The isLoaded method.
    * @return - The return value.
    */
-  isLoaded() {
+  isLoaded(): boolean {
     return this.loaded
   }
 

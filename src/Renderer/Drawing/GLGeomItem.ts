@@ -127,7 +127,7 @@ class GLGeomItem extends EventEmitter {
    * The getGeomItem method.
    * @return - The return value.
    */
-  getGeomItem() {
+  getGeomItem(): GeomItem {
     return this.geomItem
   }
 
@@ -135,7 +135,7 @@ class GLGeomItem extends EventEmitter {
    * The isVisible method.
    * @return - The return value.
    */
-  isVisible() {
+  isVisible(): boolean {
     return this.visible
   }
 
@@ -143,7 +143,7 @@ class GLGeomItem extends EventEmitter {
    * The getId method.
    * @return - The return value.
    */
-  getDrawItemId() {
+  getDrawItemId(): number  {
     return this.drawItemId
   }
 

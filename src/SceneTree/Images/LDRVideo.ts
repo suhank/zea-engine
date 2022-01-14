@@ -66,7 +66,7 @@ class LDRVideo extends FileImage {
     ;(<NumberParameter>this.addParameter(this.gainParam)).setRange([0, 5])
   }
 
-  getAudioSource() {
+  getAudioSource(): HTMLVideoElement {
     return this.videoElem
   }
 

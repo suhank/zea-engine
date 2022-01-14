@@ -20,7 +20,7 @@ class GLOverlayPass extends GLOpaqueGeomsPass {
    * Returns the pass type. OPAQUE passes are always rendered first, followed by TRANSPARENT passes, and finally OVERLAY.
    * @return - The pass type value.
    */
-  getPassType() {
+  getPassType(): number {
     return PassType.OVERLAY
   }
 
@@ -32,7 +32,7 @@ class GLOverlayPass extends GLOpaqueGeomsPass {
    * @param geomItem - The geomItem value.
    * @return - The return value.
    */
-  filterGeomItem(geomItem: GeomItem) {
+  filterGeomItem(geomItem: GeomItem): boolean {
     if (geomItem.isOverlay()) return true
     const shaderClass = geomItem.materialParam.value.getShaderClass()
     if (shaderClass) {
@@ -45,7 +45,7 @@ class GLOverlayPass extends GLOpaqueGeomsPass {
    * The draw method.
    * @param renderstate - The object tracking the current state of the renderer
    */
-  draw(renderstate: RenderState) {
+  draw(renderstate: RenderState): void {
     const gl = this.__gl!
 
     // Clear the depth buffer so handls are always drawn over the top.
@@ -75,7 +75,7 @@ class GLOverlayPass extends GLOpaqueGeomsPass {
    * The drawGeomData method.
    * @param renderstate - The object tracking the current state of the renderer
    */
-  drawGeomData(renderstate: GeomDataRenderState) {
+  drawGeomData(renderstate: GeomDataRenderState): void {
     const gl = this.__gl!
 
     // Clear the depth buffer so handls are always drawn over the top.

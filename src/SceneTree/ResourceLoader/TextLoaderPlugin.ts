@@ -19,11 +19,11 @@ class TextLoaderPlugin {
    * The type of file this plugin handles.
    * @return The type of file.
    */
-  getType() {
+  getType(): string {
     return 'text'
   }
 
-  loadFile(url: string) {
+  loadFile(url: string): Promise<unknown> {
     this.resourceLoader.incrementWorkload(1)
 
     const promise = new Promise((resolve, reject) => {

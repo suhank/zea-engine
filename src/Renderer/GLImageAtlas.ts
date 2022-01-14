@@ -51,13 +51,13 @@ class GLImageAtlas extends GLRenderTarget {
   }
 
   // eslint-disable-next-line require-jsdoc
-  incAsyncCount(count = 1) {
+  incAsyncCount(count = 1): void {
     this.__asyncCount += count
     this.ready = false
   }
 
   // eslint-disable-next-line require-jsdoc
-  decAsyncCount() {
+  decAsyncCount(): void {
     if (this.__asyncCount > 0) {
       this.__asyncCount--
       if (this.__asyncCount == 0) {

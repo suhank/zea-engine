@@ -46,7 +46,7 @@ class GLLines extends GLGeom {
    * The dirtyBuffers method.
    * @param opts - options passed when geomDataChanged is emitted. (Currently ony used by the FreehandLines tool)
    */
-  dirtyBuffers(opts: Record<string, any>) {
+  dirtyBuffers(opts: Record<string, any>): void {
     super.dirtyBuffers(opts)
     this.__fatBuffersNeedUpload = true
     this.emit('updated')
@@ -55,7 +55,7 @@ class GLLines extends GLGeom {
   /**
    * The clearBuffers method.
    */
-  clearBuffers() {
+  clearBuffers(): void {
     const gl = this.__gl
     gl.deleteBuffer(this.__indexBuffer)
     this.__indexBuffer = null
@@ -79,7 +79,7 @@ class GLLines extends GLGeom {
    * The genFatBuffers method.
    * @param renderstate - The object tracking the current state of the renderer
    */
-  genFatBuffers(renderstate: RenderState) {
+  genFatBuffers(renderstate: RenderState): void {
     const gl = this.__gl
 
     const geomBuffers = this.__geom.genBuffers()
@@ -134,7 +134,7 @@ class GLLines extends GLGeom {
       this.fatBuffers.positionsTexture.bufferData(dataArray, positions.getCount(), 1)
     }
 
-    const makeIndices = () => {
+    const makeIndices = (): Float32Array => {
       const indexArray = new Float32Array(indices.length)
       for (let i = 0; i < indices.length; i++) {
         let seqentialIndex
@@ -179,7 +179,7 @@ class GLLines extends GLGeom {
    * The genBuffers method.
    * @param renderstate - The object tracking the current state of the renderer
    */
-  genBuffers(renderstate?: RenderState) {
+  genBuffers(renderstate?: RenderState): void {
     const gl = this.__gl
 
     const geomBuffers = this.__geom.genBuffers()
@@ -244,7 +244,7 @@ class GLLines extends GLGeom {
    * @param renderstate - The object tracking the current state of the renderer
    * @return - The return value.
    */
-  bind(renderstate: RenderState) {
+  bind(renderstate: RenderState): boolean {
     const gl = this.__gl
     const unifs = renderstate.unifs
     if (unifs.LineThickness && gl.floatTexturesSupported) {
@@ -283,7 +283,7 @@ class GLLines extends GLGeom {
   /**
    * The drawPoints method.
    */
-  drawPoints() {
+  drawPoints(): void {
     this.__gl.drawArrays(this.__gl.POINTS, 0, this.__geom.numVertices())
   }
 
@@ -294,7 +294,7 @@ class GLLines extends GLGeom {
    * The draw method.
    * @param renderstate - The object tracking the current state of the renderer
    */
-  draw(renderstate: RenderState) {
+  draw(renderstate: RenderState): void {
     const gl = this.__gl
     if (renderstate.unifs.LineThickness && gl.floatTexturesSupported) {
       gl.drawElementsInstanced(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0, this.fatBuffers!.drawCount)
@@ -310,7 +310,7 @@ class GLLines extends GLGeom {
    * @param renderstate - The object tracking the current state of the renderer
    * @param instanceCount - The instanceCount value.
    */
-  drawInstanced(renderstate: RenderState, instanceCount: number) {
+  drawInstanced(renderstate: RenderState, instanceCount: number): void {
     const gl = this.__gl
     const { occluded } = renderstate.unifs
     if (occluded) {

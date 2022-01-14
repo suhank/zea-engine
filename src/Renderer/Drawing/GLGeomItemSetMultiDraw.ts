@@ -88,7 +88,7 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
    * The addGLGeomItem method.
    * @param glGeomItem - The glGeomItem value.
    */
-  addGLGeomItem(glGeomItem: GLGeomItem) {
+  addGLGeomItem(glGeomItem: GLGeomItem): void {
     const index: number = this.freeIndices.length > 0 ? this.freeIndices.pop()! : this.glGeomItems.length
 
     // Keep track of which geomitems use which geoms, so we can update the offset and count array if they change.
@@ -154,7 +154,7 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
    * The removeGLGeomItem method.
    * @param glGeomItem - The glGeomItem value.
    */
-  removeGLGeomItem(glGeomItem: GLGeomItem) {
+  removeGLGeomItem(glGeomItem: GLGeomItem): void {
     const index = this.glGeomItems.indexOf(glGeomItem)
     const geomItemIndices = this.glGeomIdsMapping[glGeomItem.geomId]
     geomItemIndices.splice(geomItemIndices.indexOf(index), 1)
@@ -196,7 +196,7 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
    * The updateDrawIDsBuffer method.
    * @param renderstate - The object used to track state changes during rendering.
    */
-  updateDrawIDsBuffer(renderstate: RenderState) {
+  updateDrawIDsBuffer(renderstate: RenderState): void {
     {
       if (!this.drawIdsArray || this.visibleItems.length > this.drawIdsArray.length) {
         this.drawIdsArray = new Float32Array(this.visibleItems.length)
@@ -278,7 +278,7 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
    * The updateHighlightedIDsBuffer method.
    * @param renderstate - The object used to track state changes during rendering.
    */
-  updateHighlightedIDsBuffer(renderstate: RenderState) {
+  updateHighlightedIDsBuffer(renderstate: RenderState): void {
     if (this.highlightedIdsBufferDirty) {
       if (!this.highlightedIdsArray || this.highlightedItems.length > this.highlightedIdsArray.length) {
         this.highlightedIdsArray = new Float32Array(this.highlightedItems.length)
@@ -370,7 +370,7 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
    * The draw method.
    * @param renderstate - The object tracking the current state of the renderer
    */
-  draw(renderstate: RenderState) {
+  draw(renderstate: RenderState): void {
     if (this.drawIdsBufferDirty) {
       this.updateDrawIDsBuffer(renderstate)
     }
@@ -397,7 +397,7 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
    * The drawHighlighted method.
    * @param renderstate - The object tracking the current state of the renderer
    */
-  drawHighlighted(renderstate: RenderState) {
+  drawHighlighted(renderstate: RenderState): void {
     if (this.highlightedItems.length == 0) {
       return
     }
@@ -431,7 +431,7 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
     counts: Int32Array,
     offsets: Int32Array,
     drawCount: number
-  ) {
+  ): void {
     const gl = this.gl
     const unifs = renderstate.unifs
 
@@ -466,7 +466,7 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
    * Sorts the drawn items in order furthest to nearest when rendering transparent objects.
    * @param viewPos - The position of the camera that we are sorting relative to.
    */
-  sortItems(viewPos: Vec3) {
+  sortItems(viewPos: Vec3): void {
     const distances: any[] = []
     const indices: any[] = []
     this.visibleItems.forEach((glGeomItem, index) => {
@@ -498,7 +498,7 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
    * The destroy is called by the system to cause explicit resources cleanup.
    * Users should never need to call this method directly.
    */
-  destroy() {
+  destroy(): void {
     if (this.drawIdsTexture) {
       this.drawIdsTexture.destroy()
     }

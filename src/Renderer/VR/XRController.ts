@@ -226,7 +226,7 @@ class XRController extends EventEmitter {
    * The getHandedness method.
    * @return - The return value.
    */
-  getHandedness() {
+  getHandedness(): any {
     return this.inputSource.handedness
   }
 
@@ -234,7 +234,7 @@ class XRController extends EventEmitter {
    * The getId method.
    * @return - The return value.
    */
-  getId() {
+  getId(): number{
     return this.id
   }
 
@@ -242,7 +242,7 @@ class XRController extends EventEmitter {
    * The getTreeItem method.
    * @return - The return value.
    */
-  getTreeItem() {
+  getTreeItem(): TreeItem {
     return this.treeItem
   }
 
@@ -250,7 +250,7 @@ class XRController extends EventEmitter {
    * The getTipItem method.
    * @return - The return value.
    */
-  getTipItem() {
+  getTipItem(): TreeItem{
     return this.tipItem
   }
 
@@ -258,7 +258,7 @@ class XRController extends EventEmitter {
    * The getTipXfo method.
    * @return - The return value.
    */
-  getTipXfo() {
+  getTipXfo(): Xfo {
     return this.tipItem.globalXfoParam.value
   }
 
@@ -266,7 +266,7 @@ class XRController extends EventEmitter {
    * The getTouchPadValue method.
    * @return - The return value.
    */
-  getTouchPadValue() {
+  getTouchPadValue(): any {
     return this.touchpadValue
   }
 
@@ -274,7 +274,7 @@ class XRController extends EventEmitter {
    * The isButtonPressed method.
    * @return - The return value.
    */
-  isButtonPressed() {
+  isButtonPressed(): boolean {
     return this.buttonPressed
   }
 
@@ -282,7 +282,7 @@ class XRController extends EventEmitter {
    * The getControllerStageLocalXfo method.
    * @return - The return value.
    */
-  getControllerStageLocalXfo() {
+  getControllerStageLocalXfo(): Xfo {
     return this.xfo
   }
 
@@ -290,7 +290,7 @@ class XRController extends EventEmitter {
    * The getControllerTipStageLocalXfo method.
    * @return - The return value.
    */
-  getControllerTipStageLocalXfo() {
+  getControllerTipStageLocalXfo(): Xfo {
     return this.xfo.multiply(this.tipItem.localXfoParam.value)
   }
 
@@ -302,7 +302,7 @@ class XRController extends EventEmitter {
    * @param xrFrame - The xrFrame value.
    * @param inputSource - The inputSource value.
    */
-  updatePose(refSpace: any, xrFrame: any, inputSource: any) {
+  updatePose(refSpace: any, xrFrame: any, inputSource: any): void {
     const inputPose = xrFrame.getPose(inputSource.gripSpace, refSpace)
 
     // We may not get a inputPose back in cases where the input source has lost
@@ -382,7 +382,7 @@ class XRController extends EventEmitter {
    * The getGeomItemAtTip method.
    * @return - The return value.
    */
-  getGeomItemAtTip() {
+  getGeomItemAtTip(): IntersectionData {
     if (this.hitTested) return this.intersectionData
     this.hitTested = true
 

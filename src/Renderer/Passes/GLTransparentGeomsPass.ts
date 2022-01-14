@@ -36,7 +36,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
    * @param renderer - The renderer value.
    * @param passIndex - The index of the pass in the GLBAseRenderer
    */
-  init(renderer: GLBaseRenderer, passIndex: number) {
+  init(renderer: GLBaseRenderer, passIndex: number): void {
     super.init(renderer, passIndex)
 
     this.itemCount = 0
@@ -54,7 +54,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
    * Returns the pass type. OPAQUE passes are always rendered first, followed by TRANSPARENT passes, and finally OVERLAY.
    * @return - The pass type value.
    */
-  getPassType() {
+  getPassType(): number {
     return PassType.TRANSPARENT
   }
 
@@ -63,7 +63,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
    * @param geomItem - The geomItem value.
    * @return - The return value.
    */
-  filterGeomItem(geomItem: GeomItem) {
+  filterGeomItem(geomItem: GeomItem): boolean {
     const geom = geomItem.geomParam.value
     if (geom instanceof Lines || geom instanceof Points || geom instanceof PointsProxy || geom instanceof LinesProxy)
       return false
@@ -74,7 +74,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
   /**
    * When an item visibility changes, we trigger this method, as new items become visible
    */
-  resortNeeded() {
+  resortNeeded(): void {
     this.reSort = true
   }
 
@@ -82,7 +82,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
    * The addGeomItem method.
    * @param geomItem - The geomItem value.
    */
-  addGeomItem(geomItem: GeomItem) {
+  addGeomItem(geomItem: GeomItem): void {
     this.itemCount++
 
     const listenerIDs: Record<string, number> = {}
@@ -254,7 +254,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
    * @param transparentItem - current item to render
    * @param cache - cache tracking which material/shader is currently bound.
    */
-  _drawItem(renderstate: RenderState, transparentItem: Record<string, any>, cache: Record<string, any>) {
+  _drawItem(renderstate: RenderState, transparentItem: Record<string, any>, cache: Record<string, any>): void {
     if (cache.currentGLMaterial != transparentItem.glMaterial) {
       cache.currentGLMaterial = transparentItem.glMaterial
       cache.currentGLMaterial.bind(renderstate)
