@@ -19,6 +19,7 @@ import { ZeaTouchEvent } from '../Utilities/Events/ZeaTouchEvent'
 import { CloneContext } from './CloneContext'
 import { AssetLoadContext } from './AssetLoadContext'
 import { ChildAddedEvent } from '../Utilities/Events/ChildAddedEvent'
+import { VisibilityChangedEvent } from '..'
 
 /**
  * Class representing an Item in the scene tree with hierarchy capabilities (has children).
@@ -218,7 +219,7 @@ class TreeItem extends BaseItem {
       for (const childItem of this.__childItems) {
         childItem.propagateVisibility(this.__visible ? 1 : -1)
       }
-      this.emit('visibilityChanged', { visible })
+      this.emit('visibilityChanged', new VisibilityChangedEvent(visible))
 
       // Note: we used to handle this by listening to a 'valueChanged' event on the
       // parameter.

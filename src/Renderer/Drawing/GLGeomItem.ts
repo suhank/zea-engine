@@ -75,12 +75,12 @@ class GLGeomItem extends EventEmitter {
     this.materialId = materialId
     this.supportInstancing = supportInstancing
 
-    this.geomVisible = this.geomItem.isVisible()
-    this.visible = this.geomVisible
+    this.visible = this.geomItem.isVisible()
     this.culled = false
 
-    this.listenerIDs['visibilityChanged'] = this.geomItem.on('visibilityChanged', (event) => {
-      this.updateVisibility()
+    this.listenerIDs['visibilityChanged'] = this.geomItem.on('visibilityChanged', (event: VisibilityChangedEvent) => {
+      this.visible = event.visible
+      this.emit('visibilityChanged', event)
     })
 
     if (!this.supportInstancing) {
@@ -143,22 +143,8 @@ class GLGeomItem extends EventEmitter {
    * The getId method.
    * @return - The return value.
    */
-  getDrawItemId(): number  {
+  getDrawItemId(): number {
     return this.drawItemId
-  }
-
-  /**
-   * The updateVisibility method.
-   */
-  updateVisibility(): void {
-    this.geomVisible = this.geomItem.isVisible()
-    const visible = this.geomVisible && !this.culled
-    if (this.visible != visible) {
-      this.visible = visible
-      const event = new VisibilityChangedEvent(visible)
-      this.emit('visibilityChanged', event)
-      this.emit('updated')
-    }
   }
 
   /**
@@ -167,11 +153,8 @@ class GLGeomItem extends EventEmitter {
    */
   setCulled(culled: boolean): void {
     this.culled = culled
-    const visible = this.geomVisible && !this.culled
-    if (this.visible != visible) {
-      this.visible = visible
-      const event = new VisibilityChangedEvent(visible)
-      this.emit('visibilityChanged', event)
+    if (this.visible) {
+      this.emit('cullStateChanged', new VisibilityChangedEvent(!culled))
     }
   }
 
