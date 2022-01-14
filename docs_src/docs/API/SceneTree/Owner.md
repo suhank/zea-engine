@@ -28,7 +28,7 @@ Returns the current path of the item in the tree as an array of names.
 
 #### Defined in
 
-[src/SceneTree/Owner.ts:10](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Owner.ts#L10)
+[src/SceneTree/Owner.ts:10](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/SceneTree/Owner.ts#L10)
 
 ___
 
@@ -49,5 +49,5 @@ ___
 
 #### Defined in
 
-[src/SceneTree/Owner.ts:12](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Owner.ts#L12)
+[src/SceneTree/Owner.ts:12](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/SceneTree/Owner.ts#L12)
 

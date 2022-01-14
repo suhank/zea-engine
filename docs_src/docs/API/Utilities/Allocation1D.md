@@ -26,7 +26,7 @@ Initializes the allocation
 
 #### Defined in
 
-[src/Utilities/Allocator1D.ts:25](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Allocator1D.ts#L25)
+[src/Utilities/Allocator1D.ts:25](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Utilities/Allocator1D.ts#L25)
 
 ## Properties
 
@@ -36,7 +36,7 @@ Initializes the allocation
 
 #### Defined in
 
-[src/Utilities/Allocator1D.ts:19](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Allocator1D.ts#L19)
+[src/Utilities/Allocator1D.ts:19](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Utilities/Allocator1D.ts#L19)
 
 ___
 
@@ -46,5 +46,5 @@ ___
 
 #### Defined in
 
-[src/Utilities/Allocator1D.ts:18](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Allocator1D.ts#L18)
+[src/Utilities/Allocator1D.ts:18](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Utilities/Allocator1D.ts#L18)
 

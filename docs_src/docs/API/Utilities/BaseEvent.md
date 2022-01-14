@@ -15,8 +15,6 @@ Class representing a BaseEvent.
 
   ↳ [`ItemEvent`](../SceneTree/Parameters/SceneTree_Parameters_ItemSetParameter.ItemEvent)
 
-  ↳ [`AudioSourceCreatedEvent`](Events/Utilities_Events_AudioSourceCreatedEvent.AudioSourceCreatedEvent)
-
   ↳ [`ChildAddedEvent`](Events/Utilities_Events_ChildAddedEvent.ChildAddedEvent)
 
   ↳ [`ControllerAddedEvent`](Events/Utilities_Events_ControllerAddedEvent.ControllerAddedEvent)
@@ -71,5 +69,5 @@ Create an BaseEvent.
 
 #### Defined in
 
-[src/Utilities/BaseEvent.ts:6](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/BaseEvent.ts#L6)
+[src/Utilities/BaseEvent.ts:6](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Utilities/BaseEvent.ts#L6)
 

@@ -26,7 +26,7 @@ Create a sphere.
 
 #### Defined in
 
-[src/Math/SphereType.ts:19](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/SphereType.ts#L19)
+[src/Math/SphereType.ts:19](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Math/SphereType.ts#L19)
 
 ## Properties
 
@@ -36,7 +36,7 @@ Create a sphere.
 
 #### Defined in
 
-[src/Math/SphereType.ts:11](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/SphereType.ts#L11)
+[src/Math/SphereType.ts:11](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Math/SphereType.ts#L11)
 
 ___
 
@@ -46,7 +46,7 @@ ___
 
 #### Defined in
 
-[src/Math/SphereType.ts:12](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/SphereType.ts#L12)
+[src/Math/SphereType.ts:12](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Math/SphereType.ts#L12)
 
 ## Methods
 
@@ -64,7 +64,7 @@ Clones this sphere and returns a new sphere.
 
 #### Defined in
 
-[src/Math/SphereType.ts:33](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/SphereType.ts#L33)
+[src/Math/SphereType.ts:33](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Math/SphereType.ts#L33)
 
 ___
 
@@ -88,7 +88,7 @@ Checks if this sphere intersects a box.
 
 #### Defined in
 
-[src/Math/SphereType.ts:43](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/SphereType.ts#L43)
+[src/Math/SphereType.ts:43](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Math/SphereType.ts#L43)
 
 ___
 
@@ -106,7 +106,7 @@ The toJSON method encodes this type as a json object for persistence.
 
 #### Defined in
 
-[src/Math/SphereType.ts:55](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/SphereType.ts#L55)
+[src/Math/SphereType.ts:55](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Math/SphereType.ts#L55)
 
 ___
 
@@ -124,5 +124,5 @@ Calls `toJSON` method and stringifies it.
 
 #### Defined in
 
-[src/Math/SphereType.ts:67](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/SphereType.ts#L67)
+[src/Math/SphereType.ts:67](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Math/SphereType.ts#L67)
 

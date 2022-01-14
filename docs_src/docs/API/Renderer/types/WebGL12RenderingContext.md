@@ -67,7 +67,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:233](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L233)
+[src/Renderer/types/webgl2.ts:233](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L233)
 
 ___
 
@@ -137,7 +137,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:259](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L259)
+[src/Renderer/types/webgl2.ts:259](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L259)
 
 ___
 
@@ -165,7 +165,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:265](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L265)
+[src/Renderer/types/webgl2.ts:265](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L265)
 
 ___
 
@@ -179,7 +179,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:266](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L266)
+[src/Renderer/types/webgl2.ts:266](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L266)
 
 ___
 
@@ -529,7 +529,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:21](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L21)
+[src/Renderer/types/webgl2.ts:21](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L21)
 
 ___
 
@@ -557,7 +557,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:173](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L173)
+[src/Renderer/types/webgl2.ts:173](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L173)
 
 ___
 
@@ -571,7 +571,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:182](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L182)
+[src/Renderer/types/webgl2.ts:182](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L182)
 
 ___
 
@@ -585,7 +585,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:183](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L183)
+[src/Renderer/types/webgl2.ts:183](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L183)
 
 ___
 
@@ -599,7 +599,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:184](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L184)
+[src/Renderer/types/webgl2.ts:184](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L184)
 
 ___
 
@@ -613,7 +613,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:185](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L185)
+[src/Renderer/types/webgl2.ts:185](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L185)
 
 ___
 
@@ -627,7 +627,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:186](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L186)
+[src/Renderer/types/webgl2.ts:186](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L186)
 
 ___
 
@@ -641,7 +641,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:187](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L187)
+[src/Renderer/types/webgl2.ts:187](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L187)
 
 ___
 
@@ -655,7 +655,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:174](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L174)
+[src/Renderer/types/webgl2.ts:174](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L174)
 
 ___
 
@@ -669,7 +669,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:175](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L175)
+[src/Renderer/types/webgl2.ts:175](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L175)
 
 ___
 
@@ -683,7 +683,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:176](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L176)
+[src/Renderer/types/webgl2.ts:176](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L176)
 
 ___
 
@@ -697,7 +697,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:177](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L177)
+[src/Renderer/types/webgl2.ts:177](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L177)
 
 ___
 
@@ -711,7 +711,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:178](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L178)
+[src/Renderer/types/webgl2.ts:178](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L178)
 
 ___
 
@@ -725,7 +725,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:179](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L179)
+[src/Renderer/types/webgl2.ts:179](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L179)
 
 ___
 
@@ -739,7 +739,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:180](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L180)
+[src/Renderer/types/webgl2.ts:180](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L180)
 
 ___
 
@@ -753,7 +753,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:181](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L181)
+[src/Renderer/types/webgl2.ts:181](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L181)
 
 ___
 
@@ -809,7 +809,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:91](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L91)
+[src/Renderer/types/webgl2.ts:91](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L91)
 
 ___
 
@@ -851,7 +851,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:261](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L261)
+[src/Renderer/types/webgl2.ts:261](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L261)
 
 ___
 
@@ -907,7 +907,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:217](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L217)
+[src/Renderer/types/webgl2.ts:217](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L217)
 
 ___
 
@@ -921,7 +921,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:219](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L219)
+[src/Renderer/types/webgl2.ts:219](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L219)
 
 ___
 
@@ -935,7 +935,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:218](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L218)
+[src/Renderer/types/webgl2.ts:218](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L218)
 
 ___
 
@@ -949,7 +949,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:220](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L220)
+[src/Renderer/types/webgl2.ts:220](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L220)
 
 ___
 
@@ -1005,7 +1005,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:47](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L47)
+[src/Renderer/types/webgl2.ts:47](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L47)
 
 ___
 
@@ -1089,7 +1089,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:22](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L22)
+[src/Renderer/types/webgl2.ts:22](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L22)
 
 ___
 
@@ -1103,7 +1103,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:164](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L164)
+[src/Renderer/types/webgl2.ts:164](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L164)
 
 ___
 
@@ -1117,7 +1117,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:150](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L150)
+[src/Renderer/types/webgl2.ts:150](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L150)
 
 ___
 
@@ -1215,7 +1215,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:43](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L43)
+[src/Renderer/types/webgl2.ts:43](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L43)
 
 ___
 
@@ -1229,7 +1229,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:149](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L149)
+[src/Renderer/types/webgl2.ts:149](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L149)
 
 ___
 
@@ -1355,7 +1355,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:57](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L57)
+[src/Renderer/types/webgl2.ts:57](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L57)
 
 ___
 
@@ -1369,7 +1369,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:58](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L58)
+[src/Renderer/types/webgl2.ts:58](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L58)
 
 ___
 
@@ -1383,7 +1383,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:67](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L67)
+[src/Renderer/types/webgl2.ts:67](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L67)
 
 ___
 
@@ -1397,7 +1397,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:68](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L68)
+[src/Renderer/types/webgl2.ts:68](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L68)
 
 ___
 
@@ -1411,7 +1411,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:69](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L69)
+[src/Renderer/types/webgl2.ts:69](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L69)
 
 ___
 
@@ -1425,7 +1425,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:70](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L70)
+[src/Renderer/types/webgl2.ts:70](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L70)
 
 ___
 
@@ -1439,7 +1439,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:71](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L71)
+[src/Renderer/types/webgl2.ts:71](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L71)
 
 ___
 
@@ -1453,7 +1453,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:72](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L72)
+[src/Renderer/types/webgl2.ts:72](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L72)
 
 ___
 
@@ -1467,7 +1467,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:59](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L59)
+[src/Renderer/types/webgl2.ts:59](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L59)
 
 ___
 
@@ -1481,7 +1481,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:60](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L60)
+[src/Renderer/types/webgl2.ts:60](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L60)
 
 ___
 
@@ -1495,7 +1495,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:61](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L61)
+[src/Renderer/types/webgl2.ts:61](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L61)
 
 ___
 
@@ -1509,7 +1509,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:62](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L62)
+[src/Renderer/types/webgl2.ts:62](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L62)
 
 ___
 
@@ -1523,7 +1523,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:63](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L63)
+[src/Renderer/types/webgl2.ts:63](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L63)
 
 ___
 
@@ -1537,7 +1537,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:64](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L64)
+[src/Renderer/types/webgl2.ts:64](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L64)
 
 ___
 
@@ -1551,7 +1551,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:65](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L65)
+[src/Renderer/types/webgl2.ts:65](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L65)
 
 ___
 
@@ -1565,7 +1565,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:66](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L66)
+[src/Renderer/types/webgl2.ts:66](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L66)
 
 ___
 
@@ -1579,7 +1579,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:168](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L168)
+[src/Renderer/types/webgl2.ts:168](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L168)
 
 ___
 
@@ -1593,7 +1593,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:166](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L166)
+[src/Renderer/types/webgl2.ts:166](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L166)
 
 ___
 
@@ -1635,7 +1635,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:55](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L55)
+[src/Renderer/types/webgl2.ts:55](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L55)
 
 ___
 
@@ -1663,7 +1663,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:54](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L54)
+[src/Renderer/types/webgl2.ts:54](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L54)
 
 ___
 
@@ -1747,7 +1747,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:151](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L151)
+[src/Renderer/types/webgl2.ts:151](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L151)
 
 ___
 
@@ -1775,7 +1775,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:82](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L82)
+[src/Renderer/types/webgl2.ts:82](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L82)
 
 ___
 
@@ -1789,7 +1789,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:83](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L83)
+[src/Renderer/types/webgl2.ts:83](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L83)
 
 ___
 
@@ -1817,7 +1817,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:84](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L84)
+[src/Renderer/types/webgl2.ts:84](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L84)
 
 ___
 
@@ -1831,7 +1831,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:85](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L85)
+[src/Renderer/types/webgl2.ts:85](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L85)
 
 ___
 
@@ -1859,7 +1859,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:86](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L86)
+[src/Renderer/types/webgl2.ts:86](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L86)
 
 ___
 
@@ -1873,7 +1873,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:87](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L87)
+[src/Renderer/types/webgl2.ts:87](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L87)
 
 ___
 
@@ -1943,7 +1943,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:77](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L77)
+[src/Renderer/types/webgl2.ts:77](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L77)
 
 ___
 
@@ -1971,7 +1971,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:157](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L157)
+[src/Renderer/types/webgl2.ts:157](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L157)
 
 ___
 
@@ -1985,7 +1985,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:156](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L156)
+[src/Renderer/types/webgl2.ts:156](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L156)
 
 ___
 
@@ -1999,7 +1999,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:152](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L152)
+[src/Renderer/types/webgl2.ts:152](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L152)
 
 ___
 
@@ -2013,7 +2013,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:153](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L153)
+[src/Renderer/types/webgl2.ts:153](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L153)
 
 ___
 
@@ -2027,7 +2027,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:158](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L158)
+[src/Renderer/types/webgl2.ts:158](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L158)
 
 ___
 
@@ -2041,7 +2041,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:155](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L155)
+[src/Renderer/types/webgl2.ts:155](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L155)
 
 ___
 
@@ -2083,7 +2083,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:154](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L154)
+[src/Renderer/types/webgl2.ts:154](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L154)
 
 ___
 
@@ -2097,7 +2097,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:159](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L159)
+[src/Renderer/types/webgl2.ts:159](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L159)
 
 ___
 
@@ -2125,7 +2125,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:171](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L171)
+[src/Renderer/types/webgl2.ts:171](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L171)
 
 ___
 
@@ -2181,7 +2181,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:160](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L160)
+[src/Renderer/types/webgl2.ts:160](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L160)
 
 ___
 
@@ -2237,7 +2237,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:188](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L188)
+[src/Renderer/types/webgl2.ts:188](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L188)
 
 ___
 
@@ -2405,7 +2405,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:190](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L190)
+[src/Renderer/types/webgl2.ts:190](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L190)
 
 ___
 
@@ -2517,7 +2517,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:116](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L116)
+[src/Renderer/types/webgl2.ts:116](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L116)
 
 ___
 
@@ -2531,7 +2531,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:269](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L269)
+[src/Renderer/types/webgl2.ts:269](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L269)
 
 ___
 
@@ -2545,7 +2545,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:141](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L141)
+[src/Renderer/types/webgl2.ts:141](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L141)
 
 ___
 
@@ -2559,7 +2559,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:144](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L144)
+[src/Renderer/types/webgl2.ts:144](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L144)
 
 ___
 
@@ -2573,7 +2573,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:142](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L142)
+[src/Renderer/types/webgl2.ts:142](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L142)
 
 ___
 
@@ -2587,7 +2587,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:143](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L143)
+[src/Renderer/types/webgl2.ts:143](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L143)
 
 ___
 
@@ -2671,7 +2671,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:247](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L247)
+[src/Renderer/types/webgl2.ts:247](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L247)
 
 ___
 
@@ -2937,7 +2937,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:42](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L42)
+[src/Renderer/types/webgl2.ts:42](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L42)
 
 ___
 
@@ -2951,7 +2951,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:33](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L33)
+[src/Renderer/types/webgl2.ts:33](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L33)
 
 ___
 
@@ -2965,7 +2965,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:97](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L97)
+[src/Renderer/types/webgl2.ts:97](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L97)
 
 ___
 
@@ -2979,7 +2979,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:281](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L281)
+[src/Renderer/types/webgl2.ts:281](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L281)
 
 ___
 
@@ -2993,7 +2993,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:172](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L172)
+[src/Renderer/types/webgl2.ts:172](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L172)
 
 ___
 
@@ -3007,7 +3007,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:231](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L231)
+[src/Renderer/types/webgl2.ts:231](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L231)
 
 ___
 
@@ -3035,7 +3035,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:227](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L227)
+[src/Renderer/types/webgl2.ts:227](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L227)
 
 ___
 
@@ -3049,7 +3049,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:230](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L230)
+[src/Renderer/types/webgl2.ts:230](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L230)
 
 ___
 
@@ -3077,7 +3077,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:56](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L56)
+[src/Renderer/types/webgl2.ts:56](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L56)
 
 ___
 
@@ -3091,7 +3091,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:36](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L36)
+[src/Renderer/types/webgl2.ts:36](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L36)
 
 ___
 
@@ -3105,7 +3105,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:35](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L35)
+[src/Renderer/types/webgl2.ts:35](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L35)
 
 ___
 
@@ -3119,7 +3119,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:275](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L275)
+[src/Renderer/types/webgl2.ts:275](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L275)
 
 ___
 
@@ -3133,7 +3133,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:249](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L249)
+[src/Renderer/types/webgl2.ts:249](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L249)
 
 ___
 
@@ -3147,7 +3147,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:226](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L226)
+[src/Renderer/types/webgl2.ts:226](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L226)
 
 ___
 
@@ -3161,7 +3161,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:73](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L73)
+[src/Renderer/types/webgl2.ts:73](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L73)
 
 ___
 
@@ -3189,7 +3189,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:99](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L99)
+[src/Renderer/types/webgl2.ts:99](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L99)
 
 ___
 
@@ -3217,7 +3217,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:189](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L189)
+[src/Renderer/types/webgl2.ts:189](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L189)
 
 ___
 
@@ -3231,7 +3231,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:250](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L250)
+[src/Renderer/types/webgl2.ts:250](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L250)
 
 ___
 
@@ -3259,7 +3259,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:44](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L44)
+[src/Renderer/types/webgl2.ts:44](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L44)
 
 ___
 
@@ -3287,7 +3287,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:114](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L114)
+[src/Renderer/types/webgl2.ts:114](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L114)
 
 ___
 
@@ -3301,7 +3301,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:115](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L115)
+[src/Renderer/types/webgl2.ts:115](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L115)
 
 ___
 
@@ -3315,7 +3315,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:108](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L108)
+[src/Renderer/types/webgl2.ts:108](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L108)
 
 ___
 
@@ -3329,7 +3329,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:229](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L229)
+[src/Renderer/types/webgl2.ts:229](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L229)
 
 ___
 
@@ -3343,7 +3343,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:228](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L228)
+[src/Renderer/types/webgl2.ts:228](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L228)
 
 ___
 
@@ -3357,7 +3357,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:100](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L100)
+[src/Renderer/types/webgl2.ts:100](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L100)
 
 ___
 
@@ -3399,7 +3399,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:248](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L248)
+[src/Renderer/types/webgl2.ts:248](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L248)
 
 ___
 
@@ -3427,7 +3427,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:225](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L225)
+[src/Renderer/types/webgl2.ts:225](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L225)
 
 ___
 
@@ -3441,7 +3441,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:74](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L74)
+[src/Renderer/types/webgl2.ts:74](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L74)
 
 ___
 
@@ -3511,7 +3511,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:41](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L41)
+[src/Renderer/types/webgl2.ts:41](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L41)
 
 ___
 
@@ -3525,7 +3525,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:98](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L98)
+[src/Renderer/types/webgl2.ts:98](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L98)
 
 ___
 
@@ -3665,7 +3665,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:251](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L251)
+[src/Renderer/types/webgl2.ts:251](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L251)
 
 ___
 
@@ -3805,7 +3805,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:18](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L18)
+[src/Renderer/types/webgl2.ts:18](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L18)
 
 ___
 
@@ -3819,7 +3819,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:20](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L20)
+[src/Renderer/types/webgl2.ts:20](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L20)
 
 ___
 
@@ -3833,7 +3833,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:19](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L19)
+[src/Renderer/types/webgl2.ts:19](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L19)
 
 ___
 
@@ -3847,7 +3847,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:78](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L78)
+[src/Renderer/types/webgl2.ts:78](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L78)
 
 ___
 
@@ -3861,7 +3861,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:80](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L80)
+[src/Renderer/types/webgl2.ts:80](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L80)
 
 ___
 
@@ -3875,7 +3875,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:79](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L79)
+[src/Renderer/types/webgl2.ts:79](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L79)
 
 ___
 
@@ -3889,7 +3889,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:81](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L81)
+[src/Renderer/types/webgl2.ts:81](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L81)
 
 ___
 
@@ -3959,7 +3959,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:48](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L48)
+[src/Renderer/types/webgl2.ts:48](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L48)
 
 ___
 
@@ -3973,7 +3973,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:49](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L49)
+[src/Renderer/types/webgl2.ts:49](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L49)
 
 ___
 
@@ -3987,7 +3987,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:103](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L103)
+[src/Renderer/types/webgl2.ts:103](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L103)
 
 ___
 
@@ -4001,7 +4001,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:195](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L195)
+[src/Renderer/types/webgl2.ts:195](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L195)
 
 ___
 
@@ -4015,7 +4015,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:201](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L201)
+[src/Renderer/types/webgl2.ts:201](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L201)
 
 ___
 
@@ -4029,7 +4029,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:202](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L202)
+[src/Renderer/types/webgl2.ts:202](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L202)
 
 ___
 
@@ -4043,7 +4043,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:196](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L196)
+[src/Renderer/types/webgl2.ts:196](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L196)
 
 ___
 
@@ -4057,7 +4057,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:203](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L203)
+[src/Renderer/types/webgl2.ts:203](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L203)
 
 ___
 
@@ -4071,7 +4071,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:204](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L204)
+[src/Renderer/types/webgl2.ts:204](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L204)
 
 ___
 
@@ -4085,7 +4085,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:193](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L193)
+[src/Renderer/types/webgl2.ts:193](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L193)
 
 ___
 
@@ -4099,7 +4099,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:199](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L199)
+[src/Renderer/types/webgl2.ts:199](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L199)
 
 ___
 
@@ -4113,7 +4113,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:200](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L200)
+[src/Renderer/types/webgl2.ts:200](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L200)
 
 ___
 
@@ -4127,7 +4127,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:212](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L212)
+[src/Renderer/types/webgl2.ts:212](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L212)
 
 ___
 
@@ -4141,7 +4141,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:113](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L113)
+[src/Renderer/types/webgl2.ts:113](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L113)
 
 ___
 
@@ -4155,7 +4155,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:14](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L14)
+[src/Renderer/types/webgl2.ts:14](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L14)
 
 ___
 
@@ -4169,7 +4169,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:167](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L167)
+[src/Renderer/types/webgl2.ts:167](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L167)
 
 ___
 
@@ -4183,7 +4183,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:169](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L169)
+[src/Renderer/types/webgl2.ts:169](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L169)
 
 ___
 
@@ -4197,7 +4197,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:24](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L24)
+[src/Renderer/types/webgl2.ts:24](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L24)
 
 ___
 
@@ -4225,7 +4225,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:132](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L132)
+[src/Renderer/types/webgl2.ts:132](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L132)
 
 ___
 
@@ -4365,7 +4365,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:170](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L170)
+[src/Renderer/types/webgl2.ts:170](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L170)
 
 ___
 
@@ -4449,7 +4449,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:191](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L191)
+[src/Renderer/types/webgl2.ts:191](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L191)
 
 ___
 
@@ -4463,7 +4463,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:197](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L197)
+[src/Renderer/types/webgl2.ts:197](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L197)
 
 ___
 
@@ -4477,7 +4477,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:207](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L207)
+[src/Renderer/types/webgl2.ts:207](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L207)
 
 ___
 
@@ -4491,7 +4491,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:208](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L208)
+[src/Renderer/types/webgl2.ts:208](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L208)
 
 ___
 
@@ -4505,7 +4505,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:198](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L198)
+[src/Renderer/types/webgl2.ts:198](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L198)
 
 ___
 
@@ -4519,7 +4519,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:209](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L209)
+[src/Renderer/types/webgl2.ts:209](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L209)
 
 ___
 
@@ -4533,7 +4533,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:210](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L210)
+[src/Renderer/types/webgl2.ts:210](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L210)
 
 ___
 
@@ -4547,7 +4547,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:194](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L194)
+[src/Renderer/types/webgl2.ts:194](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L194)
 
 ___
 
@@ -4561,7 +4561,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:205](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L205)
+[src/Renderer/types/webgl2.ts:205](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L205)
 
 ___
 
@@ -4575,7 +4575,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:206](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L206)
+[src/Renderer/types/webgl2.ts:206](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L206)
 
 ___
 
@@ -4589,7 +4589,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:213](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L213)
+[src/Renderer/types/webgl2.ts:213](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L213)
 
 ___
 
@@ -4617,7 +4617,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:27](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L27)
+[src/Renderer/types/webgl2.ts:27](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L27)
 
 ___
 
@@ -4631,7 +4631,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:268](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L268)
+[src/Renderer/types/webgl2.ts:268](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L268)
 
 ___
 
@@ -4645,7 +4645,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:95](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L95)
+[src/Renderer/types/webgl2.ts:95](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L95)
 
 ___
 
@@ -4659,7 +4659,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:129](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L129)
+[src/Renderer/types/webgl2.ts:129](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L129)
 
 ___
 
@@ -4673,7 +4673,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:123](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L123)
+[src/Renderer/types/webgl2.ts:123](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L123)
 
 ___
 
@@ -4687,7 +4687,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:93](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L93)
+[src/Renderer/types/webgl2.ts:93](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L93)
 
 ___
 
@@ -4701,7 +4701,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:127](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L127)
+[src/Renderer/types/webgl2.ts:127](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L127)
 
 ___
 
@@ -4715,7 +4715,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:121](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L121)
+[src/Renderer/types/webgl2.ts:121](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L121)
 
 ___
 
@@ -4757,7 +4757,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:25](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L25)
+[src/Renderer/types/webgl2.ts:25](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L25)
 
 ___
 
@@ -4771,7 +4771,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:131](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L131)
+[src/Renderer/types/webgl2.ts:131](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L131)
 
 ___
 
@@ -4785,7 +4785,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:125](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L125)
+[src/Renderer/types/webgl2.ts:125](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L125)
 
 ___
 
@@ -4799,7 +4799,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:214](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L214)
+[src/Renderer/types/webgl2.ts:214](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L214)
 
 ___
 
@@ -4813,7 +4813,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:105](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L105)
+[src/Renderer/types/webgl2.ts:105](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L105)
 
 ___
 
@@ -4841,7 +4841,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:94](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L94)
+[src/Renderer/types/webgl2.ts:94](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L94)
 
 ___
 
@@ -4855,7 +4855,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:128](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L128)
+[src/Renderer/types/webgl2.ts:128](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L128)
 
 ___
 
@@ -4869,7 +4869,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:122](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L122)
+[src/Renderer/types/webgl2.ts:122](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L122)
 
 ___
 
@@ -4883,7 +4883,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:92](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L92)
+[src/Renderer/types/webgl2.ts:92](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L92)
 
 ___
 
@@ -4897,7 +4897,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:126](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L126)
+[src/Renderer/types/webgl2.ts:126](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L126)
 
 ___
 
@@ -4911,7 +4911,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:120](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L120)
+[src/Renderer/types/webgl2.ts:120](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L120)
 
 ___
 
@@ -4939,7 +4939,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:26](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L26)
+[src/Renderer/types/webgl2.ts:26](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L26)
 
 ___
 
@@ -4953,7 +4953,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:130](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L130)
+[src/Renderer/types/webgl2.ts:130](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L130)
 
 ___
 
@@ -4967,7 +4967,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:124](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L124)
+[src/Renderer/types/webgl2.ts:124](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L124)
 
 ___
 
@@ -4981,7 +4981,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:215](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L215)
+[src/Renderer/types/webgl2.ts:215](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L215)
 
 ___
 
@@ -4995,7 +4995,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:134](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L134)
+[src/Renderer/types/webgl2.ts:134](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L134)
 
 ___
 
@@ -5009,7 +5009,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:133](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L133)
+[src/Renderer/types/webgl2.ts:133](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L133)
 
 ___
 
@@ -5023,7 +5023,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:192](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L192)
+[src/Renderer/types/webgl2.ts:192](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L192)
 
 ___
 
@@ -5051,7 +5051,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:135](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L135)
+[src/Renderer/types/webgl2.ts:135](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L135)
 
 ___
 
@@ -5065,7 +5065,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:136](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L136)
+[src/Renderer/types/webgl2.ts:136](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L136)
 
 ___
 
@@ -5079,7 +5079,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:76](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L76)
+[src/Renderer/types/webgl2.ts:76](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L76)
 
 ___
 
@@ -5093,7 +5093,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:75](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L75)
+[src/Renderer/types/webgl2.ts:75](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L75)
 
 ___
 
@@ -5107,7 +5107,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:267](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L267)
+[src/Renderer/types/webgl2.ts:267](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L267)
 
 ___
 
@@ -5135,7 +5135,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:137](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L137)
+[src/Renderer/types/webgl2.ts:137](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L137)
 
 ___
 
@@ -5261,7 +5261,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:117](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L117)
+[src/Renderer/types/webgl2.ts:117](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L117)
 
 ___
 
@@ -5317,7 +5317,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:258](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L258)
+[src/Renderer/types/webgl2.ts:258](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L258)
 
 ___
 
@@ -5331,7 +5331,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:216](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L216)
+[src/Renderer/types/webgl2.ts:216](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L216)
 
 ___
 
@@ -5387,7 +5387,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:88](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L88)
+[src/Renderer/types/webgl2.ts:88](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L88)
 
 ___
 
@@ -5401,7 +5401,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:89](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L89)
+[src/Renderer/types/webgl2.ts:89](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L89)
 
 ___
 
@@ -5415,7 +5415,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:90](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L90)
+[src/Renderer/types/webgl2.ts:90](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L90)
 
 ___
 
@@ -5429,7 +5429,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:53](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L53)
+[src/Renderer/types/webgl2.ts:53](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L53)
 
 ___
 
@@ -5457,7 +5457,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:52](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L52)
+[src/Renderer/types/webgl2.ts:52](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L52)
 
 ___
 
@@ -5471,7 +5471,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:23](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L23)
+[src/Renderer/types/webgl2.ts:23](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L23)
 
 ___
 
@@ -5765,7 +5765,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:51](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L51)
+[src/Renderer/types/webgl2.ts:51](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L51)
 
 ___
 
@@ -5793,7 +5793,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:50](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L50)
+[src/Renderer/types/webgl2.ts:50](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L50)
 
 ___
 
@@ -5821,7 +5821,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:252](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L252)
+[src/Renderer/types/webgl2.ts:252](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L252)
 
 ___
 
@@ -5835,7 +5835,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:255](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L255)
+[src/Renderer/types/webgl2.ts:255](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L255)
 
 ___
 
@@ -5849,7 +5849,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:254](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L254)
+[src/Renderer/types/webgl2.ts:254](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L254)
 
 ___
 
@@ -5863,7 +5863,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:263](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L263)
+[src/Renderer/types/webgl2.ts:263](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L263)
 
 ___
 
@@ -5877,7 +5877,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:256](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L256)
+[src/Renderer/types/webgl2.ts:256](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L256)
 
 ___
 
@@ -5891,7 +5891,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:253](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L253)
+[src/Renderer/types/webgl2.ts:253](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L253)
 
 ___
 
@@ -6381,7 +6381,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:101](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L101)
+[src/Renderer/types/webgl2.ts:101](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L101)
 
 ___
 
@@ -6395,7 +6395,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:31](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L31)
+[src/Renderer/types/webgl2.ts:31](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L31)
 
 ___
 
@@ -6409,7 +6409,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:39](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L39)
+[src/Renderer/types/webgl2.ts:39](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L39)
 
 ___
 
@@ -6437,7 +6437,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:102](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L102)
+[src/Renderer/types/webgl2.ts:102](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L102)
 
 ___
 
@@ -6451,7 +6451,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:28](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L28)
+[src/Renderer/types/webgl2.ts:28](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L28)
 
 ___
 
@@ -6479,7 +6479,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:46](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L46)
+[src/Renderer/types/webgl2.ts:46](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L46)
 
 ___
 
@@ -6493,7 +6493,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:45](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L45)
+[src/Renderer/types/webgl2.ts:45](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L45)
 
 ___
 
@@ -6605,7 +6605,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:274](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L274)
+[src/Renderer/types/webgl2.ts:274](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L274)
 
 ___
 
@@ -6619,7 +6619,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:276](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L276)
+[src/Renderer/types/webgl2.ts:276](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L276)
 
 ___
 
@@ -6647,7 +6647,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:40](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L40)
+[src/Renderer/types/webgl2.ts:40](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L40)
 
 ___
 
@@ -6661,7 +6661,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:38](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L38)
+[src/Renderer/types/webgl2.ts:38](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L38)
 
 ___
 
@@ -6689,7 +6689,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:37](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L37)
+[src/Renderer/types/webgl2.ts:37](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L37)
 
 ___
 
@@ -6703,7 +6703,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:32](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L32)
+[src/Renderer/types/webgl2.ts:32](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L32)
 
 ___
 
@@ -6745,7 +6745,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:260](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L260)
+[src/Renderer/types/webgl2.ts:260](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L260)
 
 ___
 
@@ -6759,7 +6759,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:278](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L278)
+[src/Renderer/types/webgl2.ts:278](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L278)
 
 ___
 
@@ -6773,7 +6773,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:270](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L270)
+[src/Renderer/types/webgl2.ts:270](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L270)
 
 ___
 
@@ -6787,7 +6787,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:272](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L272)
+[src/Renderer/types/webgl2.ts:272](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L272)
 
 ___
 
@@ -6801,7 +6801,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:273](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L273)
+[src/Renderer/types/webgl2.ts:273](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L273)
 
 ___
 
@@ -6815,7 +6815,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:118](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L118)
+[src/Renderer/types/webgl2.ts:118](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L118)
 
 ___
 
@@ -6829,7 +6829,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:119](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L119)
+[src/Renderer/types/webgl2.ts:119](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L119)
 
 ___
 
@@ -6843,7 +6843,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:107](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L107)
+[src/Renderer/types/webgl2.ts:107](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L107)
 
 ___
 
@@ -6857,7 +6857,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:111](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L111)
+[src/Renderer/types/webgl2.ts:111](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L111)
 
 ___
 
@@ -6871,7 +6871,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:110](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L110)
+[src/Renderer/types/webgl2.ts:110](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L110)
 
 ___
 
@@ -6885,7 +6885,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:271](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L271)
+[src/Renderer/types/webgl2.ts:271](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L271)
 
 ___
 
@@ -6899,7 +6899,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:112](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L112)
+[src/Renderer/types/webgl2.ts:112](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L112)
 
 ___
 
@@ -6913,7 +6913,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:109](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L109)
+[src/Renderer/types/webgl2.ts:109](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L109)
 
 ___
 
@@ -6969,7 +6969,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:238](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L238)
+[src/Renderer/types/webgl2.ts:238](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L238)
 
 ___
 
@@ -6983,7 +6983,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:243](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L243)
+[src/Renderer/types/webgl2.ts:243](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L243)
 
 ___
 
@@ -6997,7 +6997,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:244](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L244)
+[src/Renderer/types/webgl2.ts:244](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L244)
 
 ___
 
@@ -7011,7 +7011,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:241](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L241)
+[src/Renderer/types/webgl2.ts:241](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L241)
 
 ___
 
@@ -7025,7 +7025,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:242](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L242)
+[src/Renderer/types/webgl2.ts:242](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L242)
 
 ___
 
@@ -7039,7 +7039,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:236](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L236)
+[src/Renderer/types/webgl2.ts:236](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L236)
 
 ___
 
@@ -7053,7 +7053,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:246](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L246)
+[src/Renderer/types/webgl2.ts:246](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L246)
 
 ___
 
@@ -7067,7 +7067,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:245](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L245)
+[src/Renderer/types/webgl2.ts:245](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L245)
 
 ___
 
@@ -7081,7 +7081,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:221](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L221)
+[src/Renderer/types/webgl2.ts:221](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L221)
 
 ___
 
@@ -7095,7 +7095,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:222](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L222)
+[src/Renderer/types/webgl2.ts:222](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L222)
 
 ___
 
@@ -7109,7 +7109,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:232](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L232)
+[src/Renderer/types/webgl2.ts:232](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L232)
 
 ___
 
@@ -7123,7 +7123,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:224](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L224)
+[src/Renderer/types/webgl2.ts:224](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L224)
 
 ___
 
@@ -7137,7 +7137,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:223](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L223)
+[src/Renderer/types/webgl2.ts:223](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L223)
 
 ___
 
@@ -7151,7 +7151,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:240](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L240)
+[src/Renderer/types/webgl2.ts:240](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L240)
 
 ___
 
@@ -7165,7 +7165,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:239](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L239)
+[src/Renderer/types/webgl2.ts:239](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L239)
 
 ___
 
@@ -7179,7 +7179,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:237](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L237)
+[src/Renderer/types/webgl2.ts:237](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L237)
 
 ___
 
@@ -7193,7 +7193,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:235](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L235)
+[src/Renderer/types/webgl2.ts:235](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L235)
 
 ___
 
@@ -7207,7 +7207,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:234](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L234)
+[src/Renderer/types/webgl2.ts:234](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L234)
 
 ___
 
@@ -7263,7 +7263,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:30](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L30)
+[src/Renderer/types/webgl2.ts:30](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L30)
 
 ___
 
@@ -7291,7 +7291,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:15](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L15)
+[src/Renderer/types/webgl2.ts:15](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L15)
 
 ___
 
@@ -7305,7 +7305,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:29](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L29)
+[src/Renderer/types/webgl2.ts:29](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L29)
 
 ___
 
@@ -7319,7 +7319,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:17](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L17)
+[src/Renderer/types/webgl2.ts:17](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L17)
 
 ___
 
@@ -7333,7 +7333,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:16](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L16)
+[src/Renderer/types/webgl2.ts:16](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L16)
 
 ___
 
@@ -7347,7 +7347,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:257](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L257)
+[src/Renderer/types/webgl2.ts:257](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L257)
 
 ___
 
@@ -7389,7 +7389,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:104](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L104)
+[src/Renderer/types/webgl2.ts:104](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L104)
 
 ___
 
@@ -7403,7 +7403,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:163](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L163)
+[src/Renderer/types/webgl2.ts:163](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L163)
 
 ___
 
@@ -7417,7 +7417,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:34](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L34)
+[src/Renderer/types/webgl2.ts:34](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L34)
 
 ___
 
@@ -7431,7 +7431,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:106](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L106)
+[src/Renderer/types/webgl2.ts:106](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L106)
 
 ___
 
@@ -7445,7 +7445,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:145](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L145)
+[src/Renderer/types/webgl2.ts:145](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L145)
 
 ___
 
@@ -7459,7 +7459,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:148](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L148)
+[src/Renderer/types/webgl2.ts:148](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L148)
 
 ___
 
@@ -7473,7 +7473,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:146](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L146)
+[src/Renderer/types/webgl2.ts:146](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L146)
 
 ___
 
@@ -7487,7 +7487,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:147](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L147)
+[src/Renderer/types/webgl2.ts:147](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L147)
 
 ___
 
@@ -7501,7 +7501,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:138](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L138)
+[src/Renderer/types/webgl2.ts:138](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L138)
 
 ___
 
@@ -7515,7 +7515,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:139](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L139)
+[src/Renderer/types/webgl2.ts:139](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L139)
 
 ___
 
@@ -7529,7 +7529,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:140](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L140)
+[src/Renderer/types/webgl2.ts:140](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L140)
 
 ___
 
@@ -7543,7 +7543,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:165](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L165)
+[src/Renderer/types/webgl2.ts:165](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L165)
 
 ___
 
@@ -7655,7 +7655,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:211](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L211)
+[src/Renderer/types/webgl2.ts:211](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L211)
 
 ___
 
@@ -7683,7 +7683,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:264](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L264)
+[src/Renderer/types/webgl2.ts:264](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L264)
 
 ___
 
@@ -7711,7 +7711,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:96](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L96)
+[src/Renderer/types/webgl2.ts:96](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L96)
 
 ___
 
@@ -7823,7 +7823,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:262](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L262)
+[src/Renderer/types/webgl2.ts:262](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L262)
 
 ___
 
@@ -7847,7 +7847,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl.ts:9](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl.ts#L9)
+[src/Renderer/types/webgl.ts:9](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl.ts#L9)
 
 ___
 
@@ -7857,7 +7857,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl.ts:8](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl.ts#L8)
+[src/Renderer/types/webgl.ts:8](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl.ts#L8)
 
 ___
 
@@ -7867,7 +7867,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl.ts:15](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl.ts#L15)
+[src/Renderer/types/webgl.ts:15](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl.ts#L15)
 
 ___
 
@@ -7877,7 +7877,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl.ts:13](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl.ts#L13)
+[src/Renderer/types/webgl.ts:13](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl.ts#L13)
 
 ___
 
@@ -7887,7 +7887,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl.ts:14](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl.ts#L14)
+[src/Renderer/types/webgl.ts:14](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl.ts#L14)
 
 ___
 
@@ -7939,7 +7939,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl.ts:24](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl.ts#L24)
+[src/Renderer/types/webgl.ts:24](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl.ts#L24)
 
 ___
 
@@ -7949,7 +7949,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl.ts:19](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl.ts#L19)
+[src/Renderer/types/webgl.ts:19](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl.ts#L19)
 
 ___
 
@@ -7959,7 +7959,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl.ts:20](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl.ts#L20)
+[src/Renderer/types/webgl.ts:20](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl.ts#L20)
 
 ___
 
@@ -7969,7 +7969,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl.ts:23](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl.ts#L23)
+[src/Renderer/types/webgl.ts:23](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl.ts#L23)
 
 ___
 
@@ -7979,7 +7979,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl.ts:21](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl.ts#L21)
+[src/Renderer/types/webgl.ts:21](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl.ts#L21)
 
 ___
 
@@ -7989,7 +7989,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl.ts:22](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl.ts#L22)
+[src/Renderer/types/webgl.ts:22](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl.ts#L22)
 
 ___
 
@@ -7999,7 +7999,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl.ts:5](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl.ts#L5)
+[src/Renderer/types/webgl.ts:5](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl.ts#L5)
 
 ___
 
@@ -8009,7 +8009,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl.ts:18](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl.ts#L18)
+[src/Renderer/types/webgl.ts:18](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl.ts#L18)
 
 ___
 
@@ -8019,7 +8019,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl.ts:12](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl.ts#L12)
+[src/Renderer/types/webgl.ts:12](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl.ts#L12)
 
 ___
 
@@ -8029,7 +8029,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl.ts:25](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl.ts#L25)
+[src/Renderer/types/webgl.ts:25](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl.ts#L25)
 
 ## Methods
 
@@ -8103,7 +8103,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:1020](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L1020)
+[src/Renderer/types/webgl2.ts:1020](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L1020)
 
 ___
 
@@ -8127,7 +8127,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:1047](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L1047)
+[src/Renderer/types/webgl2.ts:1047](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L1047)
 
 ___
 
@@ -8204,7 +8204,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:1055](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L1055)
+[src/Renderer/types/webgl2.ts:1055](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L1055)
 
 ___
 
@@ -8232,7 +8232,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:1056](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L1056)
+[src/Renderer/types/webgl2.ts:1056](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L1056)
 
 ___
 
@@ -8307,7 +8307,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:1029](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L1029)
+[src/Renderer/types/webgl2.ts:1029](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L1029)
 
 ___
 
@@ -8357,7 +8357,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:1046](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L1046)
+[src/Renderer/types/webgl2.ts:1046](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L1046)
 
 ___
 
@@ -8381,7 +8381,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:1069](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L1069)
+[src/Renderer/types/webgl2.ts:1069](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L1069)
 
 ___
 
@@ -8542,7 +8542,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:370](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L370)
+[src/Renderer/types/webgl2.ts:370](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L370)
 
 ___
 
@@ -8568,7 +8568,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:285](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L285)
+[src/Renderer/types/webgl2.ts:285](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L285)
 
 ▸ **bufferData**(`target`, `data`, `usage`): `void`
 
@@ -8590,7 +8590,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:321](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L321)
+[src/Renderer/types/webgl2.ts:321](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L321)
 
 ▸ **bufferData**(`target`, `srcData`, `usage`, `srcOffset`, `length?`): `void`
 
@@ -8614,7 +8614,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:324](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L324)
+[src/Renderer/types/webgl2.ts:324](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L324)
 
 ___
 
@@ -8640,7 +8640,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:303](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L303)
+[src/Renderer/types/webgl2.ts:303](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L303)
 
 ▸ **bufferSubData**(`target`, `dstByteOffset`, `srcData`): `void`
 
@@ -8662,7 +8662,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:322](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L322)
+[src/Renderer/types/webgl2.ts:322](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L322)
 
 ▸ **bufferSubData**(`target`, `dstByteOffset`, `srcData`, `srcOffset`, `length?`): `void`
 
@@ -8686,7 +8686,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:343](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L343)
+[src/Renderer/types/webgl2.ts:343](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L343)
 
 ___
 
@@ -8761,7 +8761,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:1014](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L1014)
+[src/Renderer/types/webgl2.ts:1014](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L1014)
 
 ___
 
@@ -8788,7 +8788,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:1010](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L1010)
+[src/Renderer/types/webgl2.ts:1010](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L1010)
 
 ___
 
@@ -8815,7 +8815,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:1011](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L1011)
+[src/Renderer/types/webgl2.ts:1011](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L1011)
 
 ___
 
@@ -8842,7 +8842,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:1012](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L1012)
+[src/Renderer/types/webgl2.ts:1012](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L1012)
 
 ___
 
@@ -8943,7 +8943,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:1038](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L1038)
+[src/Renderer/types/webgl2.ts:1038](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L1038)
 
 ___
 
@@ -9025,7 +9025,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:654](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L654)
+[src/Renderer/types/webgl2.ts:654](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L654)
 
 ▸ **compressedTexImage2D**(`target`, `level`, `internalformat`, `width`, `height`, `border`, `srcData`, `srcOffset?`, `srcLengthOverride?`): `void`
 
@@ -9053,7 +9053,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:664](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L664)
+[src/Renderer/types/webgl2.ts:664](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L664)
 
 ▸ **compressedTexImage2D**(`target`, `level`, `internalformat`, `width`, `height`, `border`, `srcData`, `srcOffset?`, `srcLengthOverride?`): `void`
 
@@ -9081,7 +9081,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:687](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L687)
+[src/Renderer/types/webgl2.ts:687](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L687)
 
 ___
 
@@ -9113,7 +9113,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:699](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L699)
+[src/Renderer/types/webgl2.ts:699](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L699)
 
 ▸ **compressedTexImage3D**(`target`, `level`, `internalformat`, `width`, `height`, `depth`, `border`, `srcData`, `srcOffset?`, `srcLengthOverride?`): `void`
 
@@ -9142,7 +9142,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:710](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L710)
+[src/Renderer/types/webgl2.ts:710](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L710)
 
 ___
 
@@ -9174,7 +9174,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:723](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L723)
+[src/Renderer/types/webgl2.ts:723](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L723)
 
 ▸ **compressedTexSubImage2D**(`target`, `level`, `xoffset`, `yoffset`, `width`, `height`, `format`, `srcData`, `srcOffset?`, `srcLengthOverride?`): `void`
 
@@ -9203,7 +9203,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:734](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L734)
+[src/Renderer/types/webgl2.ts:734](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L734)
 
 ▸ **compressedTexSubImage2D**(`target`, `level`, `xoffset`, `yoffset`, `width`, `height`, `format`, `srcData`, `srcOffset?`, `srcLengthOverride?`): `void`
 
@@ -9232,7 +9232,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:758](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L758)
+[src/Renderer/types/webgl2.ts:758](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L758)
 
 ___
 
@@ -9266,7 +9266,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:771](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L771)
+[src/Renderer/types/webgl2.ts:771](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L771)
 
 ▸ **compressedTexSubImage3D**(`target`, `level`, `xoffset`, `yoffset`, `zoffset`, `width`, `height`, `depth`, `format`, `srcData`, `srcOffset?`, `srcLengthOverride?`): `void`
 
@@ -9297,7 +9297,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:784](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L784)
+[src/Renderer/types/webgl2.ts:784](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L784)
 
 ___
 
@@ -9325,7 +9325,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:351](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L351)
+[src/Renderer/types/webgl2.ts:351](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L351)
 
 ___
 
@@ -9419,7 +9419,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:642](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L642)
+[src/Renderer/types/webgl2.ts:642](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L642)
 
 ___
 
@@ -9491,7 +9491,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:1017](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L1017)
+[src/Renderer/types/webgl2.ts:1017](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L1017)
 
 ___
 
@@ -9527,7 +9527,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:1026](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L1026)
+[src/Renderer/types/webgl2.ts:1026](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L1026)
 
 ___
 
@@ -9587,7 +9587,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:1043](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L1043)
+[src/Renderer/types/webgl2.ts:1043](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L1043)
 
 ___
 
@@ -9605,7 +9605,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:1066](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L1066)
+[src/Renderer/types/webgl2.ts:1066](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L1066)
 
 ___
 
@@ -9725,7 +9725,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:1018](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L1018)
+[src/Renderer/types/webgl2.ts:1018](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L1018)
 
 ___
 
@@ -9773,7 +9773,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:1027](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L1027)
+[src/Renderer/types/webgl2.ts:1027](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L1027)
 
 ___
 
@@ -9821,7 +9821,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:1037](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L1037)
+[src/Renderer/types/webgl2.ts:1037](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L1037)
 
 ___
 
@@ -9869,7 +9869,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:1044](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L1044)
+[src/Renderer/types/webgl2.ts:1044](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L1044)
 
 ___
 
@@ -9893,7 +9893,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:1067](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L1067)
+[src/Renderer/types/webgl2.ts:1067](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L1067)
 
 ___
 
@@ -10092,7 +10092,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:958](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L958)
+[src/Renderer/types/webgl2.ts:958](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L958)
 
 ___
 
@@ -10116,7 +10116,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:1008](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L1008)
+[src/Renderer/types/webgl2.ts:1008](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L1008)
 
 ___
 
@@ -10171,7 +10171,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:959](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L959)
+[src/Renderer/types/webgl2.ts:959](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L959)
 
 ___
 
@@ -10185,7 +10185,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl.ts:28](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl.ts#L28)
+[src/Renderer/types/webgl.ts:28](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl.ts#L28)
 
 ___
 
@@ -10214,7 +10214,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:960](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L960)
+[src/Renderer/types/webgl2.ts:960](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L960)
 
 ___
 
@@ -10286,7 +10286,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:1021](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L1021)
+[src/Renderer/types/webgl2.ts:1021](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L1021)
 
 ___
 
@@ -10304,7 +10304,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:1048](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L1048)
+[src/Renderer/types/webgl2.ts:1048](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L1048)
 
 ___
 
@@ -10329,7 +10329,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:1035](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L1035)
+[src/Renderer/types/webgl2.ts:1035](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L1035)
 
 ___
 
@@ -10448,7 +10448,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:382](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L382)
+[src/Renderer/types/webgl2.ts:382](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L382)
 
 ___
 
@@ -10571,7 +10571,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:1062](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L1062)
+[src/Renderer/types/webgl2.ts:1062](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L1062)
 
 ___
 
@@ -10597,7 +10597,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:1061](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L1061)
+[src/Renderer/types/webgl2.ts:1061](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L1061)
 
 ___
 
@@ -10623,7 +10623,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:1059](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L1059)
+[src/Renderer/types/webgl2.ts:1059](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L1059)
 
 ___
 
@@ -10725,7 +10725,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:361](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L361)
+[src/Renderer/types/webgl2.ts:361](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L361)
 
 ___
 
@@ -11410,7 +11410,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:800](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L800)
+[src/Renderer/types/webgl2.ts:800](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L800)
 
 ___
 
@@ -11461,7 +11461,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:1057](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L1057)
+[src/Renderer/types/webgl2.ts:1057](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L1057)
 
 ___
 
@@ -11487,7 +11487,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:401](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L401)
+[src/Renderer/types/webgl2.ts:401](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L401)
 
 ___
 
@@ -11585,7 +11585,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:1022](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L1022)
+[src/Renderer/types/webgl2.ts:1022](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L1022)
 
 ___
 
@@ -11610,7 +11610,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:1023](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L1023)
+[src/Renderer/types/webgl2.ts:1023](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L1023)
 
 ___
 
@@ -11660,7 +11660,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:1032](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L1032)
+[src/Renderer/types/webgl2.ts:1032](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L1032)
 
 ___
 
@@ -11801,7 +11801,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:1040](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L1040)
+[src/Renderer/types/webgl2.ts:1040](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L1040)
 
 ___
 
@@ -11851,7 +11851,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:1050](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L1050)
+[src/Renderer/types/webgl2.ts:1050](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L1050)
 
 ___
 
@@ -11901,7 +11901,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:1060](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L1060)
+[src/Renderer/types/webgl2.ts:1060](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L1060)
 
 ___
 
@@ -11926,7 +11926,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:1058](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L1058)
+[src/Renderer/types/webgl2.ts:1058](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L1058)
 
 ___
 
@@ -12051,7 +12051,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:389](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L389)
+[src/Renderer/types/webgl2.ts:389](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L389)
 
 ___
 
@@ -12080,7 +12080,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:390](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L390)
+[src/Renderer/types/webgl2.ts:390](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L390)
 
 ___
 
@@ -12218,7 +12218,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:1019](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L1019)
+[src/Renderer/types/webgl2.ts:1019](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L1019)
 
 ___
 
@@ -12266,7 +12266,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:1028](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L1028)
+[src/Renderer/types/webgl2.ts:1028](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L1028)
 
 ___
 
@@ -12314,7 +12314,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:1036](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L1036)
+[src/Renderer/types/webgl2.ts:1036](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L1036)
 
 ___
 
@@ -12362,7 +12362,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:1045](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L1045)
+[src/Renderer/types/webgl2.ts:1045](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L1045)
 
 ___
 
@@ -12386,7 +12386,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:1068](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L1068)
+[src/Renderer/types/webgl2.ts:1068](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L1068)
 
 ___
 
@@ -12448,7 +12448,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl.ts:26](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl.ts#L26)
+[src/Renderer/types/webgl.ts:26](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl.ts#L26)
 
 ___
 
@@ -12466,7 +12466,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:1051](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L1051)
+[src/Renderer/types/webgl2.ts:1051](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L1051)
 
 ___
 
@@ -12540,7 +12540,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:398](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L398)
+[src/Renderer/types/webgl2.ts:398](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L398)
 
 ___
 
@@ -12570,7 +12570,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:964](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L964)
+[src/Renderer/types/webgl2.ts:964](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L964)
 
 ▸ **readPixels**(`x`, `y`, `width`, `height`, `format`, `type`, `dstData`): `void`
 
@@ -12596,7 +12596,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:985](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L985)
+[src/Renderer/types/webgl2.ts:985](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L985)
 
 ▸ **readPixels**(`x`, `y`, `width`, `height`, `format`, `type`, `offset`): `void`
 
@@ -12622,7 +12622,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:995](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L995)
+[src/Renderer/types/webgl2.ts:995](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L995)
 
 ▸ **readPixels**(`x`, `y`, `width`, `height`, `format`, `type`, `dstData`, `dstOffset`): `void`
 
@@ -12649,7 +12649,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:996](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L996)
+[src/Renderer/types/webgl2.ts:996](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L996)
 
 ___
 
@@ -12704,7 +12704,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:402](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L402)
+[src/Renderer/types/webgl2.ts:402](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L402)
 
 ___
 
@@ -12722,7 +12722,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:1052](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L1052)
+[src/Renderer/types/webgl2.ts:1052](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L1052)
 
 ___
 
@@ -12773,7 +12773,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:1031](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L1031)
+[src/Renderer/types/webgl2.ts:1031](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L1031)
 
 ___
 
@@ -12799,7 +12799,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:1030](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L1030)
+[src/Renderer/types/webgl2.ts:1030](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L1030)
 
 ___
 
@@ -13038,7 +13038,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:422](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L422)
+[src/Renderer/types/webgl2.ts:422](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L422)
 
 ▸ **texImage2D**(`target`, `level`, `internalformat`, `format`, `type`, `source`): `void`
 
@@ -13063,7 +13063,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:433](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L433)
+[src/Renderer/types/webgl2.ts:433](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L433)
 
 ▸ **texImage2D**(`target`, `level`, `internalformat`, `format`, `type`, `source`): `void`
 
@@ -13088,7 +13088,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:441](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L441)
+[src/Renderer/types/webgl2.ts:441](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L441)
 
 ▸ **texImage2D**(`target`, `level`, `internalformat`, `width`, `height`, `border`, `format`, `type`, `pboOffset`): `void`
 
@@ -13116,7 +13116,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:481](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L481)
+[src/Renderer/types/webgl2.ts:481](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L481)
 
 ▸ **texImage2D**(`target`, `level`, `internalformat`, `width`, `height`, `border`, `format`, `type`, `source`): `void`
 
@@ -13144,7 +13144,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:492](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L492)
+[src/Renderer/types/webgl2.ts:492](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L492)
 
 ▸ **texImage2D**(`target`, `level`, `internalformat`, `width`, `height`, `border`, `format`, `type`, `srcData`, `srcOffset`): `void`
 
@@ -13173,7 +13173,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:503](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L503)
+[src/Renderer/types/webgl2.ts:503](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L503)
 
 ___
 
@@ -13206,7 +13206,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:516](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L516)
+[src/Renderer/types/webgl2.ts:516](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L516)
 
 ▸ **texImage3D**(`target`, `level`, `internalformat`, `width`, `height`, `depth`, `border`, `format`, `type`, `source`): `void`
 
@@ -13235,7 +13235,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:528](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L528)
+[src/Renderer/types/webgl2.ts:528](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L528)
 
 ▸ **texImage3D**(`target`, `level`, `internalformat`, `width`, `height`, `depth`, `border`, `format`, `type`, `srcData`): `void`
 
@@ -13264,7 +13264,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:540](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L540)
+[src/Renderer/types/webgl2.ts:540](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L540)
 
 ▸ **texImage3D**(`target`, `level`, `internalformat`, `width`, `height`, `depth`, `border`, `format`, `type`, `srcData`, `srcOffset`): `void`
 
@@ -13294,7 +13294,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:552](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L552)
+[src/Renderer/types/webgl2.ts:552](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L552)
 
 ___
 
@@ -13374,7 +13374,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:411](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L411)
+[src/Renderer/types/webgl2.ts:411](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L411)
 
 ___
 
@@ -13403,7 +13403,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:412](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L412)
+[src/Renderer/types/webgl2.ts:412](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L412)
 
 ___
 
@@ -13435,7 +13435,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:450](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L450)
+[src/Renderer/types/webgl2.ts:450](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L450)
 
 ▸ **texSubImage2D**(`target`, `level`, `xoffset`, `yoffset`, `format`, `type`, `source`): `void`
 
@@ -13461,7 +13461,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:461](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L461)
+[src/Renderer/types/webgl2.ts:461](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L461)
 
 ▸ **texSubImage2D**(`target`, `level`, `xoffset`, `yoffset`, `format`, `type`, `source`): `void`
 
@@ -13487,7 +13487,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:470](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L470)
+[src/Renderer/types/webgl2.ts:470](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L470)
 
 ▸ **texSubImage2D**(`target`, `level`, `xoffset`, `yoffset`, `width`, `height`, `format`, `type`, `pboOffset`): `void`
 
@@ -13515,7 +13515,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:566](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L566)
+[src/Renderer/types/webgl2.ts:566](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L566)
 
 ▸ **texSubImage2D**(`target`, `level`, `xoffset`, `yoffset`, `width`, `height`, `format`, `type`, `source`): `void`
 
@@ -13543,7 +13543,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:577](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L577)
+[src/Renderer/types/webgl2.ts:577](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L577)
 
 ▸ **texSubImage2D**(`target`, `level`, `xoffset`, `yoffset`, `width`, `height`, `format`, `type`, `srcData`, `srcOffset`): `void`
 
@@ -13572,7 +13572,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:588](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L588)
+[src/Renderer/types/webgl2.ts:588](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L588)
 
 ___
 
@@ -13606,7 +13606,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:601](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L601)
+[src/Renderer/types/webgl2.ts:601](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L601)
 
 ▸ **texSubImage3D**(`target`, `level`, `xoffset`, `yoffset`, `zoffset`, `width`, `height`, `depth`, `format`, `type`, `source`): `void`
 
@@ -13636,7 +13636,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:614](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L614)
+[src/Renderer/types/webgl2.ts:614](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L614)
 
 ▸ **texSubImage3D**(`target`, `level`, `xoffset`, `yoffset`, `zoffset`, `width`, `height`, `depth`, `format`, `type`, `srcData`, `srcOffset?`): `void`
 
@@ -13667,7 +13667,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:627](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L627)
+[src/Renderer/types/webgl2.ts:627](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L627)
 
 ___
 
@@ -13693,7 +13693,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:1049](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L1049)
+[src/Renderer/types/webgl2.ts:1049](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L1049)
 
 ___
 
@@ -13745,7 +13745,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:808](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L808)
+[src/Renderer/types/webgl2.ts:808](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L808)
 
 ___
 
@@ -13797,7 +13797,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:833](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L833)
+[src/Renderer/types/webgl2.ts:833](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L833)
 
 ___
 
@@ -13822,7 +13822,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:803](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L803)
+[src/Renderer/types/webgl2.ts:803](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L803)
 
 ___
 
@@ -13849,7 +13849,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:858](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L858)
+[src/Renderer/types/webgl2.ts:858](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L858)
 
 ___
 
@@ -13902,7 +13902,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:814](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L814)
+[src/Renderer/types/webgl2.ts:814](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L814)
 
 ___
 
@@ -13955,7 +13955,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:839](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L839)
+[src/Renderer/types/webgl2.ts:839](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L839)
 
 ___
 
@@ -13981,7 +13981,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:804](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L804)
+[src/Renderer/types/webgl2.ts:804](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L804)
 
 ___
 
@@ -14008,7 +14008,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:864](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L864)
+[src/Renderer/types/webgl2.ts:864](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L864)
 
 ___
 
@@ -14062,7 +14062,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:820](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L820)
+[src/Renderer/types/webgl2.ts:820](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L820)
 
 ___
 
@@ -14116,7 +14116,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:845](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L845)
+[src/Renderer/types/webgl2.ts:845](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L845)
 
 ___
 
@@ -14143,7 +14143,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:805](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L805)
+[src/Renderer/types/webgl2.ts:805](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L805)
 
 ___
 
@@ -14170,7 +14170,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:870](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L870)
+[src/Renderer/types/webgl2.ts:870](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L870)
 
 ___
 
@@ -14225,7 +14225,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:826](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L826)
+[src/Renderer/types/webgl2.ts:826](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L826)
 
 ___
 
@@ -14280,7 +14280,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:851](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L851)
+[src/Renderer/types/webgl2.ts:851](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L851)
 
 ___
 
@@ -14308,7 +14308,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:806](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L806)
+[src/Renderer/types/webgl2.ts:806](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L806)
 
 ___
 
@@ -14335,7 +14335,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:876](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L876)
+[src/Renderer/types/webgl2.ts:876](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L876)
 
 ___
 
@@ -14361,7 +14361,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:1063](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L1063)
+[src/Renderer/types/webgl2.ts:1063](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L1063)
 
 ___
 
@@ -14389,7 +14389,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:883](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L883)
+[src/Renderer/types/webgl2.ts:883](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L883)
 
 ___
 
@@ -14417,7 +14417,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:905](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L905)
+[src/Renderer/types/webgl2.ts:905](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L905)
 
 ___
 
@@ -14445,7 +14445,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:927](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L927)
+[src/Renderer/types/webgl2.ts:927](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L927)
 
 ___
 
@@ -14473,7 +14473,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:912](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L912)
+[src/Renderer/types/webgl2.ts:912](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L912)
 
 ___
 
@@ -14501,7 +14501,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:890](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L890)
+[src/Renderer/types/webgl2.ts:890](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L890)
 
 ___
 
@@ -14529,7 +14529,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:934](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L934)
+[src/Renderer/types/webgl2.ts:934](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L934)
 
 ___
 
@@ -14557,7 +14557,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:941](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L941)
+[src/Renderer/types/webgl2.ts:941](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L941)
 
 ___
 
@@ -14585,7 +14585,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:897](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L897)
+[src/Renderer/types/webgl2.ts:897](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L897)
 
 ___
 
@@ -14613,7 +14613,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:919](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L919)
+[src/Renderer/types/webgl2.ts:919](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L919)
 
 ___
 
@@ -14892,7 +14892,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:957](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L957)
+[src/Renderer/types/webgl2.ts:957](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L957)
 
 ___
 
@@ -14920,7 +14920,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:950](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L950)
+[src/Renderer/types/webgl2.ts:950](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L950)
 
 ___
 
@@ -14945,7 +14945,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:951](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L951)
+[src/Renderer/types/webgl2.ts:951](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L951)
 
 ___
 
@@ -14973,7 +14973,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:952](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L952)
+[src/Renderer/types/webgl2.ts:952](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L952)
 
 ___
 
@@ -14998,7 +14998,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:953](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L953)
+[src/Renderer/types/webgl2.ts:953](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L953)
 
 ___
 
@@ -15026,7 +15026,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:954](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L954)
+[src/Renderer/types/webgl2.ts:954](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L954)
 
 ___
 
@@ -15108,5 +15108,5 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/webgl2.ts:1039](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Renderer/types/webgl2.ts#L1039)
+[src/Renderer/types/webgl2.ts:1039](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Renderer/types/webgl2.ts#L1039)
 
