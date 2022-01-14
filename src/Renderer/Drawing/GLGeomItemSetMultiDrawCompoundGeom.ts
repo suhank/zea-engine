@@ -181,14 +181,15 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
 
     this.glGeomItems[index] = null
     this.glgeomItemEventHandlers[index] = null
-    delete this.drawIdsArrays[index]
-    delete this.drawElementOffsets[index]
-    delete this.drawElementCounts[index]
     this.freeIndices.push(index)
 
     for (let key in this.drawIdsArraysAllocators) {
       const prevAllocation = this.drawIdsArraysAllocators[key].getAllocation(index)
       if (prevAllocation) {
+        for (let i = 0; i < prevAllocation.size; i++) {
+          this.drawElementOffsets[key][prevAllocation.start + i] = 0
+          this.drawElementCounts[key][prevAllocation.start + i] = 0
+        }
         this.drawIdsArraysAllocators[key].deallocate(index)
       }
     }

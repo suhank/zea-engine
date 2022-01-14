@@ -12,7 +12,8 @@
 
     <script type="module">
       import '../dist/index.umd.js'
-      const { GLRenderer, Scene, Vec3, Color, Xfo, Sphere, Material, GeomItem, LDRImage, TreeItem, CADAsset} = zeaEngine
+      const { GLRenderer, Scene, Vec3, Color, Xfo, Sphere, Material, GeomItem, LDRImage, TreeItem, CADAsset } =
+        zeaEngine
 
       const canvas = document.getElementById('viewport')
 
@@ -22,7 +23,7 @@
 
       scene.setupGrid(10.0, 10)
 
-      const url = 'data/Dead_eye_bearing.zcad'
+      const url = 'data/zcad/3.9.0/HC_SRO4.step.zcad'
       const asset = new CADAsset()
       asset.load(url).then(() => {
         renderer.frameAll()
@@ -48,7 +49,7 @@
         } else if (data === 'variant-02') {
           // Now look away, so that the scene gets frustum culled.
           const asset = new CADAsset()
-          asset.load(url).then(() => {
+          asset.load('data/zcad/3.9.0/Fidget-Spinner-2.STEP.zcad').then(() => {
             renderer.frameAll()
           })
           asset.getGeometryLibrary().on('loaded', () => {
