@@ -26,7 +26,7 @@ Create a ray.
 
 #### Defined in
 
-[src/Math/Ray.ts:20](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Ray.ts#L20)
+[src/Math/Ray.ts:20](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Ray.ts#L20)
 
 ## Properties
 
@@ -36,7 +36,7 @@ Create a ray.
 
 #### Defined in
 
-[src/Math/Ray.ts:11](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Ray.ts#L11)
+[src/Math/Ray.ts:11](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Ray.ts#L11)
 
 ___
 
@@ -46,7 +46,7 @@ ___
 
 #### Defined in
 
-[src/Math/Ray.ts:12](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Ray.ts#L12)
+[src/Math/Ray.ts:12](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Ray.ts#L12)
 
 ## Methods
 
@@ -64,7 +64,7 @@ Clones this Ray and returns a new Ray.
 
 #### Defined in
 
-[src/Math/Ray.ts:231](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Ray.ts#L231)
+[src/Math/Ray.ts:231](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Ray.ts#L231)
 
 ___
 
@@ -88,7 +88,7 @@ Get the closest point on the ray to the given point.
 
 #### Defined in
 
-[src/Math/Ray.ts:40](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Ray.ts#L40)
+[src/Math/Ray.ts:40](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Ray.ts#L40)
 
 ___
 
@@ -113,7 +113,7 @@ Get the closest point between the ray and the given line segment made of the 2 p
 
 #### Defined in
 
-[src/Math/Ray.ts:56](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Ray.ts#L56)
+[src/Math/Ray.ts:56](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Ray.ts#L56)
 
 ___
 
@@ -135,7 +135,7 @@ The fromJSON method decodes a json object for this type.
 
 #### Defined in
 
-[src/Math/Ray.ts:255](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Ray.ts#L255)
+[src/Math/Ray.ts:255](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Ray.ts#L255)
 
 ___
 
@@ -160,7 +160,7 @@ Determines if this Box3 intersects a ray.
 
 #### Defined in
 
-[src/Math/Ray.ts:186](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Ray.ts#L186)
+[src/Math/Ray.ts:186](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Ray.ts#L186)
 
 ___
 
@@ -185,7 +185,7 @@ of this ray against the plane defined by the given ray.
 
 #### Defined in
 
-[src/Math/Ray.ts:160](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Ray.ts#L160)
+[src/Math/Ray.ts:160](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Ray.ts#L160)
 
 ___
 
@@ -209,7 +209,7 @@ Returns the two ray params that represent the closest point between the two rays
 
 #### Defined in
 
-[src/Math/Ray.ts:114](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Ray.ts#L114)
+[src/Math/Ray.ts:114](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Ray.ts#L114)
 
 ___
 
@@ -233,7 +233,7 @@ Get the closest point at a distance.
 
 #### Defined in
 
-[src/Math/Ray.ts:104](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Ray.ts#L104)
+[src/Math/Ray.ts:104](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Ray.ts#L104)
 
 ___
 
@@ -251,7 +251,7 @@ The toJSON method encodes this type as a json object for persistence.
 
 #### Defined in
 
-[src/Math/Ray.ts:243](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Ray.ts#L243)
+[src/Math/Ray.ts:243](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Ray.ts#L243)
 
 ___
 
@@ -269,5 +269,5 @@ Calls `toJSON` method and stringifies it.
 
 #### Defined in
 
-[src/Math/Ray.ts:265](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Ray.ts#L265)
+[src/Math/Ray.ts:265](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Ray.ts#L265)
 

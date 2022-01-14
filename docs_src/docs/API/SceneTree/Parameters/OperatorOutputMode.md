@@ -15,7 +15,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[src/SceneTree/Parameters/OperatorOutputMode.ts:3](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Parameters/OperatorOutputMode.ts#L3)
+[src/SceneTree/Parameters/OperatorOutputMode.ts:3](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/Parameters/OperatorOutputMode.ts#L3)
 
 ___
 
@@ -25,5 +25,5 @@ ___
 
 #### Defined in
 
-[src/SceneTree/Parameters/OperatorOutputMode.ts:2](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Parameters/OperatorOutputMode.ts#L2)
+[src/SceneTree/Parameters/OperatorOutputMode.ts:2](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/Parameters/OperatorOutputMode.ts#L2)
 

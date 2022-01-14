@@ -37,7 +37,7 @@ You can also pass one JSON object parameter.
 
 #### Defined in
 
-[src/Math/Vec3.ts:27](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Vec3.ts#L27)
+[src/Math/Vec3.ts:27](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Vec3.ts#L27)
 
 ## Properties
 
@@ -47,7 +47,7 @@ You can also pass one JSON object parameter.
 
 #### Defined in
 
-[src/Math/Vec3.ts:12](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Vec3.ts#L12)
+[src/Math/Vec3.ts:12](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Vec3.ts#L12)
 
 ## Accessors
 
@@ -65,7 +65,7 @@ Getter for `x` component.
 
 #### Defined in
 
-[src/Math/Vec3.ts:53](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Vec3.ts#L53)
+[src/Math/Vec3.ts:53](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Vec3.ts#L53)
 
 • `set` **x**(`val`): `void`
 
@@ -85,7 +85,7 @@ Setter for `x` component.
 
 #### Defined in
 
-[src/Math/Vec3.ts:62](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Vec3.ts#L62)
+[src/Math/Vec3.ts:62](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Vec3.ts#L62)
 
 ___
 
@@ -103,7 +103,7 @@ Getter for `xy` swizzel.
 
 #### Defined in
 
-[src/Math/Vec3.ts:107](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Vec3.ts#L107)
+[src/Math/Vec3.ts:107](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Vec3.ts#L107)
 
 ___
 
@@ -121,7 +121,7 @@ Getter for `y` component.
 
 #### Defined in
 
-[src/Math/Vec3.ts:71](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Vec3.ts#L71)
+[src/Math/Vec3.ts:71](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Vec3.ts#L71)
 
 • `set` **y**(`val`): `void`
 
@@ -141,7 +141,7 @@ Setter for `y` component.
 
 #### Defined in
 
-[src/Math/Vec3.ts:80](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Vec3.ts#L80)
+[src/Math/Vec3.ts:80](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Vec3.ts#L80)
 
 ___
 
@@ -159,7 +159,7 @@ Getter for `yz` swizzel.
 
 #### Defined in
 
-[src/Math/Vec3.ts:116](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Vec3.ts#L116)
+[src/Math/Vec3.ts:116](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Vec3.ts#L116)
 
 ___
 
@@ -177,7 +177,7 @@ Getter for `z` component.
 
 #### Defined in
 
-[src/Math/Vec3.ts:89](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Vec3.ts#L89)
+[src/Math/Vec3.ts:89](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Vec3.ts#L89)
 
 • `set` **z**(`val`): `void`
 
@@ -197,7 +197,7 @@ Setter for `z` component.
 
 #### Defined in
 
-[src/Math/Vec3.ts:98](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Vec3.ts#L98)
+[src/Math/Vec3.ts:98](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Vec3.ts#L98)
 
 ## Methods
 
@@ -215,7 +215,7 @@ Returns a new Vec3 whose component values are the abs of this Vec3s component va
 
 #### Defined in
 
-[src/Math/Vec3.ts:495](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Vec3.ts#L495)
+[src/Math/Vec3.ts:495](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Vec3.ts#L495)
 
 ___
 
@@ -239,7 +239,7 @@ Adds other to this Vec3 and return the result as a new Vec3.
 
 #### Defined in
 
-[src/Math/Vec3.ts:216](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Vec3.ts#L216)
+[src/Math/Vec3.ts:216](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Vec3.ts#L216)
 
 ___
 
@@ -261,7 +261,7 @@ Adds other to this Vec3.
 
 #### Defined in
 
-[src/Math/Vec3.ts:225](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Vec3.ts#L225)
+[src/Math/Vec3.ts:225](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Vec3.ts#L225)
 
 ___
 
@@ -285,7 +285,7 @@ Gets the angle between this Vec3 and b.
 
 #### Defined in
 
-[src/Math/Vec3.ts:467](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Vec3.ts#L467)
+[src/Math/Vec3.ts:467](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Vec3.ts#L467)
 
 ___
 
@@ -310,7 +310,7 @@ Returns true if this Vec2 is approximately the same as other.
 
 #### Defined in
 
-[src/Math/Vec3.ts:202](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Vec3.ts#L202)
+[src/Math/Vec3.ts:202](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Vec3.ts#L202)
 
 ___
 
@@ -328,7 +328,7 @@ Returns the type as an array. Often used to pass types to the GPU.
 
 #### Defined in
 
-[src/Math/Vec3.ts:543](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Vec3.ts#L543)
+[src/Math/Vec3.ts:543](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Vec3.ts#L543)
 
 ___
 
@@ -346,7 +346,7 @@ Clones this Vec3 and returns a new Vec3.
 
 #### Defined in
 
-[src/Math/Vec3.ts:534](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Vec3.ts#L534)
+[src/Math/Vec3.ts:534](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Vec3.ts#L534)
 
 ___
 
@@ -370,7 +370,7 @@ Calculates the cross product of two Vec3s and returns the result as a new Vec3.
 
 #### Defined in
 
-[src/Math/Vec3.ts:450](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Vec3.ts#L450)
+[src/Math/Vec3.ts:450](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Vec3.ts#L450)
 
 ___
 
@@ -394,7 +394,7 @@ Calculates the distance to another Vec3.
 
 #### Defined in
 
-[src/Math/Vec3.ts:360](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Vec3.ts#L360)
+[src/Math/Vec3.ts:360](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Vec3.ts#L360)
 
 ___
 
@@ -418,7 +418,7 @@ Divides two Vec3s and returns the result as a new Vec3.
 
 #### Defined in
 
-[src/Math/Vec3.ts:279](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Vec3.ts#L279)
+[src/Math/Vec3.ts:279](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Vec3.ts#L279)
 
 ___
 
@@ -440,7 +440,7 @@ Divides two Vec3s.
 
 #### Defined in
 
-[src/Math/Vec3.ts:288](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Vec3.ts#L288)
+[src/Math/Vec3.ts:288](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Vec3.ts#L288)
 
 ___
 
@@ -464,7 +464,7 @@ Calculates the dot product of this Vec3 against another Vec3.
 
 #### Defined in
 
-[src/Math/Vec3.ts:440](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Vec3.ts#L440)
+[src/Math/Vec3.ts:440](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Vec3.ts#L440)
 
 ___
 
@@ -486,7 +486,7 @@ Decodes a JSON object to set the state of this class.
 
 #### Defined in
 
-[src/Math/Vec3.ts:578](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Vec3.ts#L578)
+[src/Math/Vec3.ts:578](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Vec3.ts#L578)
 
 ___
 
@@ -504,7 +504,7 @@ Returns the inverse of this Vec3, but returns. the result as a new Vec3
 
 #### Defined in
 
-[src/Math/Vec3.ts:329](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Vec3.ts#L329)
+[src/Math/Vec3.ts:329](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Vec3.ts#L329)
 
 ___
 
@@ -522,7 +522,7 @@ Checks if the coordinates of this Vec3 are 1 1 1.
 
 #### Defined in
 
-[src/Math/Vec3.ts:167](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Vec3.ts#L167)
+[src/Math/Vec3.ts:167](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Vec3.ts#L167)
 
 ___
 
@@ -546,7 +546,7 @@ Checks if this Vec3 contains the same values as the other Vec3.
 
 #### Defined in
 
-[src/Math/Vec3.ts:181](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Vec3.ts#L181)
+[src/Math/Vec3.ts:181](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Vec3.ts#L181)
 
 ___
 
@@ -564,7 +564,7 @@ Checks if the coordinates of this Vec3 are 0 0 0.
 
 #### Defined in
 
-[src/Math/Vec3.ts:158](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Vec3.ts#L158)
+[src/Math/Vec3.ts:158](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Vec3.ts#L158)
 
 ___
 
@@ -578,7 +578,7 @@ ___
 
 #### Defined in
 
-[src/Math/Vec3.ts:595](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Vec3.ts#L595)
+[src/Math/Vec3.ts:595](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Vec3.ts#L595)
 
 ___
 
@@ -596,7 +596,7 @@ Calculates the length of this Vec3.
 
 #### Defined in
 
-[src/Math/Vec3.ts:350](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Vec3.ts#L350)
+[src/Math/Vec3.ts:350](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Vec3.ts#L350)
 
 ___
 
@@ -614,7 +614,7 @@ Calculates the squared length of this Vec3.
 
 #### Defined in
 
-[src/Math/Vec3.ts:338](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Vec3.ts#L338)
+[src/Math/Vec3.ts:338](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Vec3.ts#L338)
 
 ___
 
@@ -639,7 +639,7 @@ Performs a linear interpolation between this Vec3 and other.
 
 #### Defined in
 
-[src/Math/Vec3.ts:483](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Vec3.ts#L483)
+[src/Math/Vec3.ts:483](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Vec3.ts#L483)
 
 ___
 
@@ -663,7 +663,7 @@ Multiplies two Vec3s and returns the result as a new Vec3.
 
 #### Defined in
 
-[src/Math/Vec3.ts:258](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Vec3.ts#L258)
+[src/Math/Vec3.ts:258](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Vec3.ts#L258)
 
 ___
 
@@ -685,7 +685,7 @@ Multiplies two Vec3s.
 
 #### Defined in
 
-[src/Math/Vec3.ts:267](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Vec3.ts#L267)
+[src/Math/Vec3.ts:267](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Vec3.ts#L267)
 
 ___
 
@@ -703,7 +703,7 @@ Negates this Vec3 (x = -x, y = -y and z = -z), but returns the result as a new V
 
 #### Defined in
 
-[src/Math/Vec3.ts:320](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Vec3.ts#L320)
+[src/Math/Vec3.ts:320](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Vec3.ts#L320)
 
 ___
 
@@ -722,7 +722,7 @@ Multiplies coordinates value by the inverse of the vector length.
 
 #### Defined in
 
-[src/Math/Vec3.ts:373](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Vec3.ts#L373)
+[src/Math/Vec3.ts:373](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Vec3.ts#L373)
 
 ___
 
@@ -740,7 +740,7 @@ Normalizes this Vec3 multiplying coordinate values by the inverse of the vector 
 
 #### Defined in
 
-[src/Math/Vec3.ts:389](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Vec3.ts#L389)
+[src/Math/Vec3.ts:389](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Vec3.ts#L389)
 
 ___
 
@@ -764,7 +764,7 @@ Checks if this Vec2 is different from another Vec2.
 
 #### Defined in
 
-[src/Math/Vec3.ts:191](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Vec3.ts#L191)
+[src/Math/Vec3.ts:191](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Vec3.ts#L191)
 
 ___
 
@@ -786,7 +786,7 @@ Loads the state of the value from a binary reader.
 
 #### Defined in
 
-[src/Math/Vec3.ts:589](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Vec3.ts#L589)
+[src/Math/Vec3.ts:589](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Vec3.ts#L589)
 
 ___
 
@@ -810,7 +810,7 @@ Creates and returns a new Vec3 with the new coordinates(calculated with this Vec
 
 #### Defined in
 
-[src/Math/Vec3.ts:409](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Vec3.ts#L409)
+[src/Math/Vec3.ts:409](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Vec3.ts#L409)
 
 ___
 
@@ -832,7 +832,7 @@ Modifies current coordinates using the specified length.
 
 #### Defined in
 
-[src/Math/Vec3.ts:423](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Vec3.ts#L423)
+[src/Math/Vec3.ts:423](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Vec3.ts#L423)
 
 ___
 
@@ -856,7 +856,7 @@ Scales this Vec3 by scalar and returns the result as a new Vec3.
 
 #### Defined in
 
-[src/Math/Vec3.ts:300](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Vec3.ts#L300)
+[src/Math/Vec3.ts:300](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Vec3.ts#L300)
 
 ___
 
@@ -878,7 +878,7 @@ Scales this Vec3 by scalar.
 
 #### Defined in
 
-[src/Math/Vec3.ts:309](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Vec3.ts#L309)
+[src/Math/Vec3.ts:309](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Vec3.ts#L309)
 
 ___
 
@@ -902,7 +902,7 @@ Setter from scalar components.
 
 #### Defined in
 
-[src/Math/Vec3.ts:127](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Vec3.ts#L127)
+[src/Math/Vec3.ts:127](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Vec3.ts#L127)
 
 ___
 
@@ -924,7 +924,7 @@ Sets the state of a Vec3 Object.
 
 #### Defined in
 
-[src/Math/Vec3.ts:138](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Vec3.ts#L138)
+[src/Math/Vec3.ts:138](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Vec3.ts#L138)
 
 ___
 
@@ -946,7 +946,7 @@ Sets the state of a Vec3 Object from another Vec3.
 
 #### Defined in
 
-[src/Math/Vec3.ts:147](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Vec3.ts#L147)
+[src/Math/Vec3.ts:147](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Vec3.ts#L147)
 
 ___
 
@@ -970,7 +970,7 @@ Generates a random vector anywhere in the sphere defined by the provided scale v
 
 #### Defined in
 
-[src/Math/Vec3.ts:522](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Vec3.ts#L522)
+[src/Math/Vec3.ts:522](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Vec3.ts#L522)
 
 ___
 
@@ -994,7 +994,7 @@ Sets the vector a random vector on the surface of a sphere with the radius of th
 
 #### Defined in
 
-[src/Math/Vec3.ts:505](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Vec3.ts#L505)
+[src/Math/Vec3.ts:505](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Vec3.ts#L505)
 
 ___
 
@@ -1018,7 +1018,7 @@ Subtracts other from this Vec3 and returns the result as a new Vec3.
 
 #### Defined in
 
-[src/Math/Vec3.ts:237](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Vec3.ts#L237)
+[src/Math/Vec3.ts:237](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Vec3.ts#L237)
 
 ___
 
@@ -1040,7 +1040,7 @@ Subtracts other from this Vec3.
 
 #### Defined in
 
-[src/Math/Vec3.ts:246](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Vec3.ts#L246)
+[src/Math/Vec3.ts:246](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Vec3.ts#L246)
 
 ___
 
@@ -1058,7 +1058,7 @@ Encodes Vec3 Class as a JSON object for persistence.
 
 #### Defined in
 
-[src/Math/Vec3.ts:565](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Vec3.ts#L565)
+[src/Math/Vec3.ts:565](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Vec3.ts#L565)
 
 ___
 
@@ -1076,5 +1076,5 @@ Converts this Vec3 to a string in JSON format.
 
 #### Defined in
 
-[src/Math/Vec3.ts:555](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Vec3.ts#L555)
+[src/Math/Vec3.ts:555](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Vec3.ts#L555)
 

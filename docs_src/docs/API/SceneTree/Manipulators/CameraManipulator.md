@@ -44,9 +44,10 @@ A single click or touch tap can cause the view to be focussed or a double click 
 This behavior can be configured using the 2 values.
 e.g. to disable all focus gestures, set both values to zero.
 ```
+// Make the aim focus occur after a single touch or click.
 const cameraManipulator = renderer.getViewport().getManipulator()
-cameraManipulator.aimFocusOnTouchTap = 0
-cameraManipulator.aimFocusOnMouseClick = 0
+cameraManipulator.aimFocusOnTouchTap = 1
+cameraManipulator.aimFocusOnMouseClick = 1
 ```
 
 **Parameters**
@@ -95,7 +96,7 @@ Create a camera, mouse and keyboard
 
 #### Defined in
 
-[src/SceneTree/Manipulators/CameraManipulator.ts:155](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Manipulators/CameraManipulator.ts#L155)
+[src/SceneTree/Manipulators/CameraManipulator.ts:156](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/Manipulators/CameraManipulator.ts#L156)
 
 ## Properties
 
@@ -109,7 +110,7 @@ Create a camera, mouse and keyboard
 
 #### Defined in
 
-[src/SceneTree/Manipulators/BaseTool.ts:33](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Manipulators/BaseTool.ts#L33)
+[src/SceneTree/Manipulators/BaseTool.ts:33](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/Manipulators/BaseTool.ts#L33)
 
 ___
 
@@ -119,7 +120,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/Manipulators/CameraManipulator.ts:98](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Manipulators/CameraManipulator.ts#L98)
+[src/SceneTree/Manipulators/CameraManipulator.ts:99](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/Manipulators/CameraManipulator.ts#L99)
 
 ___
 
@@ -129,7 +130,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/Manipulators/CameraManipulator.ts:101](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Manipulators/CameraManipulator.ts#L101)
+[src/SceneTree/Manipulators/CameraManipulator.ts:102](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/Manipulators/CameraManipulator.ts#L102)
 
 ___
 
@@ -139,7 +140,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/Manipulators/CameraManipulator.ts:114](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Manipulators/CameraManipulator.ts#L114)
+[src/SceneTree/Manipulators/CameraManipulator.ts:115](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/Manipulators/CameraManipulator.ts#L115)
 
 ___
 
@@ -153,7 +154,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/BaseClass.ts#L11)
+[src/Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Utilities/BaseClass.ts#L11)
 
 ___
 
@@ -163,7 +164,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/Manipulators/CameraManipulator.ts:105](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Manipulators/CameraManipulator.ts#L105)
+[src/SceneTree/Manipulators/CameraManipulator.ts:106](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/Manipulators/CameraManipulator.ts#L106)
 
 ___
 
@@ -173,7 +174,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/Manipulators/CameraManipulator.ts:106](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Manipulators/CameraManipulator.ts#L106)
+[src/SceneTree/Manipulators/CameraManipulator.ts:107](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/Manipulators/CameraManipulator.ts#L107)
 
 ___
 
@@ -183,7 +184,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/Manipulators/CameraManipulator.ts:99](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Manipulators/CameraManipulator.ts#L99)
+[src/SceneTree/Manipulators/CameraManipulator.ts:100](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/Manipulators/CameraManipulator.ts#L100)
 
 ___
 
@@ -193,7 +194,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/Manipulators/CameraManipulator.ts:116](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Manipulators/CameraManipulator.ts#L116)
+[src/SceneTree/Manipulators/CameraManipulator.ts:117](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/Manipulators/CameraManipulator.ts#L117)
 
 ___
 
@@ -203,7 +204,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/Manipulators/CameraManipulator.ts:118](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Manipulators/CameraManipulator.ts#L118)
+[src/SceneTree/Manipulators/CameraManipulator.ts:119](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/Manipulators/CameraManipulator.ts#L119)
 
 ___
 
@@ -213,7 +214,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/Manipulators/CameraManipulator.ts:119](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Manipulators/CameraManipulator.ts#L119)
+[src/SceneTree/Manipulators/CameraManipulator.ts:120](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/Manipulators/CameraManipulator.ts#L120)
 
 ___
 
@@ -223,7 +224,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/Manipulators/CameraManipulator.ts:109](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Manipulators/CameraManipulator.ts#L109)
+[src/SceneTree/Manipulators/CameraManipulator.ts:110](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/Manipulators/CameraManipulator.ts#L110)
 
 ___
 
@@ -233,7 +234,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/Manipulators/CameraManipulator.ts:111](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Manipulators/CameraManipulator.ts#L111)
+[src/SceneTree/Manipulators/CameraManipulator.ts:112](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/Manipulators/CameraManipulator.ts#L112)
 
 ___
 
@@ -243,7 +244,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/Manipulators/CameraManipulator.ts:100](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Manipulators/CameraManipulator.ts#L100)
+[src/SceneTree/Manipulators/CameraManipulator.ts:101](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/Manipulators/CameraManipulator.ts#L101)
 
 ___
 
@@ -253,7 +254,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/Manipulators/CameraManipulator.ts:113](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Manipulators/CameraManipulator.ts#L113)
+[src/SceneTree/Manipulators/CameraManipulator.ts:114](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/Manipulators/CameraManipulator.ts#L114)
 
 ___
 
@@ -263,7 +264,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/Manipulators/CameraManipulator.ts:108](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Manipulators/CameraManipulator.ts#L108)
+[src/SceneTree/Manipulators/CameraManipulator.ts:109](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/Manipulators/CameraManipulator.ts#L109)
 
 ___
 
@@ -273,7 +274,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/Manipulators/CameraManipulator.ts:107](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Manipulators/CameraManipulator.ts#L107)
+[src/SceneTree/Manipulators/CameraManipulator.ts:108](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/Manipulators/CameraManipulator.ts#L108)
 
 ___
 
@@ -283,7 +284,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/Manipulators/CameraManipulator.ts:103](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Manipulators/CameraManipulator.ts#L103)
+[src/SceneTree/Manipulators/CameraManipulator.ts:104](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/Manipulators/CameraManipulator.ts#L104)
 
 ___
 
@@ -293,7 +294,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/Manipulators/CameraManipulator.ts:102](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Manipulators/CameraManipulator.ts#L102)
+[src/SceneTree/Manipulators/CameraManipulator.ts:103](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/Manipulators/CameraManipulator.ts#L103)
 
 ___
 
@@ -303,7 +304,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/Manipulators/CameraManipulator.ts:97](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Manipulators/CameraManipulator.ts#L97)
+[src/SceneTree/Manipulators/CameraManipulator.ts:98](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/Manipulators/CameraManipulator.ts#L98)
 
 ___
 
@@ -317,7 +318,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:25](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L25)
+[src/SceneTree/ParameterOwner.ts:25](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/ParameterOwner.ts#L25)
 
 ___
 
@@ -329,7 +330,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/Manipulators/CameraManipulator.ts:129](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Manipulators/CameraManipulator.ts#L129)
+[src/SceneTree/Manipulators/CameraManipulator.ts:130](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/Manipulators/CameraManipulator.ts#L130)
 
 ___
 
@@ -339,7 +340,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/Manipulators/CameraManipulator.ts:104](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Manipulators/CameraManipulator.ts#L104)
+[src/SceneTree/Manipulators/CameraManipulator.ts:105](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/Manipulators/CameraManipulator.ts#L105)
 
 ___
 
@@ -353,7 +354,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/EventEmitter.ts#L26)
+[src/Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Utilities/EventEmitter.ts#L26)
 
 ___
 
@@ -365,7 +366,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/Manipulators/CameraManipulator.ts:134](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Manipulators/CameraManipulator.ts#L134)
+[src/SceneTree/Manipulators/CameraManipulator.ts:135](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/Manipulators/CameraManipulator.ts#L135)
 
 ___
 
@@ -377,7 +378,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/Manipulators/CameraManipulator.ts:139](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Manipulators/CameraManipulator.ts#L139)
+[src/SceneTree/Manipulators/CameraManipulator.ts:140](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/Manipulators/CameraManipulator.ts#L140)
 
 ___
 
@@ -389,7 +390,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/Manipulators/CameraManipulator.ts:124](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Manipulators/CameraManipulator.ts#L124)
+[src/SceneTree/Manipulators/CameraManipulator.ts:125](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/Manipulators/CameraManipulator.ts#L125)
 
 ___
 
@@ -403,7 +404,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:22](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L22)
+[src/SceneTree/ParameterOwner.ts:22](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/ParameterOwner.ts#L22)
 
 ___
 
@@ -417,7 +418,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:23](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L23)
+[src/SceneTree/ParameterOwner.ts:23](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/ParameterOwner.ts#L23)
 
 ___
 
@@ -431,7 +432,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:24](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L24)
+[src/SceneTree/ParameterOwner.ts:24](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/ParameterOwner.ts#L24)
 
 ___
 
@@ -441,7 +442,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/Manipulators/CameraManipulator.ts:112](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Manipulators/CameraManipulator.ts#L112)
+[src/SceneTree/Manipulators/CameraManipulator.ts:113](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/Manipulators/CameraManipulator.ts#L113)
 
 ___
 
@@ -453,7 +454,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/Manipulators/CameraManipulator.ts:149](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Manipulators/CameraManipulator.ts#L149)
+[src/SceneTree/Manipulators/CameraManipulator.ts:150](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/Manipulators/CameraManipulator.ts#L150)
 
 ___
 
@@ -465,23 +466,23 @@ ___
 
 #### Defined in
 
-[src/SceneTree/Manipulators/CameraManipulator.ts:144](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Manipulators/CameraManipulator.ts#L144)
+[src/SceneTree/Manipulators/CameraManipulator.ts:145](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/Manipulators/CameraManipulator.ts#L145)
 
 ## Accessors
 
 ### MANIPULATION\_MODES
 
-• `Static` `get` **MANIPULATION_MODES**(): `Object`
+• `Static` `get` **MANIPULATION_MODES**(): `Record`<`string`, `number`\>
 
 Returns a dictionary of support manipulation modes.
 
 #### Returns
 
-`Object`
+`Record`<`string`, `number`\>
 
 #### Defined in
 
-[src/SceneTree/Manipulators/CameraManipulator.ts:1200](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Manipulators/CameraManipulator.ts#L1200)
+[src/SceneTree/Manipulators/CameraManipulator.ts:1195](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/Manipulators/CameraManipulator.ts#L1195)
 
 ## Methods
 
@@ -503,7 +504,7 @@ The __endTouch method.
 
 #### Defined in
 
-[src/SceneTree/Manipulators/CameraManipulator.ts:1143](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Manipulators/CameraManipulator.ts#L1143)
+[src/SceneTree/Manipulators/CameraManipulator.ts:1138](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/Manipulators/CameraManipulator.ts#L1138)
 
 ___
 
@@ -525,7 +526,7 @@ The __startTouch method.
 
 #### Defined in
 
-[src/SceneTree/Manipulators/CameraManipulator.ts:1131](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Manipulators/CameraManipulator.ts#L1131)
+[src/SceneTree/Manipulators/CameraManipulator.ts:1126](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/Manipulators/CameraManipulator.ts#L1126)
 
 ___
 
@@ -547,7 +548,7 @@ The event that occurs when the user moves the pointer across a screen.
 
 #### Defined in
 
-[src/SceneTree/Manipulators/CameraManipulator.ts:685](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Manipulators/CameraManipulator.ts#L685)
+[src/SceneTree/Manipulators/CameraManipulator.ts:686](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/Manipulators/CameraManipulator.ts#L686)
 
 ___
 
@@ -569,7 +570,7 @@ The event that occurs when the user moves pointer across a touch screen.
 
 #### Defined in
 
-[src/SceneTree/Manipulators/CameraManipulator.ts:723](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Manipulators/CameraManipulator.ts#L723)
+[src/SceneTree/Manipulators/CameraManipulator.ts:724](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/Manipulators/CameraManipulator.ts#L724)
 
 ___
 
@@ -591,7 +592,7 @@ Invoked when the user touches an element on a touch screen.
 
 #### Defined in
 
-[src/SceneTree/Manipulators/CameraManipulator.ts:1156](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Manipulators/CameraManipulator.ts#L1156)
+[src/SceneTree/Manipulators/CameraManipulator.ts:1151](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/Manipulators/CameraManipulator.ts#L1151)
 
 ___
 
@@ -611,7 +612,7 @@ Enables tools usage.
 
 #### Defined in
 
-[src/SceneTree/Manipulators/CameraManipulator.ts:185](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Manipulators/CameraManipulator.ts#L185)
+[src/SceneTree/Manipulators/CameraManipulator.ts:186](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/Manipulators/CameraManipulator.ts#L186)
 
 ___
 
@@ -641,7 +642,7 @@ Adds `Parameter` object to the owner's parameter list.
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:135](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L135)
+[src/SceneTree/ParameterOwner.ts:135](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/ParameterOwner.ts#L135)
 
 ___
 
@@ -671,7 +672,7 @@ This is used to handle migrating parameters to new names.
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:92](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L92)
+[src/SceneTree/ParameterOwner.ts:92](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/ParameterOwner.ts#L92)
 
 ___
 
@@ -696,7 +697,7 @@ The aimFocus method.
 
 #### Defined in
 
-[src/SceneTree/Manipulators/CameraManipulator.ts:462](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Manipulators/CameraManipulator.ts#L462)
+[src/SceneTree/Manipulators/CameraManipulator.ts:463](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/Manipulators/CameraManipulator.ts#L463)
 
 ___
 
@@ -723,7 +724,7 @@ Copies Parameters from another `ParameterOwner` to current object.
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:316](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L316)
+[src/SceneTree/ParameterOwner.ts:316](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/ParameterOwner.ts#L316)
 
 ___
 
@@ -743,7 +744,7 @@ Disables tool usage.
 
 #### Defined in
 
-[src/SceneTree/Manipulators/CameraManipulator.ts:196](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Manipulators/CameraManipulator.ts#L196)
+[src/SceneTree/Manipulators/CameraManipulator.ts:197](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/Manipulators/CameraManipulator.ts#L197)
 
 ___
 
@@ -766,7 +767,7 @@ The dolly method.
 
 #### Defined in
 
-[src/SceneTree/Manipulators/CameraManipulator.ts:379](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Manipulators/CameraManipulator.ts#L379)
+[src/SceneTree/Manipulators/CameraManipulator.ts:380](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/Manipulators/CameraManipulator.ts#L380)
 
 ___
 
@@ -793,7 +794,7 @@ Triggers all listener functions in an event.
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/EventEmitter.ts#L154)
+[src/Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Utilities/EventEmitter.ts#L154)
 
 ___
 
@@ -815,7 +816,7 @@ The initDrag method.
 
 #### Defined in
 
-[src/SceneTree/Manipulators/CameraManipulator.ts:447](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Manipulators/CameraManipulator.ts#L447)
+[src/SceneTree/Manipulators/CameraManipulator.ts:448](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/Manipulators/CameraManipulator.ts#L448)
 
 ___
 
@@ -842,7 +843,7 @@ The fromJSON method decodes a json object for this type.
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:241](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L241)
+[src/SceneTree/ParameterOwner.ts:241](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/ParameterOwner.ts#L241)
 
 ___
 
@@ -864,7 +865,7 @@ Returns the unmangled name of the class.
 
 #### Defined in
 
-[src/Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/BaseClass.ts#L33)
+[src/Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Utilities/BaseClass.ts#L33)
 
 ___
 
@@ -888,7 +889,7 @@ Returns the unique id of the object.
 
 #### Defined in
 
-[src/Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/BaseClass.ts#L25)
+[src/Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Utilities/BaseClass.ts#L25)
 
 ___
 
@@ -910,7 +911,7 @@ Returns the number of parameters current object has.
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:41](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L41)
+[src/SceneTree/ParameterOwner.ts:41](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/ParameterOwner.ts#L41)
 
 ___
 
@@ -938,7 +939,7 @@ Returns `Parameter` object using the given name
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:102](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L102)
+[src/SceneTree/ParameterOwner.ts:102](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/ParameterOwner.ts#L102)
 
 ___
 
@@ -966,7 +967,7 @@ Returns `Parameter` object in a given index
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:70](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L70)
+[src/SceneTree/ParameterOwner.ts:70](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/ParameterOwner.ts#L70)
 
 ___
 
@@ -994,7 +995,7 @@ Returns the index of a parameter in parameter list.
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:60](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L60)
+[src/SceneTree/ParameterOwner.ts:60](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/ParameterOwner.ts#L60)
 
 ___
 
@@ -1016,7 +1017,7 @@ Returns all the parameters of the object.
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:50](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L50)
+[src/SceneTree/ParameterOwner.ts:50](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/ParameterOwner.ts#L50)
 
 ___
 
@@ -1044,7 +1045,7 @@ Validates if the specified parameter exists in the object.
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:80](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L80)
+[src/SceneTree/ParameterOwner.ts:80](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/ParameterOwner.ts#L80)
 
 ___
 
@@ -1066,7 +1067,7 @@ The initDrag method.
 
 #### Defined in
 
-[src/SceneTree/Manipulators/CameraManipulator.ts:411](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Manipulators/CameraManipulator.ts#L411)
+[src/SceneTree/Manipulators/CameraManipulator.ts:412](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/Manipulators/CameraManipulator.ts#L412)
 
 ___
 
@@ -1098,7 +1099,7 @@ It replaces the event in the specified index.
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:149](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L149)
+[src/SceneTree/ParameterOwner.ts:149](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/ParameterOwner.ts#L149)
 
 ___
 
@@ -1120,7 +1121,7 @@ The integrateVelocityChange method.
 
 #### Defined in
 
-[src/SceneTree/Manipulators/CameraManipulator.ts:1000](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Manipulators/CameraManipulator.ts#L1000)
+[src/SceneTree/Manipulators/CameraManipulator.ts:995](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/Manipulators/CameraManipulator.ts#L995)
 
 ___
 
@@ -1143,7 +1144,7 @@ The look method.
 
 #### Defined in
 
-[src/SceneTree/Manipulators/CameraManipulator.ts:224](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Manipulators/CameraManipulator.ts#L224)
+[src/SceneTree/Manipulators/CameraManipulator.ts:225](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/Manipulators/CameraManipulator.ts#L225)
 
 ___
 
@@ -1170,7 +1171,7 @@ Removes a listener function from the specified event, using either the function 
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/EventEmitter.ts#L97)
+[src/Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Utilities/EventEmitter.ts#L97)
 
 ___
 
@@ -1199,7 +1200,7 @@ Adds a listener function for a given event name.
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/EventEmitter.ts#L44)
+[src/Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Utilities/EventEmitter.ts#L44)
 
 ___
 
@@ -1225,7 +1226,7 @@ Invoked when the user is pressing a key on the keyboard.
 
 #### Defined in
 
-[src/SceneTree/Manipulators/CameraManipulator.ts:1056](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Manipulators/CameraManipulator.ts#L1056)
+[src/SceneTree/Manipulators/CameraManipulator.ts:1051](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/Manipulators/CameraManipulator.ts#L1051)
 
 ___
 
@@ -1251,7 +1252,7 @@ Invoked when the user releases a key on the keyboard.
 
 #### Defined in
 
-[src/SceneTree/Manipulators/CameraManipulator.ts:1098](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Manipulators/CameraManipulator.ts#L1098)
+[src/SceneTree/Manipulators/CameraManipulator.ts:1093](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/Manipulators/CameraManipulator.ts#L1093)
 
 ___
 
@@ -1279,7 +1280,7 @@ Invoked when a user double presses a pointer over an element.
 
 #### Defined in
 
-[src/SceneTree/Manipulators/CameraManipulator.ts:605](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Manipulators/CameraManipulator.ts#L605)
+[src/SceneTree/Manipulators/CameraManipulator.ts:606](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/Manipulators/CameraManipulator.ts#L606)
 
 ___
 
@@ -1305,7 +1306,7 @@ Event fired when either the mouse button is pressed, or a touch start event occu
 
 #### Defined in
 
-[src/SceneTree/Manipulators/CameraManipulator.ts:639](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Manipulators/CameraManipulator.ts#L639)
+[src/SceneTree/Manipulators/CameraManipulator.ts:640](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/Manipulators/CameraManipulator.ts#L640)
 
 ___
 
@@ -1313,25 +1314,25 @@ ___
 
 ▸ **onPointerEnter**(`event`): `void`
 
-Causes an event to occur when the mouse pointer is moved into this viewport
+Event fired when a mouse pointer enters the viewport
 
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `event` | [`ZeaPointerEvent`](../../Utilities/Events/Utilities_Events_ZeaPointerEvent.ZeaPointerEvent) | The event that occurs. |
+| `event` | [`ZeaPointerEvent`](../../Utilities/Events/Utilities_Events_ZeaPointerEvent.ZeaPointerEvent) | The event param. |
 
 #### Returns
 
 `void`
 
-#### Overrides
+#### Inherited from
 
 [default](SceneTree_Manipulators_BaseTool.default).[onPointerEnter](SceneTree_Manipulators_BaseTool.default#onpointerenter)
 
 #### Defined in
 
-[src/SceneTree/Manipulators/CameraManipulator.ts:889](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Manipulators/CameraManipulator.ts#L889)
+[src/SceneTree/Manipulators/BaseTool.ts:102](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/Manipulators/BaseTool.ts#L102)
 
 ___
 
@@ -1357,7 +1358,7 @@ Causes an event to occur when the mouse pointer is moved out of this viewport
 
 #### Defined in
 
-[src/SceneTree/Manipulators/CameraManipulator.ts:895](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Manipulators/CameraManipulator.ts#L895)
+[src/SceneTree/Manipulators/CameraManipulator.ts:890](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/Manipulators/CameraManipulator.ts#L890)
 
 ___
 
@@ -1383,7 +1384,7 @@ Event fired when either the mouse cursor is moved, or a touch point moves.
 
 #### Defined in
 
-[src/SceneTree/Manipulators/CameraManipulator.ts:670](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Manipulators/CameraManipulator.ts#L670)
+[src/SceneTree/Manipulators/CameraManipulator.ts:671](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/Manipulators/CameraManipulator.ts#L671)
 
 ___
 
@@ -1409,7 +1410,7 @@ Event fired when either the mouse button is released, or a touch end event occur
 
 #### Defined in
 
-[src/SceneTree/Manipulators/CameraManipulator.ts:824](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Manipulators/CameraManipulator.ts#L824)
+[src/SceneTree/Manipulators/CameraManipulator.ts:825](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/Manipulators/CameraManipulator.ts#L825)
 
 ___
 
@@ -1435,7 +1436,7 @@ Invoked when the touch event gets interrupted.
 
 #### Defined in
 
-[src/SceneTree/Manipulators/CameraManipulator.ts:1186](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Manipulators/CameraManipulator.ts#L1186)
+[src/SceneTree/Manipulators/CameraManipulator.ts:1181](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/Manipulators/CameraManipulator.ts#L1181)
 
 ___
 
@@ -1457,7 +1458,7 @@ Invoked when the user removes his/her finger from the touch pad.
 
 #### Defined in
 
-[src/SceneTree/Manipulators/CameraManipulator.ts:1170](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Manipulators/CameraManipulator.ts#L1170)
+[src/SceneTree/Manipulators/CameraManipulator.ts:1165](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/Manipulators/CameraManipulator.ts#L1165)
 
 ___
 
@@ -1483,7 +1484,7 @@ Invoked when the mouse wheel is rolled up or down over an element.
 
 #### Defined in
 
-[src/SceneTree/Manipulators/CameraManipulator.ts:910](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Manipulators/CameraManipulator.ts#L910)
+[src/SceneTree/Manipulators/CameraManipulator.ts:905](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/Manipulators/CameraManipulator.ts#L905)
 
 ___
 
@@ -1521,7 +1522,7 @@ asset.once('loaded', () => {
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/EventEmitter.ts#L82)
+[src/Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Utilities/EventEmitter.ts#L82)
 
 ___
 
@@ -1547,7 +1548,7 @@ The orientPointOfView method.
 
 #### Defined in
 
-[src/SceneTree/Manipulators/CameraManipulator.ts:561](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Manipulators/CameraManipulator.ts#L561)
+[src/SceneTree/Manipulators/CameraManipulator.ts:562](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/Manipulators/CameraManipulator.ts#L562)
 
 ___
 
@@ -1570,7 +1571,7 @@ Rotates the camera around its own `X`,`Y` axes.
 
 #### Defined in
 
-[src/SceneTree/Manipulators/CameraManipulator.ts:346](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Manipulators/CameraManipulator.ts#L346)
+[src/SceneTree/Manipulators/CameraManipulator.ts:347](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/Manipulators/CameraManipulator.ts#L347)
 
 ___
 
@@ -1597,7 +1598,7 @@ to perform general updates (see GLPass or BaseItem).
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:124](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L124)
+[src/SceneTree/ParameterOwner.ts:124](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/ParameterOwner.ts#L124)
 
 ___
 
@@ -1629,7 +1630,7 @@ used to build the right `Parameter` class. Then all of them are added to the obj
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:276](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L276)
+[src/SceneTree/ParameterOwner.ts:276](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/ParameterOwner.ts#L276)
 
 ___
 
@@ -1656,7 +1657,7 @@ remove listener by ID returned from #on
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/EventEmitter.ts#L134)
+[src/Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Utilities/EventEmitter.ts#L134)
 
 ___
 
@@ -1684,7 +1685,7 @@ Removes `Parameter` from owner, by using parameter's name.
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:176](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L176)
+[src/SceneTree/ParameterOwner.ts:176](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/ParameterOwner.ts#L176)
 
 ___
 
@@ -1712,7 +1713,7 @@ Replaces old `Parameter` by passing a new one with the same name.
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:198](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L198)
+[src/SceneTree/ParameterOwner.ts:198](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/ParameterOwner.ts#L198)
 
 ___
 
@@ -1735,7 +1736,7 @@ The value can be on of the keys in #CameraManipulator.MANIPULATION_MODES
 
 #### Defined in
 
-[src/SceneTree/Manipulators/CameraManipulator.ts:209](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Manipulators/CameraManipulator.ts#L209)
+[src/SceneTree/Manipulators/CameraManipulator.ts:210](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/Manipulators/CameraManipulator.ts#L210)
 
 ___
 
@@ -1763,7 +1764,7 @@ The toJSON method encodes this type as a json object for persistence.
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:218](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L218)
+[src/SceneTree/ParameterOwner.ts:218](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/ParameterOwner.ts#L218)
 
 ___
 
@@ -1791,7 +1792,7 @@ Converts object's JSON value and converts it to a string.
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:303](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/ParameterOwner.ts#L303)
+[src/SceneTree/ParameterOwner.ts:303](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/ParameterOwner.ts#L303)
 
 ___
 
@@ -1814,7 +1815,7 @@ Rotates viewport camera about the target.
 
 #### Defined in
 
-[src/SceneTree/Manipulators/CameraManipulator.ts:313](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Manipulators/CameraManipulator.ts#L313)
+[src/SceneTree/Manipulators/CameraManipulator.ts:314](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/Manipulators/CameraManipulator.ts#L314)
 
 ___
 
@@ -1837,7 +1838,7 @@ Rotates viewport camera about the target.
 
 #### Defined in
 
-[src/SceneTree/Manipulators/CameraManipulator.ts:281](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Manipulators/CameraManipulator.ts#L281)
+[src/SceneTree/Manipulators/CameraManipulator.ts:282](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/Manipulators/CameraManipulator.ts#L282)
 
 ___
 
@@ -1860,5 +1861,5 @@ Rotates viewport camera about the target.
 
 #### Defined in
 
-[src/SceneTree/Manipulators/CameraManipulator.ts:251](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/SceneTree/Manipulators/CameraManipulator.ts#L251)
+[src/SceneTree/Manipulators/CameraManipulator.ts:252](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/SceneTree/Manipulators/CameraManipulator.ts#L252)
 

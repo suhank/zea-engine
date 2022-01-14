@@ -34,7 +34,7 @@ Initializes the Mat3 class with given data.
 
 #### Defined in
 
-[src/Math/Mat3.ts:26](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Mat3.ts#L26)
+[src/Math/Mat3.ts:26](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Mat3.ts#L26)
 
 ## Properties
 
@@ -44,7 +44,7 @@ Initializes the Mat3 class with given data.
 
 #### Defined in
 
-[src/Math/Mat3.ts:12](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Mat3.ts#L12)
+[src/Math/Mat3.ts:12](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Mat3.ts#L12)
 
 ## Accessors
 
@@ -62,7 +62,7 @@ Getter for row 0, column 0.
 
 #### Defined in
 
-[src/Math/Mat3.ts:60](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Mat3.ts#L60)
+[src/Math/Mat3.ts:60](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Mat3.ts#L60)
 
 • `set` **m00**(`val`): `void`
 
@@ -82,7 +82,7 @@ Setter for row 0, column 0.
 
 #### Defined in
 
-[src/Math/Mat3.ts:69](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Mat3.ts#L69)
+[src/Math/Mat3.ts:69](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Mat3.ts#L69)
 
 ___
 
@@ -100,7 +100,7 @@ Getter for row 0, column 1.
 
 #### Defined in
 
-[src/Math/Mat3.ts:78](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Mat3.ts#L78)
+[src/Math/Mat3.ts:78](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Mat3.ts#L78)
 
 • `set` **m01**(`val`): `void`
 
@@ -120,7 +120,7 @@ Setter for row 0, column 1.
 
 #### Defined in
 
-[src/Math/Mat3.ts:87](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Mat3.ts#L87)
+[src/Math/Mat3.ts:87](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Mat3.ts#L87)
 
 ___
 
@@ -138,7 +138,7 @@ Getter for row 0, column 2.
 
 #### Defined in
 
-[src/Math/Mat3.ts:96](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Mat3.ts#L96)
+[src/Math/Mat3.ts:96](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Mat3.ts#L96)
 
 • `set` **m02**(`val`): `void`
 
@@ -158,7 +158,7 @@ Setter for row 0, column 2.
 
 #### Defined in
 
-[src/Math/Mat3.ts:105](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Mat3.ts#L105)
+[src/Math/Mat3.ts:105](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Mat3.ts#L105)
 
 ___
 
@@ -176,7 +176,7 @@ Getter for row 1, column 0.
 
 #### Defined in
 
-[src/Math/Mat3.ts:114](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Mat3.ts#L114)
+[src/Math/Mat3.ts:114](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Mat3.ts#L114)
 
 • `set` **m10**(`val`): `void`
 
@@ -196,7 +196,7 @@ Setter for row 1, column 0.
 
 #### Defined in
 
-[src/Math/Mat3.ts:123](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Mat3.ts#L123)
+[src/Math/Mat3.ts:123](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Mat3.ts#L123)
 
 ___
 
@@ -214,7 +214,7 @@ Getter for row 1, column 1
 
 #### Defined in
 
-[src/Math/Mat3.ts:132](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Mat3.ts#L132)
+[src/Math/Mat3.ts:132](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Mat3.ts#L132)
 
 • `set` **m11**(`val`): `void`
 
@@ -234,7 +234,7 @@ Setter for row 1, column 1.
 
 #### Defined in
 
-[src/Math/Mat3.ts:141](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Mat3.ts#L141)
+[src/Math/Mat3.ts:141](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Mat3.ts#L141)
 
 ___
 
@@ -252,7 +252,7 @@ Getter for row 1, column 2.
 
 #### Defined in
 
-[src/Math/Mat3.ts:150](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Mat3.ts#L150)
+[src/Math/Mat3.ts:150](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Mat3.ts#L150)
 
 • `set` **m12**(`val`): `void`
 
@@ -272,7 +272,7 @@ Setter for row 1, column 2.
 
 #### Defined in
 
-[src/Math/Mat3.ts:159](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Mat3.ts#L159)
+[src/Math/Mat3.ts:159](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Mat3.ts#L159)
 
 ___
 
@@ -290,7 +290,7 @@ Getter for row 2, column 0.
 
 #### Defined in
 
-[src/Math/Mat3.ts:168](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Mat3.ts#L168)
+[src/Math/Mat3.ts:168](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Mat3.ts#L168)
 
 • `set` **m20**(`val`): `void`
 
@@ -310,7 +310,7 @@ Setter for row 2, column 0.
 
 #### Defined in
 
-[src/Math/Mat3.ts:177](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Mat3.ts#L177)
+[src/Math/Mat3.ts:177](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Mat3.ts#L177)
 
 ___
 
@@ -328,7 +328,7 @@ Getter for row 2, column 1.
 
 #### Defined in
 
-[src/Math/Mat3.ts:186](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Mat3.ts#L186)
+[src/Math/Mat3.ts:186](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Mat3.ts#L186)
 
 • `set` **m21**(`val`): `void`
 
@@ -348,7 +348,7 @@ Setter for row 2, column 1.
 
 #### Defined in
 
-[src/Math/Mat3.ts:195](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Mat3.ts#L195)
+[src/Math/Mat3.ts:195](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Mat3.ts#L195)
 
 ___
 
@@ -366,7 +366,7 @@ Getter for row 2, column 2.
 
 #### Defined in
 
-[src/Math/Mat3.ts:204](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Mat3.ts#L204)
+[src/Math/Mat3.ts:204](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Mat3.ts#L204)
 
 • `set` **m22**(`val`): `void`
 
@@ -386,7 +386,7 @@ Setter for row 2, column 2.
 
 #### Defined in
 
-[src/Math/Mat3.ts:213](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Mat3.ts#L213)
+[src/Math/Mat3.ts:213](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Mat3.ts#L213)
 
 ___
 
@@ -404,7 +404,7 @@ Getter for the `x` axis.
 
 #### Defined in
 
-[src/Math/Mat3.ts:222](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Mat3.ts#L222)
+[src/Math/Mat3.ts:222](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Mat3.ts#L222)
 
 • `set` **xAxis**(`vec3`): `void`
 
@@ -424,7 +424,7 @@ Setter for the `x` axis.
 
 #### Defined in
 
-[src/Math/Mat3.ts:231](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Mat3.ts#L231)
+[src/Math/Mat3.ts:231](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Mat3.ts#L231)
 
 ___
 
@@ -441,7 +441,7 @@ Getter for the `y` axis.
 
 #### Defined in
 
-[src/Math/Mat3.ts:239](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Mat3.ts#L239)
+[src/Math/Mat3.ts:239](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Mat3.ts#L239)
 
 • `set` **yAxis**(`vec3`): `void`
 
@@ -459,7 +459,7 @@ Setter for the `y` axis.
 
 #### Defined in
 
-[src/Math/Mat3.ts:247](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Mat3.ts#L247)
+[src/Math/Mat3.ts:247](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Mat3.ts#L247)
 
 ___
 
@@ -476,7 +476,7 @@ Getter for the `z` axis.
 
 #### Defined in
 
-[src/Math/Mat3.ts:255](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Mat3.ts#L255)
+[src/Math/Mat3.ts:255](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Mat3.ts#L255)
 
 • `set` **zAxis**(`vec3`): `void`
 
@@ -494,7 +494,7 @@ Setter for the `z` axis.
 
 #### Defined in
 
-[src/Math/Mat3.ts:263](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Mat3.ts#L263)
+[src/Math/Mat3.ts:263](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Mat3.ts#L263)
 
 ## Methods
 
@@ -512,7 +512,7 @@ Returns current Math type data as array. Often used to pass types to the GPU.
 
 #### Defined in
 
-[src/Math/Mat3.ts:545](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Mat3.ts#L545)
+[src/Math/Mat3.ts:545](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Mat3.ts#L545)
 
 ___
 
@@ -530,7 +530,7 @@ Clones this Mat3 returning a new instance.
 
 #### Defined in
 
-[src/Math/Mat3.ts:485](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Mat3.ts#L485)
+[src/Math/Mat3.ts:485](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Mat3.ts#L485)
 
 ___
 
@@ -552,7 +552,7 @@ The fromJSON method decodes a json object for this type.
 
 #### Defined in
 
-[src/Math/Mat3.ts:523](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Mat3.ts#L523)
+[src/Math/Mat3.ts:523](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Mat3.ts#L523)
 
 ___
 
@@ -570,7 +570,7 @@ Inverts a Mat3 and returns the result as a new instance.
 
 #### Defined in
 
-[src/Math/Mat3.ts:353](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Mat3.ts#L353)
+[src/Math/Mat3.ts:353](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Mat3.ts#L353)
 
 ___
 
@@ -588,7 +588,7 @@ Inverts a Mat3 in place modifying its values.
 
 #### Defined in
 
-[src/Math/Mat3.ts:393](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Mat3.ts#L393)
+[src/Math/Mat3.ts:393](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Mat3.ts#L393)
 
 ___
 
@@ -610,7 +610,7 @@ Loads the state of the value from a binary reader.
 
 #### Defined in
 
-[src/Math/Mat3.ts:507](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Mat3.ts#L507)
+[src/Math/Mat3.ts:507](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Mat3.ts#L507)
 
 ___
 
@@ -640,7 +640,7 @@ Sets the state of the Mat3 class
 
 #### Defined in
 
-[src/Math/Mat3.ts:283](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Mat3.ts#L283)
+[src/Math/Mat3.ts:283](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Mat3.ts#L283)
 
 ___
 
@@ -664,7 +664,7 @@ Note: the resulting matrix +Z axis is aligned with the provided direction value.
 
 #### Defined in
 
-[src/Math/Mat3.ts:328](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Mat3.ts#L328)
+[src/Math/Mat3.ts:328](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Mat3.ts#L328)
 
 ___
 
@@ -688,7 +688,7 @@ Note: works with either Mat3 or Mat4.
 
 #### Defined in
 
-[src/Math/Mat3.ts:309](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Mat3.ts#L309)
+[src/Math/Mat3.ts:309](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Mat3.ts#L309)
 
 ___
 
@@ -704,7 +704,7 @@ Sets state of the Mat3 with the identity  Matrix
 
 #### Defined in
 
-[src/Math/Mat3.ts:298](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Mat3.ts#L298)
+[src/Math/Mat3.ts:298](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Mat3.ts#L298)
 
 ___
 
@@ -722,7 +722,7 @@ The toJSON method encodes this type as a json object for persistence.
 
 #### Defined in
 
-[src/Math/Mat3.ts:515](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Mat3.ts#L515)
+[src/Math/Mat3.ts:515](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Mat3.ts#L515)
 
 ___
 
@@ -740,7 +740,7 @@ Converts this Vec3 to a string in JSON format.
 
 #### Defined in
 
-[src/Math/Mat3.ts:535](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Mat3.ts#L535)
+[src/Math/Mat3.ts:535](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Mat3.ts#L535)
 
 ___
 
@@ -764,7 +764,7 @@ Transforms the Vec3 with a Mat3.
 
 #### Defined in
 
-[src/Math/Mat3.ts:472](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Mat3.ts#L472)
+[src/Math/Mat3.ts:472](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Mat3.ts#L472)
 
 ___
 
@@ -783,7 +783,7 @@ and returns the result as a new instance.
 
 #### Defined in
 
-[src/Math/Mat3.ts:435](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Mat3.ts#L435)
+[src/Math/Mat3.ts:435](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Mat3.ts#L435)
 
 ___
 
@@ -799,5 +799,5 @@ Transposes (exchanges columns with rows) this matrix modifying its values.
 
 #### Defined in
 
-[src/Math/Mat3.ts:452](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Math/Mat3.ts#L452)
+[src/Math/Mat3.ts:452](https://github.com/ZeaInc/zea-engine/blob/a1fd0b47a/src/Math/Mat3.ts#L452)
 
