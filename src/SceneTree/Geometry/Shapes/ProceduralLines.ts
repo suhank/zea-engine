@@ -118,16 +118,6 @@ abstract class ProceduralLines extends Lines {
     context.skipAttributes = []
     return j
   }
-
-  /**
-   * The fromJSON method decodes a json object for this type.
-   *
-   * @param j - The json object this item must decode.
-   * @param context - The context value.
-   */
-  fromJSON(j: Record<string, any>, context?: Record<string, any>): void {
-    super.fromJSON(j, context)
-  }
 }
 
 export { ProceduralLines }

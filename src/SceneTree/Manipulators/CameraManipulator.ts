@@ -884,12 +884,6 @@ class CameraManipulator extends BaseTool {
   }
 
   /**
-   * Causes an event to occur when the mouse pointer is moved into this viewport
-   * @param event - The event that occurs.
-   */
-  onPointerEnter(event: ZeaPointerEvent): void  {}
-
-  /**
    * Causes an event to occur when the mouse pointer is moved out of this viewport
    * @param event - The event that occurs.
    */

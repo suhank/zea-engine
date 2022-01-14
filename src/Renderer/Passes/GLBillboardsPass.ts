@@ -120,11 +120,6 @@ class GLBillboardsPass extends GLPass {
   // Bind to Render Tree
 
   /**
-   * The filterRenderTree method.
-   */
-  filterRenderTree(): void {}
-
-  /**
    * The addBillboard method.
    * @param billboard - The billboard value.
    */

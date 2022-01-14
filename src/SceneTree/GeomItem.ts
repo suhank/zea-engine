@@ -163,18 +163,6 @@ class GeomItem extends BaseGeomItem {
 
   // ///////////////////////////
   // Debugging
-
-  /**
-   * The toJSON method encodes this type as a json object for persistence.
-   *
-   * @param context - The context value.
-   * @return - Returns the json object.
-   */
-  toJSON(context?: Record<string, any>): Record<string, any> {
-    const json = super.toJSON(context)
-    return json
-  }
-
   /**
    * The fromJSON method decodes a json object for this type.
    *

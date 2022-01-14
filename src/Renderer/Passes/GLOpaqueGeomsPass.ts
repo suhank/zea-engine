@@ -31,15 +31,6 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
   }
 
   /**
-   * The init method.
-   * @param renderer - The renderer value.
-   * @param passIndex - The index of the pass in the GLBAseRenderer
-   */
-  init(renderer: GLBaseRenderer, passIndex: number): void {
-    super.init(renderer, passIndex)
-  }
-
-  /**
    * Returns the pass type. OPAQUE passes are always rendered first, followed by TRANSPARENT passes, and finally OVERLAY.
    * @return - The pass type value.
    */

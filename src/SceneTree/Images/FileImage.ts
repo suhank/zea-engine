@@ -131,21 +131,6 @@ class FileImage extends BaseImage {
   // Persistence
 
   /**
-   * The toJSON method encodes this type as a json object for persistence.
-   * @param context - The context value.
-   */
-  toJSON(context?: Record<string, any>): Record<any,any> {
-    return {}
-  }
-
-  /**
-   * The fromJSON method decodes a json object for this type.
-   * @param json - The json object this item must decode.
-   * @param context - The context value.
-   */
-  fromJSON(json: Record<string, any>, context?: Record<string, any>): void {}
-
-  /**
    * The readBinary method.
    * @param reader - The reader param.
    * @param context - The context param.

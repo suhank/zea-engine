@@ -405,30 +405,6 @@ class Label extends DataImage {
     if (this.needsRender) this.renderLabelToImage()
     return super.getParams()
   }
-
-  // ////////////////////////////////////////
-  // Persistence
-
-  /**
-   * The toJSON method encodes this type as a json object for persistence.
-   *
-   * @param context - The context value.
-   * @return - Returns the json object.
-   */
-  toJSON(context: Record<string, any>): Record<string, any> {
-    const j = super.toJSON(context)
-    return j
-  }
-
-  /**
-   * The fromJSON method decodes a json object for this type.
-   *
-   * @param j - The json object this item must decode.
-   * @param context - The context value.
-   */
-  fromJSON(j: Record<string, any>, context: Record<string, any>): void {
-    super.fromJSON(j, context)
-  }
 }
 
 Registry.register('Label', Label)
