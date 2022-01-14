@@ -69,7 +69,7 @@ Create a resource loader.
 
 #### Defined in
 
-[src/SceneTree/resourceLoader.ts:60](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/SceneTree/resourceLoader.ts#L60)
+[src/SceneTree/resourceLoader.ts:60](https://github.com/ZeaInc/zea-engine/blob/375d47e4b/src/SceneTree/resourceLoader.ts#L60)
 
 ## Properties
 
@@ -79,7 +79,7 @@ Create a resource loader.
 
 #### Defined in
 
-[src/SceneTree/resourceLoader.ts:52](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/SceneTree/resourceLoader.ts#L52)
+[src/SceneTree/resourceLoader.ts:52](https://github.com/ZeaInc/zea-engine/blob/375d47e4b/src/SceneTree/resourceLoader.ts#L52)
 
 ___
 
@@ -93,7 +93,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/Utilities/BaseClass.ts#L11)
+[src/Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/375d47e4b/src/Utilities/BaseClass.ts#L11)
 
 ___
 
@@ -103,7 +103,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/resourceLoader.ts:51](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/SceneTree/resourceLoader.ts#L51)
+[src/SceneTree/resourceLoader.ts:51](https://github.com/ZeaInc/zea-engine/blob/375d47e4b/src/SceneTree/resourceLoader.ts#L51)
 
 ___
 
@@ -113,7 +113,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/resourceLoader.ts:53](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/SceneTree/resourceLoader.ts#L53)
+[src/SceneTree/resourceLoader.ts:53](https://github.com/ZeaInc/zea-engine/blob/375d47e4b/src/SceneTree/resourceLoader.ts#L53)
 
 ___
 
@@ -123,7 +123,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/resourceLoader.ts:56](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/SceneTree/resourceLoader.ts#L56)
+[src/SceneTree/resourceLoader.ts:56](https://github.com/ZeaInc/zea-engine/blob/375d47e4b/src/SceneTree/resourceLoader.ts#L56)
 
 ___
 
@@ -137,7 +137,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/Utilities/EventEmitter.ts#L26)
+[src/Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/375d47e4b/src/Utilities/EventEmitter.ts#L26)
 
 ___
 
@@ -147,7 +147,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/resourceLoader.ts:54](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/SceneTree/resourceLoader.ts#L54)
+[src/SceneTree/resourceLoader.ts:54](https://github.com/ZeaInc/zea-engine/blob/375d47e4b/src/SceneTree/resourceLoader.ts#L54)
 
 ___
 
@@ -157,7 +157,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/resourceLoader.ts:55](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/SceneTree/resourceLoader.ts#L55)
+[src/SceneTree/resourceLoader.ts:55](https://github.com/ZeaInc/zea-engine/blob/375d47e4b/src/SceneTree/resourceLoader.ts#L55)
 
 ## Methods
 
@@ -184,7 +184,7 @@ Triggers all listener functions in an event.
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/Utilities/EventEmitter.ts#L154)
+[src/Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/375d47e4b/src/Utilities/EventEmitter.ts#L154)
 
 ___
 
@@ -206,7 +206,7 @@ Returns the unmangled name of the class.
 
 #### Defined in
 
-[src/Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/Utilities/BaseClass.ts#L33)
+[src/Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/375d47e4b/src/Utilities/BaseClass.ts#L33)
 
 ___
 
@@ -230,7 +230,7 @@ Returns a previously stored common resource. Typically this would be a VR asset.
 
 #### Defined in
 
-[src/SceneTree/resourceLoader.ts:126](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/SceneTree/resourceLoader.ts#L126)
+[src/SceneTree/resourceLoader.ts:126](https://github.com/ZeaInc/zea-engine/blob/375d47e4b/src/SceneTree/resourceLoader.ts#L126)
 
 ___
 
@@ -254,7 +254,7 @@ Returns the unique id of the object.
 
 #### Defined in
 
-[src/Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/Utilities/BaseClass.ts#L25)
+[src/Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/375d47e4b/src/Utilities/BaseClass.ts#L25)
 
 ___
 
@@ -278,7 +278,7 @@ been completed and #incrementWorkDone called. The progress will be at 3/5, or 60
 
 #### Defined in
 
-[src/SceneTree/resourceLoader.ts:164](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/SceneTree/resourceLoader.ts#L164)
+[src/SceneTree/resourceLoader.ts:164](https://github.com/ZeaInc/zea-engine/blob/375d47e4b/src/SceneTree/resourceLoader.ts#L164)
 
 ___
 
@@ -303,7 +303,7 @@ progress will increment.
 
 #### Defined in
 
-[src/SceneTree/resourceLoader.ts:151](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/SceneTree/resourceLoader.ts#L151)
+[src/SceneTree/resourceLoader.ts:151](https://github.com/ZeaInc/zea-engine/blob/375d47e4b/src/SceneTree/resourceLoader.ts#L151)
 
 ___
 
@@ -329,7 +329,7 @@ Note: using the resource loader to centralize data loading enables progress to b
 
 #### Defined in
 
-[src/SceneTree/resourceLoader.ts:93](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/SceneTree/resourceLoader.ts#L93)
+[src/SceneTree/resourceLoader.ts:93](https://github.com/ZeaInc/zea-engine/blob/375d47e4b/src/SceneTree/resourceLoader.ts#L93)
 
 ___
 
@@ -356,7 +356,7 @@ Removes a listener function from the specified event, using either the function 
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/Utilities/EventEmitter.ts#L97)
+[src/Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/375d47e4b/src/Utilities/EventEmitter.ts#L97)
 
 ___
 
@@ -385,7 +385,7 @@ Adds a listener function for a given event name.
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/Utilities/EventEmitter.ts#L44)
+[src/Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/375d47e4b/src/Utilities/EventEmitter.ts#L44)
 
 ___
 
@@ -423,7 +423,7 @@ asset.once('loaded', () => {
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/Utilities/EventEmitter.ts#L82)
+[src/Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/375d47e4b/src/Utilities/EventEmitter.ts#L82)
 
 ___
 
@@ -443,7 +443,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/resourceLoader.ts:82](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/SceneTree/resourceLoader.ts#L82)
+[src/SceneTree/resourceLoader.ts:82](https://github.com/ZeaInc/zea-engine/blob/375d47e4b/src/SceneTree/resourceLoader.ts#L82)
 
 ___
 
@@ -470,7 +470,7 @@ remove listener by ID returned from #on
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/Utilities/EventEmitter.ts#L134)
+[src/Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/375d47e4b/src/Utilities/EventEmitter.ts#L134)
 
 ___
 
@@ -493,5 +493,5 @@ Saves a common resource for reuse by other tools. Typically this would be a VR a
 
 #### Defined in
 
-[src/SceneTree/resourceLoader.ts:136](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/SceneTree/resourceLoader.ts#L136)
+[src/SceneTree/resourceLoader.ts:136](https://github.com/ZeaInc/zea-engine/blob/375d47e4b/src/SceneTree/resourceLoader.ts#L136)
 

@@ -25,7 +25,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[src/Utilities/IntersectionData.ts:16](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/Utilities/IntersectionData.ts#L16)
+[src/Utilities/IntersectionData.ts:16](https://github.com/ZeaInc/zea-engine/blob/375d47e4b/src/Utilities/IntersectionData.ts#L16)
 
 ## Properties
 
@@ -35,7 +35,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[src/Utilities/IntersectionData.ts:15](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/Utilities/IntersectionData.ts#L15)
+[src/Utilities/IntersectionData.ts:15](https://github.com/ZeaInc/zea-engine/blob/375d47e4b/src/Utilities/IntersectionData.ts#L15)
 
 ___
 
@@ -45,7 +45,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/IntersectionData.ts:13](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/Utilities/IntersectionData.ts#L13)
+[src/Utilities/IntersectionData.ts:13](https://github.com/ZeaInc/zea-engine/blob/375d47e4b/src/Utilities/IntersectionData.ts#L13)
 
 ___
 
@@ -55,7 +55,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/IntersectionData.ts:14](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/Utilities/IntersectionData.ts#L14)
+[src/Utilities/IntersectionData.ts:14](https://github.com/ZeaInc/zea-engine/blob/375d47e4b/src/Utilities/IntersectionData.ts#L14)
 
 ___
 
@@ -65,7 +65,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/IntersectionData.ts:12](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/Utilities/IntersectionData.ts#L12)
+[src/Utilities/IntersectionData.ts:12](https://github.com/ZeaInc/zea-engine/blob/375d47e4b/src/Utilities/IntersectionData.ts#L12)
 
 ___
 
@@ -75,7 +75,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/IntersectionData.ts:11](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/Utilities/IntersectionData.ts#L11)
+[src/Utilities/IntersectionData.ts:11](https://github.com/ZeaInc/zea-engine/blob/375d47e4b/src/Utilities/IntersectionData.ts#L11)
 
 ___
 
@@ -85,5 +85,5 @@ ___
 
 #### Defined in
 
-[src/Utilities/IntersectionData.ts:10](https://github.com/ZeaInc/zea-engine/blob/ab3250ece/src/Utilities/IntersectionData.ts#L10)
+[src/Utilities/IntersectionData.ts:10](https://github.com/ZeaInc/zea-engine/blob/375d47e4b/src/Utilities/IntersectionData.ts#L10)
 
