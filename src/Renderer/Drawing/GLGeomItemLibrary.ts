@@ -60,7 +60,6 @@ class GLGeomItemLibrary extends EventEmitter {
   protected removedItemIndices: number[]
   protected glGeomItemsTexture: GLTexture2D | null = null
   protected enableFrustumCulling: boolean
-  protected enableOcclusionCulling: boolean
 
   protected xrViewport?: XRViewport
   protected xrPresenting: boolean = false
@@ -68,7 +67,8 @@ class GLGeomItemLibrary extends EventEmitter {
   protected xrProjectionMatrix = new Mat4()
 
   // Occlusion Culling
-  protected floatOcclusionBuffer: boolean = true
+  protected enableOcclusionCulling: boolean
+  protected debugOcclusionBuffer: boolean = false
   protected occlusionDataBuffer: GLRenderTarget
   protected occlusionImage: DataImage
   protected occlusionImageItem: GeomItem
@@ -108,6 +108,7 @@ class GLGeomItemLibrary extends EventEmitter {
     // - pass uniform values for the texture sizes.
     const gl = this.renderer.gl
     this.enableOcclusionCulling = options.enableOcclusionCulling && gl.name == 'webgl2'
+    this.debugOcclusionBuffer = options.debugOcclusionBuffer ?? false
 
     // https://www.khronos.org/registry/webgl/extensions/EXT_disjoint_timer_query_webgl2/
     this.timer_query_ext = gl.getExtension('EXT_disjoint_timer_query_webgl2')
@@ -303,7 +304,6 @@ class GLGeomItemLibrary extends EventEmitter {
       // Occlusion Culling
       if (this.enableOcclusionCulling) {
         const gl = this.renderer.gl
-        this.floatOcclusionBuffer = gl.floatTexturesSupported
         let occlusionDataBufferSizeFactor = 1
         const occlusionDataBufferWidth = Math.ceil(this.renderer.getWidth() * occlusionDataBufferSizeFactor)
         const occlusionDataBufferHeight = Math.ceil(this.renderer.getHeight() * occlusionDataBufferSizeFactor)
@@ -590,9 +590,11 @@ class GLGeomItemLibrary extends EventEmitter {
       // rasterized by the bounding boxes, and not the initial
       // scene geometry.(which was counted in the first reduce)
       // Note: disable this code to see the full occlusion buffer in debugging.
-      // gl.colorMask(true, true, true, true)
-      // gl.clearColor(0, 0, 0, 0)
-      // gl.clear(gl.COLOR_BUFFER_BIT)
+      if (!this.debugOcclusionBuffer) {
+        gl.colorMask(true, true, true, true)
+        gl.clearColor(0, 0, 0, 0)
+        gl.clear(gl.COLOR_BUFFER_BIT) // do _not_ clear depth.
+      }
 
       this.boundingBoxShader.bind(renderstate, 'GLGeomItemLibrary')
       this.bbox.bind(renderstate)
