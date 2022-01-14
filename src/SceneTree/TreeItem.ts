@@ -19,7 +19,7 @@ import { ZeaTouchEvent } from '../Utilities/Events/ZeaTouchEvent'
 import { CloneContext } from './CloneContext'
 import { AssetLoadContext } from './AssetLoadContext'
 import { ChildAddedEvent } from '../Utilities/Events/ChildAddedEvent'
-import { VisibilityChangedEvent } from '..'
+import { VisibilityChangedEvent } from '../Utilities/Events/VisibilityChangedEvent'
 
 /**
  * Class representing an Item in the scene tree with hierarchy capabilities (has children).
